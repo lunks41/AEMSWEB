@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@section Scripts {
+    <script>
+        function loadProducts() {
+            $.ajax({
+                url: '@Url.Action("GetProducts", "Products", new { companyCode = ViewContext.RouteData.Values["companyCode"] })',
+                type: 'GET',
+                success: function(data) {
+                    // Update UI
+                }
+            });
+        }
+
+        function createProduct() {
+            $.ajax({
+                url: '@Url.Action("Create", "Products")',
+                type: 'POST',
+                headers: {
+                    RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                data: JSON.stringify(productData),
+                contentType: 'application/json',
+                success: function(response) {
+                    if (response.success) {
+                        loadProducts();
+                    }
+                }
+            });
+        }
+    </script>
+}

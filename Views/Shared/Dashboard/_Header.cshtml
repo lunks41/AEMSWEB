@@ -1,0 +1,149 @@
+<header class="header-area bg-white mb-4 rounded-bottom-15" id="header-area">
+    <div class="row align-items-center">
+        <div class="col-lg-4 col-sm-6">
+            <div class="left-header-content">
+                <ul class="d-flex align-items-center ps-0 mb-0 list-unstyled justify-content-center justify-content-sm-start">
+                    <li>
+                        <button class="header-burger-menu bg-transparent p-0 border-0" id="header-burger-menu">
+                            <span class="material-symbols-outlined">menu</span>
+                        </button>
+                    </li>
+                    <li>
+                        <form class="src-form position-relative">
+                            <input type="text" class="form-control" placeholder="Search here....." />
+                            <button type="submit" class="src-btn position-absolute top-50 end-0 translate-middle-y bg-transparent p-0 border-0">
+                                <span class="material-symbols-outlined">search</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-sm-6">
+            <div class="right-header-content mt-2 mt-sm-0">
+                <ul class="d-flex align-items-center justify-content-center justify-content-sm-end ps-0 mb-0 list-unstyled">
+
+                    <li class="header-right-item">
+                        <partial name="_LoginPartialV1" />
+                    </li>
+                    <!-- Dark/Light Mode Button -->
+                    <li class="header-right-item">
+                        <div class="light-dark">
+                            <button class="switch-toggle settings-btn dark-btn p-0 bg-transparent" id="switch-toggle">
+                                <span class="dark"><i class="material-symbols-outlined">light_mode</i></span>
+                                <span class="light"><i class="material-symbols-outlined">dark_mode</i></span>
+                            </button>
+                        </div>
+                    </li>
+
+                    <!-- Other Navbar Items -->
+                    <li class="header-right-item">
+                        <button class="fullscreen-btn bg-transparent p-0 border-0" id="fullscreen-button">
+                            <i class="material-symbols-outlined text-body">fullscreen</i>
+                        </button>
+                    </li>
+
+                    <li class="header-right-item">
+                        <a class="nav-link text-dark" href="javascript:triggerGlobalLogout()">Logout</a>
+
+                        <form id="logoutForm" class="d-none" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
+                            @*<button type="submit" class="btn btn-link nav-link text-dark p-0">Logout</button>*@
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Session timeout settings (30 minutes total, 25 minutes for warning)
+    const totalTimeout = 30 * 60 * 1000; // 30 minutes
+    const warningTimeout = 25 * 60 * 1000; // Show warning after 25 minutes
+    let timeoutTimer;
+    let countdownTimer;
+    let lastActivity = Date.now();
+
+    // Activity detection events
+    ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
+        document.addEventListener(event, () => {
+            lastActivity = Date.now();
+            if($('#sessionTimeoutModal').is(':visible')) {
+                continueSession();
+            }
+        });
+    });
+
+    // Check inactivity regularly
+    function checkInactivity() {
+        const currentTime = Date.now();
+        const elapsed = currentTime - lastActivity;
+
+        if(elapsed > warningTimeout && !$('#sessionTimeoutModal').is(':visible')) {
+            showTimeoutWarning(totalTimeout - elapsed);
+        }
+
+        if(elapsed > totalTimeout) {
+            triggerGlobalLogout();
+        }
+    }
+
+    // Show timeout warning modal
+    function showTimeoutWarning(timeLeft) {
+        const modal = new bootstrap.Modal(document.getElementById('sessionTimeoutModal'));
+        modal.show();
+
+        let seconds = Math.ceil(timeLeft / 1000);
+
+        countdownTimer = setInterval(() => {
+            seconds--;
+            if(seconds <= 0) {
+                clearInterval(countdownTimer);
+                triggerGlobalLogout();
+            }
+            document.getElementById('countdown').textContent =
+                `${Math.floor(seconds/60)}:${(seconds%60).toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    function continueSession() {
+        clearInterval(countdownTimer);
+        lastActivity = Date.now();
+        $('#sessionTimeoutModal').modal('hide');
+    }
+
+    function logoutNow() {
+        clearInterval(countdownTimer);
+        triggerGlobalLogout();
+    }
+
+    // Cross-tab logout functionality
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'logout-event') {
+            localStorage.removeItem('auth-data');
+            window.location.href = '@Url.Action("Login", "Account")';
+        }
+    });
+
+   function triggerGlobalLogout() {
+    // Cross-tab logout notification
+    localStorage.setItem('logout-event', Date.now());
+    localStorage.removeItem('logout-event');
+
+    // Submit the hidden form
+    document.getElementById('logoutForm').submit();
+}
+
+// Cross-tab logout listener
+window.addEventListener('storage', function(event) {
+    if (event.key === 'logout-event') {
+        window.location.href = '@Url.Action("Login", "Account")';
+    }
+});
+
+    // Initialize check
+    setInterval(checkInactivity, 10000); // Check every 10 seconds
+    checkInactivity();
+</script>

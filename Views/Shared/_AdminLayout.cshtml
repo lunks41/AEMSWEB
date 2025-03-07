@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AEMS</title>
+
+    <!-- Bootstrap & Core Styles -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Kendo UI Theme -->
+    <link id="kendo-theme" rel="stylesheet" href="~/lib/kendo/styles/kendo.default-v2.min.css" asp-append-version="true" />
+
+    <!-- Other Styles -->
+    <link rel="stylesheet" href="~/css/sidebar-menu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/simplebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/google-icon.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/lightpick.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+</head>
+
+<body class="boxed-size">
+
+    <!-- Dynamic Navigation Menu -->
+    @await Component.InvokeAsync("Navigation")
+
+    @*@await Html.PartialAsync("~/Views/Shared/Dashboard/_Sidebar.cshtml")*@
+
+    <div class="container-fluid">
+        <div class="main-content d-flex flex-column">
+            @await Html.PartialAsync("~/Views/Shared/Dashboard/_Header.cshtml")
+            @RenderBody()
+
+            @await Html.PartialAsync("~/Views/Shared/Dashboard/_Footer.cshtml")
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- Kendo UI Scripts -->
+    <script src="~/lib/kendo/js/kendo.all.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/sidebar-menu.js" asp-append-version="true"></script>
+    <script src="~/js/simplebar.min.js" asp-append-version="true"></script>
+    <script src="~/js/moment.min.js" asp-append-version="true"></script>
+    <script src="~/js/lightpick.js" asp-append-version="true"></script>
+    <script src="~/js/custom/custom.js" asp-append-version="true"></script>
+    <script src="~/js/custom/kendocustom.js" asp-append-version="true"></script>
+
+    @RenderSection("externalhtml", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

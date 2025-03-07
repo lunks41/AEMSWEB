@@ -1,0 +1,372 @@
+﻿@{
+    ViewData["Title"] = $"Barge Management ";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Barges</h3>
+
+                <!-- Action Row -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div class="flex-grow-1" style="min-width: 200px;">
+                            <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                            <i class="mdi mdi-magnify"></i>Search
+                        </button>
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBargeModal" id="addrecord">
+                            <i class="mdi mdi-plus me-1"></i> Add Barge
+                        </button>
+                    </div>
+                </div>
+                <div id="grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section externalhtml {
+    <!-- Add/Edit Modal -->
+    <div class="modal fade" id="addBargeModal" tabindex="-1" aria-labelledby="addBargeModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBargeModalLabel">Barge Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="bargeForm">
+                        <input type="hidden" id="bargeId" />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="bargeCode" class="form-label">Barge Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="bargeCode" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="bargeName" class="form-label">Barge Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="bargeName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="bargeType" class="form-label">Barge Type</label>
+                                    <select id="bargeType" style="width: 100%"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="callSign" class="form-label">Call Sign</label>
+                                    <input type="text" class="form-control" id="callSign">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="imoCode" class="form-label">IMO Code</label>
+                                    <input type="text" class="form-control" id="imoCode">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="grt" class="form-label">GRT</label>
+                                    <input type="text" class="form-control" id="grt">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="licenseNo" class="form-label">License No</label>
+                                    <input type="text" class="form-control" id="licenseNo">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="flag" class="form-label">Flag</label>
+                                    <select id="flag" style="width: 100%"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="remarks" class="form-label">Remarks</label>
+                                    <textarea class="form-control" id="remarks" rows="2"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="isActive">
+                                    <label class="form-check-label" for="isActive">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Audit Fields -->
+                        <div class="accordion mt-3" id="auditAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                        Audit Details
+                                    </button>
+                                </h2>
+                                <div id="auditCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Created By</label>
+                                                <p id="createBy" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Created Date</label>
+                                                <p id="createDate" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Modified By</label>
+                                                <p id="editBy" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Modified Date</label>
+                                                <p id="editDate" class="form-control-plaintext"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnSave" onclick="saveBarge()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this barge?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+    let companyId = 0;
+    $(document).ready(function () {
+        companyId = getUrlParameter('companyId');
+        $('#bargeCode, #bargeName').on('input', checkMandatoryFields);
+        loadGrid();
+        loadDropdowns();
+        clearForm();
+    });
+
+    function loadGrid() {
+        const search = $('#txtsearch').val();
+        $('#grid').kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: `/Master/Barge/List?companyId=${companyId}&searchString=${search}`,
+                        dataType: "json"
+                    }
+                },
+                schema: {
+                    data: "data",
+                    total: "total"
+                },
+                pageSize: 20
+            },
+            height: 550,
+            pageable: true,
+            columns: [
+                {
+                    title: "Actions",
+                    template: function(dataItem) {
+                        return `
+                            <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.bargeId}', 'view')">
+                                <i class="mdi mdi-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.bargeId}', 'edit')">
+                                <i class="mdi mdi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteBarge('${dataItem.bargeId}')">
+                                <i class="mdi mdi-delete"></i>
+                            </button>
+                        `;
+                    },
+                    width: "150px"
+                },
+                { field: "bargeCode", title: "Code" },
+                { field: "bargeName", title: "Name" },
+                { field: "bargeType", title: "Type" },
+                { field: "callSign", title: "Call Sign" },
+                { field: "imoCode", title: "IMO Code" },
+                { field: "grt", title: "GRT" },
+                { field: "licenseNo", title: "License No" },
+                { field: "flag", title: "Flag" },
+                { field: "remarks", title: "Remarks" },
+                {
+                    field: "isActive",
+                    title: "Active",
+                    template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
+                }
+            ]
+        });
+    }
+
+    function loadDropdowns() {
+        // Barge Type Dropdown
+        $("#bargeType").kendoComboBox({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+                { text: "Cargo", value: "Cargo" },
+                { text: "Tanker", value: "Tanker" },
+                { text: "Special", value: "Special" }
+            ]
+        });
+
+        // Flag Dropdown
+        $("#flag").kendoComboBox({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+                { text: "Indonesia", value: "ID" },
+                { text: "Singapore", value: "SG" },
+                { text: "Malaysia", value: "MY" }
+            ]
+        });
+    }
+
+    function openModal(id, mode) {
+        $.get(`/Master/Barge/GetById?bargeId=${id}&companyId=${companyId}`)
+            .done(function(response) {
+                if (response.success) {
+                    const data = response.data;
+                    $('#bargeId').val(data.bargeId);
+                    $('#bargeCode').val(data.bargeCode);
+                    $('#bargeName').val(data.bargeName);
+                    $('#callSign').val(data.callSign);
+                    $('#imoCode').val(data.imoCode);
+                    $('#grt').val(data.grt);
+                    $('#licenseNo').val(data.licenseNo);
+                    $('#remarks').val(data.remarks);
+                    $('#isActive').prop('checked', data.isActive);
+
+                    // Set dropdown values
+                    $("#bargeType").data("kendoComboBox").value(data.bargeType);
+                    $("#flag").data("kendoComboBox").value(data.flag);
+
+                    // Audit fields
+                    $('#createBy').text(data.createBy || 'N/A');
+                    $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : 'N/A');
+                    $('#editBy').text(data.editBy || 'N/A');
+                    $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : 'N/A');
+
+                    setMode(mode);
+                    $('#addBargeModal').modal('show');
+                }
+            });
+    }
+
+    function setMode(mode) {
+        const isView = mode === 'view';
+        $('#bargeCode').prop('readonly', isView);
+        $('#bargeName').prop('readonly', isView);
+        $('#callSign').prop('readonly', isView);
+        $('#imoCode').prop('readonly', isView);
+        $('#grt').prop('readonly', isView);
+        $('#licenseNo').prop('readonly', isView);
+        $('#remarks').prop('readonly', isView);
+        $('#isActive').prop('disabled', isView);
+        $("#bargeType").data("kendoComboBox").enable(!isView);
+        $("#flag").data("kendoComboBox").enable(!isView);
+        $('#btnSave').toggle(!isView);
+        $('#btnEdit').toggle(isView);
+    }
+
+    function deleteBarge(id) {
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function() {
+            $.ajax({
+                url: `/Master/Barge/Delete?bargeId=${id}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function(response) {
+                    if (response.success) {
+                        loadGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveBarge() {
+        const data = {
+            BargeId: $('#bargeId').val() || 0,
+            BargeCode: $('#bargeCode').val(),
+            BargeName: $('#bargeName').val(),
+            CallSign: $('#callSign').val(),
+            IMOCode: $('#imoCode').val(),
+            GRT: $('#grt').val(),
+            LicenseNo: $('#licenseNo').val(),
+            BargeType: $("#bargeType").data("kendoComboBox").value(),
+            Flag: $("#flag").data("kendoComboBox").value(),
+            Remarks: $('#remarks').val(),
+            IsActive: $('#isActive').prop('checked'),
+            CompanyId: companyId
+        };
+
+        if (!data.BargeCode || !data.BargeName) {
+            alert('Barge Code and Name are required!');
+            return;
+        }
+
+        $.post("/Master/Barge/Save", data)
+            .done(function(response) {
+                if (response.success) {
+                    $('#addBargeModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            });
+    }
+
+    function clearForm() {
+        $('#bargeForm')[0].reset();
+        $('#bargeId').val(0);
+        $("#bargeType").data("kendoComboBox").value('');
+        $("#flag").data("kendoComboBox").value('');
+        $('#btnSave').prop('disabled', true);
+    }
+
+    function checkMandatoryFields() {
+        const isValid = $('#bargeCode').val().trim() && $('#bargeName').val().trim();
+        $('#btnSave').prop('disabled', !isValid);
+    }
+    </script>
+}

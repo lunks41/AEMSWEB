@@ -1,0 +1,57 @@
+﻿@model IEnumerable<AdmModule>
+
+<ul class="navbar-nav flex-grow-1">
+    @foreach (var module in Model)
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                @module.ModuleName
+            </a>
+            <div class="dropdown-menu">
+                @foreach (var categoryGroup in module.Transactions.GroupBy(t => t.TransCategory))
+                {
+                    <div class="dropdown-header">@categoryGroup.Key.TransCategoryName</div>
+                    @foreach (var transaction in categoryGroup)
+                    {
+                        <a class="dropdown-item"
+                           asp-controller="@module.ModuleCode"
+                           asp-action="@transaction.TransactionCode">
+                            @transaction.TransactionName
+                        </a>
+                    }
+                    <div class="dropdown-divider"></div>
+                }
+            </div>
+        </li>
+    }
+</ul>
+
+@*i'm 'using AdmModule*@
+
+@*@model IEnumerable<AdmModule>
+
+    <ul class="navbar-nav flex-grow-1">
+        @foreach (var module in Model)
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    @module.ModuleName
+                </a>
+                <div class="dropdown-menu">
+                    @foreach (var categoryGroup in module.Transactions.GroupBy(t => t.TransCategory))
+                    {
+                        <div class="dropdown-header">@categoryGroup.Key.TransCategoryName</div>
+                        @foreach (var transaction in categoryGroup)
+                        {
+                            <a class="dropdown-item"
+                               asp-controller="@module.ModuleCode"
+                               asp-action="@transaction.TransactionCode">
+                                @transaction.TransactionName
+                            </a>
+                        }
+                        <div class="dropdown-divider"></div>
+                    }
+                </div>
+            </li>
+        }
+    </ul>*@

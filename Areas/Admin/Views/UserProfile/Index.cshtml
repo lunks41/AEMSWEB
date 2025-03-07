@@ -1,0 +1,390 @@
+﻿@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<style>
+    /* CSS from Checklist Screen and Modal sections */
+    .checklist-container {
+        padding: 20px;
+    }
+
+    .search-filter {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .checklist-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .checklist-item {
+        padding: 15px;
+        background: #f0f0f0;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .status {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+        .status.pending {
+            background: red;
+        }
+
+        .status.completed {
+            background: green;
+        }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        width: 90%;
+        height: 90%;
+        padding: 20px;
+        border-radius: 10px;
+        overflow-y: auto;
+    }
+
+    .modal-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        padding: 10px;
+        background: #ddd;
+        border: none;
+        cursor: pointer;
+    }
+
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+
+    .tab-content {
+        padding: 20px;
+    }
+</style>
+
+<!-- Checklist Screen -->
+<div class="checklist-container">
+    <h2>Project Checklist</h2>
+    <div class="search-filter">
+        <input type="text" placeholder="Search checklists..." />
+        <select>
+            <option>All</option>
+            <option>Pending</option>
+            <option>Completed</option>
+        </select>
+    </div>
+    <div class="checklist-list">
+        @*@foreach (var checklist in Model.Checklists)
+            {
+                <div class="checklist-item" data-id="@checklist.Id">
+                    <span>@checklist.Name (@checklist.TaskCount)</span>
+                    <span class="status @checklist.Status.ToLower()"></span>
+                </div>
+            }*@
+    </div>
+    <button class="add-checklist" onclick="openChecklistModal(1);">+ Add New Checklist</button>
+</div>
+
+<!-- Full-Screen Modal -->
+<div class="modal" id="checklistModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Checklist Title</h3>
+            <button class="close-modal">X</button>
+        </div>
+        <div class="modal-tabs">
+            <button class="tab active" data-tab="checklist">Checklist</button>
+            <button class="tab" data-tab="update">Update Checklist</button>
+        </div>
+        <div class="modal-body">
+            <div class="tab-content" id="checklistTab">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task Name</th>
+                            <th>Status</th>
+                            <th>Documents</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="checklistTasks"></tbody>
+                </table>
+                <div class="documents">
+                    <h4>Documents</h4>
+                    <ul id="documentList"></ul>
+                </div>
+                <div class="progress">
+                    <span id="progressText">0% (0/0 tasks completed)</span>
+                    <progress id="progressBar" value="0" max="100"></progress>
+                </div>
+            </div>
+            <div class="tab-content" id="updateTab" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll" /></th>
+                            <th>Task Name</th>
+                            <th>Status</th>
+                            <th>Documents</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody id="updateTasks"></tbody>
+                </table>
+                <div class="upload-section">
+                    <h4>Upload Document</h4>
+                    <input type="file" id="fileUpload" accept=".pdf,.jpg" />
+                    <button id="uploadButton">Upload</button>
+                </div>
+                <button class="add-task">+ Add New Task</button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="save">Save</button>
+            <button class="cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript from Modal Trigger, Tab Switching, and Document Upload sections
+    document.querySelectorAll('.checklist-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const checklistId = this.getAttribute('data-id');
+            openChecklistModal(checklistId);
+        });
+    });
+
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+            document.getElementById(this.getAttribute('data-tab') + 'Tab').style.display = 'block';
+        });
+    });
+
+    function openChecklistModal(checklistId) {
+        document.getElementById('checklistModal').style.display = 'flex';
+    }
+
+    document.querySelector('.close-modal').addEventListener('click', function () {
+        document.getElementById('checklistModal').style.display = 'none';
+    });
+
+    document.getElementById('uploadButton').addEventListener('click', function () {
+        const file = document.getElementById('fileUpload').files[0];
+        if (file) {
+            console.log('Uploading:', file.name);
+            const li = document.createElement('li');
+            li.textContent = file.name;
+            document.getElementById('documentList').appendChild(li);
+        }
+    });
+</script>
+
+
+
+
+<!-- Existing CSS styles from previous implementations -->
+<!--<style>
+    /* Add these styles to your existing stylesheet */
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .form-section h5 {
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+    .form-check-input {
+        margin-top: 0.25rem;
+    }
+</style>-->
+
+<!-- Tab Navigation -->
+<!--<div class="tab-container mb-4 border-bottom pb-2">
+    <ul class="nav nav-pills flex-nowrap overflow-auto"
+        id="userManagementTabs"
+        role="tablist"
+        style="--bs-nav-pills-link-active-bg: #0d6efd; --bs-nav-pills-link-active-border-color: #0d6efd;">-->
+
+        <!-- Add other tabs here -->
+        <!--<li class="nav-item" role="presentation">
+            <button class="nav-link active"
+                    id="profile-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#profile"
+                    type="button"
+                    role="tab">
+                <i class="fas fa-user me-2"></i>User Profile
+            </button>
+        </li>-->
+        <!-- Other tabs -->
+    <!--</ul>
+</div>-->
+
+<!-- User Profile Content -->
+<!--<div class="tab-content mt-3">
+    <div class="tab-pane fade show active" id="profile" role="tabpanel">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-section">
+                    <h5>User Profile Information</h5>-->
+
+                    <!-- Profile Picture -->
+                    <!--<div class="text-center mb-4">
+                        <img src="~/images/default-profile.png"
+                             alt="Profile Picture"
+                             class="profile-picture"
+                             id="profilePreview">
+                        <div class="mt-3">
+                            <input type="file"
+                                   class="form-control"
+                                   id="profilePicture"
+                                   accept="image/*"
+                                   onchange="previewImage(this)">
+                        </div>
+                    </div>-->
+
+                    <!-- Form Fields -->
+                    <!--<div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="fullName"
+                                   placeholder="John Doe"
+                                   required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">User Code</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="userCode"
+                                   placeholder="USR-001"
+                                   required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Username</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="userName"
+                                   placeholder="johndoe123">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email"
+                                   class="form-control"
+                                   id="userEmail"
+                                   placeholder="johndoe@example.com"
+                                   pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel"
+                                   class="form-control"
+                                   id="phoneNumber"
+                                   placeholder="+1234567890"
+                                   pattern="[0-9]{10}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">User Group</label>
+                            <select class="form-select" id="userGroup">
+                                <option value="">Select Group</option>
+                                <option>Administrator</option>
+                                <option>Manager</option>
+                                <option>Staff</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="isActive"
+                                       checked>
+                                <label class="form-check-label" for="isActive">
+                                    Active User
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control"
+                                      id="remarks"
+                                      rows="3"
+                                      placeholder="Additional notes..."></textarea>
+                        </div>
+                    </div>-->
+
+                    <!-- Action Buttons -->
+                    <!--<div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-secondary me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Image preview function
+    function previewImage(input) {
+        const preview = document.getElementById('profilePreview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Form validation (basic example)
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        // Add your form submission logic here
+        alert('Form submitted! Implement your API call here.');
+    });
+</script>-->

@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AEMSWEB</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AEMSWEB.styles.css" asp-append-version="true" />
+    <link href="~/css/all.min.css" rel="stylesheet" />
+
+
+
+    <!-- Add the session timeout modal here -->
+    <div id="sessionTimeoutModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Session Expiration Warning</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Your session will expire in <span id="countdown">5:00</span> minutes.</p>
+                    <p>Do you want to continue your session?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="logoutNow()">Logout Now</button>
+                    <button type="button" class="btn btn-primary" onclick="continueSession()">Continue Session</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AEMSWEB</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Admin">Admin</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="User">Users</a>
+                            </li>
+                        }
+
+                        <!-- Dynamic Navigation Menu -->
+                        @await Component.InvokeAsync("Navigation")
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Master" asp-controller="AccountGroup" asp-action="Index">AccountGroup</a>
+                        </li>
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - AEMSWEB - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+
+
+    <!-- Add all session handling scripts here -->
+    <script>
+        // Session timeout settings (30 minutes total, 25 minutes for warning)
+        const totalTimeout = 30 * 60 * 1000; // 30 minutes
+        const warningTimeout = 25 * 60 * 1000; // Show warning after 25 minutes
+        let timeoutTimer;
+        let countdownTimer;
+        let lastActivity = Date.now();
+
+        // Activity detection events
+        ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
+            document.addEventListener(event, () => {
+                lastActivity = Date.now();
+                if($('#sessionTimeoutModal').is(':visible')) {
+                    continueSession();
+                }
+            });
+        });
+
+        // Check inactivity regularly
+        function checkInactivity() {
+            const currentTime = Date.now();
+            const elapsed = currentTime - lastActivity;
+
+            if(elapsed > warningTimeout && !$('#sessionTimeoutModal').is(':visible')) {
+                showTimeoutWarning(totalTimeout - elapsed);
+            }
+
+            if(elapsed > totalTimeout) {
+                triggerGlobalLogout();
+            }
+        }
+
+        // Show timeout warning modal
+        function showTimeoutWarning(timeLeft) {
+            const modal = new bootstrap.Modal(document.getElementById('sessionTimeoutModal'));
+            modal.show();
+
+            let seconds = Math.ceil(timeLeft / 1000);
+
+            countdownTimer = setInterval(() => {
+                seconds--;
+                if(seconds <= 0) {
+                    clearInterval(countdownTimer);
+                    triggerGlobalLogout();
+                }
+                document.getElementById('countdown').textContent =
+                    `${Math.floor(seconds/60)}:${(seconds%60).toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function continueSession() {
+            clearInterval(countdownTimer);
+            lastActivity = Date.now();
+            $('#sessionTimeoutModal').modal('hide');
+        }
+
+        function logoutNow() {
+            clearInterval(countdownTimer);
+            triggerGlobalLogout();
+        }
+
+        // Cross-tab logout functionality
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'logout-event') {
+                localStorage.removeItem('auth-data');
+                window.location.href = '@Url.Action("Login", "Account")';
+            }
+        });
+
+       function triggerGlobalLogout() {
+        // Cross-tab logout notification
+        localStorage.setItem('logout-event', Date.now());
+        localStorage.removeItem('logout-event');
+
+        // Submit the hidden form
+        document.getElementById('logoutForm').submit();
+    }
+
+    // Cross-tab logout listener
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'logout-event') {
+            window.location.href = '@Url.Action("Login", "Account")';
+        }
+    });
+
+        // Initialize check
+        setInterval(checkInactivity, 10000); // Check every 10 seconds
+        checkInactivity();
+    </script>
+</body>
+</html>

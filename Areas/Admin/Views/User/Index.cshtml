@@ -1,0 +1,350 @@
+﻿@{
+    ViewData["Title"] = $"Admin";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*https://www.jqueryscript.net/other/scrolling-bootstrap-tabs.html*@
+
+<ul class="nav nav-pills mb-4 border-bottom pb-2" id="invoicePills" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="main-pill" data-bs-toggle="pill" data-bs-target="#user" type="button" role="tab">
+            <i class="fas fa-calculator me-2"></i>User
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="usergroup-tab" data-bs-toggle="tab" data-bs-target="#usergroup" type="button" role="tab">
+            <i class="fas fa-coins me-2"></i>User Group
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="userrights-tab" data-bs-toggle="tab" data-bs-target="#userrights" type="button" role="tab">
+            <i class="fas fa-asterisk me-2"></i>User Rights
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="usergrouprights-tab" data-bs-toggle="tab" data-bs-target="#usergrouprights" type="button" role="tab">
+            <i class="fas fa-eye me-2"></i>User Group Rights
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Contents -->
+<div class="tab-content mt-3">
+    <!-- User Tab -->
+    <div class="tab-pane fade" id="user" role="tabpanel">
+        <div class="row g-3">
+            <!-- Basic Information -->
+            <div class="col-md-6">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" placeholder="John Doe" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">User Code</label>
+                <input type="text" class="form-control" placeholder="USR-001" required>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col-md-6">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" placeholder="johndoe123">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" placeholder="johndoe@example.com">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" placeholder="+1234567890" pattern="[0-9]{10}">
+            </div>
+
+            <!-- User Status -->
+            <div class="col-md-6">
+                <label class="form-label">Status</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="isActive">
+                    <label class="form-check-label" for="isActive">
+                        Active User
+                    </label>
+                </div>
+            </div>
+
+            <!-- User Group -->
+            <div class="col-md-6">
+                <label class="form-label">User Group</label>
+                <select class="form-select">
+                    <option selected>Select group</option>
+                    <option>Administrator</option>
+                    <option>Manager</option>
+                    <option>Staff</option>
+                    <option>Guest</option>
+                </select>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="col-12">
+                <label class="form-label">Remarks</label>
+                <textarea class="form-control" rows="3" placeholder="Additional notes..."></textarea>
+            </div>
+
+            <!-- Profile Picture -->
+            <div class="col-md-6">
+                <label class="form-label">Profile Photo</label>
+                <input class="form-control" type="file" accept="image/*">
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end mt-4">
+            <button type="button" class="btn btn-secondary me-2">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- User Group Tab -->
+    <div class="tab-pane fade" id="usergroup" role="tabpanel">
+        <div class="row g-3">
+            <!-- User Group Information -->
+            <div class="col-md-6">
+                <label class="form-label">User Group Code</label>
+                <input type="text" class="form-control" id="usergroupcode"
+                       placeholder="Enter group code" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">User Group Name</label>
+                <input type="text" class="form-control" id="usergroupname"
+                       placeholder="Enter group name" required>
+            </div>
+
+            <!-- Status and Remarks -->
+            <div class="col-md-6">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="isactive" checked>
+                    <label class="form-check-label" for="isactive">
+                        Active Group
+                    </label>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Remarks</label>
+                <textarea class="form-control" id="remarks" rows="3"
+                          placeholder="Add group description..."></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-12">
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="button" class="btn btn-secondary me-2">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Group</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Rights Tab -->
+    <div class="tab-pane fade" id="userrights" role="tabpanel">
+        <div class="table-responsive">
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>Select User:</label>
+                        @*@Html.DropDownList("UserId", ViewBag.Users as SelectList, new { @class = "form-control", id = "userDropdown" })*@
+                    </div>
+                    <div class="col-md-4">
+                        <label>Select Module:</label>
+                        @*@Html.DropDownList("ModuleId", ViewBag.Modules as SelectList, new { @class = "form-control", id = "moduleDropdown" })*@
+                    </div>
+                </div>
+
+                <table class="table table-bordered" id="rightsTable">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rightsTableBody">
+                        <!-- Rows will be populated dynamically using JavaScript -->
+                    </tbody>
+                    @*<tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.ModuleName</td>
+                                    <td>@item.TransactionName</td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsRead" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsCreate" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsEdit" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsDelete" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsExport" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsPrint" /></td>
+                                </tr>
+                            }
+                        </tbody>*@
+                </table>
+
+                <button class="btn btn-primary" id="saveButton">Save Rights</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- User Group Rights Tab -->
+    <div class="tab-pane fade" id="usergrouprights" role="tabpanel">
+        <div class="table-responsive">
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>Select User:</label>
+                        @*@Html.DropDownList("UserId", ViewBag.Users as SelectList, new { @class = "form-control", id = "userDropdown" })*@
+                    </div>
+                    <div class="col-md-4">
+                        <label>Select Module:</label>
+                        @*@Html.DropDownList("ModuleId", ViewBag.Modules as SelectList, new { @class = "form-control", id = "moduleDropdown" })*@
+                    </div>
+                </div>
+
+                <table class="table table-bordered" id="rightsTable">
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>Transaction</th>
+                            <th>View</th>
+                            <th>Create</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            <th>Export</th>
+                            <th>Print</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rightsTableBody">
+                        <!-- Rows will be populated dynamically using JavaScript -->
+                    </tbody>
+                    @*<tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.ModuleName</td>
+                                    <td>@item.TransactionName</td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsRead" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsCreate" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsEdit" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsDelete" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsExport" /></td>
+                                    <td><input type="checkbox" class="form-check-input" checked="@item.IsPrint" /></td>
+                                </tr>
+                            }
+                        </tbody>*@
+                </table>
+
+                <button class="btn btn-primary" id="saveButton">Save Rights</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        //$(document).ready(function () {
+        //$('#userDropdown, #moduleDropdown').change(function () {
+        //    loadRights();
+        //});
+
+        //$('#saveButton').click(function () {
+        //    saveRights();
+        //});
+
+        //function loadRights() {
+        //    const userId = $('#userDropdown').val();
+        //    const moduleId = $('#moduleDropdown').val();
+
+        //    $.get('/UserRights/GetRights', { userId: userId, moduleId: moduleId }, function (data) {
+        //        $('#rightsTable tbody').empty();
+        //        data.forEach(function (item) {
+        //            const row = `<tr>
+        //                    <td>${item.moduleName}</td>
+        //                    <td>${item.transactionName}</td>
+        //                    <td><input type="checkbox" ${item.isRead ? 'checked' : ''} class="form-check-input" /></td>
+        //                    <td><input type="checkbox" ${item.isCreate ? 'checked' : ''} class="form-check-input" /></td>
+        //                    <td><input type="checkbox" ${item.isEdit ? 'checked' : ''} class="form-check-input" /></td>
+        //                    <td><input type="checkbox" ${item.isDelete ? 'checked' : ''} class="form-check-input" /></td>
+        //                    <td><input type="checkbox" ${item.isPrint ? 'checked' : ''} class="form-check-input" /></td>
+        //                </tr>`;
+        //            $('#rightsTable tbody').append(row);
+        //        });
+        //    });
+        //}
+
+        //function saveRights() {
+        //    const rights = [];
+        //    $('#rightsTable tbody tr').each(function () {
+        //        const row = $(this);
+        //        rights.push({
+        //            ModuleId: $('#moduleDropdown').val(),
+        //            TransactionId: row.find('td:eq(1)').data('transaction-id'),
+        //            IsRead: row.find('td:eq(2) input').prop('checked'),
+        //            IsCreate: row.find('td:eq(3) input').prop('checked'),
+        //            IsEdit: row.find('td:eq(4) input').prop('checked'),
+        //            IsDelete: row.find('td:eq(5) input').prop('checked'),
+        //            IsPrint: row.find('td:eq(6) input').prop('checked')
+        //        });
+        //    });
+
+        //    $.post('/UserRights/Save', { userId: $('#userDropdown').val(), rights: rights }, function () {
+        //        alert('Rights saved successfully!');
+        //    });
+        //}
+        //});
+
+        document.addEventListener('DOMContentLoaded', function () {
+            populateTable();
+        });
+
+        function populateTable() {
+            // Example data, replace this with actual data
+            const rightsData = [
+                { moduleName: 'Module1', transactionName: 'Transaction1', isEdit: false, isCreate: true, isView: true, isPrint: false, isExport: true, isDelete: false },
+                { moduleName: 'Module2', transactionName: 'Transaction2', isEdit: true, isCreate: false, isView: true, isPrint: true, isExport: false, isDelete: false },
+                // Add more rows as needed
+            ];
+
+            const tableBody = document.getElementById('rightsTableBody');
+            rightsData.forEach((right) => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                                <td>${right.moduleName}</td>
+                                <td>${right.transactionName}</td>
+                                <td><input type="checkbox" ${right.isEdit ? 'checked' : ''}></td>
+                                <td><input type="checkbox" ${right.isCreate ? 'checked' : ''}></td>
+                                <td><input type="checkbox" ${right.isView ? 'checked' : ''}></td>
+                                <td><input type="checkbox" ${right.isPrint ? 'checked' : ''}></td>
+                                <td><input type="checkbox" ${right.isExport ? 'checked' : ''}></td>
+                                <td><input type="checkbox" ${right.isDelete ? 'checked' : ''}></td>
+                            `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function saveUserGroupRights() {
+            const tableBody = document.getElementById('rightsTableBody');
+            const rows = tableBody.querySelectorAll('tr');
+
+            const rightsData = Array.from(rows).map((row) => {
+                const cells = row.querySelectorAll('td');
+                return {
+                    moduleName: cells[0].innerText,
+                    transactionName: cells[1].innerText,
+                    isEdit: cells[2].querySelector('input').checked,
+                    isCreate: cells[3].querySelector('input').checked,
+                    isView: cells[4].querySelector('input').checked,
+                    isPrint: cells[5].querySelector('input').checked,
+                    isExport: cells[5].querySelector('input').checked,
+                    isDelete: cells[6].querySelector('input').checked,
+                };
+            });
+
+            // Process the rightsData as needed, for example, send it to the server
+            console.log(rightsData);
+        }
+    </script>
+}

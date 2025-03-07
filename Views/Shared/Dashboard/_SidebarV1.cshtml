@@ -1,0 +1,204 @@
+<!--@{
+    var modules = new List<dynamic>
+{
+        new
+        {
+            ModuleId = 2,
+            ModuleName = "Master",
+            Transactions = new List<dynamic>
+{
+                new { TransactionId = 201, TransactionName = "Bank", IsCreate = true, IsEdit = true, IsDelete = false, IsExport = true, IsPrint = false },
+                new { TransactionId = 202, TransactionName = "Port", IsCreate = true, IsEdit = false, IsDelete = false, IsExport = true, IsPrint = false },
+                new { TransactionId = 203, TransactionName = "ChartOfAccount", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "AccountGroup", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Voyage", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Vessel", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Uom", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Tax", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Product", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Port", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Department", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Barge", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Country", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Currency", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Designation", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "Gst", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 203, TransactionName = "OrderType", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+            }
+        },
+                 new {
+    ModuleId = 1,
+    ModuleName = "Job Order",
+    Transactions = new List<dynamic> {
+        new { TransactionId = 1, TransactionName = "Check List", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 14, TransactionName = "Job Order", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 14, TransactionName = "Job Reports", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+    }
+},
+         new {
+     ModuleId = 1,
+     ModuleName = "Tarif",
+     Transactions = new List<dynamic> {
+         new { TransactionId = 1, TransactionName = "Lunch", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+         new { TransactionId = 14, TransactionName = "Port", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+         new { TransactionId = 12, TransactionName = "Equiment", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+     }
+ },
+                 new {
+    ModuleId = 1,
+    ModuleName = "Task Reports",
+    Transactions = new List<dynamic> {
+        new { TransactionId = 1, TransactionName = "Lunch", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 14, TransactionName = "Port", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 12, TransactionName = "Equiment", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+    }
+},
+
+        new {
+            ModuleId = 25,
+            ModuleName = "AR",
+            Transactions = new List<dynamic> {
+                new { TransactionId = 1, TransactionName = "Invoice", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 2, TransactionName = "DebitNote", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 3, TransactionName = "CreditNote", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 4, TransactionName = "Adjustment", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 5, TransactionName = "Receipt", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 6, TransactionName = "Refund", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 7, TransactionName = "DocSetoff", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true }
+            }
+        },
+        new {
+            ModuleId = 26,
+            ModuleName = "AP",
+            Transactions = new List<dynamic> {
+                new { TransactionId = 1, TransactionName = "Invoice", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 2, TransactionName = "DebitNote", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+            }
+        },
+        new {
+            ModuleId = 1,
+            ModuleName = "CB",
+            Transactions = new List<dynamic> {
+                new { TransactionId = 1, TransactionName = "General Payment", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 14, TransactionName = "General Receipt", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+                new { TransactionId = 12, TransactionName = "Petty Cash", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+            }
+        },
+         new {
+     ModuleId = 1,
+     ModuleName = "GL",
+     Transactions = new List<dynamic> {
+         new { TransactionId = 1, TransactionName = "General Payment", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+         new { TransactionId = 14, TransactionName = "General Receipt", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+         new { TransactionId = 12, TransactionName = "Petty Cash", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+     }
+ },
+                 new {
+    ModuleId = 1,
+    ModuleName = "Admin",
+    Transactions = new List<dynamic> {
+        new { TransactionId = 1, TransactionName = "General Payment", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 14, TransactionName = "General Receipt", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 12, TransactionName = "Petty Cash", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+    }
+},                 new {
+    ModuleId = 1,
+    ModuleName = "Setting",
+    Transactions = new List<dynamic> {
+        new { TransactionId = 1, TransactionName = "General Payment", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 14, TransactionName = "General Receipt", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 12, TransactionName = "Petty Cash", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+    }
+},
+                                  new {
+    ModuleId = 1,
+    ModuleName = "HRMS",
+    Transactions = new List<dynamic> {
+        new { TransactionId = 1, TransactionName = "Employee", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 14, TransactionName = "General Receipt", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+        new { TransactionId = 12, TransactionName = "Petty Cash", IsCreate = true, IsEdit = true, IsDelete = true, IsExport = true, IsPrint = true },
+    }
+},
+    };
+}
+
+<div class="sidebar-area" id="sidebar-area">
+    <div class="logo position-relative">
+        <a href="/dashboard" class="d-block text-decoration-none position-relative">
+            <img src="~/images/logo-icon.png" alt="logo-icon" />
+            <span class="logo-text fw-bold text-dark">AMES</span>
+            <span id="sidebarCompanyName" class="company-name"></span>
+        </a>
+        <button class="sidebar-burger-menu bg-transparent p-0 border-0 opacity-0 z-n1 position-absolute top-50 end-0 translate-middle-y" id="sidebar-burger-menu">
+            <i data-feather="x"></i>
+        </button>
+    </div>
+
+    <aside id="layout-menu" class="layout-menu menu-vertical menu active" data-simplebar>
+        <ul class="menu-inner">
+            <li class="menu-item @(Context.Request.Path.StartsWithSegments("/dashboard") ? "open" : "")">
+                <a href="javascript:void(0);"
+                   class="menu-link menu-toggle @(Context.Request.Path.StartsWithSegments("/dashboard") ? "active" : "")">
+                    <span class="material-symbols-outlined menu-icon">dashboard</span>
+                    <span class="title">Dashboard</span>
+                </a>
+
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="/dashboard/finance"
+                           class="menu-link @(Context.Request.Path == "/dashboard/finance" ? "active" : "")">
+                            Finance
+                        </a>
+                    </li>
+                    <li class="menu-item mb-0">
+                        <a href="/dashboard/hrm"
+                           class="menu-link @(Context.Request.Path == "/dashboard/hrm" ? "active" : "")">
+                            HRM
+                        </a>
+                    </li>
+                    <li class="menu-item mb-0">
+                        <a href="/dashboard/sales"
+                           class="menu-link @(Context.Request.Path == "/dashboard/sales" ? "active" : "")">
+                            Sales
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            @foreach (var module in modules)
+            {
+            <li class="menu-item @(Context.Request.Path.StartsWithSegments($"/{@module.ModuleName.ToLower()}") ? "open" : "")">
+                <a href="javascript:void(0);"
+                   class="menu-link menu-toggle @(Context.Request.Path.StartsWithSegments($"/{@module.ModuleName.ToLower()}") ? "active" : "")">
+                    <span class="title">@module.ModuleName</span>
+                </a>
+
+                <ul class="menu-sub">
+                    @foreach (var transaction in module.Transactions)
+                        {
+                    <li class="menu-item">
+                        <a asp-area="@module.ModuleName.ToLower()"
+                           asp-controller="@transaction.TransactionName.ToLower()"
+                           asp-action="Index"
+                           class="menu-link @(Context.Request.Path == $"/{module.ModuleName.ToLower()}/{transaction.TransactionName.ToLower()}/Index" ? "active" : "")">
+                            @transaction.TransactionName
+                        </a>
+                    </li>
+                        }
+                </ul>
+            </li>
+            }
+
+            <li class="menu-item">
+                <form asp-controller="Auth" asp-action="Logout" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()-->
+ <!-- Add anti-forgery token -->
+<!--<button type="submit" class="menu-link" style="background: none; border: none; cursor: pointer;">
+                        <span class="material-symbols-outlined menu-icon">logout</span>
+                        <span class="title">Logout</span>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+</div>-->

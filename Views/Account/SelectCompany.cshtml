@@ -1,0 +1,23 @@
+﻿@model List<AEMSWEB.Models.AdmCompany>
+@{
+    ViewData["Title"] = "Select Company";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="account-container">
+    <div class="account-box">
+        <h2 class="text-center mb-4">Select Company</h2>
+        <form asp-action="SetCompany" method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <select name="companyId" class="form-select form-select-lg">
+                    @foreach (var company in Model)
+                    {
+                        <option value="@company.CompanyId">@company.CompanyName</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Continue</button>
+        </form>
+    </div>
+</div>

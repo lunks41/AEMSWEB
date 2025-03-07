@@ -1,0 +1,108 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using AEMSWEB.Extension;
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<AdmUser> signInManager;
+
+@{
+    // Get companyId from the URL route
+    var companyId = HttpContextAccessor.HttpContext.GetRouteValue("companyId")?.ToString();
+    var companies = Context.Session.GetObject<List<AEMSWEB.Models.AdmCompany>>("AvailableCompanies");
+    var currentCompany = companies?.FirstOrDefault(c => c.CompanyId.ToString() == companyId);
+}
+
+<ul class="navbar-nav ms-auto align-items-center">
+    @if (signInManager.IsSignedIn(User))
+    {
+        @if (User.Identity.IsAuthenticated)
+        {
+           <div class="nav-item dropdown">
+               <a class="nav-link dropdown-toggle" href="#" id="companyDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                   <i class="bi bi-building"></i>
+                   @(currentCompany?.CompanyName ?? "Select Company")
+               </a>
+               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="companyDropdown">
+                   @if (companies != null)
+                   {
+                       @foreach (var company in companies)
+                       {
+                           <li>
+                               <form asp-controller="Account" asp-action="SwitchCompany"
+                                     method="post"
+                                     onsubmit="switchCompanyAndOpenNewTab(event, '@company.CompanyId')">
+                                   @Html.AntiForgeryToken()
+                                   <button type="submit" class="dropdown-item @(company.CompanyId.ToString() == companyId ? "active" : "")">
+                                       @company.CompanyName
+                                       @if (company.CompanyId.ToString() == companyId)
+                                       {
+                                           <i class="bi bi-check2 float-end"></i>
+                                       }
+                                   </button>
+                               </form>
+                           </li>
+                       }
+                   }
+                   else
+                   {
+                       <li><span class="dropdown-item-text">No companies available</span></li>
+                   }
+               </ul>
+           </div>
+        }
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="javascript:triggerGlobalLogout()">Logout</a>
+
+            <form id="logoutForm" class="d-none" asp-controller="Account" asp-action="Logout" method="post">
+                @Html.AntiForgeryToken()
+                @*<button type="submit" class="btn btn-link nav-link text-dark p-0">Logout</button>*@
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">
+                Login
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">
+                Register
+            </a>
+        </li>
+    }
+</ul>
+
+<script>
+    function switchCompanyAndOpenNewTab(event, newcompanyId) {
+        debugger;
+        event.preventDefault();
+        const form = event.target;
+        const originalPath = window.location.pathname; // Get the original page's path
+
+        $.ajax({
+            url: '/account/SwitchCompany',
+            method: 'POST',
+            data: {
+                companyId: newcompanyId,
+                originalPath: originalPath // Send the original path
+            },
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                if (response) {
+                    debugger;
+                    window.open(response.url, '_blank');
+                } else {
+                    alert('An error occurred while SwitchCompany the company selection.');
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Failed to SwitchCompany company selection: ' + xhr.responseText);
+            }
+        });
+    }
+</script>
