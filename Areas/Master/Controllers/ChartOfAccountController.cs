@@ -2,8 +2,7 @@
 using AEMSWEB.Areas.Master.Models;
 using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
-using AEMSWEB.Models;
-using AEMSWEB.Repository;
+using AEMSWEB.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AEMSWEB.Areas.Master.Controllers
@@ -14,14 +13,12 @@ namespace AEMSWEB.Areas.Master.Controllers
         private readonly ILogger<ChartOfAccountController> _logger;
         private readonly IChartOfAccountService _ChartOfAccountService;
 
-        public ChartOfAccountController(ILogger<ChartOfAccountController> logger, IRepository<TransactionViewModel> repository, IChartOfAccountService ChartOfAccountService)
-            : base(logger, repository)
+        public ChartOfAccountController(ILogger<ChartOfAccountController> logger, IBaseService baseService, IChartOfAccountService ChartOfAccountService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _ChartOfAccountService = ChartOfAccountService;
         }
-
-        protected override string TransactionCode => "chartcfaccount";
 
         public async Task<IActionResult> Index()
         {

@@ -1,5 +1,5 @@
-﻿using AEMSWEB.Models;
-using AEMSWEB.Repository;
+﻿using AEMSWEB.IServices;
+using AEMSWEB.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
@@ -11,17 +11,12 @@ namespace AEMSWEB.Controllers
         protected byte CompanyId { get; private set; }
         protected string UserId { get; private set; }
         protected readonly ILogger<BaseController> _logger;
+        private readonly IBaseService _baseService;
 
-        // Assume _repository is injected via constructor in your actual implementation
-        protected readonly IRepository<TransactionViewModel> _repository; // Add your repository interface
-
-        // Define TransactionCode as an abstract property that derived controllers must implement
-        protected abstract string TransactionCode { get; }
-
-        public BaseController(ILogger<BaseController> logger, IRepository<TransactionViewModel> repository)
+        public BaseController(ILogger<BaseController> logger, IBaseService baseService)
         {
             _logger = logger;
-            _repository = repository;
+            _baseService = baseService;
         }
 
         public override async void OnActionExecuting(ActionExecutingContext context)
@@ -52,7 +47,7 @@ namespace AEMSWEB.Controllers
                 return;
             }
 
-            //// Fetch sidebar and permission data
+            //// Fetch sidebar and base data
             //var modulesResponse = await _repository.GetQueryAsync<TransactionViewModel>(
             //    $"exec Adm_GetUserTransactions_All {CompanyId}, '1'"
             //);
@@ -88,7 +83,7 @@ namespace AEMSWEB.Controllers
 
             //    ViewBag.Modules = moduleViews;
 
-            //    // Check permissions using transaction data
+            //    // Check bases using transaction data
             //    if (!string.IsNullOrEmpty(TransactionCode))
             //    {
             //        var allTransactions = moduleViews
@@ -103,8 +98,8 @@ namespace AEMSWEB.Controllers
             //        }
 
             //        var actionName = context.ActionDescriptor.RouteValues["action"];
-            //        var requiredPermission = GetRequiredPermission(actionName);
-            //        bool hasPermission = requiredPermission switch
+            //        var requiredBase = GetRequiredBase(actionName);
+            //        bool hasBase = requiredBase switch
             //        {
             //            "IsView" => true, // View access if transaction exists
             //            "IsCreate" => transaction.IsCreate,
@@ -114,7 +109,7 @@ namespace AEMSWEB.Controllers
             //            _ => false
             //        };
 
-            //        if (!hasPermission)
+            //        if (!hasBase)
             //        {
             //            context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
             //            return;
@@ -130,7 +125,24 @@ namespace AEMSWEB.Controllers
             base.OnActionExecuting(context);
         }
 
-        protected string GetRequiredPermission(string actionName)
+        protected async Task<UserGroupRightsViewModel> HasPermission(Int16 companyId, Int32 userId, Int16 moduleId, Int16 transactionId)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return null;
+
+            return await _baseService.ValidateScreen(companyId, userId, moduleId, transactionId);
+            //return await _baseService.HasPermission(User.Identity.Name, module, permissionType);
+        }
+
+        //protected async Task EnsurePermission(Int16 companyId, Int32 userId, Int16 moduleId, Int16 transactionId)
+        //{
+        //    if (!await HasPermission(companyId, userId, moduleId, transactionId))
+        //    {
+        //        throw new UnauthorizedAccessException("You don't have permission to perform this action");
+        //    }
+        //}
+
+        protected string GetRequiredBase(string actionName)
         {
             return actionName switch
             {
@@ -139,7 +151,7 @@ namespace AEMSWEB.Controllers
                 "Edit" => "IsEdit",
                 "Delete" => "IsDelete",
                 "Print" => "IsPrint",
-                _ => "IsView" // Default to view permission
+                _ => "IsView" // Default to view base
             };
         }
     }
@@ -169,8 +181,8 @@ namespace AEMSWEB.Controllers
 //            // Get action name correctly
 //            var actionName = context.ActionDescriptor.RouteValues["action"];
 
-//            // Verify permissions
-//            if (!CheckPermissions(actionName))
+//            // Verify bases
+//            if (!CheckBases(actionName))
 //            {
 //                context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
 //            }
@@ -184,14 +196,14 @@ namespace AEMSWEB.Controllers
 //            return Guid.TryParse(companyCode, out var guid) ? guid : Guid.Empty;
 //        }
 
-//        private bool CheckPermissions(string actionName)
+//        private bool CheckBases(string actionName)
 //        {
-//            var requiredPermission = GetRequiredPermission(actionName);
-//            var permissions = HttpContext.Session.GetObject<Dictionary<string, bool>>("Permissions");
-//            return permissions?.ContainsKey(requiredPermission) == true && permissions[requiredPermission];
+//            var requiredBase = GetRequiredBase(actionName);
+//            var bases = HttpContext.Session.GetObject<Dictionary<string, bool>>("Bases");
+//            return bases?.ContainsKey(requiredBase) == true && bases[requiredBase];
 //        }
 
-//        protected string GetRequiredPermission(string actionName)
+//        protected string GetRequiredBase(string actionName)
 //        {
 //            return actionName switch
 //            {
@@ -200,7 +212,7 @@ namespace AEMSWEB.Controllers
 //                "Edit" => "IsEdit",
 //                "Delete" => "IsDelete",
 //                "Print" => "IsPrint",
-//                _ => "IsView" // Default permission
+//                _ => "IsView" // Default base
 //            };
 //        }
 //    }

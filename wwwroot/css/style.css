@@ -156,6 +156,11 @@ This files table contents are outlined below>>>>>
     --bs-form-valid-border-color: #37d80a;
     --bs-form-invalid-color: #fd5812;
     --bs-form-invalid-border-color: #fd5812;
+    --p-color-text-brand: #3a4252;
+    --p-color-nav-bg-surface-active: #f6f7f9;
+    --p-space-200: 8px;
+    --p-motion-duration-150: 0.15s;
+    --p-motion-ease-out: ease-out;
 }
 
 [data-bs-theme="dark"] {
@@ -212,6 +217,11 @@ This files table contents are outlined below>>>>>
     --bs-form-valid-border-color: #75b798;
     --bs-form-invalid-color: #ea868f;
     --bs-form-invalid-border-color: #ea868f;
+    --p-color-text-brand: #3a4252;
+    --p-color-nav-bg-surface-active: #f6f7f9;
+    --p-space-200: 8px;
+    --p-motion-duration-150: 0.15s;
+    --p-motion-ease-out: ease-out;
 }
 
 *,
@@ -3169,7 +3179,7 @@ progress {
 }
 
 .form-label {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .col-form-label {
@@ -15759,10 +15769,10 @@ img {
 .form-control {
     background-color: #fff;
     border: 1px solid #d5d9e2;
-    height: 40px;
+    height: 35px;
     color: #3a4252 !important;
     font-size: 12px;
-    padding: 12px 16px;
+    padding: 10px 10px;
     width: 100%;
     transition: all ease 0.5s;
     border-radius: 7px;
@@ -15809,8 +15819,8 @@ textarea.form-control {
 
     .form-check .form-check-input {
         border: 2px solid #64748b;
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
         cursor: pointer;
     }
 
@@ -16325,7 +16335,7 @@ Custom Font Size Area Style
 }
 
 .fs-16 {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .fs-17 {
@@ -16585,7 +16595,7 @@ Custom Hover Area Style
     cursor: pointer;
     line-height: 40px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     width: 100%;
 }
 
@@ -16849,7 +16859,7 @@ Scroll Bar Style
 
     .faq-wrapper.accordion .accordion-item .accordion-header .accordion-button {
         border-radius: 7px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
     }
 
@@ -17123,7 +17133,7 @@ Swiper Slider Style
             border: 1px solid #e2e8f0;
             max-width: 36px;
             text-align: center;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             color: #5b5b98;
             border-radius: 4px;
@@ -17151,7 +17161,7 @@ Swiper Slider Style
             .product-quantity .add-to-cart-counter .minusBtn::before,
             .product-quantity .add-to-cart-counter .plusBtn::before {
                 content: "\ea13";
-                font-size: 16px;
+                font-size: 14px;
             }
 
             .product-quantity .add-to-cart-counter .minusBtn:hover,
@@ -17163,7 +17173,7 @@ Swiper Slider Style
 
             .product-quantity .add-to-cart-counter .minusBtn::before {
                 content: "\f1af";
-                font-size: 16px;
+                font-size: 14px;
             }
 
 .for-light-logo {
@@ -17532,6 +17542,14 @@ Swiper Slider Style
 }
 /** Sidebar Menu Area
 ===================================**/
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .menu-vertical .menu-sub .menu-item .menu-link.active::before {
+        left: 12px;
+    }
+}
+
 .sidebar-area {
     position: fixed;
     top: 0;
@@ -17580,8 +17598,8 @@ Swiper Slider Style
         font-size: 13px;
         font-weight: 500;
         color: #3a4252;
-        padding: 10px;
-        border-radius: 5px;
+        padding: 8px;
+        border-radius: 8px;
         white-space: nowrap;
         transition: all ease 0.5s;
     }
@@ -17666,7 +17684,9 @@ Swiper Slider Style
         }
 
         .menu-vertical .menu-item .menu-link:hover {
-            background-color: #f5f5f9;
+            /*background-color: #f5f5f9;*/
+            background-color: var(--p-color-nav-bg-surface-active, #f6f7f9);
+            color: var(--p-color-text-brand, #3a4252);
         }
 
     .menu-vertical .menu-item.open .menu-link {
@@ -17674,7 +17694,11 @@ Swiper Slider Style
     }
 
         .menu-vertical .menu-item.open .menu-link.active {
-            background-color: #f6f7f9;
+            /*background-color: #f6f7f9;*/
+            color: #3a4252; /* Fallback for --p-color-text-brand */
+            color: var(--p-color-text-brand, #3a4252);
+            background-color: #f6f7f9; /* Fallback for --p-color-nav-bg-surface-active */
+            background-color: var(--p-color-nav-bg-surface-active, #f6f7f9);
         }
 
             .menu-vertical .menu-item.open .menu-link.active .title {
@@ -17737,9 +17761,26 @@ Swiper Slider Style
             }
 
                 .menu-vertical .menu-sub .menu-item .menu-link.active::before {
-                    opacity: 1;
-                    border-color: #605dff;
+                  /*  opacity: 1;
+                    border-color: #605dff;*/
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    left: 18px;
+                    transform: translateY(-50%);
+                    width: 6px;
+                    height: 6px;
+                    background-color: #605dff; /* Bullet point color */
+                    border-radius: 50%;
                 }
+
+                        .menu-vertical .menu-link .title {
+                            display: -webkit-box;
+                            overflow: hidden;
+                            -webkit-line-clamp: 1;
+                            -webkit-box-orient: vertical;
+                            word-break: break-word;
+                        }
 
                 .menu-vertical .menu-sub .menu-item .menu-link.active::after {
                     border-color: #fff;
@@ -20914,12 +20955,12 @@ Swiper Slider Style
     text-align: center;
     background-color: #f4f5fa;
     color: #000000;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .calendar-content th {
     background-color: #f4f5fa;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -21325,7 +21366,7 @@ Swiper Slider Style
         border: 1px solid #ecf0ff;
         max-width: 50px;
         text-align: center;
-        font-size: 16px;
+        font-size: 14px;
         border: 0;
     }
 
@@ -24639,13 +24680,13 @@ i {
     .single-testimonials p {
         margin-bottom: 22px;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 1.9;
     }
 
     .single-testimonials .review-info h4,
     .single-testimonials .review-info .h4 {
-        font-size: 16px;
+        font-size: 14px;
         margin-bottom: 5px;
     }
 

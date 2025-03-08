@@ -178,7 +178,7 @@
         function loadGrid() {
             let searchString = $('#txtsearch').val();
             const gridname = 'grid';
-            const url = "/Master/AccountSetup/List";
+            const url = '@Url.Action("List", "AccountSetup", new { area = "Master" })';
             const columns = [
                 {
                     title: "Actions",

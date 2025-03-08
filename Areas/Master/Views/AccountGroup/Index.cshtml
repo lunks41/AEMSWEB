@@ -3,6 +3,15 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    bool canExport = ViewBag.IsExport ?? false;
+    bool canPrint = ViewBag.IsPrint ?? false;
+}
+
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -26,9 +35,12 @@
 
                     <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAccountGroupModal" id="addrecord">
-                            <i class="mdi mdi-plus me-1"></i> Add
-                        </button>
+                        @if (canCreate)
+                        {
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAccountGroupModal" id="addrecord">
+                                <i class="mdi mdi-plus me-1"></i> Add
+                            </button>
+                        }
                     </div>
                 </div>
                 <div id="grid"></div>
@@ -94,19 +106,19 @@
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label class="form-label">Created By</label>
+                                                <label for="createBy" class="form-label">Created By</label>
                                                 <p id="createBy" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Created Date</label>
+                                                <label for="createDate" class="form-label">Created Date</label>
                                                 <p id="createDate" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Modified By</label>
+                                                <label for="editBy" class="form-label">Modified By</label>
                                                 <p id="editBy" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Modified Date</label>
+                                                <label for="editDate" class="form-label">Modified Date</label>
                                                 <p id="editDate" class="form-control-plaintext"></p>
                                             </div>
                                         </div>
@@ -149,210 +161,186 @@
 @section Scripts {
     <script>
         let companyId = 0;
-        $(document).ready(function () {
-            debugger;
-            companyId = getUrlParameter('companyId');
-            $('#accGroupCode, #accGroupName').on('input', checkMandatoryFields);
-            loadGrid();
-            clearForm();
-            setDefaultValues();
-            window.clearForm = clearForm;
-        });
+        let permissions = {};
+    $(document).ready(function () {
+        companyId = getUrlParameter('companyId') || 0;
+        debugger;
+        permissions = {
+            canCreate: @Json.Serialize(canCreate),
+            canEdit: @Json.Serialize(canEdit),
+            canDelete: @Json.Serialize(canDelete),
+            canRead: @Json.Serialize(canRead),
+        };
 
-        function setDefaultValues() {
-            clearForm();
-            document.getElementById('isActive').checked = true;
-            document.getElementById('btnSave').disabled = false;
-        }
+        $('#accGroupCode, #accGroupName').on('input', checkMandatoryFields);
+        loadGrid();
+        setDefaultValues();
+        clearForm();
 
-        function handleEnterKey(event) {
-            if (event.key === 'Enter') {
-                loadGrid();
-            }
-        }
-        function clearSearch() {
-            $('#txtsearch').val('');
-            loadGrid();
-        }
-
-        function loadGrid() {
-            let searchString = $('#txtsearch').val();
-            const gridname = 'grid';
-            const url = '@Url.Action("List", "AccountGroup", new { area = "Master" })';
-            const columns = [
-                {
-                    title: "Actions",
-                    width: "150px",
-                    template: function (dataItem) {
-                        return `
-                <button class="ps-0 border-0 bg-transparent lh-1 position-relative top-2" onclick="openModal('${dataItem.accGroupId}', 'view')">
-                        <i class="material-symbols-outlined fs-16 menu-icon" style="color: blue;">visibility</i>
-                </button>
-                <button class="ps-0 border-0 bg-transparent lh-1 position-relative top-2" onclick="openModal('${dataItem.accGroupId}', 'edit')">
-                    <i class="material-symbols-outlined fs-16 menu-icon" style="color: orange;">edit</i>
-                </button>
-                <button class="ps-0 border-0 bg-transparent lh-1 position-relative top-2" onclick="deleteAccountGroup('${dataItem.accGroupId}')">
-                        <i class="material-symbols-outlined fs-16 menu-icon" style="color: red;">delete</i>
-                </button>
-                                                                                        `;
-                    },
-                    width: "150px"
-                },
-                { field: "accGroupCode", title: "Code" },
-                { field: "accGroupName", title: "Name" },
-                { field: "seqNo", title: "Sequence" },
-                { field: "remarks", title: "Remarks" },
-                {
-                    field: "isActive",
-                    title: "Active",
-                    template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
-                }
-            ];
-
-            const params = {
-                searchString: searchString,
-                companyId: companyId
-                //pageSize: 20,
-                //pageNumber: 1
-            };
-            initializeKendoGrid(gridname, url, params, columns);
-        }
-
-        function openModal(id, mode) {
-
-            $.ajax({
-                url: '@Url.Action("GetById", "AccountGroup", new { area = "Master" })',
-                type: "GET",
-                data: { accGroupId: id, companyId: companyId },
-                success: function (response) {
-                    if (response.success) {
-                        const data = response.data;
-                        populateModalFields(data)
-                        setMode(mode);
-                        $('#addAccountGroupModal').modal('show');
-                    }
-                }
-            });
-
-            //$.get(`/Master/AccountGroup/GetById?accGroupId=${id}&companyId=${companyId}`)
-            //    .done(function (response) {
-            //        if (response.success) {
-            //            const data = response.data;
-            //            populateModalFields(data)
-            //            setMode(mode);
-            //            $('#addAccountGroupModal').modal('show');
-            //        }
-            //    });
-        }
-
-        function populateModalFields(data) {
-            debugger;
-            $('#accGroupId').val(data.accGroupId);
-            $('#accGroupCode').val(data.accGroupCode);
-            $('#accGroupName').val(data.accGroupName);
-            $('#seqNo').val(data.seqNo);
-            $('#remarks').val(data.remarks);
-            $('#isActive').prop('checked', data.isActive);
-
-            // Load Details History (always read-only)
-            $('#createBy').text(data.createBy || "N/A");
-            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-            $('#editBy').text(data.editBy || "N/A");
-            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
-
-            checkMandatoryFields();
-        }
-
-        function setMode(mode) {
-            const isView = mode === 'view';
-            $('#accGroupCode').prop('readonly', isView);
-            $('#accGroupName').prop('readonly', isView);
-            $('#seqNo').prop('readonly', isView);
-            $('#remarks').prop('readonly', isView);
-            $('#isActive').prop('disabled', isView);
-            $('#btnSave').toggle(!isView);
-            $('#btnEdit').toggle(isView);
-            $('#btnClose').show();
-            $('#btnClear').toggle(!isView);
-        }
-
-        $('#btnEdit').on('click', function () {
-            setMode("edit");
-        });
-
-        $('#btnClose').on('click', function () {
-            $('#addAccountGroupModal').modal('hide');
-        });
-
+        $('#btnEdit').on('click', function () { setMode("edit"); });
+        $('#btnClose').on('click', function () { $('#addAccountGroupModal').modal('hide'); });
         $('#addrecord').on('click', function () {
             clearForm();
             setDefaultValues();
-            $('#btnClose').show();
-            $('#btnClear').show();
-            $('#btnSave').show();
-            $('#btnEdit').hide();
+            $('#addAccountGroupModal').modal('show');
         });
+    });
 
-        function deleteAccountGroup(id) {
-            $('#confirmationModal').modal('show');
-            $('#confirmDelete').off('click').click(function () {
-                $.ajax({
-                    url:  `/Master/AccountGroup/Delete?accGroupId=${id}&companyId=${companyId}`,
-                    type: "DELETE",
-                    success: function (response) {
-                        if (response.success) {
-                            loadGrid();
-                            $('#confirmationModal').modal('hide');
-                        }
+    function setDefaultValues() {
+        clearForm();
+        $('#isActive').prop('checked', true);
+        $('#btnSave').prop('disabled', false);
+    }
+
+    function handleEnterKey(event) {
+        if (event.key === 'Enter') loadGrid();
+    }
+
+    function clearSearch() {
+        $('#txtsearch').val('');
+        loadGrid();
+    }
+
+    function loadGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("List", "AccountGroup", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
                     }
-                });
-            });
-        }
 
-        function saveAccountGroup() {
-            const data = {
-                AccGroupId: parseInt($('#accGroupId').val()) || 0,
-                AccGroupCode: $('#accGroupCode').val(),
-                AccGroupName: $('#accGroupName').val(),
-                SeqNo: parseInt($('#seqNo').val()) || 0,
-                Remarks: $('#remarks').val(),
-                IsActive: $('#isActive').prop('checked')
-            };
-
-            if (!data.AccGroupCode || !data.AccGroupName) {
-                alert('Code and Name are required!');
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("Save", "AccountGroup", new { area = "Master" })',
-                type: "POST",
-                data: JSON.stringify({ accountGroup: data, companyId: companyId }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    if (response.success) {
-                        $('#addAccountGroupModal').modal('hide');
-                        loadGrid();
-                        clearForm();
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountGroup('${dataItem.accGroupId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
                     }
-                },
-                error: function (error) {
-                    alert("Error: " + error.responseText);
+                    return buttons;
+                }
+            },
+            { field: "accGroupCode", title: "Code" },
+            { field: "accGroupName", title: "Name" },
+            { field: "seqNo", title: "Sequence" },
+            { field: "remarks", title: "Remarks" },
+            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        initializeKendoGrid("grid", url, { searchString, companyId }, columns);
+    }
+
+    function openModal(id, mode) {
+        $.get('@Url.Action("GetById", "AccountGroup", new { area = "Master" })', { accGroupId: id, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateModalFields(response.data);
+                    setMode(mode);
+                    $('#addAccountGroupModal').modal('show');
                 }
             });
+    }
 
+    function populateModalFields(data) {
+        $('#accGroupId').val(data.accGroupId);
+        $('#accGroupCode').val(data.accGroupCode);
+        $('#accGroupName').val(data.accGroupName);
+        $('#seqNo').val(data.seqNo);
+        $('#remarks').val(data.remarks);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createBy').text(data.createBy || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editBy').text(data.editBy || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+        checkMandatoryFields();
+    }
+
+    function setMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#accGroupCode, #accGroupName, #seqNo, #remarks').prop('readonly', !canEdit);
+        $('#isActive').prop('disabled', !canEdit);
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteAccountGroup(id) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
         }
 
-        function clearForm() {
-            $('#accountGroupForm')[0].reset();
-            $('#accGroupId').val(0);
-            $('#btnSave').prop('disabled', true);
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/AccountGroup/Delete?accGroupId=${id}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveAccountGroup() {
+        let data = {
+            AccGroupId: parseInt($('#accGroupId').val()) || 0,
+            AccGroupCode: $('#accGroupCode').val().trim(),
+            AccGroupName: $('#accGroupName').val().trim(),
+            SeqNo: parseInt($('#seqNo').val()) || 0,
+            Remarks: $('#remarks').val(),
+            IsActive: $('#isActive').prop('checked')
+        };
+
+        if (!data.AccGroupCode || !data.AccGroupName) {
+            alert('Code and Name are required!');
+            return;
         }
 
-        function checkMandatoryFields() {
-            const isValid = $('#accGroupCode').val().trim() && $('#accGroupName').val().trim();
-            $('#btnSave').prop('disabled', !isValid);
-        }
+        $.ajax({
+            url: '@Url.Action("Save", "AccountGroup", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ accountGroup: data, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addAccountGroupModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+
+    function clearForm() {
+        $('#accountGroupForm')[0].reset();
+        $('#accGroupId').val(0);
+        $('#createBy').text('');
+        $('#createDate').text('');
+        $('#editBy').text('');
+        $('#editDate').text('');
+        $('#btnSave').prop('disabled', true);
+    }
+
+    function checkMandatoryFields() {
+        let isValid = $('#accGroupCode').val().trim() && $('#accGroupName').val().trim();
+        $('#btnSave').prop('disabled', !isValid);
+    }
     </script>
+
 }

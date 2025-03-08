@@ -1,3 +1,4 @@
+using AEMSWEB.IServices;
 using AEMSWEB.Models;
 using AEMSWEB.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -11,13 +12,11 @@ namespace AEMSWEB.Controllers
     {
         private readonly ILogger<DashboardController> _logger;
 
-        public DashboardController(ILogger<DashboardController> logger, IRepository<TransactionViewModel> repository)
-            : base(logger, repository)
+        public DashboardController(ILogger<DashboardController> logger, IBaseService baseService)
+            : base(logger, baseService)
         {
             _logger = logger;
         }
-
-        protected override string TransactionCode => "country";
 
         public IActionResult Finance()
         {

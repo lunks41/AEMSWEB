@@ -4,6 +4,8 @@ namespace AEMSWEB.IServices
 {
     public interface IBaseService
     {
-        UserGroupRightsViewModel ValidateScreen(Int16 companyId, Int16 ModuleId, Int16 TransactionId, Int32 userId);
+        Task<UserGroupRightsViewModel> ValidateScreen(Int16 companyId, Int32 userId, Int16 ModuleId, Int16 TransactionId);
+
+        //<bool> HasPermission(string username, string module, string permissionType);
     }
 }

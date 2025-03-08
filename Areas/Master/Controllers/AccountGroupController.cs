@@ -1,5 +1,8 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,13 +12,12 @@ namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class AccountGroupController : Controller
+    public class AccountGroupController : BaseController
     {
         private readonly ILogger<AccountGroupController> _logger;
         private readonly IAccountGroupService _AccountGroupService;
 
-        public AccountGroupController(ILogger<AccountGroupController> logger, IAccountGroupService AccountGroupService)
-
+        public AccountGroupController(ILogger<AccountGroupController> logger, IBaseService baseService, IAccountGroupService AccountGroupService) : base(logger, baseService)
         {
             _logger = logger;
             _AccountGroupService = AccountGroupService;
@@ -24,10 +26,31 @@ namespace AEMSWEB.Areas.Master.Controllers
         // GET: /master/AccountGroup/Index
         public async Task<IActionResult> Index()
         {
+            var companyId = HttpContext.Session.GetString("CurrentCompany");
+            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            {
+                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
+            }
+
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+            var permissions = await HasPermission(companyIdShort, parsedUserId, (short)E_Modules.Master, (short)E_Master.AccountGroup);
+
+            ViewBag.IsRead = permissions.IsRead;
+            ViewBag.IsCreate = permissions.IsCreate;
+            ViewBag.IsEdit = permissions.IsEdit;
+            ViewBag.IsDelete = permissions.IsDelete;
+            ViewBag.IsExport = permissions.IsExport;
+            ViewBag.IsPrint = permissions.IsPrint;
+
             return View();
         }
 
-        [HttpGet("List")]
+        [HttpGet("AccountGroup/List")]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
         {
             try
@@ -101,6 +124,11 @@ namespace AEMSWEB.Areas.Master.Controllers
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] SaveAccountGroupViewModel model)
         {
+            //if (!await _permissionService.HasPermission(User.Identity.Name, "AccountGroup", "Edit"))
+            //{
+            //    return Forbid();
+            //}
+
             if (model == null)
             {
                 return Json(new { success = false, message = "Data operation failed due to null model." });
@@ -158,6 +186,10 @@ namespace AEMSWEB.Areas.Master.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(short accGroupId, string companyId)
         {
+            //if (!await _permissionService.HasPermission(User.Identity.Name, "AccountGroup", "Delete"))
+            //{
+            //    return Forbid();
+            //}
             if (accGroupId <= 0)
             {
                 return BadRequest(new { success = false, message = "Invalid ID." });

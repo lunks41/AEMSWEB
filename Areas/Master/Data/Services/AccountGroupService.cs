@@ -68,7 +68,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountGroupViewModel>($"SELECT AccGroupId,AccGroupCode,AccGroupName,CompanyId,SeqNo,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_AccountGroup WHERE AccGroupId={AccGroupId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountGroup}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountGroupViewModel>($"SELECT M_ACC.AccGroupId,M_ACC.AccGroupCode,M_ACC.AccGroupName,M_ACC.SeqNo,M_ACC.CompanyId,M_ACC.Remarks,M_ACC.IsActive,M_ACC.CreateById,M_ACC.CreateDate,M_ACC.EditById,M_ACC.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountGroup M_ACC  LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACC.EditById WHERE M_ACC.AccGroupId={AccGroupId} AND M_ACC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountGroup}))");
 
                 return result;
             }

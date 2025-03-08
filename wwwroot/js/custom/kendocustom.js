@@ -32,6 +32,7 @@ function getCookie(name) {
 }
 
 function initializeKendoGrid(gridId, url, params, columns) {
+    debugger;
     $("#" + gridId).kendoGrid({
         dataSource: {
             transport: {
