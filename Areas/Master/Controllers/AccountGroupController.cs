@@ -40,12 +40,12 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
             var permissions = await HasPermission(companyIdShort, parsedUserId, (short)E_Modules.Master, (short)E_Master.AccountGroup);
 
-            ViewBag.IsRead = permissions.IsRead;
-            ViewBag.IsCreate = permissions.IsCreate;
-            ViewBag.IsEdit = permissions.IsEdit;
-            ViewBag.IsDelete = permissions.IsDelete;
-            ViewBag.IsExport = permissions.IsExport;
-            ViewBag.IsPrint = permissions.IsPrint;
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.IsExport = permissions?.IsExport ?? false;
+            ViewBag.IsPrint = permissions?.IsPrint ?? false;
 
             return View();
         }

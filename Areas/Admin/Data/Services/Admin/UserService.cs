@@ -6,6 +6,7 @@ using AEMSWEB.IServices.Admin;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Admin;
 using AEMSWEB.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 using BC = BCrypt.Net.BCrypt;
@@ -23,6 +24,8 @@ namespace AEMSWEB.Services.Admin
             _context = context; _logService = logService;
         }
 
+        #region User
+
         public async Task<UserViewModelCount> GetUserListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             UserViewModelCount countViewModel = new UserViewModelCount();
@@ -30,7 +33,7 @@ namespace AEMSWEB.Services.Admin
             {
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUser A_Usr INNER JOIN dbo.AdmUserGroup A_UsrG ON A_UsrG.UserGroupId = A_Usr.UserGroupId WHERE A_Usr.UserId<>0 AND (A_Usr.UserName LIKE '%{searchString}%' OR A_Usr.UserCode LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%' OR A_UsrG.UserGroupName LIKE '%{searchString}%')");
 
-                var result = await _repository.GetQueryAsync<UserViewModel>($"SELECT A_Usr.UserId,A_Usr.UserCode,A_Usr.UserName,A_Usr.UserEmail,A_Usr.Remarks,A_Usr.IsActive,A_Usr.UserGroupId,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_Usr.CreateById,A_Usr.CreateDate,A_Usr.EditById,A_Usr.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUser A_Usr INNER JOIN dbo.AdmUserGroup A_UsrG ON A_UsrG.UserGroupId = A_Usr.UserGroupId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_Usr.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_Usr.EditById WHERE A_Usr.UserId<>0 AND (A_Usr.UserName LIKE '%{searchString}%' OR A_Usr.UserCode LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%' OR A_UsrG.UserGroupName LIKE '%{searchString}%') ORDER BY A_Usr.UserName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<UserViewModel>($"SELECT A_Usr.UserId,A_Usr.UserCode,A_Usr.FullName,A_Usr.UserName,A_Usr.UserEmail,A_Usr.Remarks,A_Usr.IsActive,A_Usr.UserGroupId,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_Usr.CreateById,A_Usr.CreateDate,A_Usr.EditById,A_Usr.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUser A_Usr INNER JOIN dbo.AdmUserGroup A_UsrG ON A_UsrG.UserGroupId = A_Usr.UserGroupId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_Usr.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_Usr.EditById WHERE A_Usr.UserId<>0 AND (A_Usr.UserName LIKE '%{searchString}%' OR A_Usr.UserCode LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%' OR A_UsrG.UserGroupName LIKE '%{searchString}%') ORDER BY A_Usr.UserName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "Success";
@@ -61,11 +64,11 @@ namespace AEMSWEB.Services.Admin
             }
         }
 
-        public async Task<AdmUser> GetUserByIdAsync(short CompanyId, short UserId)
+        public async Task<UserViewModel> GetUserByIdAsync(short CompanyId, short UserId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<AdmUser>($"SELECT Id,UserCode,UserName,UserEmail,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.AdmUser WHERE Id={UserId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<UserViewModel>($"SELECT A_Usr.UserId,A_Usr.UserCode,A_Usr.FullName,A_Usr.UserName,A_Usr.UserEmail,A_Usr.Remarks,A_Usr.IsActive,A_Usr.UserGroupId,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_Usr.CreateById,A_Usr.CreateDate,A_Usr.EditById,A_Usr.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUser A_Usr INNER JOIN dbo.AdmUserGroup A_UsrG ON A_UsrG.UserGroupId = A_Usr.UserGroupId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_Usr.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_Usr.EditById WHERE A_Usr.UserId={UserId}");
 
                 return result;
             }
@@ -91,15 +94,125 @@ namespace AEMSWEB.Services.Admin
             }
         }
 
-        public async Task<SqlResponse> DeleteUserAsync(short CompanyId, short UserId, AdmUser admUser)
+        public async Task<SqlResponse> SaveUserAsync(short UserId, AdmUser admUser, string password)
+        {
+            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                bool IsEdit = false;
+                try
+                {
+                    if (admUser.Id != 0)
+                    {
+                        IsEdit = true;
+                    }
+
+                    if (IsEdit)
+                    {
+                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.AdmUser WHERE Id<>0 AND UserId={admUser.Id} ");
+
+                        if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
+                        {
+                            var entityHead = _context.Update(admUser);
+                            entityHead.Property(b => b.CreateById).IsModified = false;
+                        }
+                        else
+                            return new SqlResponse { Result = -1, Message = "User Not Found" };
+                    }
+                    else
+                    {
+                        // Take the Next Id From SQL
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>("SELECT ISNULL((SELECT TOP 1 (Id + 1) FROM dbo.AdmUser WHERE (Id + 1) NOT IN (SELECT Id FROM dbo.AdmUser)),1) AS NextId");
+
+                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
+                        {
+                            admUser.Id = Convert.ToInt16(sqlMissingResponse.NextId);
+                            admUser.EditById = null;
+                            admUser.EditDate = null;
+
+                            // Generate PasswordHash, SecurityStamp, and ConcurrencyStamp
+                            var passwordHasher = new PasswordHasher<AdmUser>();
+                            admUser.PasswordHash = passwordHasher.HashPassword(admUser, password);
+                            admUser.SecurityStamp = Guid.NewGuid().ToString();
+                            admUser.ConcurrencyStamp = Guid.NewGuid().ToString();
+
+                            _context.Add(admUser);
+                        }
+                        else
+                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                    }
+
+                    var saveChangeRecord = _context.SaveChanges();
+
+                    #region Save AuditLog
+
+                    if (saveChangeRecord > 0)
+                    {
+                        // Saving Audit log
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = 0,
+                            ModuleId = (short)E_Modules.Admin,
+                            TransactionId = (short)E_Admin.User,
+                            DocumentId = admUser.Id,
+                            DocumentNo = admUser.UserCode,
+                            TblName = "AdmUser",
+                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                            Remarks = "User Save Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                    }
+
+                    #endregion Save AuditLog
+
+                    return new SqlResponse();
+                }
+                catch (Exception ex)
+                {
+                    _context.ChangeTracker.Clear();
+
+                    var errorLog = new AdmErrorLog
+                    {
+                        CompanyId = 0,
+                        ModuleId = (short)E_Modules.Admin,
+                        TransactionId = (short)E_Admin.User,
+                        DocumentId = admUser.Id,
+                        DocumentNo = admUser.UserCode,
+                        TblName = "AdmUser",
+                        ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                        Remarks = ex.Message + ex.InnerException?.Message,
+                        CreateById = UserId
+                    };
+                    _context.Add(errorLog);
+                    _context.SaveChanges();
+
+                    throw;
+                }
+            }
+        }
+
+        public async Task<SqlResponse> DeleteUserAsync(short CompanyId, short UserId, UserViewModel admUser)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {
-                    if (admUser.Id > 0)
+                    if (admUser.UserId > 0)
                     {
-                        var UserToRemove = _context.AdmUser.Where(x => x.Id == admUser.Id).ExecuteUpdate(setPropertyCalls: setters => setters.SetProperty(b => b.IsActive, false).SetProperty(b => b.EditById, UserId).SetProperty(b => b.EditDate, DateTime.Now));
+                        var UserToRemove = _context.AdmUser.Where(x => x.Id == admUser.UserId).ExecuteUpdate(setPropertyCalls: setters => setters.SetProperty(b => b.IsActive, false).SetProperty(b => b.EditById, UserId).SetProperty(b => b.EditDate, DateTime.Now));
 
                         if (UserToRemove > 0)
                         {
@@ -108,7 +221,7 @@ namespace AEMSWEB.Services.Admin
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Admin.User,
-                                DocumentId = admUser.Id,
+                                DocumentId = admUser.UserId,
                                 DocumentNo = admUser.UserCode,
                                 TblName = "AdmUser",
                                 ModeId = (short)E_Mode.Delete,
@@ -164,16 +277,18 @@ namespace AEMSWEB.Services.Admin
             return BC.HashPassword(userCode.ToLower().Trim() + password.Trim());
         }
 
-        #region
+        #endregion User
+
+        #region User Group
 
         public async Task<UserGroupViewModelCount> GetUserGroupListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             UserGroupViewModelCount countViewModel = new UserGroupViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUserGroup A_UsrG WHERE (A_UsrG.UserGroupName LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%') AND A_UsrG.Id<>0");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUserGroup A_UsrG WHERE (A_UsrG.UserGroupName LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%') AND A_UsrG.UserGroupId<>0");
 
-                var result = await _repository.GetQueryAsync<UserGroupViewModel>($"SELECT A_UsrG.Id,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_UsrG.Remarks,A_UsrG.IsActive,A_UsrG.CreateById,A_UsrG.CreateDate,A_UsrG.EditById,A_UsrG.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUserGroup A_UsrG LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_UsrG.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_UsrG.EditById WHERE (A_UsrG.UserGroupName LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%') AND A_UsrG.Id<>0 ORDER BY A_UsrG.UserGroupName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<UserGroupViewModel>($"SELECT A_UsrG.UserGroupId,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_UsrG.Remarks,A_UsrG.IsActive,A_UsrG.CreateById,A_UsrG.CreateDate,A_UsrG.EditById,A_UsrG.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUserGroup A_UsrG LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_UsrG.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_UsrG.EditById WHERE (A_UsrG.UserGroupName LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%') AND A_UsrG.UserGroupId<>0 ORDER BY A_UsrG.UserGroupName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "Success";
@@ -204,11 +319,11 @@ namespace AEMSWEB.Services.Admin
             }
         }
 
-        public async Task<AdmUserGroup> GetUserGroupByIdAsync(short CompanyId, short UserId, Int16 Id)
+        public async Task<UserGroupViewModel> GetUserGroupByIdAsync(short CompanyId, short UserId, Int16 Id)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<AdmUserGroup>($"SELECT Id,UserGroupCode,UserGroupName,IsActive,Remarks,CreateById,CreateDate,EditById,EditDate FROM dbo.AdmUserGroup WHERE Id={Id}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<UserGroupViewModel>($"SELECT A_UsrG.UserGroupId,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_UsrG.Remarks,A_UsrG.IsActive,A_UsrG.CreateById,A_UsrG.CreateDate,A_UsrG.EditById,A_UsrG.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUserGroup A_UsrG LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_UsrG.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_UsrG.EditById WHERE A_UsrG.UserGroupId={Id}");
 
                 return result;
             }
@@ -234,7 +349,7 @@ namespace AEMSWEB.Services.Admin
             }
         }
 
-        public async Task<SqlResponse> SaveUserGroupAsync(short CompanyId, short UserId, AdmUserGroup admUserGroup)
+        public async Task<SqlResponse> SaveUserGroupAsync(short UserId, AdmUserGroup admUserGroup)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -247,7 +362,7 @@ namespace AEMSWEB.Services.Admin
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.AdmUserGroup WHERE Id<>0 AND Id={admUserGroup.Id} ");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.AdmUserGroup WHERE Id<>0 AND UserId={admUserGroup.Id} ");
 
                         if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                         {
@@ -282,7 +397,7 @@ namespace AEMSWEB.Services.Admin
                         //Saving Audit log
                         var auditLog = new AdmAuditLog
                         {
-                            CompanyId = CompanyId,
+                            CompanyId = 0,
                             ModuleId = (short)E_Modules.Admin,
                             TransactionId = (short)E_Admin.UserGroup,
                             DocumentId = admUserGroup.Id,
@@ -318,7 +433,7 @@ namespace AEMSWEB.Services.Admin
 
                     var errorLog = new AdmErrorLog
                     {
-                        CompanyId = CompanyId,
+                        CompanyId = 0,
                         ModuleId = (short)E_Modules.Admin,
                         TransactionId = (short)E_Admin.UserGroup,
                         DocumentId = admUserGroup.Id,
@@ -336,15 +451,15 @@ namespace AEMSWEB.Services.Admin
             }
         }
 
-        public async Task<SqlResponse> DeleteUserGroupAsync(short CompanyId, short UserId, AdmUserGroup UserGroup)
+        public async Task<SqlResponse> DeleteUserGroupAsync(short CompanyId, short UserId, UserGroupViewModel UserGroup)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {
-                    if (UserGroup.Id > 0)
+                    if (UserGroup.UserGroupId > 0)
                     {
-                        var UserGroupToRemove = _context.AdmUserGroup.Where(x => x.Id == UserGroup.Id).ExecuteDelete();
+                        var UserGroupToRemove = _context.AdmUserGroup.Where(x => x.Id == UserGroup.UserGroupId).ExecuteDelete();
 
                         if (UserGroupToRemove > 0)
                         {
@@ -353,7 +468,7 @@ namespace AEMSWEB.Services.Admin
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Admin.UserGroup,
-                                DocumentId = UserGroup.Id,
+                                DocumentId = UserGroup.UserGroupId,
                                 DocumentNo = UserGroup.UserGroupCode,
                                 TblName = "AdmUserGroup",
                                 ModeId = (short)E_Mode.Delete,
@@ -404,7 +519,9 @@ namespace AEMSWEB.Services.Admin
             }
         }
 
-        #endregion
+        #endregion User Group
+
+        #region User Rights
 
         public async Task<IEnumerable<UserRightsViewModel>> GetUserRightsByIdAsync(short CompanyId, short UserId, int SelectedUserId)
         {
@@ -506,6 +623,10 @@ namespace AEMSWEB.Services.Admin
             }
         }
 
+        #endregion User Rights
+
+        #region User Group Rights
+
         public async Task<IEnumerable<UserGroupRightsViewModel>> GetUserGroupRightsByIdAsync(short CompanyId, short UserId, int SelectedUserId, int SelectedGroupId)
         {
             try
@@ -548,7 +669,7 @@ namespace AEMSWEB.Services.Admin
                         entry.State = EntityState.Detached;
                     }
 
-                    await _repository.GetQueryAsync<SqlResponseIds>($"DELETE FROM dbo.AdmUserGroupRights WHERE  UserGroupId={UserGroupId}");
+                    await _repository.GetQueryAsync<SqlResponseIds>($"DELETE FROM dbo.AdmUserGroupRights WHERE  UserGroupUserId={UserGroupId}");
 
                     _context.AdmUserGroupRights.AddRange(admUserGroupRights);
                     var saveResult = await _context.SaveChangesAsync();
@@ -603,5 +724,7 @@ namespace AEMSWEB.Services.Admin
                 }
             }
         }
+
+        #endregion User Group Rights
     }
 }

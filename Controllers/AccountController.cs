@@ -52,7 +52,10 @@ namespace AEMSWEB.Controllers
             try
             {
                 _logger.LogInformation("Login attempt for {Email}", model.Email);
-                var user = await _userManager.FindByNameAsync(model.Email);
+                // Normalize the username for lookup
+                var normalizedUserName = model.Email.ToUpperInvariant();
+                var user = await _userManager.FindByNameAsync(normalizedUserName);
+                //var user = await _userManager.FindByNameAsync(model.Email);
 
                 if (user == null)
                 {
@@ -81,8 +84,7 @@ namespace AEMSWEB.Controllers
                     await _signInManager.SignInAsync(user, authProperties);
                     _logger.LogInformation("Successful login for {Email}", model.Email);
 
-
-                    //Get all Companies 
+                    //Get all Companies
                     //var companies = await _context.AdmCompany.ToListAsync();
                     //HttpContext.Session.SetObject("AvailableCompanies", companies);
 

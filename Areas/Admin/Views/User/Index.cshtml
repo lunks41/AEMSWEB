@@ -3,6 +3,21 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    bool canExport = ViewBag.IsExport ?? false;
+    bool canPrint = ViewBag.IsPrint ?? false;
+}
+
+<style>
+    .hidden-column {
+        display: none;
+    }
+</style>
+
 @*https://www.jqueryscript.net/other/scrolling-bootstrap-tabs.html*@
 
 <ul class="nav nav-pills mb-4 border-bottom pb-2" id="invoicePills" role="tablist">
@@ -34,25 +49,11 @@
     <div class="tab-pane fade" id="user" role="tabpanel">
         <div class="row g-3">
             <div class="d-flex justify-content-between mb-3">
-                <h5>User Management</h5>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <button class="btn btn-primary" data-bs-toggle="modal" id="adduserrecord" data-bs-target="#addUserModal">
                     <i class="fas fa-plus"></i> Add User
                 </button>
             </div>
-            <table class="table table-bordered" id="usersTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Group</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data loaded via AJAX -->
-                </tbody>
-            </table>
+            <div id="usergrid"></div>
         </div>
     </div>
 
@@ -60,25 +61,11 @@
     <div class="tab-pane fade" id="usergroup" role="tabpanel">
         <div class="row g-3">
             <div class="d-flex justify-content-between mb-3">
-                <h5>User Management</h5>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserGroupModal">
+                <button class="btn btn-primary" data-bs-toggle="modal" id="addusergrouprecord" data-bs-target="#addUserGroupModal">
                     <i class="fas fa-plus"></i> Add User Group
                 </button>
             </div>
-            <table class="table table-bordered" id="usersTable">
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Remarks</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data loaded via AJAX -->
-                </tbody>
-            </table>
+            <div id="usergroupgrid"></div>
         </div>
     </div>
 
@@ -128,17 +115,6 @@
                         <label class="form-label">User Group</label>
                         <select id="cmb_usergroup"></select>
                     </div>
-                    <!-- Clone Rights Button -->
-                    <!--<div class="col-md-3">-->
-                    <!-- Using an empty label for vertical spacing/alignment -->
-                    <!--<label class="form-label d-block">&nbsp;</label>
-                        <button class="btn btn-secondary btn-block" onclick="cloneRights()">Clone Rights</button>
-                    </div>-->
-                    <!-- Save Rights Button -->
-                    <!--<div class="col-md-3">
-                        <label class="form-label d-block">&nbsp;</label>
-                        <button class="btn btn-primary btn-block" onclick="saveGroupRights()">Save Rights</button>
-                    </div>-->
                     <div class="col-md-6 d-flex justify-content-end align-items-center">
                         <button class="btn btn-secondary mr-3" onclick="cloneRights()">Clone Rights</button>
                         <button class="btn btn-primary" onclick="saveGroupRights()">Save Rights</button>
@@ -147,6 +123,8 @@
                 <table class="table table-bordered" id="userGroupRightsTable">
                     <thead>
                         <tr>
+                            <th class="hidden-column">ModuleId</th>
+                            <th class="hidden-column">TransactionId
                             <th>Module</th>
                             <th>Transaction</th>
                             <th>View</th>
@@ -193,11 +171,11 @@
                             <!-- Contact Information -->
                             <div class="col-md-6">
                                 <label class="form-label">Username</label>
-                                <input type="text" id="username" class="form-control" placeholder="johndoe123">
+                                <input type="text" id="userName" class="form-control" placeholder="johndoe123">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
-                                <input type="email" id="email" class="form-control" placeholder="johndoe@example.com">
+                                <input type="email" id="userEmail" class="form-control" placeholder="johndoe@example.com">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number</label>
@@ -218,14 +196,19 @@
                             <!-- User Group -->
                             <div class="col-md-6">
                                 <label class="form-label">User Group</label>
-                                <select id="userGroup" class="form-select">
-                                    <option selected>Select group</option>
-                                    <option>Administrator</option>
-                                    <option>Manager</option>
-                                    <option>Staff</option>
-                                    <option>Guest</option>
-                                </select>
+                                <select id="cmb_usergroup_user"></select>
                             </div>
+
+                            @*<div class="col-md-6">
+                                    <label class="form-label">User Group</label>
+                                    <select id="userGroup" class="form-select">
+                                        <option selected>Select group</option>
+                                        <option>Administrator</option>
+                                        <option>Manager</option>
+                                        <option>Staff</option>
+                                        <option>Guest</option>
+                                    </select>
+                                </div>*@
 
                             <!-- Additional Information -->
                             <div class="col-12">
@@ -277,7 +260,8 @@
                 <div class="modal-footer">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="saveUser()">Save</button>
+                        <button type="button" class="btn btn-primary" id="btnUserEdit">Edit</button>
+                        <button type="button" class="btn btn-primary" id="btnUserSave" onclick="saveUser()">Save</button>
                     </div>
                 </div>
             </div>
@@ -293,7 +277,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <form id="userForm">
+                    <form id="userGroupForm">
                         <input type="hidden" id="userGroupId" />
                         <div class="row g-3">
                             <!-- User Group Information -->
@@ -361,7 +345,8 @@
                 <div class="modal-footer">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="saveUserGroup()">Save</button>
+                        <button type="button" class="btn btn-primary" id="btnUserGroupEdit">Edit</button>
+                        <button type="button" class="btn btn-primary" id="btnUserGroupSave" onclick="saveUserGroup()">Save</button>
                     </div>
                 </div>
             </div>
@@ -424,7 +409,19 @@
         // Optionally, load the rights when the page or tab loads.
         $(document).ready(function () {
             companyId = getUrlParameter('companyId');
+
+            debugger;
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
             Refresh();
+            loadUserGrid();
+            loadUserGroupGrid();
+
             // Initialize both user dropdowns
             $("#cmb_usergroup, #cmb_user_group").kendoComboBox({
                 change: function () {
@@ -441,6 +438,332 @@
                 change: loadGroupRights
             });
         });
+
+        //############# USER ###################//
+
+        function loadUserGrid() {
+            debugger;
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("UserList", "User", new { area = "Admin" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userId}', 'view')">
+                     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userId}', 'edit')">
+                     <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteUser('${dataItem.userId}')">
+                     <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "fullName", title: "Full Name" },
+                { field: "userCode", title: "Code" },
+                { field: "userName", title: "Name" },
+                { field: "userEmail", title: "Email" },
+                { field: "userGroupName", title: "Group Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            initializeKendoGrid("usergrid", url, { searchString, companyId }, columns);
+        }
+
+        function openModal(id, mode) {
+            $.get('@Url.Action("GetUserById", "User", new { area = "Admin" })', { selectedUserId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        userPopulateModalFields(response.data);
+                        setMode(mode);
+                        $('#addUserModal').modal('show');
+                    }
+                });
+        }
+
+        function userPopulateModalFields(data) {
+            $('#userId').val(data.userId);
+            $('#fullName').val(data.fullName);
+            $('#userCode').val(data.userCode);
+            $('#userName').val(data.userName);
+            $('#userEmail').val(data.userEmail);
+            $("#cmb_usergroup_user").data("kendoComboBox").value(data.userGroupId);
+            $('#phoneNumber').val(data.phoneNumber);
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+           // checkMandatoryFields();
+        }
+
+        function setMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#fullName,#userCode, #userName, #userEmail, #remarks,#phoneNumber').prop('readonly', !canEdit);
+            $("#cmb_usergroup_user").data("kendoComboBox").enable(!isView);
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnUserSave').toggle(canEdit);
+            $('#btnUserEdit').toggle(isView && permissions.canEdit);
+            $('#btnClose').show();
+            $('#btnClear').hide();
+        }
+
+        $('#btnUserEdit').on('click', function () {
+            setMode("edit");
+        });
+
+        $('#btnClose').on('click', function () {
+            $('#addUserModal').modal('hide');
+        });
+
+        $('#adduserrecord').on('click', function () {
+            clearUserForm();
+            setDefaultUserValues();
+            $('#btnClose').show();
+            $('#btnUserSave').show();
+            $('#btnUserEdit').hide();
+        });
+
+        function setDefaultUserValues() {
+            clearUserForm();
+            document.getElementById('isActive').checked = true;
+            document.getElementById('btnUserSave').disabled = false;
+        }
+
+        function clearUserForm() {
+            $('#userForm')[0].reset();
+            $('#userId').val(0);
+            $("#cmb_usergroup_user").data("kendoComboBox").value('');
+            $('#btnUserSave').prop('disabled', true);
+        }
+
+        function deleteAccountGroup(id) {
+            if (!permissions.canDelete) {
+                alert('You do not have permission to delete records.');
+                return;
+            }
+
+            $('#confirmationModal').modal('show');
+            $('#confirmDelete').off('click').click(function () {
+                $.ajax({
+                    url: `/Admin/User/DeleteUser?selectedUserId=${id}&companyId=${companyId}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.success) {
+                            loadGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveAccountGroup() {
+            let data = {
+                UserId: parseInt($('#userId').val()) || 0,
+                UserCode: $('#userCode').val().trim(),
+                UserName: $('#userName').val().trim(),
+                FullName: $('#fullName').val().trim(),
+                UserEmail: $('#userEmail').val().trim(),
+                UserGroupId: $("#cmb_usergroup_user").data("kendoComboBox").value(),
+                PhoneNumber: $('#phoneNumber').val().trim(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            if (!data.UserCode || !data.UserName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveUser", "User", new { area = "Admin" })',
+                type: "POST",
+                data: JSON.stringify({ modal: data }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#addUserModal').modal('hide');
+                        loadUserGrid();
+                        clearUserForm();
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+
+        //############# USER ###################//
+
+        //############# USER Group###################//
+
+        function loadUserGroupGrid() {
+            debugger;
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("UserGroupList", "User", new { area = "Admin" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userGroupId}', 'view')">
+                     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userGroupId}', 'edit')">
+                     <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteUserGroup('${dataItem.userGroupId}')">
+                     <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "userGroupCode", title: "Code" },
+                { field: "userGroupName", title: "Name" },
+                { field: "userGroupGroupName", title: "Group Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            initializeKendoGrid("usergroupgrid", url, { searchString, companyId }, columns);
+        }
+
+        function openModal(id, mode) {
+            $.get('@Url.Action("GetUserGroupById", "User", new { area = "Admin" })', { selectedUserGroupId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateModalFields(response.data);
+                        setMode(mode);
+                        $('#addUserGroupModal').modal('show');
+                    }
+                });
+        }
+
+        function populateModalFields(data) {
+            $('#userGroupId').val(data.userGroupId);
+            $('#userGroupCode').val(data.userGroupCode);
+            $('#userGroupName').val(data.userGroupName);
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+           // checkMandatoryFields();
+        }
+
+        function setMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#userGroupCode, #userGroupName, #remarks').prop('readonly', !canEdit);
+
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnUserGroupSave').toggle(canEdit);
+            $('#btnUserGroupEdit').toggle(isView && permissions.canEdit);
+            $('#btnClose').show();
+            $('#btnClear').hide();
+        }
+
+        $('#btnUserGroupEdit').on('click', function () {
+            setMode("edit");
+        });
+
+        $('#btnClose').on('click', function () {
+            $('#addUserGroupModal').modal('hide');
+        });
+
+        $('#addusergrouprecord').on('click', function () {
+            clearUserGroupForm();
+            setDefaultUserGroupValues();
+            $('#btnClose').show();
+            $('#btnUserGroupSave').show();
+            $('#btnUserGroupEdit').hide();
+        });
+
+        function setDefaultUserGroupValues() {
+            clearUserGroupForm();
+            document.getElementById('isActive').checked = true;
+            document.getElementById('btnUserGroupSave').disabled = false;
+        }
+
+        function clearUserGroupForm() {
+            debugger;
+            $('#userGroupForm')[0].reset();
+            $('#userGroupId').val(0);
+            $('#btnUserGroupSave').prop('disabled', true);
+        }
+
+        function deleteAccountGroup(id) {
+            if (!permissions.canDelete) {
+                alert('You do not have permission to delete records.');
+                return;
+            }
+
+            $('#confirmationModal').modal('show');
+            $('#confirmDelete').off('click').click(function () {
+                $.ajax({
+                    url: `/Admin/User/DeleteUserGroup?selectedUserGroupId=${id}&companyId=${companyId}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.success) {
+                            loadUserGroupGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveAccountGroup() {
+            let data = {
+                UserGroupId: parseInt($('#userGroupId').val()) || 0,
+                UserGroupCode: $('#userGroupCode').val().trim(),
+                UserGroupName: $('#userGroupName').val().trim(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            if (!data.UserGroupCode || !data.UserGroupName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveUserGroup", "User", new { area = "Admin" })',
+                type: "POST",
+                data: JSON.stringify({ modal: data }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#addUserGroupModal').modal('hide');
+                        loadGrid();
+                        clearForm();
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+
+//############# USER Group ###################//
 
         function loadUserRights() {
             debugger;
@@ -523,6 +846,7 @@
 
             const userGroupUrl = '@Url.Action("GetUserGroupLookup", "Lookup", new { area = "" })';
             BindComboBox(userGroupUrl, "cmb_usergroup", "userGroupName", "userGroupId");
+            BindComboBox(userGroupUrl, "cmb_usergroup_user", "userGroupName", "userGroupId");
         }
 
         function SelectedDropdown(DrpdwnName) {
@@ -541,37 +865,49 @@
             var groupUserId = $("#cmb_user_group").data("kendoComboBox").value(); // Use new ID
             var moduleId = $("#cmb_usergroup").data("kendoComboBox").value();
 
-            $.ajax({
-                url: '/user/UserGroupRightsList', // Adjust URL as per your API routing
-                method: 'GET',
-                data: {
-                    SelectedUserId: groupUserId,
-                    SelectedGroupId: moduleId
-                },
-                success: function (result) {
-                    var tbody = $('#rightsTableBody');
-                    tbody.empty();
-                    debugger;
-                    if (result.data) {
-                        result.data.forEach(function (item) {
-                            var row = `<tr data-right-id="${item.rightId}">
+            if (groupUserId > 0 && moduleId > 0) {
+
+                $.ajax({
+                    url: '/user/UserGroupRightsList', // Adjust URL as per your API routing
+                    method: 'GET',
+                    data: {
+                        pageNumber: 1,
+                        pageSize: 100,
+                        searchString: '',
+                        companyId: companyId,
+                        SelectedUserId: groupUserId,
+                        SelectedGroupId: moduleId
+                    },
+                    success: function (result) {
+                        var tbody = $('#rightsTableBody');
+                        tbody.empty();
+                        debugger;
+                        if (result.data) {
+                            result.data.forEach(function (item) {
+                                var row = `<tr data-right-id="${item.rightId}">
+                        <td class="hidden-column">${item.moduleId}</td>
+                        <td class="hidden-column">${item.transactionId}</td>
                         <td>${item.moduleName}</td>
                         <td>${item.transactionName}</td>
                         <td><input type="checkbox" class="viewCheckbox" ${item.isRead ? 'checked' : ''}></td>
                         <td><input type="checkbox" class="createCheckbox" ${item.isCreate ? 'checked' : ''}></td>
                         <td><input type="checkbox" class="editCheckbox" ${item.isEdit ? 'checked' : ''}></td>
                         <td><input type="checkbox" class="deleteCheckbox" ${item.isDelete ? 'checked' : ''}></td>
+                         <td><input type="checkbox" class="printCheckbox" ${item.isPost ? 'checked' : ''}></td>
                         <td><input type="checkbox" class="exportCheckbox" ${item.isExport ? 'checked' : ''}></td>
                         <td><input type="checkbox" class="printCheckbox" ${item.isPrint ? 'checked' : ''}></td>
                     </tr>`;
-                            tbody.append(row);
-                        });
+                                tbody.append(row);
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        console.error("Error fetching group rights:", err);
                     }
-                },
-                error: function (err) {
-                    console.error("Error fetching group rights:", err);
-                }
-            });
+                });
+            } else {
+
+            }
         }
 
         // Function to save the group rights after modifications
@@ -652,8 +988,6 @@
             $('#cloneModal').modal('show');
         }
 
-        // When the "Clone" button inside the modal is clicked.
-        // Replace this stub with your actual cloning logic.
         function performCloneRights() {
             var currentUser = $('#modalCurrentUser').val();
             var targetUser = $('#modalToUser').val();
@@ -662,9 +996,6 @@
                 alert("Please select a to user");
                 return;
             }
-
-            // Here you can add your AJAX call or logic to perform the clone action.
-            // For instance:
 
             $.ajax({
                 url: '/user/CloneGroupRights',
@@ -693,194 +1024,56 @@
             $('#cloneModal').modal('hide');
         }
 
-        //########### User ###########
+        //document.addEventListener('DOMContentLoaded', function () {
+        //    populateTable();
+        //});
 
-        // Function to load user rights for the given company.
-        // (For this example we call page 1, pageSize 100, and an empty search string.)
+        //function populateTable() {
+        //    // Example data, replace this with actual data
+        //    const rightsData = [
+        //        { moduleName: 'Module1', transactionName: 'Transaction1', isEdit: false, isCreate: true, isView: true, isPrint: false, isExport: true, isDelete: false },
+        //        { moduleName: 'Module2', transactionName: 'Transaction2', isEdit: true, isCreate: false, isView: true, isPrint: true, isExport: false, isDelete: false },
+        //        // Add more rows as needed
+        //    ];
 
-        function loadUserGrid() {
-            let searchString = $('#txtsearch').val();
-            let url = '@Url.Action("List", "AccountGroup", new { area = "Master" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "150px",
-                    template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'view')">
-                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+        //    const tableBody = document.getElementById('rightsTableBody');
+        //    rightsData.forEach((right) => {
+        //        const row = document.createElement('tr');
 
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'edit')">
-                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
+        //        row.innerHTML = `
+        //                        <td>${right.moduleName}</td>
+        //                        <td>${right.transactionName}</td>
+        //                        <td><input type="checkbox" ${right.isEdit ? 'checked' : ''}></td>
+        //                        <td><input type="checkbox" ${right.isCreate ? 'checked' : ''}></td>
+        //                        <td><input type="checkbox" ${right.isView ? 'checked' : ''}></td>
+        //                        <td><input type="checkbox" ${right.isPrint ? 'checked' : ''}></td>
+        //                        <td><input type="checkbox" ${right.isExport ? 'checked' : ''}></td>
+        //                        <td><input type="checkbox" ${right.isDelete ? 'checked' : ''}></td>
+        //                    `;
+        //        tableBody.appendChild(row);
+        //    });
+        //}
 
-                        if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountGroup('${dataItem.accGroupId}')">
-                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                        }
-                        return buttons;
-                    }
-                },
-                { field: "accGroupCode", title: "Code" },
-                { field: "accGroupName", title: "Name" },
-                { field: "seqNo", title: "Sequence" },
-                { field: "remarks", title: "Remarks" },
-                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-            ];
+        //function saveUserGroupRights() {
+        //    const tableBody = document.getElementById('rightsTableBody');
+        //    const rows = tableBody.querySelectorAll('tr');
 
-            initializeKendoGrid("grid", url, { searchString, companyId }, columns);
-        }
+        //    const rightsData = Array.from(rows).map((row) => {
+        //        const cells = row.querySelectorAll('td');
+        //        return {
+        //            moduleName: cells[0].innerText,
+        //            transactionName: cells[1].innerText,
+        //            isEdit: cells[2].querySelector('input').checked,
+        //            isCreate: cells[3].querySelector('input').checked,
+        //            isView: cells[4].querySelector('input').checked,
+        //            isPrint: cells[5].querySelector('input').checked,
+        //            isExport: cells[5].querySelector('input').checked,
+        //            isDelete: cells[6].querySelector('input').checked,
+        //        };
+        //    });
 
-        function saveUser() {
-            let data = {
-                FullName: $('#fullName').val(),
-                UserCode: $('#userCode').val().trim(),
-                Username: $('#username').val().trim(),
-                Email: $('#email').val().trim(),
-                PhoneNumber: $('#phoneNumber').val().trim(),
-                Remarks: $('#remarks').val(),
-                IsActive: $('#isActive').prop('checked')
-            };
-
-            if (!data.FullName || !data.UserCode || !data.Username || !data.Email || !data.PhoneNumber) {
-                alert('Code and Name are required!');
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("SaveUser", "User", new { area = "Admin" })',
-                type: "POST",
-                data: JSON.stringify({ accountGroup: data, companyId }),
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        $('#addUserModal').modal('hide');
-                        loadGrid();
-                        clearForm();
-                    }
-                },
-                error: function (error) {
-                    alert("Error: " + error.responseText);
-                }
-            });
-        }
-
-        //########### User Group ###########
-
-        function loadUserGroupGrid() {
-    let searchString = $('#txtsearch').val();
-    let url = '@Url.Action("List", "AccountGroup", new { area = "Master" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "150px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'view')">
-                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
-
-                if (permissions.canEdit) {
-                    buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'edit')">
-                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                }
-
-                if (permissions.canDelete) {
-                    buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountGroup('${dataItem.accGroupId}')">
-                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                }
-                return buttons;
-            }
-        },
-        { field: "accGroupCode", title: "Code" },
-        { field: "accGroupName", title: "Name" },
-        { field: "seqNo", title: "Sequence" },
-        { field: "remarks", title: "Remarks" },
-        { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
-
-    initializeKendoGrid("grid", url, { searchString, companyId }, columns);
-}
-
-        function saveUserGroup() {
-            let data = {
-                UserGroupCode: $('#userGroupCode').val().trim(),
-                UserGroupName: $('#userGroupName').val().trim(),
-                Remarks: $('#groupRemarks').val(),
-                IsActive: $('#isActive').prop('checked')
-            };
-
-            if (!data.UserGroupCode || !data.UserGroupName ) {
-                alert('Code and Name are required!');
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("SaveUserGroup", "User", new { area = "Admin" })',
-                type: "POST",
-                data: JSON.stringify({ accountGroup: data, companyId }),
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        $('#addUserGroupModal').modal('hide');
-                        loadGrid();
-                        clearForm();
-                    }
-                },
-                error: function (error) {
-                    alert("Error: " + error.responseText);
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            populateTable();
-        });
-
-        function populateTable() {
-            // Example data, replace this with actual data
-            const rightsData = [
-                { moduleName: 'Module1', transactionName: 'Transaction1', isEdit: false, isCreate: true, isView: true, isPrint: false, isExport: true, isDelete: false },
-                { moduleName: 'Module2', transactionName: 'Transaction2', isEdit: true, isCreate: false, isView: true, isPrint: true, isExport: false, isDelete: false },
-                // Add more rows as needed
-            ];
-
-            const tableBody = document.getElementById('rightsTableBody');
-            rightsData.forEach((right) => {
-                const row = document.createElement('tr');
-
-                row.innerHTML = `
-                                <td>${right.moduleName}</td>
-                                <td>${right.transactionName}</td>
-                                <td><input type="checkbox" ${right.isEdit ? 'checked' : ''}></td>
-                                <td><input type="checkbox" ${right.isCreate ? 'checked' : ''}></td>
-                                <td><input type="checkbox" ${right.isView ? 'checked' : ''}></td>
-                                <td><input type="checkbox" ${right.isPrint ? 'checked' : ''}></td>
-                                <td><input type="checkbox" ${right.isExport ? 'checked' : ''}></td>
-                                <td><input type="checkbox" ${right.isDelete ? 'checked' : ''}></td>
-                            `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        function saveUserGroupRights() {
-            const tableBody = document.getElementById('rightsTableBody');
-            const rows = tableBody.querySelectorAll('tr');
-
-            const rightsData = Array.from(rows).map((row) => {
-                const cells = row.querySelectorAll('td');
-                return {
-                    moduleName: cells[0].innerText,
-                    transactionName: cells[1].innerText,
-                    isEdit: cells[2].querySelector('input').checked,
-                    isCreate: cells[3].querySelector('input').checked,
-                    isView: cells[4].querySelector('input').checked,
-                    isPrint: cells[5].querySelector('input').checked,
-                    isExport: cells[5].querySelector('input').checked,
-                    isDelete: cells[6].querySelector('input').checked,
-                };
-            });
-
-            // Process the rightsData as needed, for example, send it to the server
-            console.log(rightsData);
-        }
+        //    // Process the rightsData as needed, for example, send it to the server
+        //    console.log(rightsData);
+        //}
     </script>
 }

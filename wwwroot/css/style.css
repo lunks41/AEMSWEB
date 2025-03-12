@@ -13,6 +13,7 @@ This files table contents are outlined below>>>>>
 
 :root,
 [data-bs-theme="light"] {
+   
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;
     --bs-purple: #6f42c1;
@@ -223,6 +224,8 @@ This files table contents are outlined below>>>>>
     --p-motion-duration-150: 0.15s;
     --p-motion-ease-out: ease-out;
 }
+
+
 
 *,
 *::before,
@@ -4223,19 +4226,19 @@ fieldset:disabled .btn {
 
 .btn-primary {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #605dff;
-    --bs-btn-border-color: #605dff;
+    --bs-btn-bg: #95bf47; /* Shopify green */
+    --bs-btn-border-color: #95bf47; /* Shopify green */
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #006e52;
-    --bs-btn-hover-border-color: #4d4acc;
-    --bs-btn-focus-shadow-rgb: 120, 117, 255;
+    --bs-btn-hover-bg: #5a9a68; /* Slightly darker green for hover */
+    --bs-btn-hover-border-color: #5a9a68; /* Slightly darker green for hover */
+    --bs-btn-focus-shadow-rgb: 149, 191, 71; /* Shopify green */
     --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #4d4acc;
-    --bs-btn-active-border-color: #4846bf;
+    --bs-btn-active-bg: #4b8c37; /* Even darker green for active state */
+    --bs-btn-active-border-color: #4b8c37; /* Even darker green for active state */
     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #605dff;
-    --bs-btn-disabled-border-color: #605dff;
+    --bs-btn-disabled-bg: #95bf47; /* Shopify green */
+    --bs-btn-disabled-border-color: #95bf47; /* Shopify green */
 }
 
 .btn-secondary {

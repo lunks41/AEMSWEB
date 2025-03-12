@@ -3,7 +3,6 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-
 <style>
     /* CSS from Checklist Screen and Modal sections */
     .checklist-container {
@@ -209,9 +208,6 @@
     });
 </script>
 
-
-
-
 <!-- Existing CSS styles from previous implementations -->
 <!--<style>
     /* Add these styles to your existing stylesheet */
@@ -241,29 +237,26 @@
         margin-top: 0.25rem;
     }
 </style>-->
-
 <!-- Tab Navigation -->
 <!--<div class="tab-container mb-4 border-bottom pb-2">
     <ul class="nav nav-pills flex-nowrap overflow-auto"
         id="userManagementTabs"
         role="tablist"
         style="--bs-nav-pills-link-active-bg: #0d6efd; --bs-nav-pills-link-active-border-color: #0d6efd;">-->
-
-        <!-- Add other tabs here -->
-        <!--<li class="nav-item" role="presentation">
-            <button class="nav-link active"
-                    id="profile-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#profile"
-                    type="button"
-                    role="tab">
-                <i class="fas fa-user me-2"></i>User Profile
-            </button>
-        </li>-->
-        <!-- Other tabs -->
-    <!--</ul>
+<!-- Add other tabs here -->
+<!--<li class="nav-item" role="presentation">
+    <button class="nav-link active"
+            id="profile-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#profile"
+            type="button"
+            role="tab">
+        <i class="fas fa-user me-2"></i>User Profile
+    </button>
+</li>-->
+<!-- Other tabs -->
+<!--</ul>
 </div>-->
-
 <!-- User Profile Content -->
 <!--<div class="tab-content mt-3">
     <div class="tab-pane fade show active" id="profile" role="tabpanel">
@@ -271,94 +264,91 @@
             <div class="col-md-8">
                 <div class="form-section">
                     <h5>User Profile Information</h5>-->
-
-                    <!-- Profile Picture -->
-                    <!--<div class="text-center mb-4">
-                        <img src="~/images/default-profile.png"
-                             alt="Profile Picture"
-                             class="profile-picture"
-                             id="profilePreview">
-                        <div class="mt-3">
-                            <input type="file"
-                                   class="form-control"
-                                   id="profilePicture"
-                                   accept="image/*"
-                                   onchange="previewImage(this)">
-                        </div>
-                    </div>-->
-
-                    <!-- Form Fields -->
-                    <!--<div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Full Name</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="fullName"
-                                   placeholder="John Doe"
-                                   required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">User Code</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="userCode"
-                                   placeholder="USR-001"
-                                   required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Username</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="userName"
-                                   placeholder="johndoe123">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email"
-                                   class="form-control"
-                                   id="userEmail"
-                                   placeholder="johndoe@example.com"
-                                   pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel"
-                                   class="form-control"
-                                   id="phoneNumber"
-                                   placeholder="+1234567890"
-                                   pattern="[0-9]{10}">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">User Group</label>
-                            <select class="form-select" id="userGroup">
-                                <option value="">Select Group</option>
-                                <option>Administrator</option>
-                                <option>Manager</option>
-                                <option>Staff</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-check">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       id="isActive"
-                                       checked>
-                                <label class="form-check-label" for="isActive">
-                                    Active User
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Remarks</label>
-                            <textarea class="form-control"
-                                      id="remarks"
-                                      rows="3"
-                                      placeholder="Additional notes..."></textarea>
-                        </div>
-                    </div>-->
-
-                    <!-- Action Buttons -->
-                    <!--<div class="d-flex justify-content-end mt-4">
+<!-- Profile Picture -->
+<!--<div class="text-center mb-4">
+    <img src="~/images/default-profile.png"
+         alt="Profile Picture"
+         class="profile-picture"
+         id="profilePreview">
+    <div class="mt-3">
+        <input type="file"
+               class="form-control"
+               id="profilePicture"
+               accept="image/*"
+               onchange="previewImage(this)">
+    </div>
+</div>-->
+<!-- Form Fields -->
+<!--<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Full Name</label>
+        <input type="text"
+               class="form-control"
+               id="fullName"
+               placeholder="John Doe"
+               required>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">User Code</label>
+        <input type="text"
+               class="form-control"
+               id="userCode"
+               placeholder="USR-001"
+               required>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Username</label>
+        <input type="text"
+               class="form-control"
+               id="userName"
+               placeholder="johndoe123">
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email"
+               class="form-control"
+               id="userEmail"
+               placeholder="johndoe@example.com"
+               pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$">
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Phone Number</label>
+        <input type="tel"
+               class="form-control"
+               id="phoneNumber"
+               placeholder="+1234567890"
+               pattern="[0-9]{10}">
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">User Group</label>
+        <select class="form-select" id="userGroup">
+            <option value="">Select Group</option>
+            <option>Administrator</option>
+            <option>Manager</option>
+            <option>Staff</option>
+        </select>
+    </div>
+    <div class="col-md-12">
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="checkbox"
+                   id="isActive"
+                   checked>
+            <label class="form-check-label" for="isActive">
+                Active User
+            </label>
+        </div>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Remarks</label>
+        <textarea class="form-control"
+                  id="remarks"
+                  rows="3"
+                  placeholder="Additional notes..."></textarea>
+    </div>
+</div>-->
+<!-- Action Buttons -->
+<!--<div class="d-flex justify-content-end mt-4">
                         <button type="button" class="btn btn-secondary me-2">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>

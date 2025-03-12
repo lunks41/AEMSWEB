@@ -1,4 +1,5 @@
 ﻿using AEMSWEB.Controllers;
+using AEMSWEB.Enums;
 using AEMSWEB.IServices;
 using AEMSWEB.IServices.Admin;
 using AEMSWEB.Models;
@@ -22,14 +23,35 @@ namespace AEMSWEB.Areas.Admin.Controllers
             _UserService = UserService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var companyId = HttpContext.Session.GetString("CurrentCompany");
+            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            {
+                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
+            }
+
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+            var permissions = await HasPermission(companyIdShort, parsedUserId, (short)E_Modules.Admin, (short)E_Admin.User);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.IsExport = permissions?.IsExport ?? false;
+            ViewBag.IsPrint = permissions?.IsPrint ?? false;
+
             return View();
         }
 
         #region User
 
-        [HttpGet("user/UserList")]
+        [HttpGet]
         public async Task<JsonResult> UserList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             try
@@ -60,9 +82,9 @@ namespace AEMSWEB.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetUserById(short accGroupId, string companyId)
+        public async Task<JsonResult> GetUserById(short selectedUserId, string companyId)
         {
-            if (accGroupId <= 0)
+            if (selectedUserId <= 0)
             {
                 return Json(new { success = false, message = "Invalid Account Group ID." });
             }
@@ -82,7 +104,7 @@ namespace AEMSWEB.Areas.Admin.Controllers
             try
             {
                 // Assuming you would have some logic here to use the headers in your service call
-                var data = await _UserService.GetUserByIdAsync(accGroupId, parsedUserId);
+                var data = await _UserService.GetUserByIdAsync(selectedUserId, parsedUserId);
 
                 if (data == null)
                 {
@@ -98,98 +120,104 @@ namespace AEMSWEB.Areas.Admin.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SaveUser([FromBody] UserViewModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        return Json(new { success = false, message = "Data operation failed due to null model." });
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> SaveUser([FromBody] UserViewModel model)
+        {
+            if (model == null)
+            {
+                return Json(new { success = false, message = "Data operation failed due to null model." });
+            }
 
-        //    var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-        //    {
-        //        return Json(new { success = false, message = "User not logged in or invalid user ID." });
-        //    }
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-        //    var userToSave = new AdmUser
-        //    {
-        //        Id = model.AccGroupId,
-        //        FullName = model.AccGroupCode ?? string.Empty,
-        //        AccGroupName = model.AccGroupName ?? string.Empty,
-        //        SeqNo = model.SeqNo,
-        //        Remarks = model.Remarks?.Trim() ?? string.Empty,
-        //        IsActive = model.IsActive,
-        //        CreateById = parsedUserId,
-        //        CreateDate = DateTime.Now,
-        //        EditById = model.EditById ?? 0,
-        //        EditDate = DateTime.Now
-        //    };
+            var userToSave = new AdmUser
+            {
+                Id = model.UserId,
+                UserCode = model.UserCode ?? string.Empty,
+                UserName = model.UserName ?? string.Empty,
+                NormalizedUserName = model.UserName?.ToUpperInvariant() ?? string.Empty,
+                Email = model.Email ?? string.Empty,
+                NormalizedEmail = model.Email?.ToUpperInvariant() ?? string.Empty,
+                Remarks = model.Remarks?.Trim() ?? string.Empty,
+                IsActive = model.IsActive,
+                CreateById = parsedUserId,
+                CreateDate = DateTime.Now,
+                EditById = model.EditById ?? 0,
+                EditDate = DateTime.Now,
+                PhoneNumber = model.PhoneNumber ?? string.Empty,
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false
+            };
 
-        //    try
-        //    {
-        //        var data = await _UserService.SaveUserAsync(companyIdShort, parsedUserId, userToSave);
+            try
+            {
+                var password = model.UserPassword ?? string.Empty; // Assuming the password is passed in the model
+                var data = await _UserService.SaveUserAsync(parsedUserId, userToSave, password);
 
-        //        if (data == null)
-        //        {
-        //            return Json(new { success = false, message = "Failed to save account group." });
-        //        }
+                if (data == null)
+                {
+                    return Json(new { success = false, message = "Failed to save user." });
+                }
 
-        //        return Json(new { success = true, data });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while saving the account group.");
-        //        return Json(new { success = false, message = "An error occurred.", data = "" });
-        //    }
-        //}
+                return Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving the user.");
+                return Json(new { success = false, message = "An error occurred.", data = "" });
+            }
+        }
 
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteUser(short accGroupId, string companyId)
-        //{
-        //    if (accGroupId <= 0)
-        //    {
-        //        return BadRequest(new { success = false, message = "Invalid ID." });
-        //    }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(short selectedUserId, string companyId)
+        {
+            if (selectedUserId <= 0)
+            {
+                return BadRequest(new { success = false, message = "Invalid ID." });
+            }
 
-        //    if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-        //    {
-        //        return Json(new { success = false, message = "Invalid company ID." });
-        //    }
+            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            {
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
 
-        //    var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-        //    {
-        //        return Json(new { success = false, message = "User not logged in or invalid user ID." });
-        //    }
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-        //    try
-        //    {
-        //        var userget = await _UserService.GetUserByIdAsync(companyIdShort, parsedUserId, accGroupId);
+            try
+            {
+                var userget = await _UserService.GetUserByIdAsync(companyIdShort, parsedUserId);
 
-        //        var data = await _UserService.DeleteUserAsync(companyIdShort, 1, userget);
+                var data = await _UserService.DeleteUserAsync(companyIdShort, 1, userget);
 
-        //        if (data == null)
-        //        {
-        //            return Json(new { success = false, message = "Failed to save account group." });
-        //        }
+                if (data == null)
+                {
+                    return Json(new { success = false, message = "Failed to save account group." });
+                }
 
-        //        return Json(new { success = true, data });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while saving the account group.");
-        //        return Json(new { success = false, message = "An error occurred.", data = "" });
-        //    }
-        //}
+                return Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving the account group.");
+                return Json(new { success = false, message = "An error occurred.", data = "" });
+            }
+        }
 
         #endregion User
 
         #region User Group
 
-        [HttpGet("usergroup/UserGroupList")]
+        [HttpGet]
         public async Task<JsonResult> UserGroupList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             try
@@ -220,9 +248,9 @@ namespace AEMSWEB.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetUserGroupById(short accGroupId, string companyId)
+        public async Task<JsonResult> GetUserGroupById(short selectedUserGroupId, string companyId)
         {
-            if (accGroupId <= 0)
+            if (selectedUserGroupId <= 0)
             {
                 return Json(new { success = false, message = "Invalid Account Group ID." });
             }
@@ -242,7 +270,7 @@ namespace AEMSWEB.Areas.Admin.Controllers
             try
             {
                 // Assuming you would have some logic here to use the headers in your service call
-                var data = await _UserService.GetUserGroupByIdAsync(companyIdShort, parsedUserId, accGroupId);
+                var data = await _UserService.GetUserGroupByIdAsync(companyIdShort, parsedUserId, selectedUserGroupId);
 
                 if (data == null)
                 {
@@ -258,101 +286,91 @@ namespace AEMSWEB.Areas.Admin.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SaveUserGroup([FromBody] SaveUserViewModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        return Json(new { success = false, message = "Data operation failed due to null model." });
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> SaveUserGroup([FromBody] UserGroupViewModel model)
+        {
+            if (model == null)
+            {
+                return Json(new { success = false, message = "Data operation failed due to null model." });
+            }
 
-        //    var user = model.User;
-        //    var companyId = model.CompanyId;
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-        //    {
-        //        return Json(new { success = false, message = "Invalid company ID." });
-        //    }
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-        //    var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userToSave = new AdmUserGroup
+            {
+                Id = model.UserGroupId,
+                UserGroupCode = model.UserGroupCode ?? string.Empty,
+                UserGroupName = model.UserGroupName ?? string.Empty,
+                Remarks = model.Remarks?.Trim() ?? string.Empty,
+                IsActive = model.IsActive,
+                CreateById = parsedUserId,
+                CreateDate = DateTime.Now,
+                EditById = model.EditById ?? 0,
+                EditDate = DateTime.Now
+            };
 
-        //    if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-        //    {
-        //        return Json(new { success = false, message = "User not logged in or invalid user ID." });
-        //    }
+            try
+            {
+                var data = await _UserService.SaveUserGroupAsync(parsedUserId, userToSave);
 
-        //    var userToSave = new M_User
-        //    {
-        //        AccGroupId = user.AccGroupId,
-        //        CompanyId = companyIdShort,
-        //        AccGroupCode = user.AccGroupCode ?? string.Empty,
-        //        AccGroupName = user.AccGroupName ?? string.Empty,
-        //        SeqNo = user.SeqNo,
-        //        Remarks = user.Remarks?.Trim() ?? string.Empty,
-        //        IsActive = user.IsActive,
-        //        CreateById = parsedUserId,
-        //        CreateDate = DateTime.Now,
-        //        EditById = user.EditById ?? 0,
-        //        EditDate = DateTime.Now
-        //    };
+                if (data == null)
+                {
+                    return Json(new { success = false, message = "Failed to save account group." });
+                }
 
-        //    try
-        //    {
-        //        var data = await _UserService.SaveUserAsync(companyIdShort, parsedUserId, userToSave);
+                return Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving the account group.");
+                return Json(new { success = false, message = "An error occurred.", data = "" });
+            }
+        }
 
-        //        if (data == null)
-        //        {
-        //            return Json(new { success = false, message = "Failed to save account group." });
-        //        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUserGroup(short selectedUserId, string companyId)
+        {
+            if (selectedUserId <= 0)
+            {
+                return BadRequest(new { success = false, message = "Invalid ID." });
+            }
 
-        //        return Json(new { success = true, data });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while saving the account group.");
-        //        return Json(new { success = false, message = "An error occurred.", data = "" });
-        //    }
-        //}
+            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            {
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
 
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteUserGroup(short accGroupId, string companyId)
-        //{
-        //    if (accGroupId <= 0)
-        //    {
-        //        return BadRequest(new { success = false, message = "Invalid ID." });
-        //    }
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-        //    {
-        //        return Json(new { success = false, message = "Invalid company ID." });
-        //    }
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-        //    var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            try
+            {
+                var userget = await _UserService.GetUserByIdAsync(companyIdShort, parsedUserId);
 
-        //    if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-        //    {
-        //        return Json(new { success = false, message = "User not logged in or invalid user ID." });
-        //    }
+                var data = await _UserService.DeleteUserAsync(companyIdShort, 1, userget);
 
-        //    try
-        //    {
-        //        var userget = await _UserService.GetUserByIdAsync(companyIdShort, parsedUserId, accGroupId);
+                if (data == null)
+                {
+                    return Json(new { success = false, message = "Failed to save account group." });
+                }
 
-        //        var data = await _UserService.DeleteUserAsync(companyIdShort, 1, userget);
-
-        //        if (data == null)
-        //        {
-        //            return Json(new { success = false, message = "Failed to save account group." });
-        //        }
-
-        //        return Json(new { success = true, data });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while saving the account group.");
-        //        return Json(new { success = false, message = "An error occurred.", data = "" });
-        //    }
-        //}
+                return Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving the account group.");
+                return Json(new { success = false, message = "An error occurred.", data = "" });
+            }
+        }
 
         #endregion User Group
 

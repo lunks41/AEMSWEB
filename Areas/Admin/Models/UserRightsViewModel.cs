@@ -1,6 +1,4 @@
-﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-
-namespace AEMSWEB.Models.Admin
+﻿namespace AEMSWEB.Models.Admin
 {
     public class UserRightsViewModel
     {
