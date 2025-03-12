@@ -129,7 +129,8 @@ namespace AEMSWEB.Enums
         DocumentNo = 5,
         Modules = 6,
         Transaction = 7,
-        Document = 8
+        Document = 8,
+        Company = 8
     }
 
     public enum E_Setting

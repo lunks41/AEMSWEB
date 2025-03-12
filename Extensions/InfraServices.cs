@@ -86,9 +86,6 @@ public static class InfraServices
         services.AddScoped<IModuleService, ModuleService>();
         services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<ITransactionService, TransactionService>();
-        services.AddScoped<IUserGroupService, UserGroupService>();
-        services.AddScoped<IUserGroupRightsService, UserGroupRightsService>();
-        services.AddScoped<IUserRightsService, UserRightsService>();
         services.AddScoped<IDocumentService, DocumentService>();
 
         #endregion Admin

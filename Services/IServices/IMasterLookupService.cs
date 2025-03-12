@@ -5,107 +5,107 @@ namespace AEMSWEB.IServices
 {
     public interface IMasterLookupService
     {
-        public Task<IEnumerable<CompanyViewModel>> GetCompanyLookupListAsync(Int16 UserId);
+        public Task<IEnumerable<CompanyViewModel>> GetCompanyLookupAsync(Int16 UserId);
 
-        public Task<IEnumerable<AccountSetupCategoryLookupModel>> GetAccountSetupCategoryLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<UserLookupModel>> GetUserLookupAsync();
 
-        public Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<UserGroupLookupModel>> GetUserGroupLookupAsync();
 
-        public Task<IEnumerable<AccountGroupLookupModel>> GetAccountGroupLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<ModuleLookupModel>> GetModuleLookupAsync(bool IsVisible, bool IsMandatory);
 
-        public Task<IEnumerable<AccountTypeLookupModel>> GetAccountTypeLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<TransactionLookupModel>> GetTransactionLookupAsync(Int16 ModuleId);
 
-        public Task<IEnumerable<BankLookupModel>> GetBankLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<AccountSetupCategoryLookupModel>> GetAccountSetupCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<BankLookupModel>> GetBankLookup_SuppListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CategoryLookupModel>> GetCategoryLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<AccountGroupLookupModel>> GetAccountGroupLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<ChartOfAccountLookupModel>> GetChartOfAccountLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<AccountTypeLookupModel>> GetAccountTypeLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<COACategoryLookupModel>> GetCOACategory1LookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<BankLookupModel>> GetBankLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<COACategoryLookupModel>> GetCOACategory2LookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<BankLookupModel>> GetBankLookup_SuppAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<COACategoryLookupModel>> GetCOACategory3LookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<CategoryLookupModel>> GetCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CountryLookupModel>> GetCountryLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<ChartOfAccountLookupModel>> GetChartOfAccountLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CurrencyLookupModel>> GetCurrencyLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<COACategoryLookupModel>> GetCOACategory1LookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<COACategoryLookupModel>> GetCOACategory2LookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<COACategoryLookupModel>> GetCOACategory3LookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
+        public Task<IEnumerable<CountryLookupModel>> GetCountryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<DepartmentLookupModel>> GetDepartmentLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<CurrencyLookupModel>> GetCurrencyLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<DesignationLookupModel>> GetDesignationLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<EmployeeLookupModel>> GetEmployeeLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<GroupCreditLimitLookupModel>> GetGroupCreditLimitLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
 
-        public Task<IEnumerable<GstLookupModel>> GetGstLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<DepartmentLookupModel>> GetDepartmentLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<GstCategoryLookupModel>> GetGstCategoryLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<DesignationLookupModel>> GetDesignationLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<OrderTypeCategoryLookupModel>> GetOrderTypeCategoryLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<EmployeeLookupModel>> GetEmployeeLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<OrderTypeLookupModel>> GetOrderTypeLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<GroupCreditLimitLookupModel>> GetGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<PaymentTypeLookupModel>> GetPaymentTypeLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<GstLookupModel>> GetGstLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<PortLookupModel>> GetPortLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<GstCategoryLookupModel>> GetGstCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<PortRegionLookupModel>> GetPortRegionLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<OrderTypeCategoryLookupModel>> GetOrderTypeCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<ProductLookupModel>> GetProductLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<OrderTypeLookupModel>> GetOrderTypeLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<ProductLookupModel>> GetProductLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
+        public Task<IEnumerable<PaymentTypeLookupModel>> GetPaymentTypeLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<SubCategoryLookupModel>> GetSubCategoryLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<PortLookupModel>> GetPortLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<PortRegionLookupModel>> GetPortRegionLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
+        public Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<UomLookupModel>> GetUomLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
 
-        public Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<SubCategoryLookupModel>> GetSubCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
+        public Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<BargeLookupModel>> GetBargeLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
 
-        public Task<IEnumerable<BargeLookupModel>> GetBargeLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
+        public Task<IEnumerable<UomLookupModel>> GetUomLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CreditTermsLookupModel>> GetCreditTermsLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<TaxLookupModel>> GetTaxLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
 
-        public Task<IEnumerable<TaxCategoryLookupModel>> GetTaxCategoryLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<VesselLookupModel>> GetVesselLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
 
-        public Task<IEnumerable<VesselLookupModel>> GetVesselLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
+        public Task<IEnumerable<CreditTermsLookupModel>> GetCreditTermsLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<UserGroupLookupModel>> GetUserGroupLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<TaxLookupModel>> GetTaxLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<UserLookupModel>> GetUserLookupListAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<TaxCategoryLookupModel>> GetTaxCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId);
+        public Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId);
+        public Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId);
 
-        public Task<IEnumerable<SupplierAddressLookupModel>> GetSupplierAddressLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
+        public Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId);
 
-        public Task<IEnumerable<SupplierContactLookupModel>> GetSupplierContactLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
+        public Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId);
 
-        public Task<IEnumerable<ModuleLookupModel>> GetModuleLookupAsync(Int16 CompanyId, Int16 UserId, bool IsVisible, bool IsMandatory);
+        public Task<IEnumerable<SupplierAddressLookupModel>> GetSupplierAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
 
-        public Task<IEnumerable<TransactionLookupModel>> GetTransactionLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
+        public Task<IEnumerable<SupplierContactLookupModel>> GetSupplierContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
 
         public Task<IEnumerable<YearLookupModel>> GetPeriodCloseYearLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
 

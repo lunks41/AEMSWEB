@@ -1,5 +1,7 @@
 ﻿using AEMSWEB.IServices;
+using AEMSWEB.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 
 namespace AEMSWEB.Controllers
 {
@@ -15,9 +17,37 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCompanyLookup(string companyId)
+        public async Task<JsonResult> GetCompanyLookup(Int16 UserId)
         {
-            var data = await _masterLookupService.GetCompanyLookupListAsync(1);
+            var data = await _masterLookupService.GetCompanyLookupAsync(1);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetUserLookup()
+        {
+            var data = await _masterLookupService.GetUserLookupAsync();
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetUserGroupLookup()
+        {
+            var data = await _masterLookupService.GetUserGroupLookupAsync();
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetModuleLookup(bool IsVisible, bool IsMandatory)
+        {
+            var data = await _masterLookupService.GetModuleLookupAsync(IsVisible, IsMandatory);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetTransactionLookup(Int16 moduleId)
+        {
+            var data = await _masterLookupService.GetTransactionLookupAsync(moduleId);
             return Json(data);
         }
 
@@ -29,7 +59,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -41,7 +71,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -53,7 +83,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetChartOfAccountLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetChartOfAccountLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -65,7 +95,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCountryLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCountryLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -77,7 +107,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetVesselLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -89,7 +119,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -101,7 +131,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetAccountSetupCategoryLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetAccountSetupCategoryLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -113,7 +143,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetAccountSetupLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetAccountSetupLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -125,7 +155,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCOACategory1LookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCOACategory1LookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -137,7 +167,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCOACategory2LookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCOACategory2LookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -149,7 +179,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCOACategory3LookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCOACategory3LookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -161,7 +191,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetAccountTypeLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetAccountTypeLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -173,7 +203,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetAccountGroupLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetAccountGroupLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -185,7 +215,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -197,7 +227,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -209,7 +239,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -221,7 +251,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -233,21 +263,21 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
         //[HttpGet]
         //public async Task<JsonResult> GetPeriodCloseYear(string companyId)
         //{
-        //     var headers = new Dictionary<string, string>(); var data = await _apiService.GetAsync<List<PeriodCloseYearModel>>($"/master/getPeriodCloseYear",headers);
+        //     var headers = new Dictionary<string, string>(); var data = await _apiService.GetAsync<<PeriodCloseYearModel>>($"/master/getPeriodCloseYear",headers);
         //    return Json(data.Data);
         //}
 
         //[HttpGet]
         //public async Task<JsonResult> GetPeriodCloseNextYear(string companyId)
         //{
-        //     var headers = new Dictionary<string, string>(); var data = await _apiService.GetAsync<List<PeriodCloseNextYearModel>>($"/master/getPeriodCloseNextYear",headers);
+        //     var headers = new Dictionary<string, string>(); var data = await _apiService.GetAsync<<PeriodCloseNextYearModel>>($"/master/getPeriodCloseNextYear",headers);
         //    return Json(data.Data);
         //}
 
@@ -259,7 +289,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -271,7 +301,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -283,7 +313,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -295,7 +325,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -307,7 +337,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -319,7 +349,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -331,7 +361,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -343,7 +373,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -355,55 +385,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetUserGroupLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetUserLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetTransactionLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetModuleLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -415,7 +397,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -427,7 +409,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -439,7 +421,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -451,7 +433,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -463,7 +445,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -475,7 +457,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -487,7 +469,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -499,7 +481,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -511,7 +493,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -523,7 +505,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -535,7 +517,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
 
@@ -547,7 +529,7 @@ namespace AEMSWEB.Controllers
                 return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             }
 
-            var data = await _masterLookupService.GetCurrencyLookupListAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
             return Json(data);
         }
     }

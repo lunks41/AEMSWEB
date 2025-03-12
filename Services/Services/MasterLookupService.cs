@@ -23,7 +23,7 @@ namespace AEMSWEB.Services.Masters
             recordCount = Convert.ToInt16(_configuration["LookupDefault:RecordCount"]);
         }
 
-        public async Task<IEnumerable<CompanyViewModel>> GetCompanyLookupListAsync(Int16 UserId)
+        public async Task<IEnumerable<CompanyViewModel>> GetCompanyLookupAsync(Int16 UserId)
         {
             try
             {
@@ -53,7 +53,138 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<AccountSetupCategoryLookupModel>> GetAccountSetupCategoryLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<UserGroupLookupModel>> GetUserGroupLookupAsync()
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<UserGroupLookupModel>($"SELECT UserGroupId,UserGroupCode,UserGroupName FROM AdmUserGroup WHERE UserGroupId<>0 And IsActive=1  order by UserGroupName");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = 0,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Admin.UserGroup,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "AdmUserGroup",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = 0
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<UserLookupModel>> GetUserLookupAsync()
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<UserLookupModel>($"SELECT UserId,UserCode,UserName FROM AdmUser WHERE UserId<>0 And IsActive=1  order by UserName");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = 0,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Admin.User,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = 0
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<ModuleLookupModel>> GetModuleLookupAsync(bool IsVisible, bool IsMandatory)
+        {
+            try
+            {
+                string sql = "Select ModuleId, ModuleCode, ModuleName from AdmModule where IsActive = 1";
+                if (IsMandatory)
+                {
+                    sql += " And IsMandatory = 1";
+                }
+                if (IsVisible)
+                {
+                    sql += " And IsVisible = 1";
+                }
+                sql += " Order by ModuleName";
+
+                return await _repository.GetQueryAsync<ModuleLookupModel>(sql);
+
+                //return await _repository.GetQueryAsync<ModuleLookupModel>( $"Select ModuleId,ModuleCode,ModuleName from AdmModule where IsActive=1 and Order by ModuleName");
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = 0,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Admin.Modules,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "AdmModule",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = 0
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<TransactionLookupModel>> GetTransactionLookupAsync(Int16 ModuleId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<TransactionLookupModel>($"Select TransactionId,TransactionCode,TransactionName from AdmTransaction where IsActive=1 And ModuleId={ModuleId} Order by TransactionName");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = 0,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Admin.Transaction,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "AdmTransaction",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = 0
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<AccountSetupCategoryLookupModel>> GetAccountSetupCategoryLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -83,7 +214,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -113,7 +244,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<AccountTypeLookupModel>> GetAccountTypeLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<AccountTypeLookupModel>> GetAccountTypeLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -143,7 +274,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<AccountGroupLookupModel>> GetAccountGroupLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<AccountGroupLookupModel>> GetAccountGroupLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -173,7 +304,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<BankLookupModel>> GetBankLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<BankLookupModel>> GetBankLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -203,7 +334,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<BankLookupModel>> GetBankLookup_SuppListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<BankLookupModel>> GetBankLookup_SuppAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -233,7 +364,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CategoryLookupModel>> GetCategoryLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<CategoryLookupModel>> GetCategoryLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -263,7 +394,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<ChartOfAccountLookupModel>> GetChartOfAccountLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<ChartOfAccountLookupModel>> GetChartOfAccountLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -293,7 +424,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<COACategoryLookupModel>> GetCOACategory1LookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<COACategoryLookupModel>> GetCOACategory1LookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -323,7 +454,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<COACategoryLookupModel>> GetCOACategory2LookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<COACategoryLookupModel>> GetCOACategory2LookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -353,7 +484,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<COACategoryLookupModel>> GetCOACategory3LookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<COACategoryLookupModel>> GetCOACategory3LookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -383,7 +514,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CountryLookupModel>> GetCountryLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<CountryLookupModel>> GetCountryLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -413,7 +544,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CurrencyLookupModel>> GetCurrencyLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<CurrencyLookupModel>> GetCurrencyLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -443,7 +574,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -473,7 +604,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<DepartmentLookupModel>> GetDepartmentLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<DepartmentLookupModel>> GetDepartmentLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -503,7 +634,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<DesignationLookupModel>> GetDesignationLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<DesignationLookupModel>> GetDesignationLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -533,7 +664,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<EmployeeLookupModel>> GetEmployeeLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<EmployeeLookupModel>> GetEmployeeLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -563,7 +694,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<GroupCreditLimitLookupModel>> GetGroupCreditLimitLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<GroupCreditLimitLookupModel>> GetGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -593,7 +724,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<GstLookupModel>> GetGstLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<GstLookupModel>> GetGstLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -623,7 +754,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<GstCategoryLookupModel>> GetGstCategoryLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<GstCategoryLookupModel>> GetGstCategoryLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -653,7 +784,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<OrderTypeCategoryLookupModel>> GetOrderTypeCategoryLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<OrderTypeCategoryLookupModel>> GetOrderTypeCategoryLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -683,7 +814,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<OrderTypeLookupModel>> GetOrderTypeLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<OrderTypeLookupModel>> GetOrderTypeLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -713,7 +844,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<PaymentTypeLookupModel>> GetPaymentTypeLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<PaymentTypeLookupModel>> GetPaymentTypeLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -743,7 +874,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<PortLookupModel>> GetPortLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<PortLookupModel>> GetPortLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -773,7 +904,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<PortRegionLookupModel>> GetPortRegionLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<PortRegionLookupModel>> GetPortRegionLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -803,7 +934,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SubCategoryLookupModel>> GetSubCategoryLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<SubCategoryLookupModel>> GetSubCategoryLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -833,7 +964,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<UomLookupModel>> GetUomLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<UomLookupModel>> GetUomLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -863,7 +994,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CreditTermsLookupModel>> GetCreditTermsLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<CreditTermsLookupModel>> GetCreditTermsLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -893,7 +1024,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<TaxLookupModel>> GetTaxLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<TaxLookupModel>> GetTaxLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -923,7 +1054,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -953,7 +1084,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -984,7 +1115,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<ProductLookupModel>> GetProductLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -1014,7 +1145,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<ProductLookupModel>> GetProductLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1045,7 +1176,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -1075,7 +1206,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1106,7 +1237,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -1136,7 +1267,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1167,7 +1298,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<VesselLookupModel>> GetVesselLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -1197,7 +1328,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<VesselLookupModel>> GetVesselLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1228,7 +1359,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -1258,7 +1389,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupListAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1289,67 +1420,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<UserGroupLookupModel>> GetUserGroupLookupListAsync(Int16 CompanyId, Int16 UserId)
-        {
-            try
-            {
-                var result = await _repository.GetQueryAsync<UserGroupLookupModel>($"SELECT UserGroupId,UserGroupCode,UserGroupName FROM AdmUserGroup WHERE UserGroupId<>0 And IsActive=1  order by UserGroupName");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Admin,
-                    TransactionId = (short)E_Admin.UserGroup,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "AdmUserGroup",
-                    ModeId = (short)E_Mode.Lookup,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
-
-        public async Task<IEnumerable<UserLookupModel>> GetUserLookupListAsync(Int16 CompanyId, Int16 UserId)
-        {
-            try
-            {
-                var result = await _repository.GetQueryAsync<UserLookupModel>($"SELECT UserId,UserCode,UserName FROM AdmUser WHERE UserId<>0 And IsActive=1  order by UserName");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Admin,
-                    TransactionId = (short)E_Admin.User,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "AdmUser",
-                    ModeId = (short)E_Mode.Lookup,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
-
-        public async Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId)
+        public async Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId)
         {
             try
             {
@@ -1379,7 +1450,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId)
+        public async Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId)
         {
             try
             {
@@ -1409,7 +1480,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SupplierAddressLookupModel>> GetSupplierAddressLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
+        public async Task<IEnumerable<SupplierAddressLookupModel>> GetSupplierAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
         {
             try
             {
@@ -1439,7 +1510,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SupplierContactLookupModel>> GetSupplierContactLookup_FinListAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
+        public async Task<IEnumerable<SupplierContactLookupModel>> GetSupplierContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
         {
             try
             {
@@ -1469,78 +1540,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<ModuleLookupModel>> GetModuleLookupAsync(Int16 CompanyId, Int16 UserId, bool IsVisible, bool IsMandatory)
-        {
-            try
-            {
-                string sql = "Select ModuleId, ModuleCode, ModuleName from AdmModule where IsActive = 1";
-                if (IsMandatory)
-                {
-                    sql += " And IsMandatory = 1";
-                }
-                if (IsVisible)
-                {
-                    sql += " And IsVisible = 1";
-                }
-                sql += " Order by ModuleName";
-
-                return await _repository.GetQueryAsync<ModuleLookupModel>(sql);
-
-                //return await _repository.GetQueryAsync<ModuleLookupModel>( $"Select ModuleId,ModuleCode,ModuleName from AdmModule where IsActive=1 and Order by ModuleName");
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Admin,
-                    TransactionId = (short)E_Admin.Modules,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "AdmModule",
-                    ModeId = (short)E_Mode.Lookup,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
-
-        public async Task<IEnumerable<TransactionLookupModel>> GetTransactionLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId)
-        {
-            try
-            {
-                var result = await _repository.GetQueryAsync<TransactionLookupModel>($"Select TransactionId,TransactionCode,TransactionName from AdmTransaction where IsActive=1 And ModuleId={ModuleId} Order by TransactionName");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Admin,
-                    TransactionId = (short)E_Admin.Transaction,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "AdmTransaction",
-                    ModeId = (short)E_Mode.Lookup,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
-
-        public async Task<IEnumerable<TaxCategoryLookupModel>> GetTaxCategoryLookupListAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<TaxCategoryLookupModel>> GetTaxCategoryLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
@@ -1664,7 +1664,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        //public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupListAsync( Int16 CompanyId, Int16 UserId)
+        //public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync( Int16 CompanyId, Int16 UserId)
         //{
         //    try
         //    {

@@ -20,4 +20,11 @@
         public Int16 CreateById { get; set; }
         public DateTime CreateDate { get; set; }
     }
+
+    public class SaveUserGroupRightsModel
+    {
+        public Int16 SelectedUserId { get; set; }
+        public Int16 SelectedModuleId { get; set; }
+        public List<UserGroupRightsViewModel> UserGroupRights { get; set; }
+    }
 }

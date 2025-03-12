@@ -2,7 +2,7 @@
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Enums;
 using AEMSWEB.IServices;
-using AEMSWEB.IServices.Admin;
+using AEMSWEB.IServices.Masters;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Admin;
 using AEMSWEB.Repository;
@@ -10,15 +10,43 @@ using System.Transactions;
 
 namespace AEMSWEB.Services.Admin
 {
-    public sealed class UserLogService : IUserLogService
+    public sealed class AllLogService : IAllLogService
     {
         private readonly IRepository<AdmUserLog> _repository;
         private ApplicationDbContext _context; private readonly ILogService _logService;
 
-        public UserLogService(IRepository<AdmUserLog> repository, ApplicationDbContext context, ILogService logService)
+        public AllLogService(IRepository<AdmUserLog> repository, ApplicationDbContext context, ILogService logService)
         {
             _repository = repository;
             _context = context; _logService = logService;
+        }
+
+        public async Task<IEnumerable<AuditLogViewModel>> GetAuditLogListAsync(Int16 CompanyId, Int16 pageSize, Int16 pageNumber, string searchString, Int16 UserId)
+        {
+            try
+            {
+                return await _repository.GetQueryAsync<AuditLogViewModel>($"SELECT AuditLogId,AuditLogName FROM AdmAuditLog ");
+            }
+            catch (Exception ex)
+            {
+                var AuditLog = new AdmAuditLog
+                {
+                    CompanyId = 0,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Admin.User,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "GetAuditLogListAsync",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(AuditLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
         }
 
         public async Task<UserLogViewModelCount> GetUserLogListAsync(Int16 CompanyId, short pageSize, short pageNumber, string searchString, Int16 UserId)
@@ -130,6 +158,34 @@ namespace AEMSWEB.Services.Admin
 
                     throw new Exception(ex.ToString());
                 }
+            }
+        }
+
+        public async Task<IEnumerable<ErrorLogViewModel>> GetErrorLogListAsync(Int16 CompanyId, Int16 pageSize, Int16 pageNumber, string searchString, Int16 UserId)
+        {
+            try
+            {
+                return await _repository.GetQueryAsync<ErrorLogViewModel>($"SELECT ErrorLogId,ErrorLogName FROM AdmErrorLog ");
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = 0,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Admin.User,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "GetErrorLogListAsync",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

@@ -81,7 +81,17 @@ namespace AEMSWEB.Controllers
                     await _signInManager.SignInAsync(user, authProperties);
                     _logger.LogInformation("Successful login for {Email}", model.Email);
 
-                    var companies = await _context.AdmCompany.ToListAsync();
+
+                    //Get all Companies 
+                    //var companies = await _context.AdmCompany.ToListAsync();
+                    //HttpContext.Session.SetObject("AvailableCompanies", companies);
+
+                    // Get the company details from AdmCompany for those company IDs.
+                    var companies = await _context.AdmCompany
+                        .Where(company => _context.AdmUserRights
+                            .Any(rights => rights.CompanyId == company.CompanyId && rights.UserId == user.Id))
+                        .ToListAsync();
+
                     HttpContext.Session.SetObject("AvailableCompanies", companies);
 
                     return companies.Count switch
