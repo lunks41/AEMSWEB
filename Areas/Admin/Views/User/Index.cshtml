@@ -22,31 +22,32 @@
 
 <ul class="nav nav-pills mb-4 border-bottom pb-2" id="invoicePills" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="main-pill" data-bs-toggle="pill" data-bs-target="#user" type="button" role="tab">
-            <i class="fas fa-calculator me-2"></i>User
+        <button class="nav-link active" id="user-tab" data-bs-toggle="pill" data-bs-target="#user" type="button" role="tab">
+            <span class="material-symbols-outlined ">person</span>User
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="usergroup-tab" data-bs-toggle="tab" data-bs-target="#usergroup" type="button" role="tab">
-            <i class="fas fa-coins me-2"></i>User Group
+            <span class="material-symbols-outlined ">group</span>User Group
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="userrights-tab" data-bs-toggle="tab" data-bs-target="#userrights" type="button" role="tab">
-            <i class="fas fa-asterisk me-2"></i>User Rights
+            <span class="material-symbols-outlined ">shield</span>User Rights
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="usergrouprights-tab" data-bs-toggle="tab" data-bs-target="#usergrouprights" type="button" role="tab">
-            <i class="fas fa-eye me-2"></i>User Group Rights
+            <span class="material-symbols-outlined ">admin_panel_settings</span>User Group Rights
         </button>
     </li>
 </ul>
 
+
 <!-- Tab Contents -->
 <div class="tab-content mt-3">
     <!-- User Tab -->
-    <div class="tab-pane fade" id="user" role="tabpanel">
+    <div class="tab-pane fade show active" id="user" role="tabpanel">
         <div class="row g-3">
             <div class="d-flex justify-content-between mb-3">
                 <button class="btn btn-primary" data-bs-toggle="modal" id="adduserrecord" data-bs-target="#addUserModal">
@@ -198,17 +199,6 @@
                                 <label class="form-label">User Group</label>
                                 <select id="cmb_usergroup_user"></select>
                             </div>
-
-                            @*<div class="col-md-6">
-                                    <label class="form-label">User Group</label>
-                                    <select id="userGroup" class="form-select">
-                                        <option selected>Select group</option>
-                                        <option>Administrator</option>
-                                        <option>Manager</option>
-                                        <option>Staff</option>
-                                        <option>Guest</option>
-                                    </select>
-                                </div>*@
 
                             <!-- Additional Information -->
                             <div class="col-12">
@@ -438,6 +428,28 @@
                 change: loadGroupRights
             });
         });
+
+        function Refresh() {
+            const userUrl = '@Url.Action("GetUserLookup", "Lookup", new { area = "" })';
+            BindComboBox(userUrl, "cmb_user", "userName", "userId");
+            BindComboBox(userUrl, "cmb_user_group", "userName", "userId");
+            BindComboBox(userUrl, "modalCurrentUser", "userName", "userId");
+            BindComboBox(userUrl, "modalToUser", "userName", "userId");
+
+            const userGroupUrl = '@Url.Action("GetUserGroupLookup", "Lookup", new { area = "" })';
+            BindComboBox(userGroupUrl, "cmb_usergroup", "userGroupName", "userGroupId");
+            BindComboBox(userGroupUrl, "cmb_usergroup_user", "userGroupName", "userGroupId");
+        }
+
+        function SelectedDropdown(DrpdwnName) {
+        }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) {
+            if (DrpdwnName == 'cmb_user') {
+                debugger;
+                loadUserRights();
+            }
+        }
 
         //############# USER ###################//
 
@@ -763,7 +775,9 @@
             });
         }
 
-//############# USER Group ###################//
+        //############# USER Group ###################//
+
+        //############# USER rIGHTS ###################//
 
         function loadUserRights() {
             debugger;
@@ -837,27 +851,11 @@
             });
         }
 
-        function Refresh() {
-            const userUrl = '@Url.Action("GetUserLookup", "Lookup", new { area = "" })';
-            BindComboBox(userUrl, "cmb_user", "userName", "userId");
-            BindComboBox(userUrl, "cmb_user_group", "userName", "userId");
-            BindComboBox(userUrl, "modalCurrentUser", "userName", "userId");
-            BindComboBox(userUrl, "modalToUser", "userName", "userId");
+        //############# USER rIGHTS ###################//
 
-            const userGroupUrl = '@Url.Action("GetUserGroupLookup", "Lookup", new { area = "" })';
-            BindComboBox(userGroupUrl, "cmb_usergroup", "userGroupName", "userGroupId");
-            BindComboBox(userGroupUrl, "cmb_usergroup_user", "userGroupName", "userGroupId");
-        }
+        //############# USER GROUP rIGHTS ###################//
 
-        function SelectedDropdown(DrpdwnName) {
-        }
 
-        function OnSelectDropdown(dataItem, DrpdwnName) {
-            if (DrpdwnName == 'cmb_user') {
-                debugger;
-                loadUserRights();
-            }
-        }
 
         // Function to load group rights based on the selected user and module (if applicable)
         function loadGroupRights() {
@@ -963,7 +961,6 @@
             });
         }
 
-        // When the user clicks the "Clone Rights" button on the page
         function cloneRights() {
             // Retrieve the selected user from the main dropdown
             var selectedUserId = $('#cmb_user_group').val();
@@ -1024,56 +1021,6 @@
             $('#cloneModal').modal('hide');
         }
 
-        //document.addEventListener('DOMContentLoaded', function () {
-        //    populateTable();
-        //});
-
-        //function populateTable() {
-        //    // Example data, replace this with actual data
-        //    const rightsData = [
-        //        { moduleName: 'Module1', transactionName: 'Transaction1', isEdit: false, isCreate: true, isView: true, isPrint: false, isExport: true, isDelete: false },
-        //        { moduleName: 'Module2', transactionName: 'Transaction2', isEdit: true, isCreate: false, isView: true, isPrint: true, isExport: false, isDelete: false },
-        //        // Add more rows as needed
-        //    ];
-
-        //    const tableBody = document.getElementById('rightsTableBody');
-        //    rightsData.forEach((right) => {
-        //        const row = document.createElement('tr');
-
-        //        row.innerHTML = `
-        //                        <td>${right.moduleName}</td>
-        //                        <td>${right.transactionName}</td>
-        //                        <td><input type="checkbox" ${right.isEdit ? 'checked' : ''}></td>
-        //                        <td><input type="checkbox" ${right.isCreate ? 'checked' : ''}></td>
-        //                        <td><input type="checkbox" ${right.isView ? 'checked' : ''}></td>
-        //                        <td><input type="checkbox" ${right.isPrint ? 'checked' : ''}></td>
-        //                        <td><input type="checkbox" ${right.isExport ? 'checked' : ''}></td>
-        //                        <td><input type="checkbox" ${right.isDelete ? 'checked' : ''}></td>
-        //                    `;
-        //        tableBody.appendChild(row);
-        //    });
-        //}
-
-        //function saveUserGroupRights() {
-        //    const tableBody = document.getElementById('rightsTableBody');
-        //    const rows = tableBody.querySelectorAll('tr');
-
-        //    const rightsData = Array.from(rows).map((row) => {
-        //        const cells = row.querySelectorAll('td');
-        //        return {
-        //            moduleName: cells[0].innerText,
-        //            transactionName: cells[1].innerText,
-        //            isEdit: cells[2].querySelector('input').checked,
-        //            isCreate: cells[3].querySelector('input').checked,
-        //            isView: cells[4].querySelector('input').checked,
-        //            isPrint: cells[5].querySelector('input').checked,
-        //            isExport: cells[5].querySelector('input').checked,
-        //            isDelete: cells[6].querySelector('input').checked,
-        //        };
-        //    });
-
-        //    // Process the rightsData as needed, for example, send it to the server
-        //    console.log(rightsData);
-        //}
+        //############# USER GROUP rIGHTS ###################//
     </script>
 }

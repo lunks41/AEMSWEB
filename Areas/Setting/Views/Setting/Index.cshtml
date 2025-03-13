@@ -3,198 +3,225 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    bool canExport = ViewBag.IsExport ?? false;
+    bool canPrint = ViewBag.IsPrint ?? false;
+}
+
 
 <ul class="nav nav-pills mb-4 border-bottom pb-2" id="invoicePills" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="main-pill" data-bs-toggle="pill" data-bs-target="#decimal" type="button" role="tab">
-            <i class="fas fa-calculator me-2"></i>Decimal
+        <button class="nav-link active" id="decimal-tab" data-bs-toggle="tab" data-bs-target="#decimal" type="button" role="tab">
+            <span class="material-symbols-outlined">calculate</span>Decimal
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="finance-tab" data-bs-toggle="tab" data-bs-target="#finance" type="button" role="tab">
-            <i class="fas fa-coins me-2"></i>Finance
+            <span class="material-symbols-outlined">monetization_on</span>Finance
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="mandatory-tab" data-bs-toggle="tab" data-bs-target="#mandatory" type="button" role="tab">
-            <i class="fas fa-asterisk me-2"></i>Mandatory
+            <span class="material-symbols-outlined">priority_high</span>Mandatory
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="visibility-tab" data-bs-toggle="tab" data-bs-target="#visibility" type="button" role="tab">
-            <i class="fas fa-eye me-2"></i>Visibility
+            <span class="material-symbols-outlined">visibility</span>Visibility
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="number-format-tab" data-bs-toggle="tab" data-bs-target="#number-format" type="button" role="tab">
-            <i class="fas fa-hashtag me-2"></i>Number Format
+            <span class="material-symbols-outlined">tag</span>Number Format
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="user-setting-tab" data-bs-toggle="tab" data-bs-target="#user-setting" type="button" role="tab">
-            <i class="fas fa-cog me-2"></i>User Setting
+            <span class="material-symbols-outlined">settings</span>User Setting
         </button>
     </li>
 </ul>
 
+
 <!-- Tab Contents -->
 <div class="tab-content mt-3">
     <!-- Decimal Tab -->
-    <div class="tab-pane fade" id="decimal" role="tabpanel">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label class="form-label">Amount Decimal</label>
-                <input type="number" class="form-control" min="0" max="8" value="2">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Local Amount Decimals </label>
-                <input type="number" class="form-control" min="0" max="8" value="2">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Country Amount Decimals</label>
-                <input type="number" class="form-control" min="0" max="8" value="2">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Price Decimals</label>
-                <input type="number" class="form-control" min="0" max="8" value="4">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Quantity Decimals</label>
-                <input type="number" class="form-control" min="0" max="4" value="0">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Exchange Rate Decimals</label>
-                <input type="number" class="form-control" min="0" max="6" value="4">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Date Format</label>
-                <select class="form-select">
-                    <option>DD/MM/YYYY</option>
-                    <option>MM/DD/YYYY</option>
-                    <option>YYYY-MM-DD</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Long Date Format</label>
-                <select class="form-select">
-                    <option>DD MMMM YYYY</option>
-                    <option>MMMM DD, YYYY</option>
-                    <option>YYYY年MM月DD日</option>
-                </select>
+    <div class="tab-pane fade show active" id="decimal" role="tabpanel">
+        <div class="mx-auto" style="max-width: 1000px;">
+            <div class="card shadow-sm">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Decimal Settings</h5>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <form id="decimalForm">
+                        <div class="row g-3">
+                            <!-- Amount Decimal -->
+                            <div class="col-md-4">
+                                <label class="form-label">Amount Decimal</label>
+                                <input type="number" class="form-control" min="0" max="8" value="2">
+                                <div class="invalid-feedback">Value must be between 0 and 8</div>
+                            </div>
+
+                            <!-- Local Amount Decimals -->
+                            <div class="col-md-4">
+                                <label class="form-label">Local Amount Decimals</label>
+                                <input type="number" class="form-control" min="0" max="8" value="2">
+                                <div class="invalid-feedback">Value must be between 0 and 8</div>
+                            </div>
+
+                            <!-- Country Amount Decimals -->
+                            <div class="col-md-4">
+                                <label class="form-label">Country Amount Decimals</label>
+                                <input type="number" class="form-control" min="0" max="8" value="2">
+                                <div class="invalid-feedback">Value must be between 0 and 8</div>
+                            </div>
+
+                            <!-- Price Decimals -->
+                            <div class="col-md-4">
+                                <label class="form-label">Price Decimals</label>
+                                <input type="number" class="form-control" min="0" max="8" value="4">
+                                <div class="invalid-feedback">Value must be between 0 and 8</div>
+                            </div>
+
+                            <!-- Quantity Decimals -->
+                            <div class="col-md-4">
+                                <label class="form-label">Quantity Decimals</label>
+                                <input type="number" class="form-control" min="0" max="4" value="0">
+                                <div class="invalid-feedback">Value must be between 0 and 4</div>
+                            </div>
+
+                            <!-- Exchange Rate Decimals -->
+                            <div class="col-md-4">
+                                <label class="form-label">Exchange Rate Decimals</label>
+                                <input type="number" class="form-control" min="0" max="6" value="4">
+                                <div class="invalid-feedback">Value must be between 0 and 6</div>
+                            </div>
+
+                            <!-- Date Format -->
+                            <div class="col-md-4">
+                                <label class="form-label">Date Format</label>
+                                <select class="form-select">
+                                    <option>DD/MM/YYYY</option>
+                                    <option>MM/DD/YYYY</option>
+                                    <option>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+
+                            <!-- Long Date Format -->
+                            <div class="col-md-4">
+                                <label class="form-label">Long Date Format</label>
+                                <select class="form-select">
+                                    <option value="DD MMMM YYYY HH:mm:ss">DD MMMM YYYY HH:mm:ss (24h)</option>
+                                    <option value="MMMM DD, YYYY hh:mm A">MMMM DD, YYYY hh:mm AM/PM</option>
+                                    <option value="YYYY年MM月DD日 HH:mm">YYYY年MM月DD日 HH:mm (24h)</option>
+                                    <option value="DD/MM/YYYY HH:mm:ss">DD/MM/YYYY HH:mm:ss (24h)</option>
+                                    <option value="MM/DD/YYYY hh:mm A">MM/DD/YYYY hh:mm AM/PM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    <button type="submit" form="decimalForm" class="btn btn-primary float-end">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Finance Tab -->
     <div class="tab-pane fade" id="finance" role="tabpanel">
-        <div class="row">
-            <h6 class="mb-3">Currency Settings</h6>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Base Currency</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
+        <div class="mx-auto" style="max-width: 1000px;">
+            <div class="card shadow-sm">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Finance Settings</h5>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Local Currency</label>
-                    <select class="form-select">
-                        <option>SGD - Singapore Dollar</option>
-                        <option>MYR - Malaysian Ringgit</option>
-                        <option>IDR - Indonesian Rupiah</option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- This div creates a line break to ensure GL Accounts Setting starts on the next line -->
-            <div class="w-100"></div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <form id="financeForm">
+                        <!-- Currency Settings Section -->
+                        <h6 class="border-bottom pb-2 mb-3">Currency Settings</h6>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Base Currency *</label>
+                                <select id="cmb_basecurrency"></select>
+                                <div class="invalid-feedback">Please select base currency</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Local Currency *</label>
+                                <select id="cmb_localcurrency"></select>
+                                <div class="invalid-feedback">Please select local currency</div>
+                            </div>
+                        </div>
 
-            <h6 class="mb-3">GL Accounts Setting</h6>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Exchange Gain/Loss GL</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
+                        <!-- GL Accounts Section -->
+                        <h6 class="border-bottom pb-2 my-3">GL Accounts Setting</h6>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Exchange Gain/Loss GL *</label>
+                                <select id="cmb_exhgainloss"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Bank Charges GL *</label>
+                                <select id="cmb_bankcharges"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Profit/Loss GL *</label>
+                                <select id="cmb_profitndloss"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Return Earning GL *</label>
+                                <select id="cmb_returneraing"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Sales GST GL *</label>
+                                <select id="cmb_salegst"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Purchase GST GL *</label>
+                                <select id="cmb_purchasegst"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Sales Define GL *</label>
+                                <select id="cmb_saledefine"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Purchase Define GL *</label>
+                                <select id="cmb_purchasedefine"></select>
+                                <div class="invalid-feedback">Required GL account</div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Bank Charges GL</label>
-                <select class="form-select">
-                    <option>USD - US Dollar</option>
-                    <option>EUR - Euro</option>
-                    <option>SGD - Singapore Dollar</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Profit/Loss GL</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Return Earing GL</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Sales GST GL</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Purchase GST GL</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Sales Define GL</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">Purchase Define GL</label>
-                    <select class="form-select">
-                        <option>USD - US Dollar</option>
-                        <option>EUR - Euro</option>
-                        <option>SGD - Singapore Dollar</option>
-                    </select>
+
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    <button type="submit" form="financeForm" class="btn btn-primary float-end">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- Mandatory Tab -->
     <div class="tab-pane fade" id="mandatory" role="tabpanel">
@@ -254,35 +281,267 @@
 
     <!-- Number Format Tab -->
     <div class="tab-pane fade" id="number-format" role="tabpanel">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-4">
-                    <label class="form-label">Number Format Template</label>
-                    <input type="text" class="form-control" value="#,##0.00">
+        <div class="container mt-4">
+            <!-- Top Section: User Cards -->
+            <div class="row">
+                <!-- AR Card -->
+                <div class="col-md-3">
+                    <div class="card h-100 module-card">
+                        <div class="card-body">
+                            <h5 class="card-title">AR</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link"
+                                       data-module="AR"
+                                       data-screen="Invoice"
+                                       onclick="handleModuleClick(event)">Invoice</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AR" data-screen="creditNote">creditNote</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AR" data-screen="debitnote">debitnote</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AR" data-screen="receipt">receipt</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AR" data-screen="document-setup">document setup</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AR" data-screen="refund">refund</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AR" data-screen="adjustment">adjustment</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label class="form-label">Currency Format</label>
-                    <input type="text" class="form-control" value="¤ #,##0.00">
+                <!-- AP Card -->
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">AP</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AP" data-screen="Invoice">Invoice</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AP" data-screen="creditNote">creditNote</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AP" data-screen="debitnote">debitnote</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="AP" data-screen="receipt">receipt</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CB Card -->
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">CB</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="CB" data-screen="Payment">Payment</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="CB" data-screen="BankTransfer">BankTransfer</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="CB" data-screen="Batch-Payment">Batch Payment</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- GL Card -->
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">GL</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="GL" data-screen="GL-Journal">GL Journal</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" class="module-link" data-module="GL" data-screen="AR-Ap-Contra">AR Ap Contra</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="table-light">
+
+            <!-- Bottom Section: Configuration Form and Table -->
+            <div class="row mt-4">
+                <!-- Left Panel: Configuration Forms -->
+                <div class="col-md-8">
+                    <h3 id="module-title">AR - Invoice</h3>
+                    <form id="form-AR-Invoice" class="config-form">
+                        <!-- Trns Type Section -->
+                        <div class="form-group">
+                            <label>Trns Type</label>
+                            <select class="form-control">
+                                <option>CRD ALPHA</option>
+                                <option>Length</option>
+                                <option>Length</option>
+                            </select>
+                        </div>
+
+                        <!-- Length & Document Number -->
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Length</label>
+                                    <input type="text" class="form-control" value="6" readonly />
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Document Number</label>
+                                    <input type="text" class="form-control" value="Document Number Can be up to 20 characters" readonly />
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Document Number Can be up to 20 characters</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prefix, Delimiter, Sequence -->
+                        <div class="form-group">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label>Prefix</label>
+                                    <input type="text" class="form-control" placeholder="Prefix" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Delimiter</label>
+                                    <input type="text" class="form-control" placeholder="-" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Sequence Number</label>
+                                    <input type="number" class="form-control" placeholder="Number" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Include Year Section -->
+                        <div class="form-group">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <div class="row g-3">
+                                        <div class="form-check col-md-8">
+                                            <input class="form-check-input" type="checkbox" id="includeYear">
+                                            <label class="form-check-label" for="includeYear">Include Year</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control mt-1" placeholder="Enter 'yy' for year" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <input type="text" class="form-control" placeholder="-" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <input type="number" class="form-control" placeholder="Number" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Include Month Section -->
+                        <div class="form-group">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <div class="row g-3">
+                                        <div class="form-check col-md-8">
+                                            <input class="form-check-input" type="checkbox" id="includeMonth">
+                                            <label class="form-check-label" for="includeMonth">Include Month</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control mt-1" placeholder="Enter 'mm' for month" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <input type="text" class="form-control" placeholder="-" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <input type="number" class="form-control" placeholder="Number" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Number Configuration -->
+                        <div class="form-group">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label>Number of Digit</label>
+                                    <input type="number" class="form-control" placeholder="Number" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <input type="text" class="form-control" placeholder="-" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label></label>
+                                    <input type="number" class="form-control" placeholder="Number" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Yearly Series Checkbox -->
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="yearlySeries">
+                            <label class="form-check-label" for="yearlySeries">Is Yearly Series</label>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary me-2">Save</button>
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Right Panel: Tables -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Year</label>
+                        <select class="form-control">
+                            <option>2025</option>
+                            <option>2024</option>
+                            <option>2022</option>
+                        </select>
+                    </div>
+                    <table id="table-AR-Invoice" class="table table-striped data-table">
+                        <thead>
                             <tr>
-                                <th>Format Type</th>
-                                <th>Example</th>
+                                <th>Action</th>
+                                <th>Month</th>
+                                <th>Count</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Decimal</td>
-                                <td>1,234.56</td>
-                            </tr>
-                            <tr>
-                                <td>Currency</td>
-                                <td>$ 1,234.56</td>
-                            </tr>
+                            <tr><td>✏️</td><td>1</td><td>100</td></tr>
+                            <tr><td>✏️</td><td>2</td><td>60</td></tr>
+                            <tr><td>✏️</td><td>3</td><td>82</td></tr>
+                            <tr><td>✏️</td><td>4</td><td>9</td></tr>
+                            <tr><td>✏️</td><td>5</td><td>7</td></tr>
+                            <tr><td>✏️</td><td>6</td><td>7</td></tr>
+                            <tr><td>✏️</td><td>7</td><td>7</td></tr>
+                            <tr><td>✏️</td><td>8</td><td>7</td></tr>
+                            <tr><td>✏️</td><td>9</td><td>7</td></tr>
+                            <tr><td>✏️</td><td>10</td><td>10</td></tr>
+                            <tr><td>✏️</td><td>11</td><td>12</td></tr>
+                            <tr><td>✏️</td><td>12</td><td>13</td></tr>
+                            <tr><td>✏️</td><td>13</td><td>13</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -323,3 +582,118 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+
+    <script>
+
+        function SelectedDropdown(DrpdwnName) {
+        }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) {
+        }
+
+        let companyId = 0;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId');
+
+            debugger;
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+            Refresh();
+        });
+
+        function Refresh() {
+            const glUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(glUrl, "cmb_exhgainloss", "glName", "glId");
+            BindComboBox(glUrl, "cmb_bankcharges", "glName", "glId");
+            BindComboBox(glUrl, "cmb_profitndloss", "glName", "glId");
+            BindComboBox(glUrl, "cmb_returneraing", "glName", "glId");
+            BindComboBox(glUrl, "cmb_salegst", "glName", "glId");
+            BindComboBox(glUrl, "cmb_purchasegst", "glName", "glId");
+            BindComboBox(glUrl, "cmb_saledefine", "glName", "glId");
+            BindComboBox(glUrl, "cmb_purchasedefine", "glName", "glId");
+
+            const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(currencyUrl, "cmb_basecurrency", "currencyName", "currencyId");
+            BindComboBox(currencyUrl, "cmb_localcurrency", "currencyName", "currencyId");
+
+              @*const moduleUrl = '@Url.Action("GetModuleLookup", "Lookup", new { area = "" })';
+              BindComboBox(moduleUrl, "cmb_mandatorymodule", "moduleName", "moduleId");
+              BindComboBox(moduleUrl, "cmb_visiblitymodule", "moduleName", "moduleId");*@
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const financeForm = document.getElementById('financeForm');
+
+            // Form submission validation
+            financeForm.addEventListener('submit', function (e) {
+                let isValid = true;
+
+                // Validate all required selects
+                financeForm.querySelectorAll('select[required]').forEach(select => {
+                    if (!select.value) {
+                        select.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        select.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please complete all required fields before saving');
+                }
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('decimalForm');
+
+            // Real-time validation
+            form.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', function () {
+                    const min = parseInt(this.min);
+                    const max = parseInt(this.max);
+                    const value = parseInt(this.value);
+
+                    if (value < min || value > max) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+
+            // Form submission validation
+            form.addEventListener('submit', function (e) {
+                let isValid = true;
+
+                form.querySelectorAll('input[type="number"]').forEach(input => {
+                    const min = parseInt(input.min);
+                    const max = parseInt(input.max);
+                    const value = parseInt(input.value);
+
+                    if (value < min || value > max || isNaN(value)) {
+                        input.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fix the invalid fields before saving');
+                }
+            });
+        });
+    </script>
+}
