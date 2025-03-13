@@ -1,0 +1,276 @@
+﻿<div class="container mt-4">
+    <!-- Top Section: User Cards -->
+    <div class="row">
+        <!-- AR Card -->
+        <div class="col-md-3">
+            <div class="card h-100 module-card">
+                <div class="card-body">
+                    <h5 class="card-title">AR</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="#" class="module-link"
+                               data-module="AR"
+                               data-screen="Invoice"
+                               onclick="handleModuleClick(event)">Invoice</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AR" data-screen="creditNote">creditNote</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AR" data-screen="debitnote">debitnote</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AR" data-screen="receipt">receipt</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AR" data-screen="document-setup">document setup</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AR" data-screen="refund">refund</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AR" data-screen="adjustment">adjustment</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- AP Card -->
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">AP</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AP" data-screen="Invoice">Invoice</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AP" data-screen="creditNote">creditNote</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AP" data-screen="debitnote">debitnote</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="AP" data-screen="receipt">receipt</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- CB Card -->
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">CB</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="CB" data-screen="Payment">Payment</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="CB" data-screen="BankTransfer">BankTransfer</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="CB" data-screen="Batch-Payment">Batch Payment</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- GL Card -->
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">GL</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="GL" data-screen="GL-Journal">GL Journal</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#" class="module-link" data-module="GL" data-screen="AR-Ap-Contra">AR Ap Contra</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section: Configuration Form and Table -->
+    <div class="row mt-4">
+        <!-- Left Panel: Configuration Forms -->
+        <div class="col-md-8">
+            <h3 id="module-title">AR - Invoice</h3>
+            <form id="form-AR-Invoice" class="config-form">
+                <!-- Trns Type Section -->
+                <div class="form-group">
+                    <label>Trns Type</label>
+                    <select class="form-control">
+                        <option>CRD ALPHA</option>
+                        <option>Length</option>
+                        <option>Length</option>
+                    </select>
+                </div>
+
+                <!-- Length & Document Number -->
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Length</label>
+                            <input type="text" class="form-control" value="6" readonly />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Document Number</label>
+                            <input type="text" class="form-control" value="Document Number Can be up to 20 characters" readonly />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Document Number Can be up to 20 characters</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prefix, Delimiter, Sequence -->
+                <div class="form-group">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label>Prefix</label>
+                            <input type="text" class="form-control" placeholder="Prefix" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Delimiter</label>
+                            <input type="text" class="form-control" placeholder="-" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Sequence Number</label>
+                            <input type="number" class="form-control" placeholder="Number" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Include Year Section -->
+                <div class="form-group">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label></label>
+                            <div class="row g-3">
+                                <div class="form-check col-md-8">
+                                    <input class="form-check-input" type="checkbox" id="includeYear">
+                                    <label class="form-check-label" for="includeYear">Include Year</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control mt-1" placeholder="Enter 'yy' for year" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label></label>
+                            <input type="text" class="form-control" placeholder="-" />
+                        </div>
+                        <div class="col-md-4">
+                            <label></label>
+                            <input type="number" class="form-control" placeholder="Number" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Include Month Section -->
+                <div class="form-group">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label></label>
+                            <div class="row g-3">
+                                <div class="form-check col-md-8">
+                                    <input class="form-check-input" type="checkbox" id="includeMonth">
+                                    <label class="form-check-label" for="includeMonth">Include Month</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control mt-1" placeholder="Enter 'mm' for month" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label></label>
+                            <input type="text" class="form-control" placeholder="-" />
+                        </div>
+                        <div class="col-md-4">
+                            <label></label>
+                            <input type="number" class="form-control" placeholder="Number" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Number Configuration -->
+                <div class="form-group">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label>Number of Digit</label>
+                            <input type="number" class="form-control" placeholder="Number" />
+                        </div>
+                        <div class="col-md-4">
+                            <label></label>
+                            <input type="text" class="form-control" placeholder="-" />
+                        </div>
+                        <div class="col-md-4">
+                            <label></label>
+                            <input type="number" class="form-control" placeholder="Number" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yearly Series Checkbox -->
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="yearlySeries">
+                    <label class="form-check-label" for="yearlySeries">Is Yearly Series</label>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary me-2">Save</button>
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- Right Panel: Tables -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Year</label>
+                <select class="form-control">
+                    <option>2025</option>
+                    <option>2024</option>
+                    <option>2022</option>
+                </select>
+            </div>
+            <table id="table-AR-Invoice" class="table table-striped data-table">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Month</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>✏️</td><td>1</td><td>100</td></tr>
+                    <tr><td>✏️</td><td>2</td><td>60</td></tr>
+                    <tr><td>✏️</td><td>3</td><td>82</td></tr>
+                    <tr><td>✏️</td><td>4</td><td>9</td></tr>
+                    <tr><td>✏️</td><td>5</td><td>7</td></tr>
+                    <tr><td>✏️</td><td>6</td><td>7</td></tr>
+                    <tr><td>✏️</td><td>7</td><td>7</td></tr>
+                    <tr><td>✏️</td><td>8</td><td>7</td></tr>
+                    <tr><td>✏️</td><td>9</td><td>7</td></tr>
+                    <tr><td>✏️</td><td>10</td><td>10</td></tr>
+                    <tr><td>✏️</td><td>11</td><td>12</td></tr>
+                    <tr><td>✏️</td><td>12</td><td>13</td></tr>
+                    <tr><td>✏️</td><td>13</td><td>13</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            // Tab-specific JavaScript
+            const form = document.getElementById('decimalForm');
+            // Validation logic
+        })();
+    </script>
+}

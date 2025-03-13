@@ -1,0 +1,90 @@
+﻿<div class="mx-auto" style="max-width: 1000px;">
+    <div class="card shadow-sm">
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Finance Settings</h5>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+            <form id="financeForm">
+                <!-- Currency Settings Section -->
+                <h6 class="border-bottom pb-2 mb-3">Currency Settings</h6>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Base Currency *</label>
+                        <select id="cmb_basecurrency"></select>
+                        <div class="invalid-feedback">Please select base currency</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Local Currency *</label>
+                        <select id="cmb_localcurrency"></select>
+                        <div class="invalid-feedback">Please select local currency</div>
+                    </div>
+                </div>
+
+                <!-- GL Accounts Section -->
+                <h6 class="border-bottom pb-2 my-3">GL Accounts Setting</h6>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Exchange Gain/Loss GL *</label>
+                        <select id="cmb_exhgainloss"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Bank Charges GL *</label>
+                        <select id="cmb_bankcharges"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Profit/Loss GL *</label>
+                        <select id="cmb_profitndloss"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Return Earning GL *</label>
+                        <select id="cmb_returneraing"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Sales GST GL *</label>
+                        <select id="cmb_salegst"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Purchase GST GL *</label>
+                        <select id="cmb_purchasegst"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Sales Define GL *</label>
+                        <select id="cmb_saledefine"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Purchase Define GL *</label>
+                        <select id="cmb_purchasedefine"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer">
+            <button type="submit" form="financeForm" class="btn btn-primary float-end">
+                <i class="fas fa-save me-2"></i>Save Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            // Tab-specific JavaScript
+            const form = document.getElementById('decimalForm');
+            // Validation logic
+        })();
+    </script>
+}

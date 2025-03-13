@@ -1,0 +1,93 @@
+﻿<div class="mx-auto" style="max-width: 1000px;">
+    <div class="card shadow-sm settings-card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Decimal Settings</h5>
+        </div>
+
+        <div class="card-body">
+            <form id="decimalForm">
+                <div class="row g-3">
+                    <!-- Amount Decimal -->
+                    <div class="col-md-4">
+                        <label class="form-label">Amount Decimal</label>
+                        <input type="number" class="form-control" min="0" max="8" value="2">
+                        <div class="invalid-feedback">Value must be between 0 and 8</div>
+                    </div>
+
+                    <!-- Local Amount Decimals -->
+                    <div class="col-md-4">
+                        <label class="form-label">Local Amount Decimals</label>
+                        <input type="number" class="form-control" min="0" max="8" value="2">
+                        <div class="invalid-feedback">Value must be between 0 and 8</div>
+                    </div>
+
+                    <!-- Country Amount Decimals -->
+                    <div class="col-md-4">
+                        <label class="form-label">Country Amount Decimals</label>
+                        <input type="number" class="form-control" min="0" max="8" value="2">
+                        <div class="invalid-feedback">Value must be between 0 and 8</div>
+                    </div>
+
+                    <!-- Price Decimals -->
+                    <div class="col-md-4">
+                        <label class="form-label">Price Decimals</label>
+                        <input type="number" class="form-control" min="0" max="8" value="4">
+                        <div class="invalid-feedback">Value must be between 0 and 8</div>
+                    </div>
+
+                    <!-- Quantity Decimals -->
+                    <div class="col-md-4">
+                        <label class="form-label">Quantity Decimals</label>
+                        <input type="number" class="form-control" min="0" max="4" value="0">
+                        <div class="invalid-feedback">Value must be between 0 and 4</div>
+                    </div>
+
+                    <!-- Exchange Rate Decimals -->
+                    <div class="col-md-4">
+                        <label class="form-label">Exchange Rate Decimals</label>
+                        <input type="number" class="form-control" min="0" max="6" value="4">
+                        <div class="invalid-feedback">Value must be between 0 and 6</div>
+                    </div>
+
+                    <!-- Date Format -->
+                    <div class="col-md-4">
+                        <label class="form-label">Date Format</label>
+                        <select class="form-select">
+                            <option>DD/MM/YYYY</option>
+                            <option>MM/DD/YYYY</option>
+                            <option>YYYY-MM-DD</option>
+                        </select>
+                    </div>
+
+                    <!-- Long Date Format -->
+                    <div class="col-md-4">
+                        <label class="form-label">Long Date Format</label>
+                        <select class="form-select">
+                            <option value="DD MMMM YYYY HH:mm:ss">DD MMMM YYYY HH:mm:ss (24h)</option>
+                            <option value="MMMM DD, YYYY hh:mm A">MMMM DD, YYYY hh:mm AM/PM</option>
+                            <option value="YYYY年MM月DD日 HH:mm">YYYY年MM月DD日 HH:mm (24h)</option>
+                            <option value="DD/MM/YYYY HH:mm:ss">DD/MM/YYYY HH:mm:ss (24h)</option>
+                            <option value="MM/DD/YYYY hh:mm A">MM/DD/YYYY hh:mm AM/PM</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" form="decimalForm" class="btn btn-primary float-end">
+                <i class="fas fa-save me-2"></i>Save Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            // Tab-specific JavaScript
+            const form = document.getElementById('decimalForm');
+            // Validation logic
+        })();
+    </script>
+}

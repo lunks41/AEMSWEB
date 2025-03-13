@@ -1,0 +1,24 @@
+﻿<div class="row">
+    <!-- AR Card -->
+    <div class="col-md-3">
+        <div class="card h-100 module-card">
+            <div class="card-body">
+                <h5 class="card-title">AR</h5>
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in Model.ARScreens)
+                    {
+                        <li class="list-group-item">
+                            <a href="#" class="module-link"
+                               data-module="AR"
+                               data-screen="@item.Name"
+                               onclick="handleModuleClick(event)">
+                                @item.Label
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Repeat for other modules -->
+</div>

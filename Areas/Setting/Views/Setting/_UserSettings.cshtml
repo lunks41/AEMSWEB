@@ -1,0 +1,39 @@
+﻿<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>User</th>
+                <th>Access Level</th>
+                <th>Default View</th>
+                <th>Preferences</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>admin@company.com</td>
+                <td>
+                    <select class="form-select">
+                        <option>Full Access</option>
+                        <option>Read Only</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" value="Dashboard"></td>
+                <td><button class="btn btn-sm btn-outline-primary">Edit</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+    <button class="btn btn-sm btn-primary mt-3">
+        <i class="fas fa-plus me-2"></i>Add New User
+    </button>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            // Tab-specific JavaScript
+            const form = document.getElementById('decimalForm');
+            // Validation logic
+        })();
+    </script>
+}

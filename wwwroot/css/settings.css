@@ -1,0 +1,20 @@
+﻿/* SETTINGS MODULE STYLES */
+.settings-card {
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+}
+
+.module-card .list-group-item {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s;
+}
+
+.module-link {
+    color: var(--bs-dark);
+    text-decoration: none;
+}
+
+.settings-table th {
+    background-color: var(--bs-light);
+    font-weight: 500;
+}
