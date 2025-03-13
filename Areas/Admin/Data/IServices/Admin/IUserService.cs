@@ -39,7 +39,7 @@ namespace AEMSWEB.IServices.Admin
 
         #region User Group Rights
 
-        public Task<IEnumerable<UserGroupRightsViewModel>> GetUserGroupRightsByIdAsync(short CompanyId, short UserId, int SelectedUserId, int SelectedGroupId);
+        public Task<IEnumerable<UserGroupRightsViewModel>> GetUserGroupRightsByIdAsync(short CompanyId, short UserId,  int SelectedGroupId);
 
         public Task<SqlResponse> SaveUserGroupRightsAsync(short CompanyId, short UserId, List<AdmUserGroupRights> admUserGroupRights, Int16 UserGroupId);
 

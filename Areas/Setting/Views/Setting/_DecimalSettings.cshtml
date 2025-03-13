@@ -9,50 +9,50 @@
                 <div class="row g-3">
                     <!-- Amount Decimal -->
                     <div class="col-md-4">
-                        <label class="form-label">Amount Decimal</label>
-                        <input type="number" class="form-control" min="0" max="8" value="2">
+                        <label class="form-label" for="amountDecimal">Amount Decimal</label>
+                        <input type="number" class="form-control" id="amountDecimal" min="0" max="8" value="2">
                         <div class="invalid-feedback">Value must be between 0 and 8</div>
                     </div>
 
                     <!-- Local Amount Decimals -->
                     <div class="col-md-4">
-                        <label class="form-label">Local Amount Decimals</label>
-                        <input type="number" class="form-control" min="0" max="8" value="2">
+                        <label class="form-label" for="localAmountDecimals">Local Amount Decimals</label>
+                        <input type="number" class="form-control" id="localAmountDecimals" min="0" max="8" value="2">
                         <div class="invalid-feedback">Value must be between 0 and 8</div>
                     </div>
 
                     <!-- Country Amount Decimals -->
                     <div class="col-md-4">
-                        <label class="form-label">Country Amount Decimals</label>
-                        <input type="number" class="form-control" min="0" max="8" value="2">
+                        <label class="form-label" for="countryAmountDecimals">Country Amount Decimals</label>
+                        <input type="number" class="form-control" id="countryAmountDecimals" min="0" max="8" value="2">
                         <div class="invalid-feedback">Value must be between 0 and 8</div>
                     </div>
 
                     <!-- Price Decimals -->
                     <div class="col-md-4">
-                        <label class="form-label">Price Decimals</label>
-                        <input type="number" class="form-control" min="0" max="8" value="4">
+                        <label class="form-label" for="priceDecimals">Price Decimals</label>
+                        <input type="number" class="form-control" id="priceDecimals" min="0" max="8" value="4">
                         <div class="invalid-feedback">Value must be between 0 and 8</div>
                     </div>
 
                     <!-- Quantity Decimals -->
                     <div class="col-md-4">
-                        <label class="form-label">Quantity Decimals</label>
-                        <input type="number" class="form-control" min="0" max="4" value="0">
+                        <label class="form-label" for="quantityDecimals">Quantity Decimals</label>
+                        <input type="number" class="form-control" id="quantityDecimals" min="0" max="4" value="0">
                         <div class="invalid-feedback">Value must be between 0 and 4</div>
                     </div>
 
                     <!-- Exchange Rate Decimals -->
                     <div class="col-md-4">
-                        <label class="form-label">Exchange Rate Decimals</label>
-                        <input type="number" class="form-control" min="0" max="6" value="4">
+                        <label class="form-label" for="exchangeRateDecimals">Exchange Rate Decimals</label>
+                        <input type="number" class="form-control" id="exchangeRateDecimals" min="0" max="6" value="4">
                         <div class="invalid-feedback">Value must be between 0 and 6</div>
                     </div>
 
                     <!-- Date Format -->
                     <div class="col-md-4">
-                        <label class="form-label">Date Format</label>
-                        <select class="form-select">
+                        <label class="form-label" for="dateFormat">Date Format</label>
+                        <select class="form-select" id="dateFormat">
                             <option>DD/MM/YYYY</option>
                             <option>MM/DD/YYYY</option>
                             <option>YYYY-MM-DD</option>
@@ -61,8 +61,8 @@
 
                     <!-- Long Date Format -->
                     <div class="col-md-4">
-                        <label class="form-label">Long Date Format</label>
-                        <select class="form-select">
+                        <label class="form-label" for="longDateFormat">Long Date Format</label>
+                        <select class="form-select" id="longDateFormat">
                             <option value="DD MMMM YYYY HH:mm:ss">DD MMMM YYYY HH:mm:ss (24h)</option>
                             <option value="MMMM DD, YYYY hh:mm A">MMMM DD, YYYY hh:mm AM/PM</option>
                             <option value="YYYY年MM月DD日 HH:mm">YYYY年MM月DD日 HH:mm (24h)</option>
@@ -73,6 +73,7 @@
                 </div>
             </form>
         </div>
+
 
         <div class="card-footer">
             <button type="submit" form="decimalForm" class="btn btn-primary float-end">
@@ -89,5 +90,38 @@
             const form = document.getElementById('decimalForm');
             // Validation logic
         })();
+
+
+        function saveAccountGroup() {
+            let data = {
+                UserGroupId: parseInt($('#amountDecimal').val()) || 0,
+                UserGroupCode: $('#localAmountDecimals').val().trim(),
+                UserGroupName: $('#countryAmountDecimals').val().trim(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            if (!data.UserGroupCode || !data.UserGroupName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveUserGroup", "User", new { area = "Admin" })',
+                type: "POST",
+                data: JSON.stringify({ modal: data }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#addUserGroupModal').modal('hide');
+                        loadGrid();
+                        clearForm();
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
     </script>
 }

@@ -460,7 +460,7 @@ namespace AEMSWEB.Areas.Admin.Controllers
         #region User Group Rights
 
         [HttpGet("user/UserGroupRightsList")]
-        public async Task<JsonResult> UserGroupRightsList(int pageNumber, int pageSize, string searchString, string companyId, int selecteduserId, int SelectedGroupId)
+        public async Task<JsonResult> UserGroupRightsList(int pageNumber, int pageSize, string searchString, string companyId, int SelectedGroupId)
         {
             try
             {
@@ -476,7 +476,7 @@ namespace AEMSWEB.Areas.Admin.Controllers
                     return Json(new { success = false, message = "User not logged in or invalid user ID." });
                 }
 
-                var data = await _UserService.GetUserGroupRightsByIdAsync(companyIdShort, parsedUserId, selecteduserId, SelectedGroupId);
+                var data = await _UserService.GetUserGroupRightsByIdAsync(companyIdShort, parsedUserId,SelectedGroupId);
 
                 var paginatedData = data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                 return Json(new { data = paginatedData, total = 0 });

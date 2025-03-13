@@ -272,5 +272,113 @@
             const form = document.getElementById('decimalForm');
             // Validation logic
         })();
+
+        function loadModules() {
+            $.ajax({
+                url: '/user/getModuleList', // Adjust URL as needed
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    // Group transactions by module name
+                    var groupedModules = {};
+                    response.forEach(function (item) {
+                        if (!groupedModules[item.moduleName]) {
+                            groupedModules[item.moduleName] = {
+                                moduleId: item.moduleId,
+                                transactions: []
+                            };
+                        }
+                        groupedModules[item.moduleName].transactions.push({
+                            transactionId: item.TransactionId,
+                            transactionName: item.TransactionName
+                        });
+                    });
+                    renderModuleCards(groupedModules);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching module list:', error);
+                }
+            });
+        }
+
+       
+        function renderModuleCards(modules) {
+            var container = $('#moduleContainer');
+            container.empty();
+
+            // Map module names to CSS colour classes
+            var moduleColors = {
+                'AR': 'module-AR',
+                'AP': 'module-AP',
+                'CB': 'module-CB',
+                'GL': 'module-GL'
+            };
+
+            // Loop through each module group and create the card
+            $.each(modules, function (moduleName, moduleData) {
+                var col = $('<div class="col-md-3"></div>');
+                var card = $('<div class="card h-100 module-card"></div>');
+
+                // Apply module-specific colour
+                if (moduleColors[moduleName]) {
+                    card.addClass(moduleColors[moduleName]);
+                }
+
+                var cardBody = $('<div class="card-body"></div>');
+                var title = $('<h5 class="card-title"></h5>').text(moduleName);
+                var list = $('<ul class="list-group list-group-flush"></ul>');
+
+                // Create a list item for each transaction
+                moduleData.transactions.forEach(function (transaction) {
+                    var listItem = $('<li class="list-group-item"></li>');
+                    var link = $('<a href="#" class="module-link"></a>')
+                        .text(transaction.transactionName)
+                        .attr('data-moduleid', moduleData.moduleId)
+                        .attr('data-transactionid', transaction.transactionId)
+                        .click(function (e) {
+                            e.preventDefault();
+                            var modId = $(this).data('moduleid');
+                            var transId = $(this).data('transactionid');
+                            getNumberDetails(modId, transId);
+                        });
+                    listItem.append(link);
+                    list.append(listItem);
+                });
+
+                cardBody.append(title).append(list);
+                card.append(cardBody);
+                col.append(card);
+                container.append(col);
+            });
+        }
+
+     
+        function getNumberDetails(moduleId, transactionId) {
+            $.ajax({
+                url: '/user/getnumberdetailsbymodtransid',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    moduleid: moduleId,
+                    transactionid: transactionId
+                },
+                success: function (response) {
+                    // Expected response contains fields like length, documentnumber, premicx, etc.
+                    var content = $('#numberDetailsContent');
+                    content.empty();
+
+                    var detailsHtml = '<table class="table table-bordered">' +
+                        '<thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>';
+                    $.each(response, function (key, value) {
+                        detailsHtml += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+                    });
+                    detailsHtml += '</tbody></table>';
+                    content.html(detailsHtml);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching number details:', error);
+                }
+            });
+        }
     </script>
 }

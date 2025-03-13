@@ -627,7 +627,7 @@ namespace AEMSWEB.Services.Admin
 
         #region User Group Rights
 
-        public async Task<IEnumerable<UserGroupRightsViewModel>> GetUserGroupRightsByIdAsync(short CompanyId, short UserId, int SelectedUserId, int SelectedGroupId)
+        public async Task<IEnumerable<UserGroupRightsViewModel>> GetUserGroupRightsByIdAsync(short CompanyId, short UserId, int SelectedGroupId)
         {
             try
             {

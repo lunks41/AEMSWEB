@@ -1,0 +1,271 @@
+﻿<div class="row g-3">
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-primary" data-bs-toggle="modal" id="adduserrecord" data-bs-target="#addUserModal">
+            <i class="fas fa-plus"></i> Add User
+        </button>
+    </div>
+    <div id="usergrid"></div>
+</div>
+
+
+    <!-- Add/Edit User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addaddUserModalModalLabel">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearUserForm();"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="userForm">
+                        <input type="hidden" id="userId" />
+                        <div class="row g-3">
+                            <!-- Basic Information -->
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="fullName" class="form-control" placeholder="John Doe" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">User Code</label>
+                                <input type="text" id="userCode" class="form-control" placeholder="USR-001" required>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="col-md-6">
+                                <label class="form-label">Username</label>
+                                <input type="text" id="userName" class="form-control" placeholder="johndoe123">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="userEmail" class="form-control" placeholder="johndoe@example.com">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" id="phoneNumber" class="form-control" placeholder="+1234567890" pattern="[0-9]{10}">
+                            </div>
+
+                            <!-- User Status -->
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="isActive" type="checkbox">
+                                    <label class="form-check-label" for="isActive">
+                                        Active User
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- User Group -->
+                            <div class="col-md-6">
+                                <label class="form-label">User Group</label>
+                                <select id="cmb_usergroup_user"></select>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="col-12">
+                                <label class="form-label">Remarks</label>
+                                <textarea id="remarks" class="form-control" rows="3" placeholder="Additional notes..."></textarea>
+                            </div>
+
+                            <!-- Profile Picture -->
+                            <div class="col-md-6">
+                                <label class="form-label">Profile Photo</label>
+                                <input id="profilePhoto" class="form-control" type="file" accept="image/*">
+                            </div>
+                        </div>
+
+                        <!-- Audit Fields -->
+                        <div class="accordion mt-3" id="auditAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                        Audit Details
+                                    </button>
+                                </h2>
+                                <div id="auditCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="createBy" class="form-label">Created By</label>
+                                                <p id="createBy" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="createDate" class="form-label">Created Date</label>
+                                                <p id="createDate" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="editBy" class="form-label">Modified By</label>
+                                                <p id="editBy" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="editDate" class="form-label">Modified Date</label>
+                                                <p id="editDate" class="form-control-plaintext"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btnUserEdit">Edit</button>
+                        <button type="button" class="btn btn-primary" id="btnUserSave" onclick="saveUser()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+
+        function loadUserGrid() {
+            debugger;
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("UserList", "User", new { area = "Admin" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userId}', 'edit')">
+                            <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteUser('${dataItem.userId}')">
+                            <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "fullName", title: "Full Name" },
+                { field: "userCode", title: "Code" },
+                { field: "userName", title: "Name" },
+                { field: "userEmail", title: "Email" },
+                { field: "userGroupName", title: "Group Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+            initializeKendoGrid("usergrid", url, { searchString, companyId }, columns);
+        }
+
+        function openModal(id, mode) {
+            $.get('@Url.Action("GetUserById", "User", new { area = "Admin" })', { selectedUserId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        userPopulateModalFields(response.data);
+                        setMode(mode);
+                        $('#addUserModal').modal('show');
+                    }
+                });
+        }
+
+        function userPopulateModalFields(data) {
+            $('#userId').val(data.userId);
+            $('#fullName').val(data.fullName);
+            $('#userCode').val(data.userCode);
+            $('#userName').val(data.userName);
+            $('#userEmail').val(data.userEmail);
+            $("#cmb_usergroup_user").data("kendoComboBox").value(data.userGroupId);
+            $('#phoneNumber').val(data.phoneNumber);
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+        // checkMandatoryFields();
+        }
+
+        function setMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#fullName,#userCode, #userName, #userEmail, #remarks,#phoneNumber').prop('readonly', !canEdit);
+            $("#cmb_usergroup_user").data("kendoComboBox").enable(!isView);
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnUserSave').toggle(canEdit);
+            $('#btnUserEdit').toggle(isView && permissions.canEdit);
+            $('#btnClose').show();
+            $('#btnClear').hide();
+        }
+
+        function setDefaultUserValues() {
+            clearUserForm();
+            document.getElementById('isActive').checked = true;
+            document.getElementById('btnUserSave').disabled = false;
+        }
+
+        function clearUserForm() {
+            $('#userForm')[0].reset();
+            $('#userId').val(0);
+            $("#cmb_usergroup_user").data("kendoComboBox").value('');
+            $('#btnUserSave').prop('disabled', true);
+        }
+
+        function deleteUser(id) {
+            if (!permissions.canDelete) {
+                alert('You do not have permission to delete records.');
+                return;
+            }
+
+            $('#confirmationModal').modal('show');
+            $('#confirmDelete').off('click').click(function () {
+                $.ajax({
+                    url: `/Admin/User/DeleteUser?selectedUserId=${id}&companyId=${companyId}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.success) {
+                            loadGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveUser() {
+            let data = {
+                UserId: parseInt($('#userId').val()) || 0,
+                UserCode: $('#userCode').val().trim(),
+                UserName: $('#userName').val().trim(),
+                FullName: $('#fullName').val().trim(),
+                UserEmail: $('#userEmail').val().trim(),
+                UserGroupId: $("#cmb_usergroup_user").data("kendoComboBox").value(),
+                PhoneNumber: $('#phoneNumber').val().trim(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            if (!data.UserCode || !data.UserName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveUser", "User", new { area = "Admin" })',
+                type: "POST",
+                data: JSON.stringify({ modal: data }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#addUserModal').modal('hide');
+                        loadUserGrid();
+                        clearUserForm();
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+    </script>
