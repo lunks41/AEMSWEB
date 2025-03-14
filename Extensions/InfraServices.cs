@@ -1,24 +1,21 @@
+using AEMSWEB.Areas.Account.Data.IServices;
+using AEMSWEB.Areas.Account.Data.IServices.AP;
+using AEMSWEB.Areas.Account.Data.IServices.AR;
+using AEMSWEB.Areas.Account.Data.IServices.CB;
+using AEMSWEB.Areas.Account.Data.IServices.GL;
+using AEMSWEB.Areas.Account.Data.Services;
+using AEMSWEB.Areas.Account.Data.Services.AP;
+using AEMSWEB.Areas.Account.Data.Services.AR;
+using AEMSWEB.Areas.Account.Data.Services.CB;
+using AEMSWEB.Areas.Account.Data.Services.GL;
+using AEMSWEB.Areas.Admin.Data;
 using AEMSWEB.Areas.Master.Data.IServices;
 using AEMSWEB.Areas.Master.Data.Services;
+using AEMSWEB.Areas.Setting.Data;
 using AEMSWEB.IServices;
-using AEMSWEB.IServices.Accounts;
-using AEMSWEB.IServices.Accounts.AP;
-using AEMSWEB.IServices.Accounts.AR;
-using AEMSWEB.IServices.Accounts.CB;
-using AEMSWEB.IServices.Accounts.GL;
-using AEMSWEB.IServices.Admin;
-using AEMSWEB.IServices.Masters;
-using AEMSWEB.IServices.Setting;
 using AEMSWEB.Repository;
 using AEMSWEB.Services;
-using AEMSWEB.Services.Accounts;
-using AEMSWEB.Services.Accounts.AP;
-using AEMSWEB.Services.Accounts.AR;
-using AEMSWEB.Services.Accounts.CB;
-using AEMSWEB.Services.Accounts.GL;
-using AEMSWEB.Services.Admin;
 using AEMSWEB.Services.Masters;
-using AEMSWEB.Services.Setting;
 
 namespace AEMSWEB.Extensions;
 
@@ -133,16 +130,7 @@ public static class InfraServices
 
         #region Setting
 
-        services.AddScoped<IDecimalSettingService, DecimalSettingServices>();
-        services.AddScoped<IFinanceSettingService, FinanceSettingServices>();
-        services.AddScoped<IUserSettingService, UserSettingServices>();
-        services.AddScoped<INumberFormatServices, NumberFormatServices>();
-        services.AddScoped<IUserGridServices, UserGridServices>();
-        services.AddScoped<IBaseSettingsService, BaseSettingsServices>();
-        services.AddScoped<IMandatoryFieldsServices, MandatoryFieldsServices>();
-        services.AddScoped<IVisibleFieldsServices, VisibleFieldsServices>();
-        services.AddScoped<IDynamicLookupService, DynamicLookupServices>();
-        services.AddScoped<IDocSeqNoService, DocSeqNoServices>();
+        services.AddScoped<ISettingService, SettingServices>();
 
         #endregion Setting
 

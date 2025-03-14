@@ -1,6 +1,6 @@
-﻿@using Microsoft.AspNetCore.Identity;
-@using AEMSWEB.Extension;
+﻿@using AEMSWEB.Extensions
 @using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity;
 @inject IHttpContextAccessor HttpContextAccessor
 @inject SignInManager<AdmUser> signInManager;
 
@@ -16,39 +16,39 @@
     {
         @if (User.Identity.IsAuthenticated)
         {
-           <div class="nav-item dropdown">
-               <a class="nav-link dropdown-toggle" href="#" id="companyDropdown" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                   <i class="bi bi-building"></i>
-                   @(currentCompany?.CompanyName ?? "Select Company")
-               </a>
-               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="companyDropdown">
-                   @if (companies != null)
-                   {
-                       @foreach (var company in companies)
-                       {
-                           <li>
-                               <form asp-controller="Account" asp-action="SwitchCompany"
-                                     method="post"
-                                     onsubmit="switchCompanyAndOpenNewTab(event, '@company.CompanyId')">
-                                   @Html.AntiForgeryToken()
-                                   <button type="submit" class="dropdown-item @(company.CompanyId.ToString() == companyId ? "active" : "")">
-                                       @company.CompanyName
-                                       @if (company.CompanyId.ToString() == companyId)
-                                       {
-                                           <i class="bi bi-check2 float-end"></i>
-                                       }
-                                   </button>
-                               </form>
-                           </li>
-                       }
-                   }
-                   else
-                   {
-                       <li><span class="dropdown-item-text">No companies available</span></li>
-                   }
-               </ul>
-           </div>
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="companyDropdown" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-building"></i>
+                    @(currentCompany?.CompanyName ?? "Select Company")
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="companyDropdown">
+                    @if (companies != null)
+                    {
+                        @foreach (var company in companies)
+                        {
+                            <li>
+                                <form asp-controller="Account" asp-action="SwitchCompany"
+                                      method="post"
+                                      onsubmit="switchCompanyAndOpenNewTab(event, '@company.CompanyId')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item @(company.CompanyId.ToString() == companyId ? "active" : "")">
+                                        @company.CompanyName
+                                        @if (company.CompanyId.ToString() == companyId)
+                                        {
+                                            <i class="bi bi-check2 float-end"></i>
+                                        }
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li><span class="dropdown-item-text">No companies available</span></li>
+                    }
+                </ul>
+            </div>
         }
 
         <li class="nav-item">

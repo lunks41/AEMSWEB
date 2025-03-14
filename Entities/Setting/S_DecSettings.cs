@@ -15,7 +15,7 @@ namespace AEMSWEB.Entities.Setting
         public Int16 QtyDec { get; set; }
         public Int16 ExhRateDec { get; set; }
         public string DateFormat { get; set; }
-        public string longDateFormat { get; set; }
+        public string LongDateFormat { get; set; }
         public Int16 CreateById { get; set; }
 
         [NotMapped]

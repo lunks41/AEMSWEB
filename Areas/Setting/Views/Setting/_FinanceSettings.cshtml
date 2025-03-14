@@ -67,24 +67,115 @@
                         <div class="invalid-feedback">Required GL account</div>
                     </div>
                 </div>
+                <!-- Audit Fields -->
+                <div class="accordion mt-3" id="auditAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                Audit Details
+                            </button>
+                        </h2>
+                        <div id="auditCollapse" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="createBy" class="form-label">Created By</label>
+                                        <p id="createBy" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="createDate" class="form-label">Created Date</label>
+                                        <p id="createDate" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editBy" class="form-label">Modified By</label>
+                                        <p id="editBy" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editDate" class="form-label">Modified Date</label>
+                                        <p id="editDate" class="form-control-plaintext"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
         <!-- Card Footer -->
         <div class="card-footer">
-            <button type="submit" form="financeForm" class="btn btn-primary float-end">
+            <button type="submit" form="financeForm" class="btn btn-primary float-end" onclick="saveFinanceSetting()">
                 <i class="fas fa-save me-2"></i>Save Changes
             </button>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        (function () {
-            // Tab-specific JavaScript
-            const form = document.getElementById('decimalForm');
-            // Validation logic
-        })();
-    </script>
-}
+<script>
+    (function () {
+        // Tab-specific JavaScript
+        const form = document.getElementById('financeForm');
+        // Validation logic
+    })();
+
+    function getfinancesetting() {
+        debugger;
+        $.get('@Url.Action("GetFinSetting", "Setting", new { area = "Setting" })', { companyId })
+            .done(function (response) {
+                if (response.success) {
+                    debugger;
+                    if (response.data != null) {
+                        var data = response.data;
+                        $('#cmb_basecurrency').data("kendoComboBox").value(data.base_CurrencyId > 0 ? data.base_CurrencyId : '');
+                        $('#cmb_localcurrency').data("kendoComboBox").value(data.local_CurrencyId > 0 ? data.local_CurrencyId : '');
+                        $('#cmb_exhgainloss').data("kendoComboBox").value(data.exhGainLoss_GlId > 0 ? data.exhGainLoss_GlId : '');
+                        $('#cmb_bankcharges').data("kendoComboBox").value(data.bankCharge_GlId > 0 ? data.bankCharge_GlId : '');
+                        $('#cmb_profitndloss').data("kendoComboBox").value(data.profitLoss_GlId > 0 ? data.profitLoss_GlId : '');
+                        $('#cmb_returneraing').data("kendoComboBox").value(data.retEarning_GlId > 0 ? data.retEarning_GlId : '');
+                        $('#cmb_salegst').data("kendoComboBox").value(data.saleGst_GlId > 0 ? data.saleGst_GlId : '');
+                        $('#cmb_purchasegst').data("kendoComboBox").value(data.purGst_GlId > 0 ? data.purGst_GlId : '');
+                        $('#cmb_saledefine').data("kendoComboBox").value(data.saleDef_GlId > 0 ? data.saleDef_GlId : '');
+                        $('#cmb_purchasedefine').data("kendoComboBox").value(data.purDef_GlId > 0 ? data.purDef_GlId : '');
+                        debugger;
+                        $('#createBy').text(data.createBy || "N/A");
+                        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+                        $('#editBy').text(data.editBy || "N/A");
+                        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+                    } else {
+                        alert("Error: there have no default data");
+                    }
+                }
+            });
+    }
+
+    function saveFinanceSetting() {
+        debugger;
+        let data = {
+            Base_CurrencyId: parseInt($('#cmb_basecurrency').data('kendoComboBox').value()) || 0,
+            Local_CurrencyId: parseInt($('#cmb_localcurrency').data('kendoComboBox').value()) || 0,
+            ExhGainLoss_GlId: parseInt($('#cmb_exhgainloss').data('kendoComboBox').value()) || 0,
+            BankCharge_GlId: parseInt($('#cmb_bankcharges').data('kendoComboBox').value()) || 0,
+            ProfitLoss_GlId: parseInt($('#cmb_profitndloss').data('kendoComboBox').value()) || 0,
+            RetEarning_GlId: parseInt($('#cmb_returneraing').data('kendoComboBox').value()) || 0,
+            SaleGst_GlId: parseInt($('#cmb_salegst').data('kendoComboBox').value()) || 0,
+            PurGst_GlId: parseInt($('#cmb_purchasegst').data('kendoComboBox').value()) || 0,
+            SaleDef_GlId: parseInt($('#cmb_saledefine').data('kendoComboBox').value()) || 0,
+            PurDef_GlId: parseInt($('#cmb_purchasedefine').data('kendoComboBox').value()) || 0,
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveFinSetting", "Setting", new { area = "Setting" })',
+            type: "POST",
+            data: JSON.stringify({ FinanceSetting: data, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    alert("Success: Update done !!");
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+</script>

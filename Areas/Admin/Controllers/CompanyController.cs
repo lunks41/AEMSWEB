@@ -1,7 +1,7 @@
-﻿using AEMSWEB.Controllers;
+﻿using AEMSWEB.Areas.Admin.Data;
+using AEMSWEB.Controllers;
 using AEMSWEB.Enums;
 using AEMSWEB.IServices;
-using AEMSWEB.IServices.Masters;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Admin;
 using Microsoft.AspNetCore.Mvc;

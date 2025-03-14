@@ -1,6 +1,6 @@
-﻿@using Microsoft.AspNetCore.Identity;
-@using AEMSWEB.Extension;
+﻿@using AEMSWEB.Extensions
 @using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity;
 @inject IHttpContextAccessor HttpContextAccessor
 @inject SignInManager<AdmUser> signInManager;
 
@@ -50,8 +50,6 @@
         </div>
     }
 }
-
-
 
 <script>
     function switchCompanyAndOpenNewTab(event, newcompanyId) {

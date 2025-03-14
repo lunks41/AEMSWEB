@@ -38,14 +38,15 @@ namespace AEMSWEB.Controllers
                 return;
             }
 
-            // Optional: Verify route companyCode matches session
-            var routeCompanyCode = context.RouteData.Values["companyId"]?.ToString();
-            var sessionCompanyCode = HttpContext.Session.GetString("CurrentCompany");
-            if (!string.IsNullOrEmpty(routeCompanyCode) && routeCompanyCode != sessionCompanyCode)
-            {
-                context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
-                return;
-            }
+            ////checking urlcompanyId & session companyId
+            //// Optional: Verify route companyCode matches session
+            //var routeCompanyCode = context.RouteData.Values["companyId"]?.ToString();
+            //var sessionCompanyCode = HttpContext.Session.GetString("CurrentCompany");
+            //if (!string.IsNullOrEmpty(routeCompanyCode) && routeCompanyCode != sessionCompanyCode)
+            //{
+            //    context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
+            //    return;
+            //}
 
             base.OnActionExecuting(context);
         }

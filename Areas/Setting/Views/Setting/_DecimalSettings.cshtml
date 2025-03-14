@@ -53,9 +53,9 @@
                     <div class="col-md-4">
                         <label class="form-label" for="dateFormat">Date Format</label>
                         <select class="form-select" id="dateFormat">
-                            <option>DD/MM/YYYY</option>
-                            <option>MM/DD/YYYY</option>
-                            <option>YYYY-MM-DD</option>
+                            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                         </select>
                     </div>
 
@@ -63,65 +63,116 @@
                     <div class="col-md-4">
                         <label class="form-label" for="longDateFormat">Long Date Format</label>
                         <select class="form-select" id="longDateFormat">
-                            <option value="DD MMMM YYYY HH:mm:ss">DD MMMM YYYY HH:mm:ss (24h)</option>
-                            <option value="MMMM DD, YYYY hh:mm A">MMMM DD, YYYY hh:mm AM/PM</option>
-                            <option value="YYYY年MM月DD日 HH:mm">YYYY年MM月DD日 HH:mm (24h)</option>
                             <option value="DD/MM/YYYY HH:mm:ss">DD/MM/YYYY HH:mm:ss (24h)</option>
                             <option value="MM/DD/YYYY hh:mm A">MM/DD/YYYY hh:mm AM/PM</option>
+                            <option value="YYYY-MM-DD hh:mm A">MM/DD/YYYY hh:mm AM/PM</option>
                         </select>
+                    </div>
+                </div>
+                <!-- Audit Fields -->
+                <div class="accordion mt-3" id="auditAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                Audit Details
+                            </button>
+                        </h2>
+                        <div id="auditCollapse" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="createBy" class="form-label">Created By</label>
+                                        <p id="createBy" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="createDate" class="form-label">Created Date</label>
+                                        <p id="createDate" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editBy" class="form-label">Modified By</label>
+                                        <p id="editBy" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editDate" class="form-label">Modified Date</label>
+                                        <p id="editDate" class="form-control-plaintext"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
         </div>
 
-
         <div class="card-footer">
-            <button type="submit" form="decimalForm" class="btn btn-primary float-end">
+            <button type="submit" form="decimalForm" class="btn btn-primary float-end" onclick="saveDecimalSetting()">
                 <i class="fas fa-save me-2"></i>Save Changes
             </button>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        (function () {
-            // Tab-specific JavaScript
-            const form = document.getElementById('decimalForm');
-            // Validation logic
-        })();
+<script>
+    (function () {
+        // Tab-specific JavaScript
+        const form = document.getElementById('decimalForm');
+        // Validation logic
+    })();
 
-
-        function saveAccountGroup() {
-            let data = {
-                UserGroupId: parseInt($('#amountDecimal').val()) || 0,
-                UserGroupCode: $('#localAmountDecimals').val().trim(),
-                UserGroupName: $('#countryAmountDecimals').val().trim(),
-                Remarks: $('#remarks').val(),
-                IsActive: $('#isActive').prop('checked')
-            };
-
-            if (!data.UserGroupCode || !data.UserGroupName) {
-                alert('Code and Name are required!');
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("SaveUserGroup", "User", new { area = "Admin" })',
-                type: "POST",
-                data: JSON.stringify({ modal: data }),
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        $('#addUserGroupModal').modal('hide');
-                        loadGrid();
-                        clearForm();
+    function getdecimalsetting() {
+        
+        $.get('@Url.Action("GetDecSetting", "Setting", new { area = "Setting" })', { companyId })
+            .done(function (response) {
+                if (response.success) {
+                    
+                    if (response.data != null) {
+                        var data = response.data;
+                        $('#amountDecimal').val(data.amtDec);
+                        $('#localAmountDecimals').val(data.locAmtDec);
+                        $('#countryAmountDecimals').val(data.ctyAmtDec);
+                        $('#priceDecimals').val(data.priceDec);
+                        $('#quantityDecimals').val(data.qtyDec);
+                        $('#exchangeRateDecimals').val(data.exhRateDec);
+                        $('#dateFormat').val(data.dateFormat);
+                        $('#longDateFormat').val(data.longDateFormat);
+                        
+                        $('#createBy').text(data.createBy || "N/A");
+                        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+                        $('#editBy').text(data.editBy || "N/A");
+                        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+                    } else {
+                        alert("Error: there have no default data");
                     }
-                },
-                error: function (error) {
-                    alert("Error: " + error.responseText);
                 }
             });
-        }
-    </script>
-}
+    }
+
+    function saveDecimalSetting() {
+        
+        let data = {
+            AmtDec: parseInt($('#amountDecimal').val()) || 0,
+            LocAmtDec: parseInt($('#localAmountDecimals').val()) || 0,
+            CtyAmtDec: parseInt($('#countryAmountDecimals').val()) || 0,
+            PriceDec: parseInt($('#priceDecimals').val()) || 0,
+            QtyDec: parseInt($('#quantityDecimals').val()) || 0,
+            ExhRateDec: parseInt($('#exchangeRateDecimals').val()) || 0,
+            DateFormat: $('#dateFormat').val() || "DD/MM/YYYY",
+            LongDateFormat: $('#longDateFormat').val() || "DD/MM/YYYY HH:mm:ss",
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveDecSetting", "Setting", new { area = "Setting" })',
+            type: "POST",
+            data: JSON.stringify({ DecimalSetting: data, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    alert("Success: Update done !!");
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+</script>

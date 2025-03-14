@@ -1,5 +1,5 @@
 ﻿using AEMSWEB.Data;
-using AEMSWEB.Extension;
+using AEMSWEB.Extensions;
 using AEMSWEB.Models;
 using AEMSWEB.ViewModels;
 using Microsoft.AspNetCore.Authentication;
