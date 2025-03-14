@@ -223,7 +223,6 @@ namespace AEMSWEB.Controllers
 
         [HttpPost]
         [Authorize]
-        [ValidateAntiForgeryToken]
         public IActionResult SwitchCompany([FromForm] string companyId, [FromForm] string originalPath)
         {
             try
