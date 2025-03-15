@@ -79,20 +79,20 @@
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="createBy" class="form-label">Created By</label>
-                                        <p id="createBy" class="form-control-plaintext"></p>
+                                        <label for="fincreateBy" class="form-label">Created By</label>
+                                        <p id="fincreateBy" class="form-control-plaintext"></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="createDate" class="form-label">Created Date</label>
-                                        <p id="createDate" class="form-control-plaintext"></p>
+                                        <label for="fincreateDate" class="form-label">Created Date</label>
+                                        <p id="fincreateDate" class="form-control-plaintext"></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="editBy" class="form-label">Modified By</label>
-                                        <p id="editBy" class="form-control-plaintext"></p>
+                                        <label for="fineditBy" class="form-label">Modified By</label>
+                                        <p id="fineditBy" class="form-control-plaintext"></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="editDate" class="form-label">Modified Date</label>
-                                        <p id="editDate" class="form-control-plaintext"></p>
+                                        <label for="fineditDate" class="form-label">Modified Date</label>
+                                        <p id="fineditDate" class="form-control-plaintext"></p>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
 
         <!-- Card Footer -->
         <div class="card-footer">
-            <button type="submit" form="financeForm" class="btn btn-primary float-end" onclick="saveFinanceSetting()">
+            <button class="btn btn-primary float-end" onclick="saveFinanceSetting()">
                 <i class="fas fa-save me-2"></i>Save Changes
             </button>
         </div>
@@ -137,10 +137,10 @@
                         $('#cmb_saledefine').data("kendoComboBox").value(data.saleDef_GlId > 0 ? data.saleDef_GlId : '');
                         $('#cmb_purchasedefine').data("kendoComboBox").value(data.purDef_GlId > 0 ? data.purDef_GlId : '');
                         debugger;
-                        $('#createBy').text(data.createBy || "N/A");
-                        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-                        $('#editBy').text(data.editBy || "N/A");
-                        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+                        $('#fincreateBy').text(data.createBy || "N/A");
+                        $('#fincreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+                        $('#fineditBy').text(data.editBy || "N/A");
+                        $('#fineditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
                     } else {
                         alert("Error: there have no default data");
                     }
