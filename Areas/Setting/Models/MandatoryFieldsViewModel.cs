@@ -38,4 +38,10 @@
         public bool M_MobileNo { get; set; }
         public bool M_EmailAdd { get; set; }
     }
+
+    public class SaveMandatoryFieldsViewModel
+    {
+        public List<MandatoryFieldsViewModel> MandatoryFields { get; set; }
+        public byte CompanyId { get; set; }
+    }
 }

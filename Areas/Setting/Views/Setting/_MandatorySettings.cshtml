@@ -1,34 +1,101 @@
-﻿<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead class="table-light">
-            <tr>
-                <th>Field Name</th>
-                <th>Mandatory</th>
-                <th>Default Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Customer</td>
-                <td><input type="checkbox" checked></td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>Due Date</td>
-                <td><input type="checkbox"></td>
-                <td><input type="date" class="form-control"></td>
-            </tr>
-            <!-- Add more rows as needed -->
-        </tbody>
-    </table>
+﻿<div class="row mb-3">
+    <div class="col-md-4">
+        <label for="cmb_user" class="form-label">User</label>
+        <select id="cmb_user"></select>
+    </div>
+
+    <!-- Save Rights Button -->
+    <div class="col-md-3">
+        <label class="form-label d-block">&nbsp;</label>
+        <button class="btn btn-primary btn-block" id="saveUserRightsButton" onclick="saveUserRights()">Save Rights</button>
+    </div>
 </div>
 
-@section Scripts {
-    <script>
-        (function () {
-            // Tab-specific JavaScript
-            const form = document.getElementById('decimalForm');
-            // Validation logic
-        })();
-    </script>
-}
+<!-- Hidden field for company id (if needed). Adjust value as required. -->
+<input type="hidden" id="companyIdHidden" value="1" />
+
+<table class="table table-bordered" id="userRightsTable">
+    <thead>
+        <tr>
+            <th>Company Name</th>
+            <th>Is Access</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data loaded via AJAX -->
+    </tbody>
+</table>
+
+<script>
+    function loadUserRights() {
+        debugger;
+        var companyId = $('#companyIdHidden').val();
+        var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
+
+        $.ajax({
+            url: '/setting/mandatoryfieldslist',
+            method: 'GET',
+            data: {
+                pageNumber: 1,
+                pageSize: 100,
+                searchString: '',
+                companyId: companyId,
+                selecteduserId: selecteduserId
+            },
+            success: function (result) {
+                var tbody = $('#userRightsTable tbody');
+                tbody.empty();
+                debugger;
+                if (result.data) {
+                    result.data.forEach(function (company) {
+                        var row = `<tr>
+                <td>${company.companyName}</td>
+                <td>
+                    <input type="checkbox" data-company-id="${company.companyId}"
+                           ${company.isAccess ? 'checked' : ''}>
+                </td>
+            </tr>`;
+                        tbody.append(row);
+                    });
+                }
+            },
+            error: function (err) {
+                console.error("Error fetching user rights:", err);
+            }
+        });
+    }
+
+    function saveUserRights() {
+        debugger;
+        var userRightsData = [];
+        $('#userRightsTable tbody tr').each(function () {
+            var companyId = $(this).find('input[type="checkbox"]').data('company-id');
+            var isAccess = $(this).find('input[type="checkbox"]').is(':checked');
+            userRightsData.push({ CompanyId: companyId, IsAccess: isAccess });
+        });
+
+        var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
+
+        $.ajax({
+            url: '/user/SaveUserRights',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                SelectedUserId: selecteduserId,
+                UserRights: userRightsData
+            }),
+            success: function (response) {
+                if (response && response.success) {
+                    alert('User rights saved successfully.');
+                    loadUserRights(); // Refresh after save
+                } else {
+                    alert('Failed to save user rights: ' + (response.message || ''));
+                }
+            },
+            error: function (err) {
+                console.error("Error saving user rights:", err);
+                alert('Error saving user rights. Check console for details.');
+            }
+        });
+    }
+</script>

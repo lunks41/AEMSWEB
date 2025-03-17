@@ -145,7 +145,6 @@
         $(document).ready(function () {
             companyId = getUrlParameter('companyId');
 
-            
             permissions = {
                 canCreate: @Json.Serialize(canCreate),
                 canEdit: @Json.Serialize(canEdit),
@@ -173,9 +172,17 @@
             BindComboBox(currencyUrl, "cmb_basecurrency", "currencyName", "currencyId");
             BindComboBox(currencyUrl, "cmb_localcurrency", "currencyName", "currencyId");
 
-              @*const moduleUrl = '@Url.Action("GetModuleLookup", "Lookup", new { area = "" })';
-              BindComboBox(moduleUrl, "cmb_mandatorymodule", "moduleName", "moduleId");
-              BindComboBox(moduleUrl, "cmb_visiblitymodule", "moduleName", "moduleId");*@
+            function updateAndBindComboBox(isVisible, isMandatory, dropdownId) {
+                const moduleUrl = `@Url.Action("GetModuleLookup", "Lookup", new { area = "" })?IsVisible=${isVisible}&IsMandatory=${isMandatory}`;
+                BindComboBox(moduleUrl, dropdownId, "moduleName", "moduleId");
+            }
+
+            // To bind the mandatory dropdown (IsVisible=0, IsMandatory=1)
+            updateAndBindComboBox(0, 1, "cmb_mandatorymodule");
+
+            // To bind the visibility dropdown (IsVisible=1, IsMandatory=0)
+            updateAndBindComboBox(1, 0, "cmb_visiblitymodule");
+
         }
 
         document.addEventListener('DOMContentLoaded', function () {
