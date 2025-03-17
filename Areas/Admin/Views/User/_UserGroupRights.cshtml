@@ -1,7 +1,7 @@
 ﻿<div class="table-responsive">
     <div class="container">
         <div class="row mb-3">
-            
+
             <!-- User Group Dropdown -->
             <div class="col-md-3">
                 <label class="form-label">User Group</label>
@@ -19,7 +19,7 @@
                     <th class="hidden-column">TransactionId</th>
                     <th>Module</th>
                     <th>Transaction</th>
-        
+
                     <th>View <input type="checkbox" class="select-all-col" data-col="view"></th>
                     <th>Create <input type="checkbox" class="select-all-col" data-col="create"></th>
                     <th>Edit <input type="checkbox" class="select-all-col" data-col="edit"></th>
@@ -34,34 +34,32 @@
         </table>
     </div>
 </div>
-    
-
 
 <script>
 
-     function loadGroupRights() {
-     debugger;
-     var moduleId = $("#cmb_usergroup").data("kendoComboBox").value();
+    function loadGroupRights() {
+        debugger;
+        var moduleId = $("#cmb_usergroup").data("kendoComboBox").value();
 
-     if (moduleId > 0) {
+        if (moduleId > 0) {
 
-         $.ajax({
-             url: '/user/UserGroupRightsList', // Adjust URL as per your API routing
-             method: 'GET',
-             data: {
-                 pageNumber: 1,
-                 pageSize: 100,
-                 searchString: '',
-                 companyId: companyId,
-                 SelectedGroupId: moduleId
-             },
-             success: function (result) {
-                 var tbody = $('#rightsTableBody');
-                 tbody.empty();
-                 debugger;
-                 if (result.data) {
-                     result.data.forEach(function (item) {
-                         var row = `<tr data-right-id="${item.rightId}">
+            $.ajax({
+                url: '/user/UserGroupRightsList', // Adjust URL as per your API routing
+                method: 'GET',
+                data: {
+                    pageNumber: 1,
+                    pageSize: 100,
+                    searchString: '',
+                    companyId: companyId,
+                    SelectedGroupId: moduleId
+                },
+                success: function (result) {
+                    var tbody = $('#rightsTableBody');
+                    tbody.empty();
+                    debugger;
+                    if (result.data) {
+                        result.data.forEach(function (item) {
+                            var row = `<tr data-right-id="${item.rightId}">
 
     <td><input type="checkbox" class="select-row"></td>
     <td class="hidden-column">${item.moduleId}</td>
@@ -76,69 +74,68 @@
     <td><input type="checkbox" class="exportCheckbox" ${item.isExport ? 'checked' : ''}></td>
     <td><input type="checkbox" class="printCheckbox" ${item.isPrint ? 'checked' : ''}></td>
 </tr>`;
-                         tbody.append(row);
-                     });
-                 }
-             },
-             error: function (err) {
-                 console.error("Error fetching group rights:", err);
-             }
-         });
-     } else {
+                            tbody.append(row);
+                        });
+                    }
+                },
+                error: function (err) {
+                    console.error("Error fetching group rights:", err);
+                }
+            });
+        } else {
 
-     }
- }
+        }
+    }
 
- // Function to save the group rights after modifications
- function saveGroupRights() {
-     var rightsData = [];
-     var moduleId = $("#cmb_usergroup").data("kendoComboBox").value();
+    // Function to save the group rights after modifications
+    function saveGroupRights() {
+        var rightsData = [];
+        var moduleId = $("#cmb_usergroup").data("kendoComboBox").value();
 
-     $('#rightsTableBody tr').each(function () {
-         var row = $(this);
-         // Assuming each row has a data attribute "data-right-id" that uniquely identifies the right record.
-         var rightId = row.data('right-id');
+        $('#rightsTableBody tr').each(function () {
+            var row = $(this);
+            // Assuming each row has a data attribute "data-right-id" that uniquely identifies the right record.
+            var rightId = row.data('right-id');
 
-         // Read the checkbox states for each right
-         var isRead = row.find('input.viewCheckbox').is(':checked');
-         var isCreate = row.find('input.createCheckbox').is(':checked');
-         var isEdit = row.find('input.editCheckbox').is(':checked');
-         var isDelete = row.find('input.deleteCheckbox').is(':checked');
-         var isExport = row.find('input.exportCheckbox').is(':checked');
-         var isPrint = row.find('input.printCheckbox').is(':checked');
+            // Read the checkbox states for each right
+            var isRead = row.find('input.viewCheckbox').is(':checked');
+            var isCreate = row.find('input.createCheckbox').is(':checked');
+            var isEdit = row.find('input.editCheckbox').is(':checked');
+            var isDelete = row.find('input.deleteCheckbox').is(':checked');
+            var isExport = row.find('input.exportCheckbox').is(':checked');
+            var isPrint = row.find('input.printCheckbox').is(':checked');
 
-         rightsData.push({
-             RightId: rightId, // use 0 or null if it's a new record
-             IsRead: isRead,
-             IsCreate: isCreate,
-             IsEdit: isEdit,
-             IsDelete: isDelete,
-             IsExport: isExport,
-             IsPrint: isPrint
-         });
-     });
+            rightsData.push({
+                RightId: rightId, // use 0 or null if it's a new record
+                IsRead: isRead,
+                IsCreate: isCreate,
+                IsEdit: isEdit,
+                IsDelete: isDelete,
+                IsExport: isExport,
+                IsPrint: isPrint
+            });
+        });
 
-     $.ajax({
-         url: '/user/SaveGroupRights', // Adjust URL as per your API routing
-         method: 'POST',
-         contentType: 'application/json',
-         data: JSON.stringify({
-             GroupUserId: groupUserId,
-             Rights: rightsData
-         }),
-         success: function (response) {
-             if (response && response.success) {
-                 alert('Group rights saved successfully.');
-                 loadGroupRights(); // Refresh the list after saving
-             } else {
-                 alert('Failed to save group rights: ' + (response.message || ''));
-             }
-         },
-         error: function (err) {
-             console.error("Error saving group rights:", err);
-             alert('Error saving group rights. Please check the console for details.');
-         }
-     });
- }
-
+        $.ajax({
+            url: '/user/SaveGroupRights', // Adjust URL as per your API routing
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                GroupUserId: groupUserId,
+                Rights: rightsData
+            }),
+            success: function (response) {
+                if (response && response.success) {
+                    alert('Group rights saved successfully.');
+                    loadGroupRights(); // Refresh the list after saving
+                } else {
+                    alert('Failed to save group rights: ' + (response.message || ''));
+                }
+            },
+            error: function (err) {
+                console.error("Error saving group rights:", err);
+                alert('Error saving group rights. Please check the console for details.');
+            }
+        });
+    }
 </script>

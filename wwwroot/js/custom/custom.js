@@ -2,7 +2,6 @@
 	"use strict";
 
 	window.onload = function () {
-
 		// Preloader JS
 		const getPreloaderId = document.getElementById('preloader');
 		if (getPreloaderId) {
@@ -45,7 +44,6 @@
 			window.Helpers.scrollToActive((animate = false));
 			window.Helpers.mainMenu = menu;
 		});
-
 	})();
 
 	// Header Burger Button
@@ -202,7 +200,6 @@
 				passwordToggleIcon.classList.add("ri-eye-off-line");
 			}
 		});
-
 	} catch { }
 
 	// Tagss
@@ -506,7 +503,7 @@
 			boto_next.className = 'boto-next';
 			boto_next.innerHTML = '';
 			titol.appendChild(boto_prev);
-			titol.appendChild(document.createElement('span')).innerHTML = 
+			titol.appendChild(document.createElement('span')).innerHTML =
 				mesos[data.getMonth()] + '<span class="any">' + data.getFullYear() + '</span>';
 			titol.appendChild(boto_next);
 			boto_prev.onclick = function() {
@@ -533,7 +530,7 @@
 			data.getMonth(),
 			-inici_mes);
 			/* 6 setmanes per cobrir totes les posiblitats
-			*  Quedaria mes consistent alhora de mostrar molts mesos 
+			*  Quedaria mes consistent alhora de mostrar molts mesos
 			*  en una quadricula */
 			for(var s = 0; s < 6; s++)
 			{
@@ -575,7 +572,7 @@
 	if (getEventCalendarId) {
 		document.addEventListener('DOMContentLoaded', function() {
 			var calendarEl = document.getElementById('calendar');
-	
+
 			var calendar = new FullCalendar.Calendar(calendarEl, {
 			headerToolbar: {
 				right: 'today,prev,next',
@@ -608,7 +605,7 @@
 					className: 'danger'
 				},
 			],
-		}); 
+		});
 		calendar.render();
 		});
 	}
@@ -631,13 +628,13 @@
 				reader.readAsDataURL(input.files[0]);
 			}
 		}
-		
+
 		document.getElementById('imageUpload').addEventListener('change', function() {
 			readURL(this);
 		});
 	}
 
-	// Days, Hrs, Min, Sec JS 
+	// Days, Hrs, Min, Sec JS
 	const getCountDownId = document.getElementsByClassName('clockdiv');
 	if (getCountDownId) {
 		document.addEventListener('readystatechange', event => {
@@ -673,7 +670,7 @@
 							countDownDate[i]['el'].querySelector('.minutes').innerHTML = countDownDate[i]['minutes'];
 							countDownDate[i]['el'].querySelector('.seconds').innerHTML = countDownDate[i]['seconds'];
 						}
-					}  
+					}
 				}, 1000);
 			}
 		});
@@ -683,7 +680,7 @@
 	try {
 		const multipleEvents = (element, eventNames, listener) => {
 			const events = eventNames.split(' ');
-		
+
 			events.forEach(event => {
 				element.addEventListener(event, listener, false);
 			});
@@ -693,18 +690,18 @@
 			const INPUT_CONTAINER = document.querySelector('#upload-container');
 			const FILES_LIST_CONTAINER = document.querySelector('#files-list-container')
 			const FILE_LIST = [];
-		
+
 			multipleEvents(INPUT_FILE, 'click dragstart dragover', () => {
 				INPUT_CONTAINER.classList.add('active');
 			});
-			
+
 			multipleEvents(INPUT_FILE, 'dragleave dragend drop change', () => {
 				INPUT_CONTAINER.classList.remove('active');
 			});
-			
+
 			INPUT_FILE.addEventListener('change', () => {
 			const files = [...INPUT_FILE.files];
-			
+
 			files.forEach(file => {
 				const fileURL = URL.createObjectURL(file);
 				const fileName = file.name;
@@ -712,7 +709,7 @@
 					name: fileName,
 					url: fileURL,
 				};
-				
+
 				FILE_LIST.push(uploadedFiles);
 			});
 			FILES_LIST_CONTAINER.innerHTML = '';
@@ -726,14 +723,13 @@
 					</div>
 					</div>
 				`;
-		
+
 				FILES_LIST_CONTAINER.insertAdjacentHTML('beforeEnd', content);
 				});
 			});
 		};
 		fileUpload();
 	} catch { }
-
 
 	// Sales By Locations Map JS
 	const getSalesByLocationsMapId = document.getElementById('sales_by_locations_map');
@@ -746,7 +742,7 @@
 			{ name: "Portugal", coords: [80.7069, -70.6043] },
 			{ name: "Spain", coords: [0.7069, -40.6043] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#sales_by_locations_map",
@@ -767,7 +763,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -796,7 +792,7 @@
 			{ name: "United Kingdom", coords: [56.1304, -106.3468] },
 			{ name: "Canada", coords: [71.7069, -42.6043] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#enrolled_by_countries_map",
@@ -817,7 +813,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -846,7 +842,7 @@
 			{ name: "United States", coords: [26.8206, 30.8025] },
 			{ name: "United Kingdom", coords: [61.524, 105.3188] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#users_by_country_map",
@@ -867,7 +863,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -896,7 +892,7 @@
 			{ name: "United States", coords: [26.8206, 30.8025] },
 			{ name: "United Kingdom", coords: [61.524, 105.3188] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#worldwide_top_creators_map",
@@ -917,7 +913,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -946,7 +942,7 @@
 			{ name: "United States", coords: [26.8206, 30.8025] },
 			{ name: "Germany", coords: [61.524, 105.3188] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#sales_by_country_map",
@@ -967,7 +963,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -999,7 +995,7 @@
 			{ name: "Spain", coords: [0.7069, -40.6043] },
 			{ name: "France", coords: [70.7069, -100.6043] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#most_sales_location",
@@ -1020,7 +1016,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -1046,7 +1042,7 @@
 		var markers = [
 			{ name: "United States", coords: [26.8206, 30.8025] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#shipment_to_top",
@@ -1067,7 +1063,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -1095,7 +1091,7 @@
 			{ name: "Canada", coords: [71.7069, -42.6043] },
 			{ name: "Brazil", coords: [0.7069, -40.6043] },
 		];
-		  
+
 		var jvm = new jsVectorMap({
 			map: "world_merc",
 			selector: "#call_center_geography",
@@ -1116,7 +1112,7 @@
 			markersSelectable: true,
 			selectedMarkers: markers.map((marker, index) => {
 				var name = marker.name;
-			
+
 				if (name === "Russia" || name === "Brazil") {
 					return index;
 				}
@@ -1197,7 +1193,7 @@
 		}
 		setInterval(updateDate, 1000);
 	}
-	
+
 	// Theme Settings
 	// Dark/Light Toggle
 	const getSwitchToggleId = document.getElementById('switch-toggle');
@@ -1374,7 +1370,6 @@
             });
         });
     });
-
 })();
 
 try {
@@ -1391,7 +1386,7 @@ try {
 			setTheme('rtl');
 		}
 	}
-	
+
 	// Immediately invoked function to set the theme on initial load
 	(function () {
 		if (localStorage.getItem('trezo_rtl') === 'rtl') {

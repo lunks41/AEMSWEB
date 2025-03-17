@@ -1,8 +1,6 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
-using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Models.Masters;
-using AEMSWEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

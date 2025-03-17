@@ -10,8 +10,6 @@ namespace UserRoles.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
-
             migrationBuilder.CreateTable(
                 name: "AdmUserGroup",
                 columns: table => new
@@ -34,7 +32,6 @@ namespace UserRoles.Migrations
                 {
                     table.PrimaryKey("PK_AdmUserGroup", x => x.UserGroupId);
                 });
-
 
             migrationBuilder.CreateTable(
                 name: "AdmRoleClaim",

@@ -1,5 +1,4 @@
-﻿using AEMSWEB.Areas.Master.Models;
-using AEMSWEB.Helpers;
+﻿using AEMSWEB.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AEMSWEB.Areas.Account.Models.AR

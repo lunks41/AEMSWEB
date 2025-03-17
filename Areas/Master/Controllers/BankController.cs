@@ -1,13 +1,10 @@
-﻿using AEMSWEB.Controllers;
+﻿using AEMSWEB.Areas.Master.Data.IServices;
 using AEMSWEB.Areas.Master.Models;
-using AEMSWEB.Services;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Text;
-using AEMSWEB.Areas.Master.Data.IServices;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using AEMSWEB.Entities.Masters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Text;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {

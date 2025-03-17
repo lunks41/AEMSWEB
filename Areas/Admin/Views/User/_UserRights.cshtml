@@ -26,77 +26,76 @@
     </tbody>
 </table>
 
-
 <script>
     function loadUserRights() {
-    debugger;
-    var companyId = $('#companyIdHidden').val();
-    var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
+        debugger;
+        var companyId = $('#companyIdHidden').val();
+        var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
 
-    $.ajax({
-        url: '/user/UserRightsList',
-        method: 'GET',
-        data: {
-            pageNumber: 1,
-            pageSize: 100,
-            searchString: '',
-            companyId: companyId,
-            selecteduserId: selecteduserId
-        },
-        success: function (result) {
-            var tbody = $('#userRightsTable tbody');
-            tbody.empty();
-            debugger;
-            if (result.data) {
-                result.data.forEach(function (company) {
-                    var row = `<tr>
+        $.ajax({
+            url: '/user/UserRightsList',
+            method: 'GET',
+            data: {
+                pageNumber: 1,
+                pageSize: 100,
+                searchString: '',
+                companyId: companyId,
+                selecteduserId: selecteduserId
+            },
+            success: function (result) {
+                var tbody = $('#userRightsTable tbody');
+                tbody.empty();
+                debugger;
+                if (result.data) {
+                    result.data.forEach(function (company) {
+                        var row = `<tr>
                 <td>${company.companyName}</td>
                 <td>
                     <input type="checkbox" data-company-id="${company.companyId}"
                            ${company.isAccess ? 'checked' : ''}>
                 </td>
             </tr>`;
-                    tbody.append(row);
-                });
+                        tbody.append(row);
+                    });
+                }
+            },
+            error: function (err) {
+                console.error("Error fetching user rights:", err);
             }
-        },
-        error: function (err) {
-            console.error("Error fetching user rights:", err);
-        }
-    });
-}
+        });
+    }
 
-function saveUserRights() {
-    debugger;
-    var userRightsData = [];
-    $('#userRightsTable tbody tr').each(function () {
-        var companyId = $(this).find('input[type="checkbox"]').data('company-id');
-        var isAccess = $(this).find('input[type="checkbox"]').is(':checked');
-        userRightsData.push({ CompanyId: companyId, IsAccess: isAccess });
-    });
+    function saveUserRights() {
+        debugger;
+        var userRightsData = [];
+        $('#userRightsTable tbody tr').each(function () {
+            var companyId = $(this).find('input[type="checkbox"]').data('company-id');
+            var isAccess = $(this).find('input[type="checkbox"]').is(':checked');
+            userRightsData.push({ CompanyId: companyId, IsAccess: isAccess });
+        });
 
-    var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
+        var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
 
-    $.ajax({
-        url: '/user/SaveUserRights',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            SelectedUserId: selecteduserId,
-            UserRights: userRightsData
-        }),
-        success: function (response) {
-            if (response && response.success) {
-                alert('User rights saved successfully.');
-                loadUserRights(); // Refresh after save
-            } else {
-                alert('Failed to save user rights: ' + (response.message || ''));
+        $.ajax({
+            url: '/user/SaveUserRights',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                SelectedUserId: selecteduserId,
+                UserRights: userRightsData
+            }),
+            success: function (response) {
+                if (response && response.success) {
+                    alert('User rights saved successfully.');
+                    loadUserRights(); // Refresh after save
+                } else {
+                    alert('Failed to save user rights: ' + (response.message || ''));
+                }
+            },
+            error: function (err) {
+                console.error("Error saving user rights:", err);
+                alert('Error saving user rights. Check console for details.');
             }
-        },
-        error: function (err) {
-            console.error("Error saving user rights:", err);
-            alert('Error saving user rights. Check console for details.');
-        }
-    });
-}
+        });
+    }
 </script>

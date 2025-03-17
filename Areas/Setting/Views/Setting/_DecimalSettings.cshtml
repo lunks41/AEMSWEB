@@ -120,11 +120,11 @@
     })();
 
     function getdecimalsetting() {
-        
+
         $.get('@Url.Action("GetDecSetting", "Setting", new { area = "Setting" })', { companyId })
             .done(function (response) {
                 if (response.success) {
-                    
+
                     if (response.data != null) {
                         var data = response.data;
                         $('#amountDecimal').val(data.amtDec);
@@ -135,7 +135,7 @@
                         $('#exchangeRateDecimals').val(data.exhRateDec);
                         $('#dateFormat').val(data.dateFormat);
                         $('#longDateFormat').val(data.longDateFormat);
-                        
+
                         $('#createBy').text(data.createBy || "N/A");
                         $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
                         $('#editBy').text(data.editBy || "N/A");
@@ -148,7 +148,7 @@
     }
 
     function saveDecimalSetting() {
-        
+
         let data = {
             AmtDec: parseInt($('#amountDecimal').val()) || 0,
             LocAmtDec: parseInt($('#localAmountDecimals').val()) || 0,

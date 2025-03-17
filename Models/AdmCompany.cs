@@ -6,6 +6,7 @@ namespace AEMSWEB.Models
     {
         [Key]
         public Byte CompanyId { get; set; }
+
         public string CompanyCode { get; set; }
         public string CompanyName { get; set; }
         public string RegistrationNo { get; set; }

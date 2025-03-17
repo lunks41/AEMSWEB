@@ -5,7 +5,7 @@
 
 @{
 
-var categoryIcons = new Dictionary<string, string>
+    var categoryIcons = new Dictionary<string, string>
 {
         { "Region", "handshake" },
         { "Product", "content_paste" },
@@ -99,74 +99,74 @@ var categoryIcons = new Dictionary<string, string>
                                 <a href="javascript:void(0);"
                                    class="menu-link menu-toggle @(isCategoryActive ? " active" : "" )">
                                     <span class="material-symbols-outlined menu-icon"> @iconClass</span>
-                                            <span class="title">  @transcategory.TransCategoryName</span>
-                                        </a>
+                                    <span class="title">  @transcategory.TransCategoryName</span>
+                                </a>
 
-                                        <ul class="menu-sub">
-                                            @foreach (var transaction in transcategory.Transactions.OrderBy(t => t.TransactionName))
-                                            {
-                                                var isActive = Context.Request.Path.Equals(
-                                                $"/{module.ModuleCode}/{transaction.TransactionCode}/Index",
-                                                StringComparison.OrdinalIgnoreCase
-                                                );
+                                <ul class="menu-sub">
+                                    @foreach (var transaction in transcategory.Transactions.OrderBy(t => t.TransactionName))
+                                    {
+                                        var isActive = Context.Request.Path.Equals(
+                                        $"/{module.ModuleCode}/{transaction.TransactionCode}/Index",
+                                        StringComparison.OrdinalIgnoreCase
+                                        );
 
-                                                <li class="menu-item">
-                                                    <a asp-area="@module.ModuleCode"
-                                                       asp-controller="@transaction.TransactionCode"
-                                                       asp-action="Index"
-                                                       class="menu-link @(isActive ? " active" : "" )">
-                                                        @transaction.TransactionName
-                                                    </a>
-                                                </li>
-                                            }
-                                        </ul>
-                                    </li>
-                                }
-                            }
+                                        <li class="menu-item">
+                                            <a asp-area="@module.ModuleCode"
+                                               asp-controller="@transaction.TransactionCode"
+                                               asp-action="Index"
+                                               class="menu-link @(isActive ? " active" : "" )">
+                                                @transaction.TransactionName
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
                         }
                     }
-                    <li class="menu-item">
-                        <a class="nav-link text-dark" href="javascript:triggerGlobalLogout()">Logout</a>
-                        <form id="logoutForm" class="d-none" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
-                            @Html.AntiForgeryToken()
-                        </form>
-                    </li>
-
-                    <li class="menu-item">
-                        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
-                            @Html.AntiForgeryToken() <!-- Add anti-forgery token -->
-                            <button type="submit" class="menu-link" style="background: none; border: none; cursor: pointer;">
-                                <span class="material-symbols-outlined menu-icon">logout</span>
-                                <span class="title">Logout</span>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </aside>
-        </div>
-
-        <script>
-            // Store active state in browser storage
-            function loadContent(event, url, category) {
-                event.preventDefault();
-                sessionStorage.setItem('activeCategory', category);
-                // ... existing AJAX code ...
-            }
-
-            // On page load, restore state
-            document.addEventListener('DOMContentLoaded', () => {
-                const activeCategory = sessionStorage.getItem('activeCategory');
-                if (activeCategory) {
-                    // Programmatically open the menu and highlight the active item
                 }
-            });
-
-            function triggerGlobalLogout() {
-                // Cross-tab logout notification
-                localStorage.setItem('logout-event', Date.now());
-                localStorage.removeItem('logout-event');
-
-                // Submit the hidden form
-                document.getElementById('logoutForm').submit();
             }
-        </script>
+            <li class="menu-item">
+                <a class="nav-link text-dark" href="javascript:triggerGlobalLogout()">Logout</a>
+                <form id="logoutForm" class="d-none" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                </form>
+            </li>
+
+            <li class="menu-item">
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken() <!-- Add anti-forgery token -->
+                    <button type="submit" class="menu-link" style="background: none; border: none; cursor: pointer;">
+                        <span class="material-symbols-outlined menu-icon">logout</span>
+                        <span class="title">Logout</span>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+</div>
+
+<script>
+    // Store active state in browser storage
+    function loadContent(event, url, category) {
+        event.preventDefault();
+        sessionStorage.setItem('activeCategory', category);
+        // ... existing AJAX code ...
+    }
+
+    // On page load, restore state
+    document.addEventListener('DOMContentLoaded', () => {
+        const activeCategory = sessionStorage.getItem('activeCategory');
+        if (activeCategory) {
+            // Programmatically open the menu and highlight the active item
+        }
+    });
+
+    function triggerGlobalLogout() {
+        // Cross-tab logout notification
+        localStorage.setItem('logout-event', Date.now());
+        localStorage.removeItem('logout-event');
+
+        // Submit the hidden form
+        document.getElementById('logoutForm').submit();
+    }
+</script>

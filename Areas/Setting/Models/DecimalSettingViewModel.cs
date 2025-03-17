@@ -1,7 +1,4 @@
-﻿using AEMSWEB.Models.Masters;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace AEMSWEB.Areas.Setting.Models
+﻿namespace AEMSWEB.Areas.Setting.Models
 {
     public class DecimalSettingViewModel
     {

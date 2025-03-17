@@ -4,8 +4,6 @@ using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Setting;
 using AEMSWEB.Enums;
 using AEMSWEB.IServices;
-using AEMSWEB.Models.Admin;
-using AEMSWEB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

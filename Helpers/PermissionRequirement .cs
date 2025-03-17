@@ -27,7 +27,6 @@ namespace AEMSWEB.Helpers
         public PermissionHandler(ApplicationDbContext context)
         {
             _context = context;
-
         }
 
         protected override async Task HandleRequirementAsync(
@@ -71,9 +70,8 @@ namespace AEMSWEB.Helpers
                 _ => false
             };
         }
-
-
     }
+
     public class PermissionAuthorizeAttribute : AuthorizeAttribute
     {
         public PermissionAuthorizeAttribute(short moduleId, short transactionId, string permissionType)

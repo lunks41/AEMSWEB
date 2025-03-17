@@ -178,7 +178,6 @@
             loadGrid();
         }
 
-
         function loadGrid() {
             let searchString = $('#txtsearch').val();
             const gridname = 'grid';
@@ -189,16 +188,16 @@
                     width: "150px",
                     template: function (dataItem) {
                         return `
-                                <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.accTypeId}', 'view')">
-                                    <i class="mdi mdi-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.accTypeId}', 'edit')">
-                                    <i class="mdi mdi-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteAccountType('${dataItem.accTypeId}')">
-                                    <i class="mdi mdi-delete"></i>
-                                </button>
-                            `;
+                                    <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.accTypeId}', 'view')">
+                                        <i class="mdi mdi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.accTypeId}', 'edit')">
+                                        <i class="mdi mdi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteAccountType('${dataItem.accTypeId}')">
+                                        <i class="mdi mdi-delete"></i>
+                                    </button>
+                                `;
                     },
                     width: "150px"
                 },
@@ -217,8 +216,6 @@
             const params = { selectedTab: gridname, searchString: searchString, companyId: companyId };
             initializeKendoGrid(gridname, url, params, columns);
         }
-
-
 
         function openModal(id, mode) {
             $.get(`/Master/AccountType/GetById?accTypeId=${id}&companyId=${companyId}`)

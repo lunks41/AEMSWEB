@@ -6,6 +6,7 @@ namespace AEMSWEB.ViewModels
     {
         [Required(ErrorMessage = "Name is required.")]
         public string? Name { get; set; }
+
         [Required(ErrorMessage = "UserCode is required.")]
         public string UserCode { get; set; }
 
@@ -23,6 +24,5 @@ namespace AEMSWEB.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Confirm Password")]
         public string? ConfirmPassword { get; set; }
-
     }
 }

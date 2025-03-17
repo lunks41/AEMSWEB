@@ -13,7 +13,6 @@ This files table contents are outlined below>>>>>
 
 :root,
 [data-bs-theme="light"] {
-   
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;
     --bs-purple: #6f42c1;
@@ -224,8 +223,6 @@ This files table contents are outlined below>>>>>
     --p-motion-duration-150: 0.15s;
     --p-motion-ease-out: ease-out;
 }
-
-
 
 *,
 *::before,
@@ -17764,7 +17761,7 @@ Swiper Slider Style
             }
 
                 .menu-vertical .menu-sub .menu-item .menu-link.active::before {
-                  /*  opacity: 1;
+                    /*  opacity: 1;
                     border-color: #605dff;*/
                     content: "";
                     position: absolute;
@@ -17777,82 +17774,110 @@ Swiper Slider Style
                     border-radius: 50%;
                 }
 
-                        .menu-vertical .menu-link .title {
-                            display: -webkit-box;
-                            overflow: hidden;
-                            -webkit-line-clamp: 1;
-                            -webkit-box-orient: vertical;
-                            word-break: break-word;
-                        }
+.menu-vertical .menu-link .title {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+}
 
-                .menu-vertical .menu-sub .menu-item .menu-link.active::after {
-                    border-color: #fff;
-                }
+.menu-vertical .menu-sub .menu-item .menu-link.active::after {
+    border-color: #fff;
+}
 
-            .menu-vertical .menu-sub .menu-item .menu-link:hover {
-                background-color: #ecf0ff;
-                color: #605dff;
-            }
+.menu-vertical .menu-sub .menu-item .menu-link:hover {
+    background-color: #ecf0ff;
+    color: #605dff;
+}
 
-                .menu-vertical .menu-sub .menu-item .menu-link:hover::before {
-                    opacity: 1;
-                    background-color: #fff;
-                    border-color: #605dff;
-                }
+    .menu-vertical .menu-sub .menu-item .menu-link:hover::before {
+        opacity: 1;
+        background-color: #fff;
+        border-color: #605dff;
+    }
+
+.menu-vertical
+.menu-sub
+.menu-item.after-sub-menu
+.menu-link.menu-toggle::after {
+    top: 22px !important;
+}
+
+.menu-vertical
+.menu-sub
+.menu-item.after-sub-menu
+.menu-link:hover.menu-toggle {
+    background-color: #ecf0ff;
+}
+
+    .menu-vertical
+    .menu-sub
+    .menu-item.after-sub-menu
+    .menu-link:hover.menu-toggle
+    .title {
+        color: #3a4252;
+    }
+
+    .menu-vertical
+    .menu-sub
+    .menu-item.after-sub-menu
+    .menu-link:hover.menu-toggle::after {
+        border-color: #3a4252 !important;
+    }
+
+.menu-vertical
+.menu-sub
+.menu-item.after-sub-menu
+.menu-link.active.menu-toggle {
+    background-color: #ecf0ff;
+}
+
+    .menu-vertical
+    .menu-sub
+    .menu-item.after-sub-menu
+    .menu-link.active.menu-toggle
+    .title {
+        color: #3a4252;
+    }
+
+    .menu-vertical
+    .menu-sub
+    .menu-item.after-sub-menu
+    .menu-link.active.menu-toggle::after {
+        border-color: #3a4252 !important;
+    }
+
+.menu-vertical .menu-sub .menu-item.after-sub-menu .menu-sub .menu-item {
+    margin-left: 30px;
+}
+
+    .menu-vertical
+    .menu-sub
+    .menu-item.after-sub-menu
+    .menu-sub
+    .menu-item
+    .menu-link {
+        background-color: transparent;
+    }
 
         .menu-vertical
         .menu-sub
         .menu-item.after-sub-menu
-        .menu-link.menu-toggle::after {
-            top: 22px !important;
+        .menu-sub
+        .menu-item
+        .menu-link::before {
+            background-color: #818093;
         }
 
         .menu-vertical
         .menu-sub
         .menu-item.after-sub-menu
-        .menu-link:hover.menu-toggle {
-            background-color: #ecf0ff;
-        }
-
-            .menu-vertical
-            .menu-sub
-            .menu-item.after-sub-menu
-            .menu-link:hover.menu-toggle
-            .title {
-                color: #3a4252;
-            }
-
-            .menu-vertical
-            .menu-sub
-            .menu-item.after-sub-menu
-            .menu-link:hover.menu-toggle::after {
-                border-color: #3a4252 !important;
-            }
-
-        .menu-vertical
         .menu-sub
-        .menu-item.after-sub-menu
-        .menu-link.active.menu-toggle {
-            background-color: #ecf0ff;
-        }
-
-            .menu-vertical
-            .menu-sub
-            .menu-item.after-sub-menu
-            .menu-link.active.menu-toggle
-            .title {
-                color: #3a4252;
-            }
-
-            .menu-vertical
-            .menu-sub
-            .menu-item.after-sub-menu
-            .menu-link.active.menu-toggle::after {
-                border-color: #3a4252 !important;
-            }
-
-        .menu-vertical .menu-sub .menu-item.after-sub-menu .menu-sub .menu-item {
-            margin-left: 30px;
+        .menu-item
+        .menu-link.active {
+            background-color: #fafafa;
+            color: #605dff;
         }
 
             .menu-vertical
@@ -17860,118 +17885,90 @@ Swiper Slider Style
             .menu-item.after-sub-menu
             .menu-sub
             .menu-item
-            .menu-link {
-                background-color: transparent;
+            .menu-link.active::before {
+                background-color: #605dff;
             }
 
-                .menu-vertical
-                .menu-sub
-                .menu-item.after-sub-menu
-                .menu-sub
-                .menu-item
-                .menu-link::before {
-                    background-color: #818093;
-                }
+            .menu-vertical
+            .menu-sub
+            .menu-item.after-sub-menu
+            .menu-sub
+            .menu-item
+            .menu-link.active.menu-toggle::after {
+                border-color: #fff;
+            }
 
-                .menu-vertical
-                .menu-sub
-                .menu-item.after-sub-menu
-                .menu-sub
-                .menu-item
-                .menu-link.active {
-                    background-color: #fafafa;
-                    color: #605dff;
-                }
+        .menu-vertical
+        .menu-sub
+        .menu-item.after-sub-menu
+        .menu-sub
+        .menu-item
+        .menu-link:hover {
+            background-color: #fafafa;
+            color: #605dff;
+        }
 
-                    .menu-vertical
-                    .menu-sub
-                    .menu-item.after-sub-menu
-                    .menu-sub
-                    .menu-item
-                    .menu-link.active::before {
-                        background-color: #605dff;
-                    }
+            .menu-vertical
+            .menu-sub
+            .menu-item.after-sub-menu
+            .menu-sub
+            .menu-item
+            .menu-link:hover::before {
+                background-color: #605dff;
+            }
 
-                    .menu-vertical
-                    .menu-sub
-                    .menu-item.after-sub-menu
-                    .menu-sub
-                    .menu-item
-                    .menu-link.active.menu-toggle::after {
-                        border-color: #fff;
-                    }
+.menu-vertical .menu-sub .menu-item.after-sub-menu .menu-link:hover .title {
+    color: #fff;
+}
 
-                .menu-vertical
-                .menu-sub
-                .menu-item.after-sub-menu
-                .menu-sub
-                .menu-item
-                .menu-link:hover {
-                    background-color: #fafafa;
-                    color: #605dff;
-                }
+.menu-vertical
+.menu-sub
+.menu-item.after-sub-menu
+.menu-link:hover.menu-toggle::after {
+    border-color: #fff;
+}
 
-                    .menu-vertical
-                    .menu-sub
-                    .menu-item.after-sub-menu
-                    .menu-sub
-                    .menu-item
-                    .menu-link:hover::before {
-                        background-color: #605dff;
-                    }
+.menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link {
+    background-color: #605dff;
+}
 
-        .menu-vertical .menu-sub .menu-item.after-sub-menu .menu-link:hover .title {
+    .menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link .title {
+        color: #fff;
+    }
+
+    .menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link::before {
+        background-color: #fff;
+    }
+
+    .menu-vertical
+    .menu-sub
+    .menu-item.after-sub-menu.open
+    .menu-link.menu-toggle::after {
+        border-color: #fff;
+    }
+
+    .menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link.active {
+        background-color: #605dff;
+    }
+
+        .menu-vertical
+        .menu-sub
+        .menu-item.after-sub-menu.open
+        .menu-link.active
+        .title {
             color: #fff;
         }
 
         .menu-vertical
         .menu-sub
-        .menu-item.after-sub-menu
-        .menu-link:hover.menu-toggle::after {
+        .menu-item.after-sub-menu.open
+        .menu-link.active.menu-toggle::after {
             border-color: #fff;
         }
 
-        .menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link {
-            background-color: #605dff;
-        }
-
-            .menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link .title {
-                color: #fff;
-            }
-
-            .menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link::before {
-                background-color: #fff;
-            }
-
-            .menu-vertical
-            .menu-sub
-            .menu-item.after-sub-menu.open
-            .menu-link.menu-toggle::after {
-                border-color: #fff;
-            }
-
-            .menu-vertical .menu-sub .menu-item.after-sub-menu.open .menu-link.active {
-                background-color: #605dff;
-            }
-
-                .menu-vertical
-                .menu-sub
-                .menu-item.after-sub-menu.open
-                .menu-link.active
-                .title {
-                    color: #fff;
-                }
-
-                .menu-vertical
-                .menu-sub
-                .menu-item.after-sub-menu.open
-                .menu-link.active.menu-toggle::after {
-                    border-color: #fff;
-                }
-
-        .menu-vertical .menu-sub .menu-item.open > .menu-sub {
-            margin-right: 0;
-        }
+.menu-vertical .menu-sub .menu-item.open > .menu-sub {
+    margin-right: 0;
+}
 
 .menu-vertical .menu-inner > .menu-item {
     margin-bottom: 6px;

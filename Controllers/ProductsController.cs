@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using AEMSWEB.Data;
+﻿using AEMSWEB.Data;
 using AEMSWEB.Helpers;
 using AEMSWEB.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AEMSWEB.Controllers
 {

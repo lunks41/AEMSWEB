@@ -1,6 +1,4 @@
-﻿using AEMSWEB.Models.Masters;
-
-namespace AEMSWEB.Areas.Master.Models
+﻿namespace AEMSWEB.Areas.Master.Models
 {
     public class BankViewModel
     {

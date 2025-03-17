@@ -1,6 +1,4 @@
-﻿using AEMSWEB.Models.Masters;
-
-namespace AEMSWEB.Models.Masters
+﻿namespace AEMSWEB.Models.Masters
 {
     public class GroupCreditLimit_CustomerViewModelCount
     {

@@ -1,7 +1,6 @@
 ﻿using AEMSWEB.Data;
 using AEMSWEB.IServices;
 using AEMSWEB.Models.Admin;
-using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
 
 namespace AEMSWEB.Services

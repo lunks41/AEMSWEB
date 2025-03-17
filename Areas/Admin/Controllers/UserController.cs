@@ -476,7 +476,7 @@ namespace AEMSWEB.Areas.Admin.Controllers
                     return Json(new { success = false, message = "User not logged in or invalid user ID." });
                 }
 
-                var data = await _UserService.GetUserGroupRightsByIdAsync(companyIdShort, parsedUserId,SelectedGroupId);
+                var data = await _UserService.GetUserGroupRightsByIdAsync(companyIdShort, parsedUserId, SelectedGroupId);
 
                 var paginatedData = data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                 return Json(new { data = paginatedData, total = 0 });

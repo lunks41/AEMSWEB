@@ -148,7 +148,6 @@
                 }
 
                 if (day.className.indexOf('is-disabled') >= 0) {
-
                     if (opts.locale.tooltipOnDisabled && (!opts.startDate || date.isAfter(opts.startDate) || opts.startDate && opts.endDate)) {
                         day.className.push('disabled-tooltip');
                     }
@@ -220,7 +219,6 @@
         }
 
         if (moment().isSame(date, 'month')) {
-
         }
         else if (prevMonth.isSame(date, 'month')) {
             day.className.push('is-previous-month');
@@ -484,7 +482,6 @@
 
         self.el.innerHTML = html;
 
-
         if (opts.parentEl instanceof Node) {
             opts.parentEl.appendChild(self.el)
         }
@@ -516,7 +513,6 @@
             var opts = self._opts;
 
             if (target.classList.contains('lightpick__day') && target.classList.contains('is-available')) {
-
                 var day = moment(parseInt(target.getAttribute('data-time')));
 
                 if (!opts.disabledDatesInRange && opts.disableDates && opts.startDate) {
@@ -591,7 +587,6 @@
                     }
 
                     target.classList.add('is-end-date');
-
 
                     if (opts.autoclose) {
                         setTimeout(function() {
@@ -721,7 +716,6 @@
                     var tooltip = self.el.querySelector('.lightpick__tooltip');
 
                     if (days > 0 && !target.classList.contains('is-disabled')) {
-
                         var pluralText = '';
                         if (typeof opts.locale.pluralize === 'function') {
                             pluralText = opts.locale.pluralize.call(self, days, opts.locale.tooltip);
@@ -1322,7 +1316,6 @@
             Object.assign(this._opts.dropdowns, dropdowns, options.dropdowns);
             Object.assign(this._opts.locale, locale, options.locale);
         }
-
     };
 
     return Lightpick;
