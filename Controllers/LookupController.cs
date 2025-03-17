@@ -43,6 +43,13 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
+        public async Task<JsonResult> GetModuleTransCategoryLookup(bool IsVisible, bool IsMandatory)
+        {
+            var data = await _masterLookupService.GetModuleTransCategoryLookupAsync(IsVisible, IsMandatory);
+            return Json(data);
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetTransactionLookup(Int16 moduleId)
         {
             var data = await _masterLookupService.GetTransactionLookupAsync(moduleId);

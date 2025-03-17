@@ -129,10 +129,10 @@
                     title: "Actions",
                     width: "150px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openUserModal('${dataItem.userId}', 'view')">
                         <i class="material-symbols-outlined text-primary">visibility</i></button>`;
                         if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.userId}', 'edit')">
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openUserModal('${dataItem.userId}', 'edit')">
                             <i class="material-symbols-outlined text-warning">edit</i></button>`;
                         }
                         if (permissions.canDelete) {
@@ -153,10 +153,12 @@
             initializeKendoGrid("usergrid", url, { searchString, companyId }, columns);
         }
 
-        function openModal(id, mode) {
+    function openUserModal(id, mode) {
+        debugger;
             $.get('@Url.Action("GetUserById", "User", new { area = "Admin" })', { selectedUserId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
+                        debugger;
                         userPopulateModalFields(response.data);
                         setMode(mode);
                         $('#addUserModal').modal('show');

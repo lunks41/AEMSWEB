@@ -276,7 +276,7 @@ namespace AEMSWEB.Areas.Setting.Controllers
             }
         }
 
-        [HttpPost("user/SaveUserRights")]
+        [HttpPost("user/Savemandatoryfields")]
         public async Task<IActionResult> SaveUserRights([FromBody] SaveMandatoryFieldsViewModel model)
         {
             if (model == null)

@@ -154,6 +154,49 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
+        public async Task<IEnumerable<TransCategoryLookupModel>> GetModuleTransCategoryLookupAsync(bool IsVisible, bool IsMandatory)
+        {
+            try
+            {
+                string sql =
+                    "SELECT TrnCat.TransCategoryId,TrnCat.TransCategoryName,       TrnCat.TransCategoryCode FROM dbo.AdmModule AS Mod " +
+                    " INNER JOIN dbo.AdmTransaction AS Trn ON Trn.ModuleId = Mod.ModuleId" +
+                    " INNER JOIN dbo.AdmTransactionCategory AS TrnCat ON TrnCat.TransCategoryId = Trn.TransCategoryId " +
+                    "where Mod.IsActive = 1 ";
+                if (IsMandatory)
+                {
+                    sql += " And Trn.IsMandatory = 1";
+                }
+                if (IsVisible)
+                {
+                    sql += " And Trn.IsVisible = 1";
+                }
+                sql += " GROUP BY TrnCat.TransCategoryId,TrnCat.TransCategoryName,        TrnCat.TransCategoryCode ORDER BY TrnCat.TransCategoryName";
+
+                return await _repository.GetQueryAsync<TransCategoryLookupModel>(sql);
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = 0,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Admin.Modules,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "AdmModule",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = 0
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
         public async Task<IEnumerable<TransactionLookupModel>> GetTransactionLookupAsync(Int16 ModuleId)
         {
             try

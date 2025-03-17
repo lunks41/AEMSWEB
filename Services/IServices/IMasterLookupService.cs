@@ -13,6 +13,8 @@ namespace AEMSWEB.IServices
 
         public Task<IEnumerable<ModuleLookupModel>> GetModuleLookupAsync(bool IsVisible, bool IsMandatory);
 
+        public Task<IEnumerable<TransCategoryLookupModel>> GetModuleTransCategoryLookupAsync(bool IsVisible, bool IsMandatory);
+
         public Task<IEnumerable<TransactionLookupModel>> GetTransactionLookupAsync(Int16 ModuleId);
 
         public Task<IEnumerable<AccountSetupCategoryLookupModel>> GetAccountSetupCategoryLookupAsync(Int16 CompanyId, Int16 UserId);

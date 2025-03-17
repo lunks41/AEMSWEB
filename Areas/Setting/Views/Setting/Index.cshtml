@@ -13,6 +13,19 @@
 }
 
 <style>
+    .nav-pills .nav-link {
+        min-width: 120px;
+        display: flex !important;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .material-symbols-outlined {
+        font-size: 1.2rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
     /* SETTINGS MODULE STYLES */
     .settings-card {
         margin-bottom: 2rem;
@@ -64,37 +77,45 @@
     #detailsTab {
         margin-top: 20px;
     }
+
+
 </style>
 
 <ul class="nav nav-pills mb-4 border-bottom pb-2" id="invoicePills" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="decimal-tab" data-bs-toggle="tab" data-bs-target="#decimal" type="button" role="tab">
-            <span class="material-symbols-outlined">calculate</span>Decimal
+        <button class="nav-link active d-flex align-items-center gap-2" id="decimal-tab" data-bs-toggle="tab" data-bs-target="#decimal" type="button" role="tab" style="min-width: 120px;">
+            <span class="material-symbols-outlined" style="font-size: 1.2rem;">calculate</span>
+            <span>Decimal</span>
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="finance-tab" data-bs-toggle="tab" data-bs-target="#finance" type="button" role="tab">
-            <span class="material-symbols-outlined">monetization_on</span>Finance
+        <button class="nav-link d-flex align-items-center gap-2" id="finance-tab" data-bs-toggle="tab" data-bs-target="#finance" type="button" role="tab" style="min-width: 120px;">
+            <span class="material-symbols-outlined" style="font-size: 1.2rem;">monetization_on</span>
+            <span>Finance</span>
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="mandatory-tab" data-bs-toggle="tab" data-bs-target="#mandatory" type="button" role="tab">
-            <span class="material-symbols-outlined">priority_high</span>Mandatory
+        <button class="nav-link d-flex align-items-center gap-2" id="mandatory-tab" data-bs-toggle="tab" data-bs-target="#mandatory" type="button" role="tab" style="min-width: 120px;">
+            <span class="material-symbols-outlined" style="font-size: 1.2rem;">priority_high</span>
+            <span>Mandatory</span>
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="visibility-tab" data-bs-toggle="tab" data-bs-target="#visibility" type="button" role="tab">
-            <span class="material-symbols-outlined">visibility</span>Visibility
+        <button class="nav-link d-flex align-items-center gap-2" id="visibility-tab" data-bs-toggle="tab" data-bs-target="#visibility" type="button" role="tab" style="min-width: 120px;">
+            <span class="material-symbols-outlined" style="font-size: 1.2rem;">visibility</span>
+            <span>Visibility</span>
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="number-format-tab" data-bs-toggle="tab" data-bs-target="#number-format" type="button" role="tab">
-            <span class="material-symbols-outlined">tag</span>Number Format
+        <button class="nav-link d-flex align-items-center gap-2" id="number-format-tab" data-bs-toggle="tab" data-bs-target="#number-format" type="button" role="tab" style="min-width: 120px;">
+            <span class="material-symbols-outlined" style="font-size: 1.2rem;">tag</span>
+            <span>Number Format</span>
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="user-setting-tab" data-bs-toggle="tab" data-bs-target="#user-setting" type="button" role="tab">
-            <span class="material-symbols-outlined">settings</span>User Setting
+        <button class="nav-link d-flex align-items-center gap-2" id="user-setting-tab" data-bs-toggle="tab" data-bs-target="#user-setting" type="button" role="tab" style="min-width: 120px;">
+            <span class="material-symbols-outlined" style="font-size: 1.2rem;">settings</span>
+            <span>User Setting</span>
         </button>
     </li>
 </ul>
@@ -155,6 +176,14 @@
 
             getdecimalsetting();
             getfinancesetting();
+
+            $("#cmb_mandatorymodule").kendoComboBox({
+                change: loadMandatoryfields
+            });
+
+            $("#cmb_visiblitymodule").kendoComboBox({
+                change: loadVisibleFieldss
+            });
         });
 
         function Refresh() {
@@ -173,15 +202,18 @@
             BindComboBox(currencyUrl, "cmb_localcurrency", "currencyName", "currencyId");
 
             function updateAndBindComboBox(isVisible, isMandatory, dropdownId) {
-                const moduleUrl = `@Url.Action("GetModuleLookup", "Lookup", new { area = "" })?IsVisible=${isVisible}&IsMandatory=${isMandatory}`;
-                BindComboBox(moduleUrl, dropdownId, "moduleName", "moduleId");
+                debugger;
+                // Convert numbers to booleans explicitly
+                const isVisibleBool = !!isVisible; // Converts 0->false, 1->true
+                const isMandatoryBool = !!isMandatory;
+                debugger;
+                const moduleUrl = `@Url.Action("GetModuleTransCategoryLookup", "Lookup", new { area = "" })?IsVisible=${isVisibleBool}&IsMandatory=${isMandatoryBool}`;
+                BindComboBox(moduleUrl, dropdownId, "transCategoryName", "transCategoryId");
             }
 
-            // To bind the mandatory dropdown (IsVisible=0, IsMandatory=1)
-            updateAndBindComboBox(0, 1, "cmb_mandatorymodule");
-
-            // To bind the visibility dropdown (IsVisible=1, IsMandatory=0)
-            updateAndBindComboBox(1, 0, "cmb_visiblitymodule");
+            // Updated calls with numeric flags
+            updateAndBindComboBox(0, 1, "cmb_mandatorymodule"); // 0=false, 1=true
+            updateAndBindComboBox(1, 0, "cmb_visiblitymodule");  // 1=true, 0=false
 
         }
 
