@@ -31,6 +31,12 @@
         public string EditBy { get; set; }
     }
 
+    public class SaveCustomerAddressViewModel
+    {
+        public CustomerAddressViewModel customerAddress { get; set; }
+        public string companyId { get; set; }
+    }
+
     public class CustomerAddressViewModelCount
     {
         public Int16 responseCode { get; set; }

@@ -26,6 +26,12 @@
         public string EditBy { get; set; }
     }
 
+    public class SaveCustomerContactViewModel
+    {
+        public CustomerContactViewModel customerContact { get; set; }
+        public string companyId { get; set; }
+    }
+
     public class CustomerContactViewModelCount
     {
         public Int16 responseCode { get; set; }

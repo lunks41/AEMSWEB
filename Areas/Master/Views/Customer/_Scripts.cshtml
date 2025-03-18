@@ -1,0 +1,36 @@
+﻿<script>
+    function openCustomerModal(id, mode) {
+        $.get('@Url.Action("GetById", "Customer", new { area = "Master" })', { customerId: id, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateCustomerFields(response.data);
+                    setCustomerMode(mode);
+                    $('#customerModal').modal('show');
+                }
+            });
+    }
+
+    function saveCustomer() {
+        const customerData = {
+            CustomerId: $('#customerId').val() || 0,
+            CustomerCode: $('#customerCode').val().trim(),
+            CustomerName: $('#customerName').val().trim(),
+            // Add other fields
+        };
+        $.ajax({
+            url: '@Url.Action("Save", "Customer", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ customer: customerData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#customerModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            }
+        });
+    }
+
+    // Similar functions for addresses and contacts
+</script>

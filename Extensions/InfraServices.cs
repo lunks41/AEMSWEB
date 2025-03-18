@@ -44,8 +44,6 @@ public static class InfraServices
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<ICurrencyService, CurrencyService>();
         services.AddScoped<ICustomerGroupCreditLimitService, CustomerGroupCreditLimitService>();
-        services.AddScoped<ICustomerAddressService, CustomerAddressService>();
-        services.AddScoped<ICustomerContactService, CustomerContactService>();
         services.AddScoped<ICustomerCreditLimitService, CustomerCreditLimitService>();
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IDepartmentService, DepartmentService>();
