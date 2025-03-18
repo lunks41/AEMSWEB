@@ -1,9 +1,6 @@
 ﻿@{
-    var modules = ViewBag.Modules as IEnumerable<AEMSWEB.Models.ModuleView>
-    ;
-}
-
-@{
+    var modules = ViewBag.Modules as IEnumerable<AEMSWEB.Models.ModuleView>;
+    var companyId = ViewContext.RouteData.Values["companyId"]?.ToString();
 
     var categoryIcons = new Dictionary<string, string>
 {
@@ -25,12 +22,12 @@
         { "GL", "Wallet" },
         { "Admin", "shield_person" },
         { "Setting", "Settings" }
-        };
+    };
 }
 
 <div class="sidebar-area" id="sidebar-area">
     <div class="logo position-relative">
-        <a href="/dashboard" class="d-block text-decoration-none position-relative">
+        <a href="@Url.Action("Index", "Dashboard", new { companyId = companyId })" class="d-block text-decoration-none position-relative">
             <img src="~/images/logo-icon.png" alt="logo-icon" />
             <span class="logo-text fw-bold text-dark">AMES</span>
             <span id="sidebarCompanyName" class="company-name"></span>
@@ -42,34 +39,49 @@
 
     <aside id="layout-menu" class="layout-menu menu-vertical menu active" data-simplebar>
         <ul class="menu-inner">
-            <li class="menu-item @(Context.Request.Path.StartsWithSegments("/dashboard") ? "open" : "" )">
-                <a href="javascript:void(0);"
-                   class="menu-link menu-toggle @(Context.Request.Path.StartsWithSegments("/dashboard") ? "active" : "" )">
+            <!-- Dashboard Section -->
+            <li class="menu-item @(Context.Request.Path.StartsWithSegments($"/{companyId}/dashboard") ? "open" : "")">
+                <a href="@Url.Action("Index", "Dashboard", new { companyId = companyId })"
+                   class="menu-link menu-toggle @(Context.Request.Path.StartsWithSegments($"/{companyId}/dashboard") ? "active" : "")">
                     <span class="material-symbols-outlined menu-icon">dashboard</span>
                     <span class="title">Dashboard</span>
                 </a>
 
                 <ul class="menu-sub">
                     <li class="menu-item">
-                        <a href="/dashboard/finance"
-                           class="menu-link @(Context.Request.Path == "/dashboard/finance" ? "active" : "" )">
+                        <a href="@Url.Action("Finance", "Dashboard", new { companyId = companyId })"
+                           class="menu-link @(Context.Request.Path == $"/{companyId}/dashboard/finance" ? "active" : "")">
                             Finance
                         </a>
                     </li>
                     <li class="menu-item mb-0">
-                        <a href="/dashboard/hrm"
-                           class="menu-link @(Context.Request.Path == "/dashboard/hrm" ? "active" : "" )">
+                        <a href="@Url.Action("Hrm", "Dashboard", new { companyId = companyId })"
+                           class="menu-link @(Context.Request.Path == $"/{companyId}/dashboard/hrm" ? "active" : "")">
                             HRM
                         </a>
                     </li>
                     <li class="menu-item mb-0">
-                        <a href="/dashboard/sales"
-                           class="menu-link @(Context.Request.Path == "/dashboard/sales" ? "active" : "" )">
-                            Sales
+                        <a href="@Url.Action("Job", "Dashboard", new { companyId = companyId })"
+                           class="menu-link @(Context.Request.Path == $"/{companyId}/dashboard/job" ? "active" : "")">
+                            Job
+                        </a>
+                    </li>
+                    <li class="menu-item mb-0">
+                        <a href="@Url.Action("Account", "Dashboard", new { companyId = companyId })"
+                           class="menu-link @(Context.Request.Path == $"/{companyId}/dashboard/account" ? "active" : "")">
+                            Account
+                        </a>
+                    </li>
+                    <li class="menu-item mb-0">
+                        <a href="@Url.Action("Documents", "Dashboard", new { companyId = companyId })"
+                           class="menu-link @(Context.Request.Path == $"/{companyId}/dashboard/documents" ? "active" : "")">
+                            Documents
                         </a>
                     </li>
                 </ul>
             </li>
+
+            <!-- Modules Section -->
             @if (modules != null)
             {
                 foreach (var module in modules.OrderBy(m => m.ModuleId))
@@ -78,43 +90,38 @@
                         <span class="menu-title-text">@module.ModuleName</span>
                     </li>
 
-                    @if (module.TransCategorys != null && module.TransCategorys.Any())
+                    @if (module.TransCategorys?.Any() == true)
                     {
                         @foreach (var transcategory in module.TransCategorys.OrderBy(t => t.TransCategoryName))
                         {
-                            // Case-insensitive path check
                             var isCategoryActive = transcategory.Transactions.Any(t =>
-                            Context.Request.Path.Equals(
-                            $"/{module.ModuleCode}/{t.TransactionCode}/Index",
-                            StringComparison.OrdinalIgnoreCase
-                            )
-                            );
+                                Context.Request.Path.Equals(
+                                    $"/{companyId}/{module.ModuleCode}/{t.TransactionCode}/Index",
+                                    StringComparison.OrdinalIgnoreCase
+                                ));
 
-                            // Get icon class for the category
                             var iconClass = categoryIcons.ContainsKey(transcategory.TransCategoryName)
-                            ? categoryIcons[transcategory.TransCategoryName]
-                            : "default-icon-class"; // Fallback icon
+                                ? categoryIcons[transcategory.TransCategoryName]
+                                : "settings";
 
-                            <li class="menu-item @(isCategoryActive ? " open" : "" )">
+                            <li class="menu-item @(isCategoryActive ? "open" : "")">
                                 <a href="javascript:void(0);"
-                                   class="menu-link menu-toggle @(isCategoryActive ? " active" : "" )">
-                                    <span class="material-symbols-outlined menu-icon"> @iconClass</span>
-                                    <span class="title">  @transcategory.TransCategoryName</span>
+                                   class="menu-link menu-toggle @(isCategoryActive ? "active" : "")">
+                                    <span class="material-symbols-outlined menu-icon">@iconClass</span>
+                                    <span class="title">@transcategory.TransCategoryName</span>
                                 </a>
 
                                 <ul class="menu-sub">
                                     @foreach (var transaction in transcategory.Transactions.OrderBy(t => t.TransactionName))
                                     {
-                                        var isActive = Context.Request.Path.Equals(
-                                        $"/{module.ModuleCode}/{transaction.TransactionCode}/Index",
-                                        StringComparison.OrdinalIgnoreCase
-                                        );
+                                        var expectedPath = $"/{companyId}/{module.ModuleCode}/{transaction.TransactionCode}/Index";
+                                        var isActive = Context.Request.Path.Equals(expectedPath, StringComparison.OrdinalIgnoreCase);
 
                                         <li class="menu-item">
                                             <a asp-area="@module.ModuleCode"
                                                asp-controller="@transaction.TransactionCode"
                                                asp-action="Index"
-                                               class="menu-link @(isActive ? " active" : "" )">
+                                               class="menu-link @(isActive ? "active" : "")">
                                                 @transaction.TransactionName
                                             </a>
                                         </li>
@@ -125,16 +132,15 @@
                     }
                 }
             }
-            <li class="menu-item">
-                <a class="nav-link text-dark" href="javascript:triggerGlobalLogout()">Logout</a>
-                <form id="logoutForm" class="d-none" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
-                    @Html.AntiForgeryToken()
-                </form>
-            </li>
 
+            <!-- Logout Section -->
             <li class="menu-item">
-                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
-                    @Html.AntiForgeryToken() <!-- Add anti-forgery token -->
+                <form asp-controller="Account"
+                      asp-action="Logout"
+                      asp-route-companyId="@companyId"
+                      method="post"
+                      style="display: inline;">
+                    @Html.AntiForgeryToken()
                     <button type="submit" class="menu-link" style="background: none; border: none; cursor: pointer;">
                         <span class="material-symbols-outlined menu-icon">logout</span>
                         <span class="title">Logout</span>
@@ -157,16 +163,16 @@
     document.addEventListener('DOMContentLoaded', () => {
         const activeCategory = sessionStorage.getItem('activeCategory');
         if (activeCategory) {
-            // Programmatically open the menu and highlight the active item
+            const categoryElement = document.querySelector(`[data-category="${activeCategory}"]`);
+            if (categoryElement) {
+                categoryElement.classList.add('open', 'active');
+            }
         }
     });
 
     function triggerGlobalLogout() {
         // Cross-tab logout notification
         localStorage.setItem('logout-event', Date.now());
-        localStorage.removeItem('logout-event');
-
-        // Submit the hidden form
         document.getElementById('logoutForm').submit();
     }
 </script>

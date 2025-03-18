@@ -1,0 +1,30 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Tax Categories</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div class="flex-grow-1" style="min-width: 200px;">
+                            <input type="text" id="txtCategorySearch" class="form-control" placeholder="Search categories...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadCategoryGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Category
+                        </button>
+                    </div>
+                </div>
+                <div id="categoryGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <!-- Similar structure to tax modal but for category fields -->
+</div>

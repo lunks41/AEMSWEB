@@ -1,4 +1,6 @@
-﻿namespace AEMSWEB.Areas.Master.Models
+﻿using AEMSWEB.Models.Masters;
+
+namespace AEMSWEB.Areas.Master.Models
 {
     public class BankViewModel
     {
@@ -30,5 +32,13 @@
     {
         public BankViewModel Bank { get; set; }
         public string CompanyId { get; set; }
+    }
+
+    public class BankViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<BankViewModel> data { get; set; }
     }
 }

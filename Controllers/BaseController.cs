@@ -58,5 +58,15 @@ namespace AEMSWEB.Controllers
 
             return await _baseService.ValidateScreen(companyId, userId, moduleId, transactionId);
         }
+
+        protected short? GetParsedUserId()
+        {
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(userId) && short.TryParse(userId, out var parsedUserId))
+            {
+                return parsedUserId;
+            }
+            return null;
+        }
     }
 }

@@ -1,0 +1,36 @@
+﻿<!-- Category/Index.cshtml -->
+@{
+    ViewData["Title"] = "Category Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- Nav Pills -->
+<ul class="nav nav-pills mb-3" id="categoryTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="category-tab" data-bs-toggle="pill"
+                data-bs-target="#category" type="button" role="tab" aria-controls="category" aria-selected="true">
+            <i class="mdi mdi-shape-outline me-1"></i> Categories
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="subcategory-tab" data-bs-toggle="pill"
+                data-bs-target="#subcategory" type="button" role="tab" aria-controls="subcategory" aria-selected="false">
+            <i class="mdi mdi-shape-plus me-1"></i> Sub-Categories
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="categoryTabsContent">
+    <div class="tab-pane fade show active" id="category" role="tabpanel" aria-labelledby="category-tab">
+        @Html.Partial("_Category")
+    </div>
+    <div class="tab-pane fade" id="subcategory" role="tabpanel" aria-labelledby="subcategory-tab">
+        @Html.Partial("_SubCategory")
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/category.js"></script>
+    <script src="~/js/subcategory.js"></script>
+}

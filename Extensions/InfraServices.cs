@@ -32,7 +32,6 @@ public static class InfraServices
 
         services.AddScoped<IDocumentTypeService, DocumentTypeService>();
         services.AddScoped<IAccountGroupService, AccountGroupService>();
-        services.AddScoped<IAccountSetupCategoryService, AccountSetupCategoryService>();
         services.AddScoped<IAccountSetupService, AccountSetupService>();
         services.AddScoped<IAccountTypeService, AccountTypeService>();
         services.AddScoped<IBankService, BankService>();
@@ -41,9 +40,7 @@ public static class InfraServices
         services.AddScoped<IBargeService, BargeService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IChartOfAccountService, ChartOfAccountService>();
-        services.AddScoped<ICOACategory1Service, COACategory1Service>();
-        services.AddScoped<ICOACategory2Service, COACategory2Service>();
-        services.AddScoped<ICOACategory3Service, COACategory3Service>();
+        services.AddScoped<ICOACategoryService, COACategoryService>();
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<ICreditTermService, CreditTermService>();
         services.AddScoped<ICurrencyService, CurrencyService>();
@@ -57,19 +54,15 @@ public static class InfraServices
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IGroupCreditLimitService, GroupCreditLimitService>();
         services.AddScoped<IGroupCreditLimit_CustomerService, GroupCreditLimit_CustomerService>();
-        services.AddScoped<IGstCategoryService, GstCategoryService>();
         services.AddScoped<IGstService, GstService>();
-        services.AddScoped<IOrderTypeCategoryService, OrderTypeCategoryService>();
         services.AddScoped<IOrderTypeService, OrderTypeService>();
         services.AddScoped<IPaymentTypeService, PaymentTypeService>();
         services.AddScoped<IPortRegionService, PortRegionService>();
         services.AddScoped<IPortService, PortService>();
         services.AddScoped<IProductService, ProductService>();
-        services.AddScoped<ISubCategoryService, SubCategoryService>();
         services.AddScoped<ISupplierAddressService, SupplierAddressService>();
         services.AddScoped<ISupplierContactService, SupplierContactService>();
         services.AddScoped<ISupplierService, SupplierService>();
-        services.AddScoped<ITaxCategoryService, TaxCategoryService>();
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<IUomService, UomService>();
         services.AddScoped<IVesselService, VesselService>();

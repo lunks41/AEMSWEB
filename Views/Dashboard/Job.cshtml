@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "DashBoard Page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Job</h1>
+</div>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Open Positions</h5>
+                    <h2>@ViewBag.OpenPositions</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Applications</h5>
+                    <h2>@ViewBag.TotalApplications</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Interviews Scheduled</h5>
+                    <h2>@ViewBag.InterviewsScheduled</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Job Status Distribution</h5>
+                    <canvas id="jobChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,3 +6,62 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Companies</h5>
+                    <h2>@ViewBag.TotalCompanies</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Active Users</h5>
+                    <h2>@ViewBag.ActiveUsers</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activities</h5>
+                    <h2>@ViewBag.RecentActivities</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Registration Timeline</h5>
+                    <canvas id="registrationChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Dummy chart data
+        const ctx = document.getElementById('registrationChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Registrations',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderColor: '#4e73df',
+                    tension: 0.1
+                }]
+            }
+        });
+    </script>
+}

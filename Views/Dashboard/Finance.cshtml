@@ -1,8 +1,67 @@
 ﻿@{
     ViewData["Title"] = "DashBoard Page";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var companyId = ViewContext.RouteData.Values["companyId"]?.ToString();
+    ViewBag.CompanyId = companyId;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Finance</h1>
+</div>
+
+<div class="container-fluid">
+    <h3>Finance Dashboard - Company @companyId</h3>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Revenue</h5>
+                    <h2>@ViewBag.Revenue.ToString("C")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Expenses</h5>
+                    <h2>@ViewBag.Expenses.ToString("C")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Profit</h5>
+                    <h2>@ViewBag.Profit.ToString("C")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Invoices</h5>
+                    <h2>@ViewBag.PendingInvoices</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Financial Overview</h5>
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Example link to another company-specific page -->
+    <a asp-controller="Invoices"
+       asp-action="Index"
+       asp-route-companyId="@companyId"
+       class="btn btn-primary">
+        View Invoices
+    </a>
 </div>

@@ -25,4 +25,12 @@
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
     }
+
+    public class SupplierContactViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<SupplierContactViewModel> data { get; set; }
+    }
 }

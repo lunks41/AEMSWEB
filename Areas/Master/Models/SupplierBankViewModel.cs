@@ -17,7 +17,6 @@
         public Int16 CountryId { get; set; }
         public string CountryCode { get; set; }
         public string CountryName { get; set; }
-
         public string Remarks1 { get; set; }
         public string Remarks2 { get; set; }
         public bool IsDefault { get; set; }
@@ -28,5 +27,13 @@
         public DateTime? EditDate { get; set; }
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
+    }
+
+    public class SupplierBankViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<SupplierBankViewModel> data { get; set; }
     }
 }

@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿<!-- Index.cshtml -->
 @{
+    ViewData["Title"] = "Order Type Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- Nav Pills -->
+<ul class="nav nav-pills mb-3" id="orderTypeTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="ordertype-tab" data-bs-toggle="pill"
+                data-bs-target="#ordertype" type="button" role="tab" aria-controls="ordertype" aria-selected="true">
+            <i class="mdi mdi-view-list me-1"></i> Order Types
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="ordertypecategory-tab" data-bs-toggle="pill"
+                data-bs-target="#ordertypecategory" type="button" role="tab" aria-controls="ordertypecategory" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> Categories
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="orderTypeTabsContent">
+    <div class="tab-pane fade show active" id="ordertype" role="tabpanel" aria-labelledby="ordertype-tab">
+        @Html.Partial("_OrderType")
+    </div>
+    <div class="tab-pane fade" id="ordertypecategory" role="tabpanel" aria-labelledby="ordertypecategory-tab">
+        @Html.Partial("_OrderTypeCategory")
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/ordertype.js"></script>
+    <script src="~/js/ordertypecategory.js"></script>
 }

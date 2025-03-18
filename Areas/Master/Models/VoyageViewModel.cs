@@ -27,4 +27,12 @@
         public VoyageViewModel Voyage { get; set; }
         public string CompanyId { get; set; }
     }
+
+    public class VoyageViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<VoyageViewModel> data { get; set; }
+    }
 }

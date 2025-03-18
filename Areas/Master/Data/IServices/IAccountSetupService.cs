@@ -29,5 +29,17 @@ namespace AEMSWEB.Areas.Master.Data.IServices
         public Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, AccountSetupDtViewModel accountSetupDtViewModel);
 
         #endregion Details
+
+        #region AccountSetupCategory
+
+        public Task<AccountSetupCategoryViewModelCount> GetAccountSetupCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+
+        public Task<M_AccountSetupCategory> GetAccountSetupCategoryByIdAsync(short CompanyId, short UserId, short AccSetupCategoryId);
+
+        public Task<SqlResponse> SaveAccountSetupCategoryAsync(short CompanyId, short UserId, M_AccountSetupCategory m_AccountSetupCategory);
+
+        public Task<SqlResponse> DeleteAccountSetupCategoryAsync(short CompanyId, short UserId, M_AccountSetupCategory m_AccountSetupCategory);
+
+        #endregion AccountSetupCategory
     }
 }

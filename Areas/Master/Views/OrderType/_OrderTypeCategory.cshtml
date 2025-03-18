@@ -1,0 +1,106 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Order Type Categories</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div class="flex-grow-1" style="min-width: 200px;">
+                            <input type="text" id="txtCategorySearch" class="form-control" placeholder="Search categories...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadCategoryGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Category
+                        </button>
+                    </div>
+                </div>
+                <div id="categoryGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Category Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCategoryForm()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="categoryForm">
+                    <input type="hidden" id="OrderTypeCategoryId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="CategoryCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="CategoryCode" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="CategoryName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="CategoryName" maxlength="100" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="CategoryRemarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="CategoryRemarks" rows="2" maxlength="500"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="CategoryIsActive">
+                                <label class="form-check-label" for="CategoryIsActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Section -->
+                    <div class="accordion mt-3" id="categoryAudit">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryAuditBody">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="categoryAuditBody" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="CategoryCreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="CategoryCreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="CategoryEditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="CategoryEditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearCategoryForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCategoryEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearCategoryForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCategorySave" onclick="saveCategory()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

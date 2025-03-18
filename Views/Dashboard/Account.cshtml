@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "DashBoard Page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var companyId = ViewContext.RouteData.Values["companyId"]?.ToString();
+}
+
+<div class="container-fluid">
+    <!-- Quick Stats Row -->
+    <div class="row mb-4">
+        <!-- Total Invoices -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-primary">Total Invoices</span>
+                            <h3 class="mb-0">@ViewBag.TotalInvoices</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-primary fs-2">receipt_long</span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">AED @ViewBag.InvoiceValueAED.ToString("N")</span>
+                        <span class="badge bg-info ms-2">USD @ViewBag.InvoiceValueUSD.ToString("N")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Receipt -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-success">Total Receipt</span>
+                            <h3 class="mb-0">@ViewBag.TotalReceipt.ToString("C")</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-success fs-2">payments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Payable -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-danger">Total Payable</span>
+                            <h3 class="mb-0">@ViewBag.TotalPayable.ToString("C")</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-danger fs-2">money_off</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Receivable -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-warning">Total Receivable</span>
+                            <h3 class="mb-0">@ViewBag.TotalReceivable.ToString("C")</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-warning fs-2">credit_card</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Balances & Trial Balance -->
+    <div class="row">
+        <!-- Bank Balances -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Bank Balances</h5>
+                    <a asp-controller="Bank" asp-action="Index" asp-route-companyId="@companyId"
+                       class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Bank Name</th>
+                                    <th>Account Number</th>
+                                    <th class="text-end">Balance (AED)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bank in ViewBag.BankBalances)
+                                {
+                                    <tr>
+                                        <td>@bank.BankName</td>
+                                        <td>@bank.AccountNumber</td>
+                                        <td class="text-end">@bank.Balance.ToString("N")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trial Balance -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Trial Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="alert alert-success">
+                                <h6>Total Debit</h6>
+                                <h3>@ViewBag.TrialBalance.Debit.ToString("C")</h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="alert alert-info">
+                                <h6>Total Credit</h6>
+                                <h3>@ViewBag.TrialBalance.Credit.ToString("C")</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <span class="badge @(ViewBag.TrialBalance.IsBalanced ? "bg-success" : "bg-danger")">
+                            @(ViewBag.TrialBalance.IsBalanced ? "Balanced" : "Imbalanced")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Sections -->
+    <div class="row">
+        <!-- Cash Flow Chart -->
+        <div class="col-lg-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Cash Flow (Last 6 Months)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="cashFlowChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Transactions</h5>
+                    <a asp-controller="Transaction" asp-action="Index" asp-route-companyId="@companyId"
+                       class="btn btn-sm btn-secondary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        @foreach (var transaction in ViewBag.RecentTransactions)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">@transaction.Description</h6>
+                                        <small class="text-muted">@transaction.Date.ToString("d")</small>
+                                    </div>
+                                    <span class="badge @(transaction.Type == "Credit" ? "bg-success" : "bg-danger")">
+                                        @transaction.Amount.ToString("C")
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Cash Flow Chart
+        const ctx = document.getElementById('cashFlowChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.CashFlowLabels)),
+                datasets: [{
+                    label: 'Cash Flow (AED)',
+                    data: @Html.Raw(Json.Serialize(ViewBag.CashFlowData)),
+                    borderColor: '#4e73df',
+                    tension: 0.1
+                }]
+            }
+        });
+    </script>
+}

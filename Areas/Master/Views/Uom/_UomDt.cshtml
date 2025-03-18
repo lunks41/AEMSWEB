@@ -1,0 +1,110 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>UOM Conversions</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div class="flex-grow-1" style="min-width: 200px;">
+                            <input type="text" id="txtUomDtSearch" class="form-control" placeholder="Search conversions...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadUomDtGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uomDtModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Conversion
+                        </button>
+                    </div>
+                </div>
+                <div id="uomDtGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UOM Conversion Modal -->
+<div class="modal fade" id="uomDtModal" tabindex="-1" aria-labelledby="uomDtModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uomDtModalLabel">Conversion Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearUomDtForm()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="uomDtForm">
+                    <input type="hidden" id="UomDtId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="BaseUom" class="form-label">Base UOM <span class="text-danger">*</span></label>
+                                <select id="BaseUom" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="PackUom" class="form-label">Pack UOM <span class="text-danger">*</span></label>
+                                <select id="PackUom" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="UomFactor" class="form-label">Conversion Factor <span class="text-danger">*</span></label>
+                                <input type="number" step="0.0001" class="form-control" id="UomFactor" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="UomDtIsActive">
+                                <label class="form-check-label" for="UomDtIsActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Section -->
+                    <div class="accordion mt-3" id="uomDtAudit">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uomDtAuditBody">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="uomDtAuditBody" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="UomDtCreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="UomDtCreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="UomDtEditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="UomDtEditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearUomDtForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUomDtEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearUomDtForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnUomDtSave" onclick="saveUomDt()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

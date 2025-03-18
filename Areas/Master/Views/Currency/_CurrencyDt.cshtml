@@ -1,0 +1,108 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Exchange Rates</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div class="flex-grow-1" style="min-width: 200px;">
+                            <input type="text" id="txtCurrencyDtSearch" class="form-control" placeholder="Search exchange rates...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadCurrencyDtGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#currencyDtModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Exchange Rate
+                        </button>
+                    </div>
+                </div>
+                <div id="currencyDtGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Currency Detail Modal -->
+<div class="modal fade" id="currencyDtModal" tabindex="-1" aria-labelledby="currencyDtModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="currencyDtModalLabel">Exchange Rate Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCurrencyDtForm()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="currencyDtForm">
+                    <input type="hidden" id="CurrencyDtId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cmbCurrency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="cmbCurrency" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="ExhRate" class="form-label">Exchange Rate <span class="text-danger">*</span></label>
+                                <input type="number" step="0.0000000001" class="form-control" id="ExhRate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="ValidFrom" class="form-label">Valid From <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="ValidFrom" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="IsActiveDt">
+                                <label class="form-check-label" for="IsActiveDt">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Section -->
+                    <div class="accordion mt-3" id="currencyDtAudit">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#currencyDtAuditBody">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="currencyDtAuditBody" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="CreateByDt" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="CreateDateDt" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="EditByDt" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="EditDateDt" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearCurrencyDtForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencyDtEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearCurrencyDtForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencyDtSave" onclick="saveCurrencyDt()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

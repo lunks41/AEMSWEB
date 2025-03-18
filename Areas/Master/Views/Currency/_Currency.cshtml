@@ -1,0 +1,123 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Currencies</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div class="flex-grow-1" style="min-width: 200px;">
+                            <input type="text" id="txtCurrencySearch" class="form-control" placeholder="Search currencies...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadCurrencyGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#currencyModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Currency
+                        </button>
+                    </div>
+                </div>
+                <div id="currencyGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Currency Modal -->
+<div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="currencyModalLabel">Currency Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCurrencyForm()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="currencyForm">
+                    <input type="hidden" id="CurrencyId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="CompanyId" class="form-label">Company <span class="text-danger">*</span></label>
+                                <select id="CompanyId" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="CurrencyCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="CurrencyCode" maxlength="3" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="CurrencyName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="CurrencyName" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="IsMultiply" class="form-label">Conversion Type <span class="text-danger">*</span></label>
+                                <select id="IsMultiply" class="form-select" required>
+                                    <option value="true">Multiply</option>
+                                    <option value="false">Divide</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Remarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="Remarks" rows="2" maxlength="500"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="IsActive">
+                                <label class="form-check-label" for="IsActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Section -->
+                    <div class="accordion mt-3" id="currencyAudit">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#currencyAuditBody">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="currencyAuditBody" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="CreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="CreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="EditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="EditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearCurrencyForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencyEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearCurrencyForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencySave" onclick="saveCurrency()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

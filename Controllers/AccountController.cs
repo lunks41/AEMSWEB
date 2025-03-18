@@ -99,7 +99,8 @@ namespace AEMSWEB.Controllers
                     return companies.Count switch
                     {
                         0 => RedirectToAction("NoCompanyAccess"),
-                        1 => RedirectToCompanyDashboard(companies.First().CompanyCode),
+                        1 => RedirectToAction("Index", "Dashboard", new { companyId = companies.First().CompanyId }),
+                        //1 => RedirectToCompanyDashboard(companies.First().CompanyCode),
                         _ => RedirectToAction("SelectCompany")
                     };
                 }

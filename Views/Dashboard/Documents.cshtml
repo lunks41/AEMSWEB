@@ -1,0 +1,228 @@
+﻿@{
+    ViewBag.Title = "Document Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var companyId = ViewContext.RouteData.Values["companyId"]?.ToString();
+
+    // Dummy Data
+    var documents = new List<dynamic> {
+        new {
+            Id = 1,
+            Name = "Company Trade License",
+            Type = "Company License",
+            ExpiryDate = DateTime.Now.AddMonths(2),
+            Status = "Valid",
+            LinkedEntity = "Head Office",
+            FilePath = "#"
+        },
+        new {
+            Id = 2,
+            Name = "John Doe - Work Visa",
+            Type = "Employee Visa",
+            ExpiryDate = DateTime.Now.AddDays(-15),
+            Status = "Expired",
+            LinkedEntity = "EMP-1001",
+            FilePath = "#"
+        },
+        new {
+            Id = 3,
+            Name = "Toyota Camry License",
+            Type = "Vehicle License",
+            ExpiryDate = DateTime.Now.AddDays(10),
+            Status = "Expiring Soon",
+            LinkedEntity = "VH-2023",
+            FilePath = "#"
+        },
+        new {
+            Id = 4,
+            Name = "Sarah Smith Passport",
+            Type = "Employee Passport",
+            ExpiryDate = DateTime.Now.AddYears(1),
+            Status = "Valid",
+            LinkedEntity = "EMP-1002",
+            FilePath = "#"
+        }
+    };
+
+    ViewBag.Documents = documents;
+    ViewBag.ExpiringCount = documents.Count(d => d.Status == "Expiring Soon");
+    ViewBag.ExpiredCount = documents.Count(d => d.Status == "Expired");
+    ViewBag.ValidCount = documents.Count(d => d.Status == "Valid");
+    ViewBag.TotalDocuments = documents.Count;
+}
+
+<div class="container-fluid">
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-danger">EXPIRED</div>
+                            <div class="h2">@ViewBag.ExpiredCount</div>
+                        </div>
+                        <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-warning">EXPIRING SOON</div>
+                            <div class="h2">@ViewBag.ExpiringCount</div>
+                        </div>
+                        <i class="fas fa-clock fa-2x text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-success">VALID</div>
+                            <div class="h2">@ViewBag.ValidCount</div>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-primary">TOTAL DOCUMENTS</div>
+                            <div class="h2">@ViewBag.TotalDocuments</div>
+                        </div>
+                        <i class="fas fa-archive fa-2x text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Document List</h6>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="fas fa-upload me-2"></i>Upload New
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Type</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                            <th>Linked To</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var doc in ViewBag.Documents)
+                        {
+                            <tr>
+                                <td>@doc.Name</td>
+                                <td>@doc.Type</td>
+                                <td>@doc.ExpiryDate.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    <span class="badge @(doc.Status == "Valid" ? "bg-success" :
+                                                   doc.Status == "Expired" ? "bg-danger" : "bg-warning")">
+                                        @doc.Status
+                                    </span>
+                                    <div class="progress mt-1" style="height: 3px;">
+                                        <div class="progress-bar @(doc.Status == "Valid" ? "bg-success" :
+                                                        doc.Status == "Expired" ? "bg-danger" : "bg-warning")"
+                                             style="width: @GetExpiryProgress(doc.ExpiryDate)%"></div>
+                                    </div>
+                                </td>
+                                <td>@doc.LinkedEntity</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-sync"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload New Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Document Type</label>
+                        <select class="form-select">
+                            <option>Company License</option>
+                            <option>Employee Visa</option>
+                            <option>Employee Passport</option>
+                            <option>Vehicle License</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="date" class="form-control"
+                               value="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Upload File</label>
+                        <input type="file" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload Document</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private int GetExpiryProgress(DateTime expiryDate)
+    {
+        var totalDays = (expiryDate - DateTime.Now).TotalDays;
+        return totalDays switch
+        {
+            > 365 => 100,
+            < 0 => 0,
+            _ => (int)((totalDays / 365) * 100)
+        };
+    }
+}
+
+<style>
+    .progress {
+        background-color: #f8f9fa;
+        border-radius: 0;
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 0.4em 0.6em;
+    }
+</style>

@@ -72,7 +72,9 @@ namespace AEMSWEB.Enums
         GroupCreditLimit_Customer = 44,
         SupplierContact = 45,
         AccountSetupDt = 46,
-        DocumentType = 47
+        DocumentType = 47,
+        Task = 48,
+        Chrage = 49
     }
 
     public enum E_AR

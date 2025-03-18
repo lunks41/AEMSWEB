@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Master\Views\OrderType\_OrderTypeCategory.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.2" />
@@ -36,6 +40,10 @@
     <Folder Include="Areas\Project\Data\" />
     <Folder Include="Areas\Project\Models\" />
     <Folder Include="Logs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Master\Views\OrderType\_OrderTypeCategory.cshtml" />
   </ItemGroup>
 
 </Project>

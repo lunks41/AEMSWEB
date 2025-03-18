@@ -1,0 +1,46 @@
+﻿<!-- Index.cshtml -->
+@{
+    ViewData["Title"] = "COA Category Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- Nav Pills -->
+<ul class="nav nav-pills mb-3" id="coaTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="coa1-tab" data-bs-toggle="pill"
+                data-bs-target="#coa1" type="button" role="tab" aria-controls="coa1" aria-selected="true">
+            <i class="mdi mdi-numeric-1-circle me-1"></i> Level 1
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="coa2-tab" data-bs-toggle="pill"
+                data-bs-target="#coa2" type="button" role="tab" aria-controls="coa2" aria-selected="false">
+            <i class="mdi mdi-numeric-2-circle me-1"></i> Level 2
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="coa3-tab" data-bs-toggle="pill"
+                data-bs-target="#coa3" type="button" role="tab" aria-controls="coa3" aria-selected="false">
+            <i class="mdi mdi-numeric-3-circle me-1"></i> Level 3
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="coaTabsContent">
+    <div class="tab-pane fade show active" id="coa1" role="tabpanel" aria-labelledby="coa1-tab">
+        @Html.Partial("_COACategory1")
+    </div>
+    <div class="tab-pane fade" id="coa2" role="tabpanel" aria-labelledby="coa2-tab">
+        @Html.Partial("_COACategory2")
+    </div>
+    <div class="tab-pane fade" id="coa3" role="tabpanel" aria-labelledby="coa3-tab">
+        @Html.Partial("_COACategory3")
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/coacategory1.js"></script>
+    <script src="~/js/coacategory2.js"></script>
+    <script src="~/js/coacategory3.js"></script>
+}
