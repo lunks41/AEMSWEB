@@ -28,7 +28,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Headers
 
-        public async Task<CurrencyViewModelCount> GetCurrencyListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<CurrencyViewModelCount> GetCurrencyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CurrencyViewModelCount countViewModel = new CurrencyViewModelCount();
             try
@@ -237,7 +237,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCurrencyAsync(short CompanyId, short UserId, int CurrencyId)
+        public async Task<SqlResponse> DeleteCurrencyAsync(short CompanyId, short UserId, short CurrencyId)
         {
             string CurrencyCode = string.Empty;
             try
@@ -341,7 +341,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Details
 
-        public async Task<CurrencyDtViewModelCount> GetCurrencyDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<CurrencyDtViewModelCount> GetCurrencyDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CurrencyDtViewModelCount countViewModel = new CurrencyDtViewModelCount();
             try
@@ -632,7 +632,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Local Details
 
-        public async Task<CurrencyLocalDtViewModelCount> GetCurrencyLocalDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<CurrencyLocalDtViewModelCount> GetCurrencyLocalDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CurrencyLocalDtViewModelCount countViewModel = new CurrencyLocalDtViewModelCount();
             try

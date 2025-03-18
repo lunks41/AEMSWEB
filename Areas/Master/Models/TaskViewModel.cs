@@ -18,8 +18,8 @@
 
     public class SaveTaskViewModel
     {
-        public TaskViewModel Task { get; set; }
-        public string CompanyId { get; set; }
+        public TaskViewModel task { get; set; }
+        public string companyId { get; set; }
     }
 
     public class TaskViewModelCount

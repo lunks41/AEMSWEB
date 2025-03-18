@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.CB
             _accountService = accountService;
         }
 
-        public async Task<CBGenReceiptViewModel> GetCBGenReceiptListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId)
+        public async Task<CBGenReceiptViewModel> GetCBGenReceiptListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId)
         {
             CBGenReceiptViewModel countViewModel = new CBGenReceiptViewModel();
             try

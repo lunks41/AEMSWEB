@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IPaymentTypeService
     {
-        public Task<PaymentTypeViewModelCount> GetPaymentTypeListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<PaymentTypeViewModelCount> GetPaymentTypeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_PaymentType> GetPaymentTypeByIdAsync(short CompanyId, short UserId, short PaymentTypeId);
 

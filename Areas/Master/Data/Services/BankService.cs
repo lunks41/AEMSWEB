@@ -7,7 +7,6 @@ using AEMSWEB.Enums;
 using AEMSWEB.Helpers;
 using AEMSWEB.IServices;
 using AEMSWEB.Models;
-using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +26,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context; _logService = logService;
         }
 
-        public async Task<BankViewModelCount> GetBankListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<BankViewModelCount> GetBankListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             BankViewModelCount countViewModel = new BankViewModelCount();
             try

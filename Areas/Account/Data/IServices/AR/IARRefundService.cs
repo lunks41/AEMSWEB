@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AR
 {
     public interface IARRefundService
     {
-        public Task<ARRefundViewModelCount> GetARRefundListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<ARRefundViewModelCount> GetARRefundListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<ARRefundViewModel> GetARRefundByIdAsync(short CompanyId, long RefundId, string RefundNo, short UserId);
 

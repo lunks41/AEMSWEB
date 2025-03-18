@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.GL
 {
     public interface IGLJournalService
     {
-        public Task<GLJournalViewModel> GetGLJournalListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<GLJournalViewModel> GetGLJournalListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<GLJournalHdViewModel> GetGLJournalByIdNoAsync(short CompanyId, long JournalId, string JournalNo, short UserId);
 

@@ -18,8 +18,8 @@
 
     public class SaveDesignationViewModel
     {
-        public DesignationViewModel Designation { get; set; }
-        public string CompanyId { get; set; }
+        public DesignationViewModel designation { get; set; }
+        public string companyId { get; set; }
     }
 
     public class DesignationViewModelCount

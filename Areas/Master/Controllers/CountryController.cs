@@ -1,194 +1,172 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class CountryController : Controller
+    public class CountryController : BaseController
     {
         private readonly ILogger<CountryController> _logger;
         private readonly ICountryService _countryService;
 
-        public CountryController(ILogger<CountryController> logger, ICountryService countryService)
+        public CountryController(ILogger<CountryController> logger,
+            IBaseService baseService,
+            ICountryService countryService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _countryService = countryService;
         }
 
-        // GET: /master/Country/Index
-        public IActionResult Index()
+        #region Country CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _countryService.GetCountryListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching countries.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Country/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short countryId, string companyId)
-        {
-            if (countryId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Country ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Country);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _countryService.GetCountryByIdAsync(companyIdShort, parsedUserId, countryId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Country not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _countryService.GetCountryListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching country by ID.");
+                _logger.LogError(ex, "Error fetching country list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Country/Save
-        [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveCountryViewModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetById(short countryId, string companyId)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (countryId <= 0)
+                return Json(new { success = false, message = "Invalid Country ID" });
 
-            var country = model.Country;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var countryToSave = new M_Country
-            {
-                CountryId = country.CountryId,
-                CompanyId = companyIdShort,
-                CountryCode = country.CountryCode ?? string.Empty,
-                CountryName = country.CountryName ?? string.Empty,
-                Remarks = country.Remarks?.Trim() ?? string.Empty,
-                IsActive = country.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = country.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _countryService.SaveCountryAsync(companyIdShort, parsedUserId, countryToSave);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save country." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _countryService.GetCountryByIdAsync(companyIdShort, parsedUserId.Value, countryId);
+                return data == null
+                    ? Json(new { success = false, message = "Country not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the country.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error fetching country by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Country/Delete
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveCountryViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var countryToSave = new M_Country
+                {
+                    CountryId = model.country.CountryId,
+                    CompanyId = companyIdShort,
+                    CountryCode = model.country.CountryCode ?? string.Empty,
+                    CountryName = model.country.CountryName ?? string.Empty,
+                    Remarks = model.country.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.country.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.country.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _countryService.SaveCountryAsync(companyIdShort, parsedUserId.Value, countryToSave);
+                return Json(new { success = true, message = "Country saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving country");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(short countryId, string companyId)
         {
             if (countryId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+                return Json(new { success = false, message = "Invalid Country ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Country);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var countryGet = await _countryService.GetCountryByIdAsync(companyIdShort, parsedUserId, countryId);
+                var country = await _countryService.GetCountryByIdAsync(companyIdShort, parsedUserId.Value, countryId);
+                if (country == null)
+                    return Json(new { success = false, message = "Country not found" });
 
-                var data = await _countryService.DeleteCountryAsync(companyIdShort, 1, countryGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save country." });
-                }
-
-                return Json(new { success = true, data });
+                await _countryService.DeleteCountryAsync(companyIdShort, parsedUserId.Value, country);
+                return Json(new { success = true, message = "Country deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the country.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting country");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Country CRUD
     }
 }

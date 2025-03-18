@@ -1,165 +1,182 @@
-﻿//using AEMSWEB.Controllers;
-//using AEMSWEB.Models.Masters;
-//using AEMSWEB.Services;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
+using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
+using AEMSWEB.Models.Masters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace AEMSWEB.Areas.Master.Controllers
-//{
-//    [Area("master")]
-//    public class EmployeeController : BaseController
-//    {
-//        private readonly ILogger<EmployeeController> _logger;
+namespace AEMSWEB.Areas.Master.Controllers
+{
+    [Area("master")]
+    [Authorize]
+    public class EmployeeController : BaseController
+    {
+        private readonly ILogger<EmployeeController> _logger;
+        private readonly IEmployeeService _employeeService;
 
-//        public EmployeeController(
-//            ILogger<EmployeeController> logger
+        public EmployeeController(ILogger<EmployeeController> logger,
+            IBaseService baseService,
+            IEmployeeService employeeService)
+            : base(logger, baseService)
+        {
+            _logger = logger;
+            _employeeService = employeeService;
+        }
 
-//           )
+        #region Employee CRUD
 
-//        {
-//            _logger = logger;
-//        }
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
 
-//        // GET: /master/Employee/Index
-//        public async Task<IActionResult> Index()
-//        {
-//            return View();
-//        }
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-//        // GET: /master/Employee/List
-//        [HttpGet]
-//        public async Task<JsonResult> List(string searchString, string companyId)
-//        {
-//            try
-//            {
-//                var headers = new Dictionary<string, string>
-//            {
-//                { "PageSize", "10" },
-//                { "PageNumber", "1" },
-//                { "SearchString", searchString ?? string.Empty }
-//            };
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Employee);
 
-//                if (!string.IsNullOrEmpty(companyId))
-//                {
-//                    headers.Add("CompanyId", companyId);
-//                }
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
 
-//                var apiResponse = await _apiService.GetAsync<List<EmployeeViewModel>>("/master/getemployees", headers);
-//                return Json(apiResponse.Data);
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "An error occurred while fetching employees.");
-//                return Json(null);
-//            }
-//        }
+            return View();
+        }
 
-//        // GET: /master/Employee/GetById
-//        [HttpGet]
-//        public async Task<JsonResult> GetById(short employeeId, string companyId)
-//        {
-//            if (employeeId <= 0)
-//            {
-//                return Json(new { success = false, message = "Invalid Employee ID." });
-//            }
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var apiResponse = await _apiService.GetAsync<EmployeeViewModel>($"/master/getemployeebyid/{employeeId}", headers);
+            try
+            {
+                var data = await _employeeService.GetEmployeeListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching employee list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, data = apiResponse.Data });
-//            }
-//            else
-//            {
-//                return Json(new { success = false, message = "Employee not found." });
-//            }
-//        }
+        [HttpGet]
+        public async Task<JsonResult> GetById(short employeeId, string companyId)
+        {
+            if (employeeId <= 0)
+                return Json(new { success = false, message = "Invalid Employee ID" });
 
-//        // POST: /master/Employee/Save
-//        [HttpPost]
-//        public async Task<IActionResult> Save([FromBody] SaveEmployeeViewModel model)
-//        {
-//            if (model == null)
-//            {
-//                return BadRequest(new { success = false, message = "Data operation failed." });
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var employee = model.Employee;
-//            var companyId = model.CompanyId;
+            try
+            {
+                var data = await _employeeService.GetEmployeeByIdAsync(companyIdShort, parsedUserId.Value, employeeId);
+                return data == null
+                    ? Json(new { success = false, message = "Employee not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching employee by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            var employeeToSave = new EmployeeViewModel
-//            {
-//                EmployeeId = employee.EmployeeId,
-//                CompanyId = Convert.ToInt16(companyId),
-//                EmployeeCode = employee.EmployeeCode ?? string.Empty,
-//                EmployeeName = employee.EmployeeName ?? string.Empty,
-//                EmployeeOtherName = employee.EmployeeOtherName ?? string.Empty,
-//                EmployeePhoto = employee.EmployeePhoto ?? string.Empty,
-//                EmployeeSignature = employee.EmployeeSignature ?? string.Empty,
-//                DepartmentId = employee.DepartmentId,
-//                DepartmentCode = employee.DepartmentCode ?? string.Empty,
-//                DepartmentName = employee.DepartmentName ?? string.Empty,
-//                EmployeeSex = employee.EmployeeSex ?? string.Empty,
-//                MartialStatus = employee.MartialStatus ?? string.Empty,
-//                EmployeeDOB = employee.EmployeeDOB,
-//                EmployeeJoinDate = employee.EmployeeJoinDate,
-//                EmployeeLastDate = employee.EmployeeLastDate,
-//                EmployeeOffEmailAdd = employee.EmployeeOffEmailAdd ?? string.Empty,
-//                EmployeeOtherEmailAdd = employee.EmployeeOtherEmailAdd ?? string.Empty,
-//                Remarks = employee.Remarks?.Trim() ?? string.Empty,
-//                IsActive = employee.IsActive,
-//                CreateById = employee.CreateById,
-//                CreateDate = DateTime.Now,
-//                EditById = employee.EditById ?? 0,
-//                EditDate = DateTime.Now,
-//                CreateBy = employee.CreateBy ?? string.Empty,
-//                EditBy = employee.EditBy ?? string.Empty
-//            };
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveEmployeeViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var apiResponse = await _apiService.PostAsync<EmployeeViewModel>("/master/saveemployee", employeeToSave, headers);
+            try
+            {
+                var employeeToSave = new M_Employee
+                {
+                    EmployeeId = model.employee.EmployeeId,
+                    CompanyId = companyIdShort,
+                    EmployeeCode = model.employee.EmployeeCode ?? string.Empty,
+                    EmployeeName = model.employee.EmployeeName ?? string.Empty,
+                    EmployeeOtherName = model.employee.EmployeeOtherName ?? string.Empty,
+                    EmployeePhoto = model.employee.EmployeePhoto ?? string.Empty,
+                    EmployeeSignature = model.employee.EmployeeSignature ?? string.Empty,
+                    DepartmentId = model.employee.DepartmentId,
+                    EmployeeSex = model.employee.EmployeeSex ?? string.Empty,
+                    MartialStatus = model.employee.MartialStatus ?? string.Empty,
+                    EmployeeDOB = model.employee.EmployeeDOB,
+                    EmployeeJoinDate = model.employee.EmployeeJoinDate,
+                    EmployeeLastDate = model.employee.EmployeeLastDate,
+                    EmployeeOffEmailAdd = model.employee.EmployeeOffEmailAdd ?? string.Empty,
+                    EmployeeOtherEmailAdd = model.employee.EmployeeOtherEmailAdd ?? string.Empty,
+                    Remarks = model.employee.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.employee.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.employee.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record saved successfully." });
-//            }
+                var result = await _employeeService.SaveEmployeeAsync(companyIdShort, parsedUserId.Value, employeeToSave);
+                return Json(new { success = true, message = "Employee saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving employee");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Save operation failed." });
-//        }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(short employeeId, string companyId)
+        {
+            if (employeeId <= 0)
+                return Json(new { success = false, message = "Invalid Employee ID" });
 
-//        // DELETE: /master/Employee/Delete
-//        [HttpDelete]
-//        public async Task<IActionResult> Delete(int id, string companyId)
-//        {
-//            if (id <= 0)
-//            {
-//                return BadRequest(new { success = false, message = "Invalid ID." });
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Employee);
 
-//            var apiResponse = await _apiService.DeleteAsync($"/master/deleteemployee/{id}", headers);
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record deleted successfully." });
-//            }
+            try
+            {
+                var employee = await _employeeService.GetEmployeeByIdAsync(companyIdShort, parsedUserId.Value, employeeId);
+                if (employee == null)
+                    return Json(new { success = false, message = "Employee not found" });
 
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Delete operation failed." });
-//        }
-//    }
-//}
+                await _employeeService.DeleteEmployeeAsync(companyIdShort, parsedUserId.Value, employee);
+                return Json(new { success = true, message = "Employee deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting employee");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion Employee CRUD
+    }
+}

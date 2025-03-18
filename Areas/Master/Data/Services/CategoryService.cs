@@ -26,7 +26,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context; _logService = logService;
         }
 
-        public async Task<CategoryViewModelCount> GetCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<CategoryViewModelCount> GetCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CategoryViewModelCount countViewModel = new CategoryViewModelCount();
             try
@@ -332,7 +332,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SubCategoryViewModelCount> GetSubCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<SubCategoryViewModelCount> GetSubCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             SubCategoryViewModelCount countViewModel = new SubCategoryViewModelCount();
             try

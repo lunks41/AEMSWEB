@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface ICustomerService
     {
-        public Task<CustomerViewModelCount> GetCustomerListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<CustomerViewModelCount> GetCustomerListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<CustomerViewModel> GetCustomerAsync(short CompanyId, short UserId, int CustomerId, string CustomerCode, string CustomerName);
 

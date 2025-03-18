@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.AR
             _accountService = accountService;
         }
 
-        public async Task<ARInvoiceViewModelCount> GetARInvoiceListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate)
+        public async Task<ARInvoiceViewModelCount> GetARInvoiceListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate)
         {
             ARInvoiceViewModelCount countViewModel = new ARInvoiceViewModelCount();
             try

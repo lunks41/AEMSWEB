@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IVoyageService
     {
-        public Task<VoyageViewModelCount> GetVoyageListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<VoyageViewModelCount> GetVoyageListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_Voyage> GetVoyageByIdAsync(short CompanyId, short UserId, short VoyageId);
 

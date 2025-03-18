@@ -6,15 +6,15 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface ICurrencyService
     {
-        public Task<CurrencyViewModelCount> GetCurrencyListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<CurrencyViewModelCount> GetCurrencyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<CurrencyViewModel> GetCurrencyByIdAsync(short CompanyId, short UserId, int CurrencyId);
 
         public Task<SqlResponse> SaveCurrencyAsync(short CompanyId, short UserId, M_Currency M_Currency);
 
-        public Task<SqlResponse> DeleteCurrencyAsync(short CompanyId, short UserId, int CurrencyId);
+        public Task<SqlResponse> DeleteCurrencyAsync(short CompanyId, short UserId, short CurrencyId);
 
-        public Task<CurrencyDtViewModelCount> GetCurrencyDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<CurrencyDtViewModelCount> GetCurrencyDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<CurrencyDtViewModel> GetCurrencyDtByIdAsync(short CompanyId, short UserId, int CurrencyId, DateTime ValidFrom);
 
@@ -22,7 +22,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> DeleteCurrencyDtAsync(short CompanyId, short UserId, CurrencyDtViewModel M_CurrencyDt);
 
-        public Task<CurrencyLocalDtViewModelCount> GetCurrencyLocalDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<CurrencyLocalDtViewModelCount> GetCurrencyLocalDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<CurrencyLocalDtViewModel> GetCurrencyLocalDtByIdAsync(short CompanyId, short UserId, int CurrencyId, DateTime ValidFrom);
 

@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.GL
             _accountService = accountService;
         }
 
-        public async Task<GLJournalViewModel> GetGLJournalListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId)
+        public async Task<GLJournalViewModel> GetGLJournalListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId)
         {
             GLJournalViewModel countViewModel = new GLJournalViewModel();
             try

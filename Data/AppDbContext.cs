@@ -133,7 +133,7 @@ namespace AEMSWEB.Data
         public DbSet<M_Vessel> M_Vessel { get; set; }
         public DbSet<M_Voyage> M_Voyage { get; set; }
         public DbSet<M_Task> M_Task { get; set; }
-        public DbSet<M_Charge> M_Charge { get; set; }
+        public DbSet<M_Charges> M_Charges { get; set; }
 
         #endregion Masters
 

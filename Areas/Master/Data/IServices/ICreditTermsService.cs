@@ -4,9 +4,9 @@ using AEMSWEB.Models.Masters;
 
 namespace AEMSWEB.Areas.Master.Data.IServices
 {
-    public interface ICreditTermService
+    public interface ICreditTermsService
     {
-        public Task<CreditTermViewModelCount> GetCreditTermListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<CreditTermViewModelCount> GetCreditTermListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_CreditTerm> GetCreditTermByIdAsync(short CompanyId, short UserId, short CreditTermId);
 
@@ -14,7 +14,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> DeleteCreditTermAsync(short CompanyId, short UserId, M_CreditTerm m_CreditTerm);
 
-        public Task<CreditTermDtViewModelCount> GetCreditTermDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<CreditTermDtViewModelCount> GetCreditTermDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<CreditTermDtViewModel> GetCreditTermDtByIdAsync(short CompanyId, short UserId, short CreditTermId, short FromDay);
 

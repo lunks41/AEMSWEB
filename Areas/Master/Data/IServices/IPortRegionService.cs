@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IPortRegionService
     {
-        public Task<PortRegionViewModelCount> GetPortRegionListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<PortRegionViewModelCount> GetPortRegionListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<PortRegionViewModel> GetPortRegionByIdAsync(short CompanyId, short UserId, short PortRegionId);
 

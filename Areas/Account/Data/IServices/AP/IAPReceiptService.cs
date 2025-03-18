@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AP
 {
     public interface IAPPaymentService
     {
-        public Task<APPaymentViewModelCount> GetAPPaymentListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<APPaymentViewModelCount> GetAPPaymentListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<APPaymentViewModel> GetAPPaymentByIdAsync(short CompanyId, long PaymentId, string PaymentNo, short UserId);
 

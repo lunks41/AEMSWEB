@@ -68,5 +68,25 @@ namespace AEMSWEB.Controllers
             }
             return null;
         }
+
+        protected JsonResult ValidateCompanyAndUserId(string companyId, out short companyIdShort, out short? parsedUserId)
+        {
+            companyIdShort = 0;
+            parsedUserId = GetParsedUserId();
+
+            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out companyIdShort))
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
+
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+
+            return null;
+        }
     }
 }

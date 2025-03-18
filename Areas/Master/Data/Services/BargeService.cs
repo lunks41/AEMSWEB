@@ -26,7 +26,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context; _logService = logService;
         }
 
-        public async Task<BargeViewModelCount> GetBargeListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<BargeViewModelCount> GetBargeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             BargeViewModelCount countViewModel = new BargeViewModelCount();
             try

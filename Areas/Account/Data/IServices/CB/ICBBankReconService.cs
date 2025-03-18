@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.CB
 {
     public interface ICBBankReconService
     {
-        public Task<CBBankReconViewModel> GetCBBankReconListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<CBBankReconViewModel> GetCBBankReconListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<CBBankReconHdViewModel> GetCBBankReconByIdNoAsync(short CompanyId, long ReconId, string ReconNo, short UserId);
 

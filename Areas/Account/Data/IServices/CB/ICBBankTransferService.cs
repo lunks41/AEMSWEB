@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.CB
 {
     public interface ICBBankTransferService
     {
-        public Task<CBBankTransferViewModelList> GetCBBankTransferListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, short UserId);
+        public Task<CBBankTransferViewModelList> GetCBBankTransferListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, short UserId);
 
         public Task<CBBankTransferViewModel> GetCBBankTransferByIdNoAsync(short CompanyId, long TransferId, string TransferNo, short UserId);
 

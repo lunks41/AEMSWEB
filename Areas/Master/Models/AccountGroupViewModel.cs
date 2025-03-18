@@ -20,7 +20,7 @@
 
     public class SaveAccountGroupViewModel
     {
-        public AccountGroupViewModel AccountGroup { get; set; }
+        public AccountGroupViewModel accountGroup { get; set; }
         public string CompanyId { get; set; }
     }
 

@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.GL
             _accountService = accountService;
         }
 
-        public async Task<GLContraViewModel> GetGLContraListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId)
+        public async Task<GLContraViewModel> GetGLContraListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId)
         {
             GLContraViewModel countViewModel = new GLContraViewModel();
             try

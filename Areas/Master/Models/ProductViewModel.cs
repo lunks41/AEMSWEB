@@ -18,8 +18,8 @@
 
     public class SaveProductViewModel
     {
-        public ProductViewModel Product { get; set; }
-        public string CompanyId { get; set; }
+        public ProductViewModel product { get; set; }
+        public string companyId { get; set; }
     }
 
     public class ProductViewModelCount

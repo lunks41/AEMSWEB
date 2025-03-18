@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IVesselService
     {
-        public Task<VesselViewModelCount> GetVesselListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<VesselViewModelCount> GetVesselListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_Vessel> GetVesselByIdAsync(short CompanyId, short UserId, int VesselId);
 

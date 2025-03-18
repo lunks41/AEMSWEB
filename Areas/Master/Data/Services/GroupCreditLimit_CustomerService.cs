@@ -23,7 +23,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context;
         }
 
-        public async Task<GroupCreditLimit_CustomerViewModelCount> GetGroupCreditLimit_CustomerListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<GroupCreditLimit_CustomerViewModelCount> GetGroupCreditLimit_CustomerListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             GroupCreditLimit_CustomerViewModelCount countViewModel = new GroupCreditLimit_CustomerViewModelCount();
             try

@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.CB
 {
     public interface ICBPettyCashService
     {
-        public Task<CBPettyCashViewModel> GetCBPettyCashListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<CBPettyCashViewModel> GetCBPettyCashListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<CBPettyCashHdViewModel> GetCBPettyCashByIdNoAsync(short CompanyId, long PaymentId, string PaymentNo, short UserId);
 

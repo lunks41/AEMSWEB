@@ -7,7 +7,6 @@ using AEMSWEB.Enums;
 using AEMSWEB.Helpers;
 using AEMSWEB.IServices;
 using AEMSWEB.Models;
-using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

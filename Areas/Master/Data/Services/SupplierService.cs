@@ -23,7 +23,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context;
         }
 
-        public async Task<SupplierViewModelCount> GetSupplierListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<SupplierViewModelCount> GetSupplierListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             SupplierViewModelCount countViewModel = new SupplierViewModelCount();
             try

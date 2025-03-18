@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AR
 {
     public interface IARReceiptService
     {
-        public Task<ARReceiptViewModelCount> GetARReceiptListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<ARReceiptViewModelCount> GetARReceiptListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<ARReceiptViewModel> GetARReceiptByIdAsync(short CompanyId, long ReceiptId, string ReceiptNo, short UserId);
 

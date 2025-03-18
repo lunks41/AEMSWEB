@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.AR
             _accountService = accountService;
         }
 
-        public async Task<ARCreditNoteViewModelCount> GetARCreditNoteListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId)
+        public async Task<ARCreditNoteViewModelCount> GetARCreditNoteListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId)
         {
             ARCreditNoteViewModelCount countViewModel = new ARCreditNoteViewModelCount();
             try

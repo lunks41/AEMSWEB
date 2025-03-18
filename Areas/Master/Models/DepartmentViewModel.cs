@@ -18,8 +18,8 @@
 
     public class SaveDepartmentViewModel
     {
-        public DepartmentViewModel Department { get; set; }
-        public string CompanyId { get; set; }
+        public DepartmentViewModel department { get; set; }
+        public string companyId { get; set; }
     }
 
     public class DepartmentViewModelCount

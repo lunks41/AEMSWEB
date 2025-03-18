@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.CB
 {
     public interface ICBGenReceiptService
     {
-        public Task<CBGenReceiptViewModel> GetCBGenReceiptListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<CBGenReceiptViewModel> GetCBGenReceiptListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<CBGenReceiptHdViewModel> GetCBGenReceiptByIdNoAsync(short CompanyId, long InvoiceId, string InvoiceNo, short UserId);
 

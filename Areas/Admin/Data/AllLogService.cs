@@ -20,7 +20,7 @@ namespace AEMSWEB.Areas.Admin.Data
             _context = context; _logService = logService;
         }
 
-        public async Task<IEnumerable<AuditLogViewModel>> GetAuditLogListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, short UserId)
+        public async Task<IEnumerable<AuditLogViewModel>> GetAuditLogListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, short UserId)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace AEMSWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<UserLogViewModelCount> GetUserLogListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, short UserId)
+        public async Task<UserLogViewModelCount> GetUserLogListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, short UserId)
         {
             UserLogViewModelCount countViewModel = new UserLogViewModelCount();
             try
@@ -160,7 +160,7 @@ namespace AEMSWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<IEnumerable<ErrorLogViewModel>> GetErrorLogListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, short UserId)
+        public async Task<IEnumerable<ErrorLogViewModel>> GetErrorLogListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, short UserId)
         {
             try
             {

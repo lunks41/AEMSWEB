@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IAccountTypeService
     {
-        public Task<AccountTypeViewModelCount> GetAccountTypeListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<AccountTypeViewModelCount> GetAccountTypeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_AccountType> GetAccountTypeByIdAsync(short CompanyId, short UserId, short AccTypeId);
 

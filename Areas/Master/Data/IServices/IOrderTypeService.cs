@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IOrderTypeService
     {
-        public Task<OrderTypeViewModelCount> GetOrderTypeListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<OrderTypeViewModelCount> GetOrderTypeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_OrderType> GetOrderTypeByIdAsync(short CompanyId, short UserId, short OrderTypeId);
 
@@ -14,7 +14,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> DeleteOrderTypeAsync(short CompanyId, short UserId, M_OrderType m_OrderType);
 
-        public Task<OrderTypeCategoryViewModelCount> GetOrderTypeCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<OrderTypeCategoryViewModelCount> GetOrderTypeCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_OrderTypeCategory> GetOrderTypeCategoryByIdAsync(short CompanyId, short UserId, int OrderTypeCategoryId);
 

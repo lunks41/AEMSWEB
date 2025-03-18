@@ -1,110 +1,172 @@
-﻿//using AEMSWEB.Controllers;
-//using AEMSWEB.Services;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Areas.Master.Models;
+using AEMSWEB.Controllers;
+using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace AEMSWEB.Areas.Master.Controllers
-//{
-//    [Area("master")]
-//    public class PortController : BaseController
-//    {
-//        private readonly ILogger<PortController> _logger;
+namespace AEMSWEB.Areas.Master.Controllers
+{
+    [Area("master")]
+    [Authorize]
+    public class PortController : BaseController
+    {
+        private readonly ILogger<PortController> _logger;
+        private readonly IPortService _portService;
 
-//        public PortController(
-//                            ILogger<PortController> logger
-//                             )
+        public PortController(ILogger<PortController> logger,
+            IBaseService baseService,
+            IPortService portService)
+            : base(logger, baseService)
+        {
+            _logger = logger;
+            _portService = portService;
+        }
 
-//        {
-//            _logger = logger;
-//        }
+        #region Port CRUD
 
-//        public IActionResult Index()
-//        {
-//            try
-//            {
-//                if (HttpContext.Session.GetInt32("selectedCompany") == null)
-//                {
-//                    return RedirectToAction("SelectCompany", "Company");
-//                }
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
 
-//                return View();
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "Error in PortController.Index");
-//                return StatusCode(500);
-//            }
-//        }
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-//        [HttpGet]
-//        public IActionResult GetUsers()
-//        {
-//            var users = new List<object>
-//        {
-//            new { userId = 1, userName = "John Doe", userEmail = "john@example.com" },
-//            new { userId = 2, userName = "Jane Doe", userEmail = "jane@example.com" }
-//        };
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Port);
 
-//            return Json(users);
-//        }
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
 
-//        [HttpPost]
-//        public JsonResult GetUsersV1()
-//        {
-//            // For demo purposes - hardcoded data
-//            var data = new List<object>
-//    {
-//        new { userId = 1, userName = "John Doe", userEmail = "john@example.com" },
-//        new { userId = 2, userName = "Jane Doe", userEmail = "jane@example.com" }
-//    };
+            return View();
+        }
 
-//            // DataTables expected response format
-//            return Json(new
-//            {
-//                draw = 1,  // Echo back the draw parameter from the request
-//                recordsTotal = data.Count,
-//                recordsFiltered = data.Count,
-//                data = data
-//            });
-//        }
-//    }
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
 
-//    //[Area("master")]
-//    //public class PortController : BaseController
-//    //{
-//    //    private readonly ILogger<PortController> _logger;
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//    //    public PortController( ILogger<PortController> logger IHttpContextAccessor httpContextAccessor) : base(logger  httpContextAccessor)
-//    //    {
-//    //        _logger = logger;
-//    //    }
+            try
+            {
+                var data = await _portService.GetPortListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching port list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//    //    public IActionResult Index()
-//    //    {
-//    //        try
-//    //        {
-//    //            _logger.LogInformation("PortController - Index() method called.");
-//    //            return View();
-//    //        }
-//    //        catch (Exception ex)
-//    //        {
-//    //            _logger.LogError(ex, "An error occurred in PortController - Index()");
-//    //            return StatusCode(500, "Internal Server Error");
-//    //        }
-//    //    }
+        [HttpGet]
+        public async Task<JsonResult> GetById(short portId, string companyId)
+        {
+            if (portId <= 0)
+                return Json(new { success = false, message = "Invalid Port ID" });
 
-//    //    public IActionResult Save()
-//    //    {
-//    //        return View();
-//    //    }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//    //    public IActionResult View()
-//    //    {
-//    //        return View();
-//    //    }
+            try
+            {
+                var data = await _portService.GetPortByIdAsync(companyIdShort, parsedUserId.Value, portId);
+                return data == null
+                    ? Json(new { success = false, message = "Port not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching port by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//    //    public IActionResult Delete()
-//    //    {
-//    //        return View();
-//    //    }
-//    //}
-//}
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SavePortViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var portToSave = new M_Port
+                {
+                    PortId = model.port.PortId,
+                    CompanyId = companyIdShort,
+                    PortRegionId = model.port.PortRegionId,
+                    PortCode = model.port.PortCode ?? string.Empty,
+                    PortName = model.port.PortName ?? string.Empty,
+                    Remarks = model.port.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.port.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.port.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _portService.SavePortAsync(companyIdShort, parsedUserId.Value, portToSave);
+                return Json(new { success = true, message = "Port saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving port");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(short portId, string companyId)
+        {
+            if (portId <= 0)
+                return Json(new { success = false, message = "Invalid Port ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Port);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                var port = await _portService.GetPortByIdAsync(companyIdShort, parsedUserId.Value, portId);
+                if (port == null)
+                    return Json(new { success = false, message = "Port not found" });
+
+                await _portService.DeletePortAsync(companyIdShort, parsedUserId.Value, port);
+                return Json(new { success = true, message = "Port deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting port");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion Port CRUD
+    }
+}

@@ -1,200 +1,178 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class BargeController : Controller
+    public class BargeController : BaseController
     {
         private readonly ILogger<BargeController> _logger;
         private readonly IBargeService _bargeService;
 
-        public BargeController(ILogger<BargeController> logger, IBargeService bargeService)
+        public BargeController(ILogger<BargeController> logger,
+            IBaseService baseService,
+            IBargeService bargeService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _bargeService = bargeService;
         }
 
-        // GET: /master/Barge/Index
-        public IActionResult Index()
+        #region Barge CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _bargeService.GetBargeListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching barges.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Barge/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short bargeId, string companyId)
-        {
-            if (bargeId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Barge ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Barge);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _bargeService.GetBargeByIdAsync(companyIdShort, parsedUserId, bargeId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Barge not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _bargeService.GetBargeListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching barge by ID.");
+                _logger.LogError(ex, "Error fetching barge list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Barge/Save
-        [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveBargeViewModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetById(short bargeId, string companyId)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (bargeId <= 0)
+                return Json(new { success = false, message = "Invalid Barge ID" });
 
-            var barge = model.Barge;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var bargeToSave = new M_Barge
-            {
-                BargeId = barge.BargeId,
-                CompanyId = companyIdShort,
-                BargeCode = barge.BargeCode ?? string.Empty,
-                BargeName = barge.BargeName ?? string.Empty,
-                CallSign = barge.CallSign ?? string.Empty,
-                IMOCode = barge.IMOCode ?? string.Empty,
-                GRT = barge.GRT ?? string.Empty,
-                LicenseNo = barge.LicenseNo ?? string.Empty,
-                BargeType = barge.BargeType ?? string.Empty,
-                Flag = barge.Flag ?? string.Empty,
-                Remarks = barge.Remarks?.Trim() ?? string.Empty,
-                IsActive = barge.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = barge.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _bargeService.SaveBargeAsync(companyIdShort, parsedUserId, bargeToSave);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save barge." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _bargeService.GetBargeByIdAsync(companyIdShort, parsedUserId.Value, bargeId);
+                return data == null
+                    ? Json(new { success = false, message = "Barge not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the barge.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error fetching barge by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Barge/Delete
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveBargeViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var bargeToSave = new M_Barge
+                {
+                    BargeId = model.barge.BargeId,
+                    CompanyId = companyIdShort,
+                    BargeCode = model.barge.BargeCode ?? string.Empty,
+                    BargeName = model.barge.BargeName ?? string.Empty,
+                    CallSign = model.barge.CallSign ?? string.Empty,
+                    IMOCode = model.barge.IMOCode ?? string.Empty,
+                    GRT = model.barge.GRT ?? string.Empty,
+                    LicenseNo = model.barge.LicenseNo ?? string.Empty,
+                    BargeType = model.barge.BargeType ?? string.Empty,
+                    Flag = model.barge.Flag ?? string.Empty,
+                    Remarks = model.barge.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.barge.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.barge.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _bargeService.SaveBargeAsync(companyIdShort, parsedUserId.Value, bargeToSave);
+                return Json(new { success = true, message = "Barge saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving barge");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(short bargeId, string companyId)
         {
             if (bargeId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+                return Json(new { success = false, message = "Invalid Barge ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Barge);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var bargeGet = await _bargeService.GetBargeByIdAsync(companyIdShort, parsedUserId, bargeId);
+                var barge = await _bargeService.GetBargeByIdAsync(companyIdShort, parsedUserId.Value, bargeId);
+                if (barge == null)
+                    return Json(new { success = false, message = "Barge not found" });
 
-                var data = await _bargeService.DeleteBargeAsync(companyIdShort, 1, bargeGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save barge." });
-                }
-
-                return Json(new { success = true, data });
+                await _bargeService.DeleteBargeAsync(companyIdShort, parsedUserId.Value, barge);
+                return Json(new { success = true, message = "Barge deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the barge.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting barge");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Barge CRUD
     }
 }

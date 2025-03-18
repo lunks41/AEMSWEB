@@ -23,7 +23,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context;
         }
 
-        public async Task<OrderTypeViewModelCount> GetOrderTypeListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<OrderTypeViewModelCount> GetOrderTypeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             OrderTypeViewModelCount countViewModel = new OrderTypeViewModelCount();
             try
@@ -274,7 +274,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<OrderTypeCategoryViewModelCount> GetOrderTypeCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<OrderTypeCategoryViewModelCount> GetOrderTypeCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             OrderTypeCategoryViewModelCount countViewModel = new OrderTypeCategoryViewModelCount();
             try

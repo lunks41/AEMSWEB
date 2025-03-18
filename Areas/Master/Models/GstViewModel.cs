@@ -23,24 +23,8 @@ namespace AEMSWEB.Models.Masters
 
     public class SaveGstViewModel
     {
-        public GstViewModel Gst { get; set; }
-        public string CompanyId { get; set; }
-    }
-
-    public class GstViewModelCount
-    {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<GstViewModel> data { get; set; }
-    }
-
-    public class GstDtViewModelCount
-    {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<GstDtViewModel> data { get; set; }
+        public GstViewModel gst { get; set; }
+        public string companyId { get; set; }
     }
 
     public class GstDtViewModel
@@ -51,7 +35,7 @@ namespace AEMSWEB.Models.Masters
         public Int16 CompanyId { get; set; }
 
         [Column(TypeName = "decimal(4,2)")]
-        public decimal GstPercentahge { get; set; }
+        public decimal GstPercentage { get; set; }
 
         public DateTime ValidFrom { get; set; }
         public Int16? CreateById { get; set; }
@@ -60,6 +44,12 @@ namespace AEMSWEB.Models.Masters
         public DateTime? EditDate { get; set; }
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
+    }
+
+    public class SaveGstDtViewModel
+    {
+        public GstDtViewModel gstDt { get; set; }
+        public string companyId { get; set; }
     }
 
     public class GstCategoryViewModel
@@ -76,6 +66,28 @@ namespace AEMSWEB.Models.Masters
         public DateTime? EditDate { get; set; }
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
+    }
+
+    public class SaveGstCategoryViewModel
+    {
+        public GstCategoryViewModel gstCategory { get; set; }
+        public string companyId { get; set; }
+    }
+
+    public class GstViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<GstViewModel> data { get; set; }
+    }
+
+    public class GstDtViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<GstDtViewModel> data { get; set; }
     }
 
     public class GstCategoryViewModelCount

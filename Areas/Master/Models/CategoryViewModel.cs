@@ -18,16 +18,8 @@
 
     public class SaveCategoryViewModel
     {
-        public CategoryViewModel Category { get; set; }
-        public string CompanyId { get; set; }
-    }
-
-    public class CategoryViewModelCount
-    {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<CategoryViewModel> data { get; set; }
+        public CategoryViewModel category { get; set; }
+        public string companyId { get; set; }
     }
 
     public class SubCategoryViewModel
@@ -44,6 +36,20 @@
         public DateTime? EditDate { get; set; }
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
+    }
+
+    public class SaveSubCategoryViewModel
+    {
+        public SubCategoryViewModel subCategory { get; set; }
+        public string companyId { get; set; }
+    }
+
+    public class CategoryViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<CategoryViewModel> data { get; set; }
     }
 
     public class SubCategoryViewModelCount

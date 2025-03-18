@@ -1,196 +1,174 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class AccountTypeController : Controller
+    public class AccountTypeController : BaseController
     {
         private readonly ILogger<AccountTypeController> _logger;
         private readonly IAccountTypeService _accountTypeService;
 
-        public AccountTypeController(ILogger<AccountTypeController> logger, IAccountTypeService accountTypeService)
+        public AccountTypeController(ILogger<AccountTypeController> logger,
+            IBaseService baseService,
+            IAccountTypeService accountTypeService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _accountTypeService = accountTypeService;
         }
 
-        // GET: /master/AccountType/Index
-        public IActionResult Index()
+        #region AccountType CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _accountTypeService.GetAccountTypeListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching account types.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/AccountType/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short accTypeId, string companyId)
-        {
-            if (accTypeId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Account Type ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.AccountType);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _accountTypeService.GetAccountTypeByIdAsync(companyIdShort, parsedUserId, accTypeId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Account Type not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _accountTypeService.GetAccountTypeListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching account type by ID.");
+                _logger.LogError(ex, "Error fetching account type list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/AccountType/Save
-        [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveAccountTypeViewModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetById(short accTypeId, string companyId)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (accTypeId <= 0)
+                return Json(new { success = false, message = "Invalid Account Type ID" });
 
-            var accountType = model.AccountType;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var accountTypeToSave = new M_AccountType
-            {
-                AccTypeId = accountType.AccTypeId,
-                CompanyId = companyIdShort,
-                AccTypeCode = accountType.AccTypeCode ?? string.Empty,
-                AccTypeName = accountType.AccTypeName ?? string.Empty,
-                SeqNo = accountType.SeqNo,
-                AccGroupName = accountType.AccGroupName ?? string.Empty,
-                Remarks = accountType.Remarks?.Trim() ?? string.Empty,
-                IsActive = accountType.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = accountType.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _accountTypeService.SaveAccountTypeAsync(companyIdShort, parsedUserId, accountTypeToSave);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save account type." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _accountTypeService.GetAccountTypeByIdAsync(companyIdShort, parsedUserId.Value, accTypeId);
+                return data == null
+                    ? Json(new { success = false, message = "Account Type not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the account type.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error fetching account type by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/AccountType/Delete
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveAccountTypeViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var accountTypeToSave = new M_AccountType
+                {
+                    AccTypeId = model.accountType.AccTypeId,
+                    CompanyId = companyIdShort,
+                    AccTypeCode = model.accountType.AccTypeCode ?? string.Empty,
+                    AccTypeName = model.accountType.AccTypeName ?? string.Empty,
+                    SeqNo = model.accountType.SeqNo,
+                    AccGroupName = model.accountType.AccGroupName ?? string.Empty,
+                    Remarks = model.accountType.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.accountType.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.accountType.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _accountTypeService.SaveAccountTypeAsync(companyIdShort, parsedUserId.Value, accountTypeToSave);
+                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving account type");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(short accTypeId, string companyId)
         {
             if (accTypeId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+                return Json(new { success = false, message = "Invalid Account Type ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.AccountType);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var accountTypeGet = await _accountTypeService.GetAccountTypeByIdAsync(companyIdShort, parsedUserId, accTypeId);
+                var accountType = await _accountTypeService.GetAccountTypeByIdAsync(companyIdShort, parsedUserId.Value, accTypeId);
+                if (accountType == null)
+                    return Json(new { success = false, message = "Account Type not found" });
 
-                var data = await _accountTypeService.DeleteAccountTypeAsync(companyIdShort, 1, accountTypeGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save account type." });
-                }
-
-                return Json(new { success = true, data });
+                await _accountTypeService.DeleteAccountTypeAsync(companyIdShort, parsedUserId.Value, accountType);
+                return Json(new { success = true, message = "Account Type deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the account type.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting account type");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion AccountType CRUD
     }
 }

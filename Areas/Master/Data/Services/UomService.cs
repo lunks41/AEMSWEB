@@ -25,7 +25,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Header
 
-        public async Task<UomViewModelCount> GetUomListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<UomViewModelCount> GetUomListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             UomViewModelCount countViewModel = new UomViewModelCount();
             try
@@ -275,7 +275,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Details
 
-        public async Task<UomDtViewModelCount> GetUomDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<UomDtViewModelCount> GetUomDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             UomDtViewModelCount countViewModel = new UomDtViewModelCount();
             try

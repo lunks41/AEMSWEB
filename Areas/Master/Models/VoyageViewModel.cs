@@ -24,8 +24,8 @@
 
     public class SaveVoyageViewModel
     {
-        public VoyageViewModel Voyage { get; set; }
-        public string CompanyId { get; set; }
+        public VoyageViewModel voyage { get; set; }
+        public string companyId { get; set; }
     }
 
     public class VoyageViewModelCount

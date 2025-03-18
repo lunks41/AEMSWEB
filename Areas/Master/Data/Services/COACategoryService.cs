@@ -26,7 +26,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context; _logService = logService;
         }
 
-        public async Task<COACategoryViewModelCount> GetCOACategory1ListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<COACategoryViewModelCount> GetCOACategory1ListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             COACategoryViewModelCount countViewModel = new COACategoryViewModelCount();
             try
@@ -335,7 +335,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<COACategoryViewModelCount> GetCOACategory2ListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<COACategoryViewModelCount> GetCOACategory2ListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             COACategoryViewModelCount countViewModel = new COACategoryViewModelCount();
             try
@@ -641,7 +641,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<COACategoryViewModelCount> GetCOACategory3ListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<COACategoryViewModelCount> GetCOACategory3ListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             COACategoryViewModelCount countViewModel = new COACategoryViewModelCount();
             try

@@ -24,8 +24,8 @@
 
     public class SaveVesselViewModel
     {
-        public VesselViewModel Vessel { get; set; }
-        public string CompanyId { get; set; }
+        public VesselViewModel vessel { get; set; }
+        public string companyId { get; set; }
     }
 
     public class VesselViewModelCount

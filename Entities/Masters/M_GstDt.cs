@@ -10,7 +10,7 @@ namespace AEMSWEB.Entities.Masters
         public Int16 CompanyId { get; set; }
 
         [Column(TypeName = "decimal(4,2)")]
-        public decimal GstPercentahge { get; set; }
+        public decimal GstPercentage { get; set; }
 
         public DateTime ValidFrom { get; set; }
         public Int16 CreateById { get; set; }

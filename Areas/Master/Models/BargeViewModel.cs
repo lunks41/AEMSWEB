@@ -24,8 +24,8 @@
 
     public class SaveBargeViewModel
     {
-        public BargeViewModel Barge { get; set; }
-        public string CompanyId { get; set; }
+        public BargeViewModel barge { get; set; }
+        public string companyId { get; set; }
     }
 
     public class BargeViewModelCount

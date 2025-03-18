@@ -21,8 +21,8 @@
 
     public class SaveAccountTypeViewModel
     {
-        public AccountTypeViewModel AccountType { get; set; }
-        public string CompanyId { get; set; }
+        public AccountTypeViewModel accountType { get; set; }
+        public string companyId { get; set; }
     }
 
     public class AccountTypeViewModelCount

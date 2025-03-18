@@ -1,195 +1,428 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class GstController : Controller
+    public class GstController : BaseController
     {
         private readonly ILogger<GstController> _logger;
         private readonly IGstService _gstService;
 
-        public GstController(ILogger<GstController> logger, IGstService gstService)
+        public GstController(ILogger<GstController> logger,
+            IBaseService baseService,
+            IGstService gstService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _gstService = gstService;
         }
 
-        // GET: /master/Gst/Index
-        public IActionResult Index()
+        #region Gst CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _gstService.GetGstListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching GSTs.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Gst/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short gstId, string companyId)
-        {
-            if (gstId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid GST ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Gst);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _gstService.GetGstByIdAsync(companyIdShort, parsedUserId, gstId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "GST not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _gstService.GetGstListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching GST by ID.");
+                _logger.LogError(ex, "Error fetching GST list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Gst/Save
-        [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveGstViewModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetById(short gstId, string companyId)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (gstId <= 0)
+                return Json(new { success = false, message = "Invalid GST ID" });
 
-            var gst = model.Gst;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var gstToSave = new M_Gst
-            {
-                GstId = gst.GstId,
-                CompanyId = companyIdShort,
-                GstCategoryId = gst.GstCategoryId,
-                GstCode = gst.GstCode ?? string.Empty,
-                GstName = gst.GstName ?? string.Empty,
-                Remarks = gst.Remarks?.Trim() ?? string.Empty,
-                IsActive = gst.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = gst.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _gstService.SaveGstAsync(companyIdShort, parsedUserId, gstToSave);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save GST." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _gstService.GetGstByIdAsync(companyIdShort, parsedUserId.Value, gstId);
+                return data == null
+                    ? Json(new { success = false, message = "GST not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the GST.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error fetching GST by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Gst/Delete
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveGstViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var gstToSave = new M_Gst
+                {
+                    GstId = model.gst.GstId,
+                    CompanyId = companyIdShort,
+                    GstCategoryId = model.gst.GstCategoryId,
+                    GstCode = model.gst.GstCode ?? string.Empty,
+                    GstName = model.gst.GstName ?? string.Empty,
+                    Remarks = model.gst.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.gst.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.gst.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _gstService.SaveGstAsync(companyIdShort, parsedUserId.Value, gstToSave);
+                return Json(new { success = true, message = "GST saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving GST");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(short gstId, string companyId)
         {
             if (gstId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+                return Json(new { success = false, message = "Invalid GST ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Gst);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var gstGet = await _gstService.GetGstByIdAsync(companyIdShort, parsedUserId, gstId);
+                var gst = await _gstService.GetGstByIdAsync(companyIdShort, parsedUserId.Value, gstId);
+                if (gst == null)
+                    return Json(new { success = false, message = "GST not found" });
 
-                var data = await _gstService.DeleteGstAsync(companyIdShort, 1, gstGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save GST." });
-                }
-
-                return Json(new { success = true, data });
+                await _gstService.DeleteGstAsync(companyIdShort, parsedUserId.Value, gst);
+                return Json(new { success = true, message = "GST deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the GST.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting GST");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Gst CRUD
+
+        #region GstDt CRUD
+
+        [HttpGet]
+        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _gstService.GetGstDtListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching GST details list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDetailById(short gstDtId, DateTime validFrom, string companyId)
+        {
+            if (gstDtId <= 0)
+                return Json(new { success = false, message = "Invalid GST Detail ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _gstService.GetGstDtByIdAsync(companyIdShort, parsedUserId.Value, gstDtId, validFrom);
+                return data == null
+                    ? Json(new { success = false, message = "GST Detail not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching GST detail by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDetail([FromBody] SaveGstDtViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var gstDtToSave = new M_GstDt
+                {
+                    GstId = model.gstDt.GstId,
+                    CompanyId = companyIdShort,
+                    GstPercentage = model.gstDt.GstPercentage,
+                    ValidFrom = model.gstDt.ValidFrom,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.gstDt.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _gstService.SaveGstDtAsync(companyIdShort, parsedUserId.Value, gstDtToSave);
+                return Json(new { success = true, message = "GST Detail saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving GST detail");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDetail(short gstDtId, DateTime validFrom, string companyId)
+        {
+            if (gstDtId <= 0)
+                return Json(new { success = false, message = "Invalid GST Detail ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Gst);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                var gstDt = await _gstService.GetGstDtByIdAsync(companyIdShort, parsedUserId.Value, gstDtId, validFrom);
+                if (gstDt == null)
+                    return Json(new { success = false, message = "GST Detail not found" });
+
+                await _gstService.DeleteGstDtAsync(companyIdShort, parsedUserId.Value, gstDt);
+                return Json(new { success = true, message = "GST Detail deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting GST detail");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion GstDt CRUD
+
+        #region GstCategory CRUD
+
+        [Authorize]
+        public async Task<IActionResult> CategoryIndex(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
+
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.GstCategory);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> ListCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _gstService.GetGstCategoryListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching GST category list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCategoryById(short gstCategoryId, string companyId)
+        {
+            if (gstCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid GST Category ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _gstService.GetGstCategoryByIdAsync(companyIdShort, parsedUserId.Value, gstCategoryId);
+                return data == null
+                    ? Json(new { success = false, message = "GST Category not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching GST category by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCategory([FromBody] SaveGstCategoryViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var categoryToSave = new M_GstCategory
+                {
+                    GstCategoryId = model.gstCategory.GstCategoryId,
+                    CompanyId = companyIdShort,
+                    GstCategoryCode = model.gstCategory.GstCategoryCode ?? string.Empty,
+                    GstCategoryName = model.gstCategory.GstCategoryName ?? string.Empty,
+                    Remarks = model.gstCategory.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.gstCategory.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.gstCategory.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _gstService.SaveGstCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);
+                return Json(new { success = true, message = "GST Category saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving GST category");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCategory(short gstCategoryId, string companyId)
+        {
+            if (gstCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid GST Category ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.GstCategory);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                var category = await _gstService.GetGstCategoryByIdAsync(companyIdShort, parsedUserId.Value, gstCategoryId);
+                if (category == null)
+                    return Json(new { success = false, message = "GST Category not found" });
+
+                await _gstService.DeleteGstCategoryAsync(companyIdShort, parsedUserId.Value, category);
+                return Json(new { success = true, message = "GST Category deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting GST category");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion GstCategory CRUD
     }
 }

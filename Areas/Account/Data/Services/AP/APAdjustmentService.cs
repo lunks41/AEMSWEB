@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.AP
             _accountService = accountService;
         }
 
-        public async Task<APAdjustmentViewModelCount> GetAPAdjustmentListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId)
+        public async Task<APAdjustmentViewModelCount> GetAPAdjustmentListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId)
         {
             APAdjustmentViewModelCount countViewModel = new APAdjustmentViewModelCount();
             try

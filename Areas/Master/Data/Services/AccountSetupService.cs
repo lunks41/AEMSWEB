@@ -28,7 +28,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Header
 
-        public async Task<AccountSetupViewModelCount> GetAccountSetupListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<AccountSetupViewModelCount> GetAccountSetupListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             AccountSetupViewModelCount countViewModel = new AccountSetupViewModelCount();
             try
@@ -339,7 +339,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Details
 
-        public async Task<AccountSetupDtViewModelCount> GetAccountSetupDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<AccountSetupDtViewModelCount> GetAccountSetupDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             AccountSetupDtViewModelCount countViewModel = new AccountSetupDtViewModelCount();
             try
@@ -628,7 +628,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region
 
-        public async Task<AccountSetupCategoryViewModelCount> GetAccountSetupCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<AccountSetupCategoryViewModelCount> GetAccountSetupCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             AccountSetupCategoryViewModelCount countViewModel = new AccountSetupCategoryViewModelCount();
             try

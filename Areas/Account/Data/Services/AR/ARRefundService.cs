@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.AR
             _accountService = accountService;
         }
 
-        public async Task<ARRefundViewModelCount> GetARRefundListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId)
+        public async Task<ARRefundViewModelCount> GetARRefundListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId)
         {
             ARRefundViewModelCount countViewModel = new ARRefundViewModelCount();
             try

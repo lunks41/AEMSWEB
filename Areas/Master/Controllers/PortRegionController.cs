@@ -1,155 +1,172 @@
-﻿//using AEMSWEB.Controllers;
-//using AEMSWEB.Models.Masters;
-//using AEMSWEB.Services;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
+using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
+using AEMSWEB.Models.Masters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace AEMSWEB.Areas.Master.Controllers
-//{
-//    [Area("master")]
-//    public class PortRegionController : BaseController
-//    {
-//        private readonly ILogger<PortRegionController> _logger;
+namespace AEMSWEB.Areas.Master.Controllers
+{
+    [Area("master")]
+    [Authorize]
+    public class PortRegionController : BaseController
+    {
+        private readonly ILogger<PortRegionController> _logger;
+        private readonly IPortRegionService _portRegionService;
 
-//        public PortRegionController(
-//            ILogger<PortRegionController> logger
+        public PortRegionController(ILogger<PortRegionController> logger,
+            IBaseService baseService,
+            IPortRegionService portRegionService)
+            : base(logger, baseService)
+        {
+            _logger = logger;
+            _portRegionService = portRegionService;
+        }
 
-//           )
+        #region PortRegion CRUD
 
-//        {
-//            _logger = logger;
-//        }
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
 
-//        // GET: /master/PortRegion/Index
-//        public async Task<IActionResult> Index()
-//        {
-//            return View();
-//        }
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-//        // GET: /master/PortRegion/List
-//        [HttpGet]
-//        public async Task<JsonResult> List(string searchString, string companyId)
-//        {
-//            try
-//            {
-//                var headers = new Dictionary<string, string>
-//            {
-//                { "PageSize", "10" },
-//                { "PageNumber", "1" },
-//                { "SearchString", searchString ?? string.Empty }
-//            };
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.PortRegion);
 
-//                if (!string.IsNullOrEmpty(companyId))
-//                {
-//                    headers.Add("CompanyId", companyId);
-//                }
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
 
-//                var apiResponse = await _apiService.GetAsync<List<PortRegionViewModel>>("/master/getportregions", headers);
-//                return Json(apiResponse.Data);
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "An error occurred while fetching port regions.");
-//                return Json(null);
-//            }
-//        }
+            return View();
+        }
 
-//        // GET: /master/PortRegion/GetById
-//        [HttpGet]
-//        public async Task<JsonResult> GetById(short portRegionId, string companyId)
-//        {
-//            if (portRegionId <= 0)
-//            {
-//                return Json(new { success = false, message = "Invalid Port Region ID." });
-//            }
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var apiResponse = await _apiService.GetAsync<PortRegionViewModel>($"/master/getportregionbyid/{portRegionId}", headers);
+            try
+            {
+                var data = await _portRegionService.GetPortRegionListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching port region list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, data = apiResponse.Data });
-//            }
-//            else
-//            {
-//                return Json(new { success = false, message = "Port Region not found." });
-//            }
-//        }
+        [HttpGet]
+        public async Task<JsonResult> GetById(short portRegionId, string companyId)
+        {
+            if (portRegionId <= 0)
+                return Json(new { success = false, message = "Invalid Port Region ID" });
 
-//        // POST: /master/PortRegion/Save
-//        [HttpPost]
-//        public async Task<IActionResult> Save([FromBody] SavePortRegionViewModel model)
-//        {
-//            if (model == null)
-//            {
-//                return BadRequest(new { success = false, message = "Data operation failed." });
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var portRegion = model.PortRegion;
-//            var companyId = model.CompanyId;
+            try
+            {
+                var data = await _portRegionService.GetPortRegionByIdAsync(companyIdShort, parsedUserId.Value, portRegionId);
+                return data == null
+                    ? Json(new { success = false, message = "Port Region not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching port region by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            var portRegionToSave = new PortRegionViewModel
-//            {
-//                PortRegionId = portRegion.PortRegionId,
-//                CompanyId = Convert.ToInt16(companyId),
-//                PortRegionCode = portRegion.PortRegionCode ?? string.Empty,
-//                PortRegionName = portRegion.PortRegionName ?? string.Empty,
-//                CountryId = portRegion.CountryId,
-//                CountryCode = portRegion.CountryCode ?? string.Empty,
-//                CountryName = portRegion.CountryName ?? string.Empty,
-//                Remarks = portRegion.Remarks?.Trim() ?? string.Empty,
-//                IsActive = portRegion.IsActive,
-//                CreateById = portRegion.CreateById ?? 0,
-//                CreateDate = DateTime.Now,
-//                EditById = portRegion.EditById ?? 0,
-//                EditDate = DateTime.Now,
-//                CreateBy = portRegion.CreateBy ?? string.Empty,
-//                EditBy = portRegion.EditBy ?? string.Empty
-//            };
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SavePortRegionViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var apiResponse = await _apiService.PostAsync<PortRegionViewModel>("/master/saveportregion", portRegionToSave, headers);
+            try
+            {
+                var portRegionToSave = new M_PortRegion
+                {
+                    PortRegionId = model.portRegion.PortRegionId,
+                    CompanyId = companyIdShort,
+                    PortRegionCode = model.portRegion.PortRegionCode ?? string.Empty,
+                    PortRegionName = model.portRegion.PortRegionName ?? string.Empty,
+                    CountryId = model.portRegion.CountryId,
+                    Remarks = model.portRegion.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.portRegion.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.portRegion.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record saved successfully." });
-//            }
+                var result = await _portRegionService.SavePortRegionAsync(companyIdShort, parsedUserId.Value, portRegionToSave);
+                return Json(new { success = true, message = "Port Region saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving port region");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Save operation failed." });
-//        }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(short portRegionId, string companyId)
+        {
+            if (portRegionId <= 0)
+                return Json(new { success = false, message = "Invalid Port Region ID" });
 
-//        // DELETE: /master/PortRegion/Delete
-//        [HttpDelete]
-//        public async Task<IActionResult> Delete(int id, string companyId)
-//        {
-//            if (id <= 0)
-//            {
-//                return BadRequest(new { success = false, message = "Invalid ID." });
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.PortRegion);
 
-//            var apiResponse = await _apiService.DeleteAsync($"/master/deleteportregion/{id}", headers);
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record deleted successfully." });
-//            }
+            try
+            {
+                var portRegion = await _portRegionService.GetPortRegionByIdAsync(companyIdShort, parsedUserId.Value, portRegionId);
+                if (portRegion == null)
+                    return Json(new { success = false, message = "Port Region not found" });
 
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Delete operation failed." });
-//        }
-//    }
-//}
+                await _portRegionService.DeletePortRegionAsync(companyIdShort, parsedUserId.Value, portRegion);
+                return Json(new { success = true, message = "Port Region deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting port region");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion PortRegion CRUD
+    }
+}

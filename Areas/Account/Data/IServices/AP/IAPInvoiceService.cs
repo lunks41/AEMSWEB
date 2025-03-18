@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AP
 {
     public interface IAPInvoiceService
     {
-        public Task<APInvoiceViewModelCount> GetAPInvoiceListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<APInvoiceViewModelCount> GetAPInvoiceListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<APInvoiceViewModel> GetAPInvoiceByIdNoAsync(short CompanyId, long InvoiceId, string InvoiceNo, short UserId);
 

@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AR
 {
     public interface IARDebitNoteService
     {
-        public Task<ARDebitNoteViewModelCount> GetARDebitNoteListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<ARDebitNoteViewModelCount> GetARDebitNoteListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<ARDebitNoteViewModel> GetARDebitNoteByIdAsync(short CompanyId, long DebitNoteId, string DebitNoteNo, short UserId);
 

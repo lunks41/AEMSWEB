@@ -15,12 +15,12 @@ using System.Transactions;
 
 namespace AEMSWEB.Areas.Master.Data.Services
 {
-    public sealed class CreditTermService : ICreditTermService
+    public sealed class CreditTermsService : ICreditTermsService
     {
         private readonly IRepository<M_CreditTerm> _repository;
         private ApplicationDbContext _context; private readonly ILogService _logService;
 
-        public CreditTermService(IRepository<M_CreditTerm> repository, ApplicationDbContext context, ILogService logService)
+        public CreditTermsService(IRepository<M_CreditTerm> repository, ApplicationDbContext context, ILogService logService)
         {
             _repository = repository;
             _context = context; _logService = logService;
@@ -28,7 +28,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Header
 
-        public async Task<CreditTermViewModelCount> GetCreditTermListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<CreditTermViewModelCount> GetCreditTermListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CreditTermViewModelCount countViewModel = new CreditTermViewModelCount();
             try
@@ -267,7 +267,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Details
 
-        public async Task<CreditTermDtViewModelCount> GetCreditTermDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<CreditTermDtViewModelCount> GetCreditTermDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CreditTermDtViewModelCount countViewModel = new CreditTermDtViewModelCount();
             try

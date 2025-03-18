@@ -21,16 +21,8 @@
 
     public class SaveOrderTypeViewModel
     {
-        public OrderTypeViewModel OrderType { get; set; }
-        public string CompanyId { get; set; }
-    }
-
-    public class OrderTypeViewModelCount
-    {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<OrderTypeViewModel> data { get; set; }
+        public OrderTypeViewModel orderType { get; set; }
+        public string companyId { get; set; }
     }
 
     public class OrderTypeCategoryViewModel
@@ -47,6 +39,20 @@
         public DateTime? EditDate { get; set; }
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
+    }
+
+    public class SaveOrderTypeCategoryViewModel
+    {
+        public OrderTypeCategoryViewModel orderTypeCategory { get; set; }
+        public string companyId { get; set; }
+    }
+
+    public class OrderTypeViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<OrderTypeViewModel> data { get; set; }
     }
 
     public class OrderTypeCategoryViewModelCount

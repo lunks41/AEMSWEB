@@ -23,24 +23,8 @@ namespace AEMSWEB.Models.Masters
 
     public class SaveTaxViewModel
     {
-        public TaxViewModel Tax { get; set; }
-        public string CompanyId { get; set; }
-    }
-
-    public class TaxViewModelCount
-    {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<TaxViewModel> data { get; set; }
-    }
-
-    public class TaxDtViewModelCount
-    {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<TaxDtViewModel> data { get; set; }
+        public TaxViewModel tax { get; set; }
+        public string companyId { get; set; }
     }
 
     public class TaxDtViewModel
@@ -62,6 +46,12 @@ namespace AEMSWEB.Models.Masters
         public string EditBy { get; set; }
     }
 
+    public class SaveTaxDtViewModel
+    {
+        public TaxDtViewModel taxDt { get; set; }
+        public string companyId { get; set; }
+    }
+
     public class TaxCategoryViewModel
     {
         public Int16 TaxCategoryId { get; set; }
@@ -76,6 +66,28 @@ namespace AEMSWEB.Models.Masters
         public DateTime? EditDate { get; set; }
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
+    }
+
+    public class SaveTaxCategoryViewModel
+    {
+        public TaxCategoryViewModel taxCategory { get; set; }
+        public string companyId { get; set; }
+    }
+
+    public class TaxViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<TaxViewModel> data { get; set; }
+    }
+
+    public class TaxDtViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<TaxDtViewModel> data { get; set; }
     }
 
     public class TaxCategoryViewModelCount

@@ -1,6 +1,6 @@
 ﻿namespace AEMSWEB.Models.Masters
 {
-    public class ChargeViewModel
+    public class ChargesViewModel
     {
         public Int32 ChargeId { get; set; }
         public string ChargeCode { get; set; }
@@ -15,17 +15,17 @@
         public string EditBy { get; set; }
     }
 
-    public class SaveChargeViewModel
+    public class SaveChargesViewModel
     {
-        public ChargeViewModel Charge { get; set; }
-        public string CompanyId { get; set; }
+        public ChargesViewModel charges { get; set; }
+        public string companyId { get; set; }
     }
 
-    public class ChargeViewModelCount
+    public class ChargesViewModelCount
     {
         public Int16 responseCode { get; set; }
         public string responseMessage { get; set; }
         public Int64 totalRecords { get; set; }
-        public List<ChargeViewModel> data { get; set; }
+        public List<ChargesViewModel> data { get; set; }
     }
 }

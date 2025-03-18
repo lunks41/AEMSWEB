@@ -1,158 +1,166 @@
-﻿//using AEMSWEB.Controllers;
-//using AEMSWEB.Models.Masters;
-//using AEMSWEB.Services;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
+using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
+using AEMSWEB.Models.Masters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace AEMSWEB.Areas.Master.Controllers
-//{
-//    [Area("master")]
-//    public class VoyageController : BaseController
-//    {
-//        private readonly ILogger<VoyageController> _logger;
+namespace AEMSWEB.Areas.Master.Controllers
+{
+    [Area("master")]
+    [Authorize]
+    public class VoyageController : BaseController
+    {
+        private readonly ILogger<VoyageController> _logger;
+        private readonly IVoyageService _voyageService;
 
-//        public VoyageController(
-//            ILogger<VoyageController> logger
+        public VoyageController(ILogger<VoyageController> logger, IBaseService baseService, IVoyageService voyageService)
+            : base(logger, baseService)
+        {
+            _logger = logger;
+            _voyageService = voyageService;
+        }
 
-//           )
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
 
-//        {
-//            _logger = logger;
-//        }
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-//        // GET: /master/Voyage/Index
-//        public async Task<IActionResult> Index()
-//        {
-//            return View();
-//        }
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Voyage);
 
-//        // GET: /master/Voyage/List
-//        [HttpGet]
-//        public async Task<JsonResult> List(string searchString, string companyId)
-//        {
-//            try
-//            {
-//                var headers = new Dictionary<string, string>
-//            {
-//                { "PageSize", "10" },
-//                { "PageNumber", "1" },
-//                { "SearchString", searchString ?? string.Empty }
-//            };
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
 
-//                if (!string.IsNullOrEmpty(companyId))
-//                {
-//                    headers.Add("CompanyId", companyId);
-//                }
+            return View();
+        }
 
-//                var apiResponse = await _apiService.GetAsync<List<VoyageViewModel>>("/master/getvoyages", headers);
-//                return Json(apiResponse.Data);
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "An error occurred while fetching voyages.");
-//                return Json(null);
-//            }
-//        }
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
 
-//        // GET: /master/Voyage/GetById
-//        [HttpGet]
-//        public async Task<JsonResult> GetById(short voyageId, string companyId)
-//        {
-//            if (voyageId <= 0)
-//            {
-//                return Json(new { success = false, message = "Invalid Voyage ID." });
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            try
+            {
+                var data = await _voyageService.GetVoyageListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching voyage list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            var apiResponse = await _apiService.GetAsync<VoyageViewModel>($"/master/getvoyagebyid/{voyageId}", headers);
+        [HttpGet]
+        public async Task<JsonResult> GetById(short voyageId, string companyId)
+        {
+            if (voyageId <= 0)
+                return Json(new { success = false, message = "Invalid Voyage ID" });
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, data = apiResponse.Data });
-//            }
-//            else
-//            {
-//                return Json(new { success = false, message = "Voyage not found." });
-//            }
-//        }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//        // POST: /master/Voyage/Save
-//        [HttpPost]
-//        public async Task<IActionResult> Save([FromBody] SaveVoyageViewModel model)
-//        {
-//            if (model == null)
-//            {
-//                return BadRequest(new { success = false, message = "Data operation failed." });
-//            }
+            try
+            {
+                var data = await _voyageService.GetVoyageByIdAsync(companyIdShort, parsedUserId.Value, voyageId);
+                return data == null
+                    ? Json(new { success = false, message = "Voyage not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching voyage by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            var voyage = model.Voyage;
-//            var companyId = model.CompanyId;
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveVoyageViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-//            var voyageToSave = new VoyageViewModel
-//            {
-//                CompanyId = Convert.ToInt16(companyId),
-//                VoyageId = voyage.VoyageId,
-//                VoyageNo = voyage.VoyageNo ?? string.Empty,
-//                ReferenceNo = voyage.ReferenceNo ?? string.Empty,
-//                VesselId = voyage.VesselId,
-//                VesselCode = voyage.VesselCode ?? string.Empty,
-//                VesselName = voyage.VesselName ?? string.Empty,
-//                BargeId = voyage.BargeId,
-//                BargeCode = voyage.BargeCode ?? string.Empty,
-//                BargeName = voyage.BargeName ?? string.Empty,
-//                Remarks = voyage.Remarks?.Trim() ?? string.Empty,
-//                IsActive = voyage.IsActive,
-//                CreateById = voyage.CreateById ?? 0,
-//                CreateDate = DateTime.Now,
-//                EditById = voyage.EditById ?? 0,
-//                EditDate = DateTime.Now,
-//                CreateBy = voyage.CreateBy ?? string.Empty,
-//                EditBy = voyage.EditBy ?? string.Empty
-//            };
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            try
+            {
+                var voyageToSave = new M_Voyage
+                {
+                    VoyageId = model.voyage.VoyageId,
+                    CompanyId = companyIdShort,
+                    VoyageNo = model.voyage.VoyageNo ?? string.Empty,
+                    ReferenceNo = model.voyage.ReferenceNo ?? string.Empty,
+                    VesselId = model.voyage.VesselId,
+                    BargeId = model.voyage.BargeId,
+                    Remarks = model.voyage.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.voyage.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.voyage.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
 
-//            var apiResponse = await _apiService.PostAsync<VoyageViewModel>("/master/savevoyage", voyageToSave, headers);
+                var result = await _voyageService.SaveVoyageAsync(companyIdShort, parsedUserId.Value, voyageToSave);
+                return Json(new { success = true, message = "Voyage saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving voyage");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record saved successfully." });
-//            }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(short voyageId, string companyId)
+        {
+            if (voyageId <= 0)
+                return Json(new { success = false, message = "Invalid Voyage ID" });
 
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Save operation failed." });
-//        }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//        // DELETE: /master/Voyage/Delete
-//        [HttpDelete]
-//        public async Task<IActionResult> Delete(int id, string companyId)
-//        {
-//            if (id <= 0)
-//            {
-//                return BadRequest(new { success = false, message = "Invalid ID." });
-//            }
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Voyage);
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
-//            var apiResponse = await _apiService.DeleteAsync($"/master/deletevoyage/{id}", headers);
+            try
+            {
+                var voyage = await _voyageService.GetVoyageByIdAsync(companyIdShort, parsedUserId.Value, voyageId);
+                if (voyage == null)
+                    return Json(new { success = false, message = "Voyage not found" });
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record deleted successfully." });
-//            }
-
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Delete operation failed." });
-//        }
-//    }
-//}
+                await _voyageService.DeleteVoyageAsync(companyIdShort, parsedUserId.Value, voyage);
+                return Json(new { success = true, message = "Voyage deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting voyage");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+    }
+}

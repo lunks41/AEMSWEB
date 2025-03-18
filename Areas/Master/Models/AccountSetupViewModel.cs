@@ -21,8 +21,8 @@
 
     public class SaveAccountSetupViewModel
     {
-        public AccountSetupViewModel AccountSetup { get; set; }
-        public string CompanyId { get; set; }
+        public AccountSetupViewModel accountSetup { get; set; }
+        public string companyId { get; set; }
     }
 
     public class AccountSetupDtViewModel
@@ -46,20 +46,10 @@
         public string EditBy { get; set; }
     }
 
-    public class AccountSetupViewModelCount
+    public class SaveAccountSetupDtViewModel
     {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<AccountSetupViewModel> data { get; set; }
-    }
-
-    public class AccountSetupDtViewModelCount
-    {
-        public Int16 responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public Int64 totalRecords { get; set; }
-        public List<AccountSetupDtViewModel> data { get; set; }
+        public AccountSetupDtViewModel accountSetupDt { get; set; }
+        public string companyId { get; set; }
     }
 
     public class AccountSetupCategoryViewModel
@@ -79,8 +69,24 @@
 
     public class SaveAccountSetupCategoryViewModel
     {
-        public AccountSetupCategoryViewModel AccountSetupCategory { get; set; }
-        public string CompanyId { get; set; }
+        public AccountSetupCategoryViewModel accountSetupCategory { get; set; }
+        public string companyId { get; set; }
+    }
+
+    public class AccountSetupViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<AccountSetupViewModel> data { get; set; }
+    }
+
+    public class AccountSetupDtViewModelCount
+    {
+        public Int16 responseCode { get; set; }
+        public string responseMessage { get; set; }
+        public Int64 totalRecords { get; set; }
+        public List<AccountSetupDtViewModel> data { get; set; }
     }
 
     public class AccountSetupCategoryViewModelCount

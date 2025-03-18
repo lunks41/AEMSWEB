@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AR
 {
     public interface IARDocSetOffService
     {
-        public Task<ARDocSetOffViewModelCount> GetARDocSetOffListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<ARDocSetOffViewModelCount> GetARDocSetOffListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<ARDocSetOffViewModel> GetARDocSetOffByIdAsync(short CompanyId, long SetoffId, string SetoffNo, short UserId);
 

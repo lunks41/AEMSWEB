@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.CB
 {
     public interface ICBGenPaymentService
     {
-        public Task<CBGenPaymentViewModel> GetCBGenPaymentListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<CBGenPaymentViewModel> GetCBGenPaymentListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<CBGenPaymentHdViewModel> GetCBGenPaymentByIdNoAsync(short CompanyId, long PaymentId, string PaymentNo, short UserId);
 

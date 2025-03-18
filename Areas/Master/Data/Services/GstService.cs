@@ -25,7 +25,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region GST_HD
 
-        public async Task<GstViewModelCount> GetGstListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<GstViewModelCount> GetGstListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             GstViewModelCount countViewModel = new GstViewModelCount();
             try
@@ -264,7 +264,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region GST_DT
 
-        public async Task<GstDtViewModelCount> GetGstDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<GstDtViewModelCount> GetGstDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             GstDtViewModelCount GstDtViewModelCount = new GstDtViewModelCount();
             try
@@ -497,7 +497,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #endregion GST_DT
 
-        public async Task<GstCategoryViewModelCount> GetGstCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<GstCategoryViewModelCount> GetGstCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             GstCategoryViewModelCount countViewModel = new GstCategoryViewModelCount();
             try

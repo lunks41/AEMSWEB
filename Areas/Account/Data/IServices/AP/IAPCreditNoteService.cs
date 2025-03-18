@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AP
 {
     public interface IAPCreditNoteService
     {
-        public Task<APCreditNoteViewModelCount> GetAPCreditNoteListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<APCreditNoteViewModelCount> GetAPCreditNoteListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<APCreditNoteViewModel> GetAPCreditNoteByIdAsync(short CompanyId, long CreditNoteId, string CreditNoteNo, short UserId);
 

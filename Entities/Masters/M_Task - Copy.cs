@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AEMSWEB.Entities.Masters
 {
-    public class M_Charge
+    public class M_Charges
     {
         [Key]
         public Int32 ChargeId { get; set; }

@@ -2,201 +2,179 @@
 using AEMSWEB.Areas.Master.Models;
 using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
 using AEMSWEB.IServices;
+using AEMSWEB.Models.Masters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
+    [Authorize]
     public class ChartOfAccountController : BaseController
     {
         private readonly ILogger<ChartOfAccountController> _logger;
-        private readonly IChartOfAccountService _ChartOfAccountService;
+        private readonly IChartOfAccountService _chartOfAccountService;
 
-        public ChartOfAccountController(ILogger<ChartOfAccountController> logger, IBaseService baseService, IChartOfAccountService ChartOfAccountService)
+        public ChartOfAccountController(ILogger<ChartOfAccountController> logger,
+            IBaseService baseService,
+            IChartOfAccountService chartOfAccountService)
             : base(logger, baseService)
         {
             _logger = logger;
-            _ChartOfAccountService = ChartOfAccountService;
+            _chartOfAccountService = chartOfAccountService;
         }
 
-        public async Task<IActionResult> Index()
+        #region ChartOfAccount CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
+
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.ChartOfAccount);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
             return View();
         }
 
         [HttpGet]
-        [Route("ChartOfAccount/List")]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
         {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-                }
-
-                //var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                //if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                //{
-                //    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                //}
-
-                var data = await _ChartOfAccountService.GetChartOfAccountListAsync(companyIdShort, 1, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total = total });
+                var data = await _chartOfAccountService.GetChartOfAccountListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching account groups.");
-                return Json(new { Result = -1, Message = "An error occurred", Data = "" });
+                _logger.LogError(ex, "Error fetching chart of account list");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(Int16 GLId, string companyId)
+        public async Task<JsonResult> GetById(short glId, string companyId)
         {
-            // Validate GLId
-            if (GLId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Account Group ID." });
-            }
+            if (glId <= 0)
+                return Json(new { success = false, message = "Invalid GL ID" });
 
-            // Validate input parameters
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            //var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            //if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            //{
-            //    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            //}
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                // Assuming you would have some logic here to use the headers in your service call
-                var data = await _ChartOfAccountService.GetChartOfAccountByIdAsync(companyIdShort, 1, GLId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Account Group not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _chartOfAccountService.GetChartOfAccountByIdAsync(companyIdShort, parsedUserId.Value, glId);
+                return data == null
+                    ? Json(new { success = false, message = "Chart of Account not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching account group by ID.");
-                return Json(new { success = false, message = "An error occurred", data = "" });
+                _logger.LogError(ex, "Error fetching chart of account by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] SaveChartOfAccountViewModel model)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-            var chartofaccount = model.ChartOfAccount;
-            var companyId = model.CompanyId;
-
-            // Validate input parameters
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            //var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            //if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            //{
-            //    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            //}
-
-            var chartOfAccountToSave = new M_ChartOfAccount
-            {
-                GLId = chartofaccount.GLId,
-                CompanyId = Convert.ToInt16(HttpContext.Session.GetInt32("selectedCompany")),
-                GLCode = chartofaccount.GLCode ?? string.Empty,
-                GLName = chartofaccount.GLName ?? string.Empty,
-                AccTypeId = chartofaccount.AccTypeId,
-                AccGroupId = chartofaccount.AccGroupId,
-                COACategoryId1 = chartofaccount.COACategoryId1,
-                COACategoryId2 = chartofaccount.COACategoryId2,
-                COACategoryId3 = chartofaccount.COACategoryId3,
-                IsSysControl = chartofaccount.IsSysControl,
-                SeqNo = chartofaccount.SeqNo,
-                Remarks = chartofaccount.Remarks?.Trim() ?? string.Empty,
-                IsActive = chartofaccount.IsActive,
-                CreateById = chartofaccount.CreateById ?? 0,
-                CreateDate = DateTime.Now,
-                EditById = chartofaccount.EditById ?? 0,
-                EditDate = DateTime.Now,
-            };
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _ChartOfAccountService.SaveChartOfAccountAsync(companyIdShort, 1, chartOfAccountToSave);
-
-                if (data == null)
+                var chartToSave = new M_ChartOfAccount
                 {
-                    return Json(new { success = false, message = "Failed to save account group." });
-                }
+                    GLId = model.chartOfAccount.GLId,
+                    CompanyId = companyIdShort,
+                    GLCode = model.chartOfAccount.GLCode ?? string.Empty,
+                    GLName = model.chartOfAccount.GLName ?? string.Empty,
+                    AccTypeId = model.chartOfAccount.AccTypeId,
+                    AccGroupId = model.chartOfAccount.AccGroupId,
+                    COACategoryId1 = model.chartOfAccount.COACategoryId1,
+                    COACategoryId2 = model.chartOfAccount.COACategoryId2,
+                    COACategoryId3 = model.chartOfAccount.COACategoryId3,
+                    IsSysControl = model.chartOfAccount.IsSysControl,
+                    SeqNo = model.chartOfAccount.SeqNo,
+                    Remarks = model.chartOfAccount.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.chartOfAccount.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.chartOfAccount.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
 
-                return Json(new { success = true, data });
+                var result = await _chartOfAccountService.SaveChartOfAccountAsync(companyIdShort, parsedUserId.Value, chartToSave);
+                return Json(new { success = true, message = "Chart of Account saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the account group.");
-                return Json(new { success = false, message = "An error occurred.", data = "" });
+                _logger.LogError(ex, "Error saving chart of account");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        public async Task<IActionResult> Remove(short GLId, string companyId)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(short glId, string companyId)
         {
-            if (GLId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+            if (glId <= 0)
+                return Json(new { success = false, message = "Invalid GL ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            //var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.ChartOfAccount);
 
-            //if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            //{
-            //    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            //}
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var chartOfAccountget = await _ChartOfAccountService.GetChartOfAccountByIdAsync(companyIdShort, 1, GLId);
+                var chart = await _chartOfAccountService.GetChartOfAccountByIdAsync(companyIdShort, parsedUserId.Value, glId);
+                if (chart == null)
+                    return Json(new { success = false, message = "Chart of Account not found" });
 
-                var data = await _ChartOfAccountService.DeleteChartOfAccountAsync(companyIdShort, 1, GLId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save account group." });
-                }
-
-                return Json(new { success = true, data });
+                await _chartOfAccountService.DeleteChartOfAccountAsync(companyIdShort, parsedUserId.Value, glId);
+                return Json(new { success = true, message = "Chart of Account deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the account group.");
-                return Json(new { success = false, message = "An error occurred.", data = "" });
+                _logger.LogError(ex, "Error deleting chart of account");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion ChartOfAccount CRUD
     }
 }

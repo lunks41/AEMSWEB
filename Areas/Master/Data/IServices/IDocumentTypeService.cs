@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IDocumentTypeService
     {
-        public Task<DocumentTypeViewModelCount> GetDocumentTypeListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<DocumentTypeViewModelCount> GetDocumentTypeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<DocumentTypeViewModel> GetDocumentTypeByIdAsync(short CompanyId, short UserId, short DocTypeId);
 

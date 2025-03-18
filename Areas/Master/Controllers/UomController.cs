@@ -1,194 +1,278 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class UomController : Controller
+    public class UomController : BaseController
     {
         private readonly ILogger<UomController> _logger;
         private readonly IUomService _uomService;
 
-        public UomController(ILogger<UomController> logger, IUomService uomService)
+        public UomController(ILogger<UomController> logger, IBaseService baseService, IUomService uomService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _uomService = uomService;
         }
 
-        // GET: /master/Uom/Index
-        public IActionResult Index()
+        #region Uom CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _uomService.GetUomListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching UOMs.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Uom/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short uomId, string companyId)
-        {
-            if (uomId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid UOM ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Uom);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _uomService.GetUomByIdAsync(companyIdShort, parsedUserId, uomId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "UOM not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _uomService.GetUomListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching UOM by ID.");
+                _logger.LogError(ex, "Error fetching UOM list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Uom/Save
-        [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveUomViewModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetById(short uomId, string companyId)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (uomId <= 0)
+                return Json(new { success = false, message = "Invalid UOM ID" });
 
-            var uom = model.Uom;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var uomToSave = new M_Uom
-            {
-                UomId = uom.UomId,
-                CompanyId = companyIdShort,
-                UomCode = uom.UomCode ?? string.Empty,
-                UomName = uom.UomName ?? string.Empty,
-                Remarks = uom.Remarks?.Trim() ?? string.Empty,
-                IsActive = uom.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = uom.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _uomService.SaveUomAsync(companyIdShort, parsedUserId, uomToSave);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save UOM." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _uomService.GetUomByIdAsync(companyIdShort, parsedUserId.Value, uomId);
+                return data == null
+                    ? Json(new { success = false, message = "UOM not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the UOM.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error fetching UOM by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Uom/Delete
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveUomViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.CompanyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var uomToSave = new M_Uom
+                {
+                    UomId = model.Uom.UomId,
+                    CompanyId = companyIdShort,
+                    UomCode = model.Uom.UomCode ?? string.Empty,
+                    UomName = model.Uom.UomName ?? string.Empty,
+                    Remarks = model.Uom.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.Uom.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.Uom.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _uomService.SaveUomAsync(companyIdShort, parsedUserId.Value, uomToSave);
+                return Json(new { success = true, message = "UOM saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving UOM");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(short uomId, string companyId)
         {
             if (uomId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+                return Json(new { success = false, message = "Invalid UOM ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Uom);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var uomGet = await _uomService.GetUomByIdAsync(companyIdShort, parsedUserId, uomId);
+                var uom = await _uomService.GetUomByIdAsync(companyIdShort, parsedUserId.Value, uomId);
+                if (uom == null)
+                    return Json(new { success = false, message = "UOM not found" });
 
-                var data = await _uomService.DeleteUomAsync(companyIdShort, 1, uomGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save UOM." });
-                }
-
-                return Json(new { success = true, data });
+                await _uomService.DeleteUomAsync(companyIdShort, parsedUserId.Value, uom);
+                return Json(new { success = true, message = "UOM deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the UOM.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting UOM");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Uom CRUD
+
+        #region UomDt CRUD
+
+        [HttpGet]
+        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _uomService.GetUomDtListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching UOM details list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDetailById(short uomDtId, short packUomId, string companyId)
+        {
+            if (uomDtId <= 0)
+                return Json(new { success = false, message = "Invalid UOM Detail ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _uomService.GetUomDtByIdAsync(companyIdShort, parsedUserId.Value, uomDtId, packUomId);
+                return data == null
+                    ? Json(new { success = false, message = "UOM Detail not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching UOM Detail by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDetail([FromBody] SaveUomDtViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var uomDtToSave = new M_UomDt
+                {
+                    CompanyId = companyIdShort,
+                    UomId = model.uomDt.UomId,
+                    PackUomId = model.uomDt.PackUomId,
+                    UomFactor = model.uomDt.UomFactor,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.uomDt.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _uomService.SaveUomDtAsync(companyIdShort, parsedUserId.Value, uomDtToSave);
+                return Json(new { success = true, message = "UOM Detail saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving UOM Detail");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDetail(short uomDtId, short packUomId, string companyId)
+        {
+            if (uomDtId <= 0)
+                return Json(new { success = false, message = "Invalid UOM Detail ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Uom);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                await _uomService.DeleteUomDtAsync(companyIdShort, parsedUserId.Value, uomDtId, packUomId);
+                return Json(new { success = true, message = "UOM Detail deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting UOM Detail");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion UomDt CRUD
     }
 }

@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IUomService
     {
-        public Task<UomViewModelCount> GetUomListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<UomViewModelCount> GetUomListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_Uom> GetUomByIdAsync(short CompanyId, short UserId, short UomId);
 
@@ -14,7 +14,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> DeleteUomAsync(short CompanyId, short UserId, M_Uom m_Uom);
 
-        public Task<UomDtViewModelCount> GetUomDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<UomDtViewModelCount> GetUomDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<UomDtViewModel> GetUomDtByIdAsync(short CompanyId, short UserId, short UomId, short PackUomId);
 

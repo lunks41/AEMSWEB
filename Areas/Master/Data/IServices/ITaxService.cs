@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface ITaxService
     {
-        public Task<TaxViewModelCount> GetTaxListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<TaxViewModelCount> GetTaxListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_Tax> GetTaxByIdAsync(short CompanyId, short UserId, short TaxId);
 
@@ -14,7 +14,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> DeleteTaxAsync(short CompanyId, short UserId, M_Tax m_Tax);
 
-        public Task<TaxDtViewModelCount> GetTaxDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<TaxDtViewModelCount> GetTaxDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<TaxDtViewModel> GetTaxDtByIdAsync(short CompanyId, short UserId, short TaxId, DateTime ValidFrom);
 
@@ -22,7 +22,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> DeleteTaxDtAsync(short CompanyId, short UserId, TaxDtViewModel m_TaxDt);
 
-        public Task<TaxCategoryViewModelCount> GetTaxCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<TaxCategoryViewModelCount> GetTaxCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_TaxCategory> GetTaxCategoryByIdAsync(short CompanyId, short UserId, short TaxCategoryId);
 

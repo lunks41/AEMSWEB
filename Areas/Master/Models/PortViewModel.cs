@@ -1,6 +1,4 @@
-﻿using AEMSWEB.Models.Masters;
-
-namespace AEMSWEB.Areas.Master.Models
+﻿namespace AEMSWEB.Areas.Master.Models
 {
     public class PortViewModel
     {
@@ -19,6 +17,12 @@ namespace AEMSWEB.Areas.Master.Models
         public DateTime? EditDate { get; set; }
         public string CreateBy { get; set; }
         public string EditBy { get; set; }
+    }
+
+    public class SavePortViewModel
+    {
+        public PortViewModel port { get; set; }
+        public string companyId { get; set; }
     }
 
     public class PortViewModelCount

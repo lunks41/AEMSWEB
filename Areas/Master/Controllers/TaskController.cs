@@ -1,194 +1,169 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class TaskController : Controller
+    public class TaskController : BaseController
     {
         private readonly ILogger<TaskController> _logger;
-        private readonly ITaskService _vesselService;
+        private readonly ITaskService _taskService;
 
-        public TaskController(ILogger<TaskController> logger, ITaskService vesselService)
+        public TaskController(ILogger<TaskController> logger, IBaseService baseService, ITaskService taskService)
+            : base(logger, baseService)
         {
             _logger = logger;
-            _vesselService = vesselService;
+            _taskService = taskService;
         }
 
-        // GET: /master/Task/Index
-        public IActionResult Index()
+        #region Task CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _vesselService.GetTaskListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching vessels.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Task/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(int vesselId, string companyId)
-        {
-            if (vesselId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Task ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Task);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _vesselService.GetTaskByIdAsync(companyIdShort, parsedUserId, vesselId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Task not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _taskService.GetTaskListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching vessel by ID.");
+                _logger.LogError(ex, "Error fetching task list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Task/Save
+        [HttpGet]
+        public async Task<JsonResult> GetById(int taskId, string companyId)
+        {
+            if (taskId <= 0)
+                return Json(new { success = false, message = "Invalid Task ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _taskService.GetTaskByIdAsync(companyIdShort, parsedUserId.Value, taskId);
+                return data == null
+                    ? Json(new { success = false, message = "Task not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching task by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] SaveTaskViewModel model)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-            var vessel = model.Task;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var vesselToSave = new M_Task
-            {
-                TaskId = vessel.TaskId,
-                TaskCode = vessel.TaskCode ?? string.Empty,
-                TaskName = vessel.TaskName ?? string.Empty,
-                TaskOrder = vessel.TaskOrder,
-                Remarks = vessel.Remarks?.Trim() ?? string.Empty,
-                IsActive = vessel.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = vessel.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _vesselService.SaveTaskAsync(companyIdShort, parsedUserId, vesselToSave);
-
-                if (data == null)
+                var taskToSave = new M_Task
                 {
-                    return Json(new { success = false, message = "Failed to save vessel." });
-                }
+                    TaskId = model.task.TaskId,
+                    TaskCode = model.task.TaskCode ?? string.Empty,
+                    TaskName = model.task.TaskName ?? string.Empty,
+                    TaskOrder = model.task.TaskOrder,
+                    Remarks = model.task.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.task.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.task.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
 
-                return Json(new { success = true, data });
+                var result = await _taskService.SaveTaskAsync(companyIdShort, parsedUserId.Value, taskToSave);
+                return Json(new { success = true, message = "Task saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the vessel.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error saving task");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Task/Delete
         [HttpDelete]
-        public async Task<IActionResult> Delete(int vesselId, string companyId)
+        public async Task<IActionResult> Delete(int taskId, string companyId)
         {
-            if (vesselId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+            if (taskId <= 0)
+                return Json(new { success = false, message = "Invalid Task ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Task);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var vesselGet = await _vesselService.GetTaskByIdAsync(companyIdShort, parsedUserId, vesselId);
+                var task = await _taskService.GetTaskByIdAsync(companyIdShort, parsedUserId.Value, taskId);
+                if (task == null)
+                    return Json(new { success = false, message = "Task not found" });
 
-                var data = await _vesselService.DeleteTaskAsync(companyIdShort, 1, vesselGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save vessel." });
-                }
-
-                return Json(new { success = true, data });
+                await _taskService.DeleteTaskAsync(companyIdShort, parsedUserId.Value, task);
+                return Json(new { success = true, message = "Task deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the vessel.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting task");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Task CRUD
     }
 }

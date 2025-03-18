@@ -25,7 +25,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region HEaders
 
-        public async Task<TaxViewModelCount> GetTaxListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<TaxViewModelCount> GetTaxListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             TaxViewModelCount countViewModel = new TaxViewModelCount();
             try
@@ -276,7 +276,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #region Details
 
-        public async Task<TaxDtViewModelCount> GetTaxDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<TaxDtViewModelCount> GetTaxDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             TaxDtViewModelCount countViewModel = new TaxDtViewModelCount();
             try
@@ -508,7 +508,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         #endregion Details
 
-        public async Task<TaxCategoryViewModelCount> GetTaxCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<TaxCategoryViewModelCount> GetTaxCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             TaxCategoryViewModelCount countViewModel = new TaxCategoryViewModelCount();
             try

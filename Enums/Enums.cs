@@ -74,7 +74,7 @@ namespace AEMSWEB.Enums
         AccountSetupDt = 46,
         DocumentType = 47,
         Task = 48,
-        Chrage = 49
+        Charges = 49
     }
 
     public enum E_AR

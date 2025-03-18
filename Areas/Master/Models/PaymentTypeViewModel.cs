@@ -18,8 +18,8 @@
 
     public class SavePaymentTypeViewModel
     {
-        public PaymentTypeViewModel PaymentType { get; set; }
-        public string CompanyId { get; set; }
+        public PaymentTypeViewModel paymentType { get; set; }
+        public string companyId { get; set; }
     }
 
     public class PaymentTypeViewModelCount

@@ -5,7 +5,6 @@ using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
 using AEMSWEB.Models;
-using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -24,7 +23,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context;
         }
 
-        public async Task<PortViewModelCount> GetPortListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString)
+        public async Task<PortViewModelCount> GetPortListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             PortViewModelCount countViewModel = new PortViewModelCount();
             try

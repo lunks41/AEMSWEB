@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.GL
 {
     public interface IGLContraService
     {
-        public Task<GLContraViewModel> GetGLContraListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<GLContraViewModel> GetGLContraListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<GLContraHdViewModel> GetGLContraByIdNoAsync(short CompanyId, long ContraId, string ContraNo, short UserId);
 

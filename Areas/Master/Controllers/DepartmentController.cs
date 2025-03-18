@@ -1,152 +1,171 @@
-﻿//using AEMSWEB.Controllers;
-//using AEMSWEB.Models.Masters;
-//using AEMSWEB.Services;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
+using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
+using AEMSWEB.Models.Masters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace AEMSWEB.Areas.Master.Controllers
-//{
-//    [Area("master")]
-//    public class DepartmentController : BaseController
-//    {
-//        private readonly ILogger<DepartmentController> _logger;
+namespace AEMSWEB.Areas.Master.Controllers
+{
+    [Area("master")]
+    [Authorize]
+    public class DepartmentController : BaseController
+    {
+        private readonly ILogger<DepartmentController> _logger;
+        private readonly IDepartmentService _departmentService;
 
-//        public DepartmentController(
-//            ILogger<DepartmentController> logger
+        public DepartmentController(ILogger<DepartmentController> logger,
+            IBaseService baseService,
+            IDepartmentService departmentService)
+            : base(logger, baseService)
+        {
+            _logger = logger;
+            _departmentService = departmentService;
+        }
 
-//           )
+        #region Department CRUD
 
-//        {
-//            _logger = logger;
-//        }
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
 
-//        // GET: /master/Department/Index
-//        public async Task<IActionResult> Index()
-//        {
-//            return View();
-//        }
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
 
-//        // GET: /master/Department/List
-//        [HttpGet]
-//        public async Task<JsonResult> List(string searchString, string companyId)
-//        {
-//            try
-//            {
-//                var headers = new Dictionary<string, string>
-//            {
-//                { "PageSize", "10" },
-//                { "PageNumber", "1" },
-//                { "SearchString", searchString ?? string.Empty }
-//            };
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Department);
 
-//                if (!string.IsNullOrEmpty(companyId))
-//                {
-//                    headers.Add("CompanyId", companyId);
-//                }
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
 
-//                var apiResponse = await _apiService.GetAsync<List<DepartmentViewModel>>("/master/getdepartments", headers);
-//                return Json(apiResponse.Data);
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "An error occurred while fetching departments.");
-//                return Json(null);
-//            }
-//        }
+            return View();
+        }
 
-//        // GET: /master/Department/GetById
-//        [HttpGet]
-//        public async Task<JsonResult> GetById(short departmentId, string companyId)
-//        {
-//            if (departmentId <= 0)
-//            {
-//                return Json(new { success = false, message = "Invalid Department ID." });
-//            }
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var apiResponse = await _apiService.GetAsync<DepartmentViewModel>($"/master/getdepartmentbyid/{departmentId}", headers);
+            try
+            {
+                var data = await _departmentService.GetDepartmentListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching department list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, data = apiResponse.Data });
-//            }
-//            else
-//            {
-//                return Json(new { success = false, message = "Department not found." });
-//            }
-//        }
+        [HttpGet]
+        public async Task<JsonResult> GetById(short departmentId, string companyId)
+        {
+            if (departmentId <= 0)
+                return Json(new { success = false, message = "Invalid Department ID" });
 
-//        // POST: /master/Department/Save
-//        [HttpPost]
-//        public async Task<IActionResult> Save([FromBody] SaveDepartmentViewModel model)
-//        {
-//            if (model == null)
-//            {
-//                return BadRequest(new { success = false, message = "Data operation failed." });
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var department = model.Department;
-//            var companyId = model.CompanyId;
+            try
+            {
+                var data = await _departmentService.GetDepartmentByIdAsync(companyIdShort, parsedUserId.Value, departmentId);
+                return data == null
+                    ? Json(new { success = false, message = "Department not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching department by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            var departmentToSave = new DepartmentViewModel
-//            {
-//                DepartmentId = department.DepartmentId,
-//                CompanyId = Convert.ToInt16(companyId),
-//                DepartmentCode = department.DepartmentCode ?? string.Empty,
-//                DepartmentName = department.DepartmentName ?? string.Empty,
-//                Remarks = department.Remarks?.Trim() ?? string.Empty,
-//                IsActive = department.IsActive,
-//                CreateById = department.CreateById,
-//                CreateDate = DateTime.Now,
-//                EditById = department.EditById ?? 0,
-//                EditDate = DateTime.Now,
-//                CreateBy = department.CreateBy ?? string.Empty,
-//                EditBy = department.EditBy ?? string.Empty
-//            };
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveDepartmentViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var apiResponse = await _apiService.PostAsync<DepartmentViewModel>("/master/savedepartment", departmentToSave, headers);
+            try
+            {
+                var departmentToSave = new M_Department
+                {
+                    DepartmentId = model.department.DepartmentId,
+                    CompanyId = companyIdShort,
+                    DepartmentCode = model.department.DepartmentCode ?? string.Empty,
+                    DepartmentName = model.department.DepartmentName ?? string.Empty,
+                    Remarks = model.department.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.department.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.department.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record saved successfully." });
-//            }
+                var result = await _departmentService.SaveDepartmentAsync(companyIdShort, parsedUserId.Value, departmentToSave);
+                return Json(new { success = true, message = "Department saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving department");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
 
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Save operation failed." });
-//        }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(short departmentId, string companyId)
+        {
+            if (departmentId <= 0)
+                return Json(new { success = false, message = "Invalid Department ID" });
 
-//        // DELETE: /master/Department/Delete
-//        [HttpDelete]
-//        public async Task<IActionResult> Delete(int id, string companyId)
-//        {
-//            if (id <= 0)
-//            {
-//                return BadRequest(new { success = false, message = "Invalid ID." });
-//            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-//            var headers = new Dictionary<string, string>();
-//            if (!string.IsNullOrEmpty(companyId))
-//            {
-//                headers.Add("CompanyId", companyId);
-//            }
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Department);
 
-//            var apiResponse = await _apiService.DeleteAsync($"/master/deletedepartment/{id}", headers);
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
-//            if (apiResponse.Result > 0)
-//            {
-//                return Json(new { success = true, message = "Record deleted successfully." });
-//            }
+            try
+            {
+                var department = await _departmentService.GetDepartmentByIdAsync(companyIdShort, parsedUserId.Value, departmentId);
+                if (department == null)
+                    return Json(new { success = false, message = "Department not found" });
 
-//            return BadRequest(new { success = false, message = apiResponse.Message?.ToString() ?? "Delete operation failed." });
-//        }
-//    }
-//}
+                await _departmentService.DeleteDepartmentAsync(companyIdShort, parsedUserId.Value, department);
+                return Json(new { success = true, message = "Department deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting department");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion Department CRUD
+    }
+}

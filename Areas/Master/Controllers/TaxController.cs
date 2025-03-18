@@ -1,195 +1,426 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class TaxController : Controller
+    public class TaxController : BaseController
     {
         private readonly ILogger<TaxController> _logger;
         private readonly ITaxService _taxService;
 
-        public TaxController(ILogger<TaxController> logger, ITaxService taxService)
+        public TaxController(ILogger<TaxController> logger, IBaseService baseService, ITaxService taxService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _taxService = taxService;
         }
 
-        // GET: /master/Tax/Index
-        public IActionResult Index()
+        #region Tax CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _taxService.GetTaxListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching taxes.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Tax/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short taxId, string companyId)
-        {
-            if (taxId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Tax ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Tax);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _taxService.GetTaxByIdAsync(companyIdShort, parsedUserId, taxId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Tax not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _taxService.GetTaxListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching tax by ID.");
+                _logger.LogError(ex, "Error fetching tax list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Tax/Save
-        [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveTaxViewModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetById(short taxId, string companyId)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (taxId <= 0)
+                return Json(new { success = false, message = "Invalid Tax ID" });
 
-            var tax = model.Tax;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var taxToSave = new M_Tax
-            {
-                TaxId = tax.TaxId,
-                CompanyId = companyIdShort,
-                TaxCategoryId = tax.TaxCategoryId,
-                TaxCode = tax.TaxCode ?? string.Empty,
-                TaxName = tax.TaxName ?? string.Empty,
-                Remarks = tax.Remarks?.Trim() ?? string.Empty,
-                IsActive = tax.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = tax.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _taxService.SaveTaxAsync(companyIdShort, parsedUserId, taxToSave);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save tax." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _taxService.GetTaxByIdAsync(companyIdShort, parsedUserId.Value, taxId);
+                return data == null
+                    ? Json(new { success = false, message = "Tax not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the tax.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error fetching tax by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Tax/Delete
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveTaxViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var taxToSave = new M_Tax
+                {
+                    TaxId = model.tax.TaxId,
+                    CompanyId = companyIdShort,
+                    TaxCategoryId = model.tax.TaxCategoryId,
+                    TaxCode = model.tax.TaxCode ?? string.Empty,
+                    TaxName = model.tax.TaxName ?? string.Empty,
+                    Remarks = model.tax.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.tax.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.tax.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _taxService.SaveTaxAsync(companyIdShort, parsedUserId.Value, taxToSave);
+                return Json(new { success = true, message = "Tax saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving tax");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(short taxId, string companyId)
         {
             if (taxId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+                return Json(new { success = false, message = "Invalid Tax ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Tax);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var taxGet = await _taxService.GetTaxByIdAsync(companyIdShort, parsedUserId, taxId);
+                var tax = await _taxService.GetTaxByIdAsync(companyIdShort, parsedUserId.Value, taxId);
+                if (tax == null)
+                    return Json(new { success = false, message = "Tax not found" });
 
-                var data = await _taxService.DeleteTaxAsync(companyIdShort, 1, taxGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save tax." });
-                }
-
-                return Json(new { success = true, data });
+                await _taxService.DeleteTaxAsync(companyIdShort, parsedUserId.Value, tax);
+                return Json(new { success = true, message = "Tax deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the tax.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting tax");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Tax CRUD
+
+        #region TaxDt CRUD
+
+        [HttpGet]
+        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _taxService.GetTaxDtListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching tax details list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDetailById(short taxDtId, DateTime validFrom, string companyId)
+        {
+            if (taxDtId <= 0)
+                return Json(new { success = false, message = "Invalid Tax Detail ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _taxService.GetTaxDtByIdAsync(companyIdShort, parsedUserId.Value, taxDtId, validFrom);
+                return data == null
+                    ? Json(new { success = false, message = "Tax Detail not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching tax detail by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDetail([FromBody] SaveTaxDtViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var taxDtToSave = new M_TaxDt
+                {
+                    TaxId = model.taxDt.TaxId,
+                    CompanyId = companyIdShort,
+                    TaxPercentage = model.taxDt.TaxPercentage,
+                    ValidFrom = model.taxDt.ValidFrom,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.taxDt.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _taxService.SaveTaxDtAsync(companyIdShort, parsedUserId.Value, taxDtToSave);
+                return Json(new { success = true, message = "Tax Detail saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving tax detail");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDetail(short taxDtId, DateTime validFrom, string companyId)
+        {
+            if (taxDtId <= 0)
+                return Json(new { success = false, message = "Invalid Tax Detail ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Tax);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                var taxDt = await _taxService.GetTaxDtByIdAsync(companyIdShort, parsedUserId.Value, taxDtId, validFrom);
+                if (taxDt == null)
+                    return Json(new { success = false, message = "Tax Detail not found" });
+
+                await _taxService.DeleteTaxDtAsync(companyIdShort, parsedUserId.Value, taxDt);
+                return Json(new { success = true, message = "Tax Detail deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting tax detail");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion TaxDt CRUD
+
+        #region TaxCategory CRUD
+
+        [Authorize]
+        public async Task<IActionResult> CategoryIndex(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
+
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.TaxCategory);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> ListCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _taxService.GetTaxCategoryListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching tax category list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCategoryById(short taxCategoryId, string companyId)
+        {
+            if (taxCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid Tax Category ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _taxService.GetTaxCategoryByIdAsync(companyIdShort, parsedUserId.Value, taxCategoryId);
+                return data == null
+                    ? Json(new { success = false, message = "Tax Category not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching tax category by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCategory([FromBody] SaveTaxCategoryViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var categoryToSave = new M_TaxCategory
+                {
+                    TaxCategoryId = model.taxCategory.TaxCategoryId,
+                    CompanyId = companyIdShort,
+                    TaxCategoryCode = model.taxCategory.TaxCategoryCode ?? string.Empty,
+                    TaxCategoryName = model.taxCategory.TaxCategoryName ?? string.Empty,
+                    Remarks = model.taxCategory.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.taxCategory.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.taxCategory.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _taxService.SaveTaxCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);
+                return Json(new { success = true, message = "Tax Category saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving tax category");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCategory(short taxCategoryId, string companyId)
+        {
+            if (taxCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid Tax Category ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.TaxCategory);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                var category = await _taxService.GetTaxCategoryByIdAsync(companyIdShort, parsedUserId.Value, taxCategoryId);
+                if (category == null)
+                    return Json(new { success = false, message = "Tax Category not found" });
+
+                await _taxService.DeleteTaxCategoryAsync(companyIdShort, parsedUserId.Value, category);
+                return Json(new { success = true, message = "Tax Category deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting tax category");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion TaxCategory CRUD
     }
 }

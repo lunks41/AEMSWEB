@@ -31,8 +31,8 @@
 
     public class SaveEmployeeViewModel
     {
-        public EmployeeViewModel Employee { get; set; }
-        public string CompanyId { get; set; }
+        public EmployeeViewModel employee { get; set; }
+        public string companyId { get; set; }
     }
 
     public class EmployeeViewModelCount

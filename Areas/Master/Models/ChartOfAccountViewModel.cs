@@ -35,8 +35,8 @@
 
     public class SaveChartOfAccountViewModel
     {
-        public ChartOfAccountViewModel ChartOfAccount { get; set; }
-        public string CompanyId { get; set; }
+        public ChartOfAccountViewModel chartOfAccount { get; set; }
+        public string companyId { get; set; }
     }
 
     public class ChartOfAccountViewModelCount

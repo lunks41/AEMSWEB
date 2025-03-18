@@ -21,8 +21,8 @@
 
     public class SavePortRegionViewModel
     {
-        public PortRegionViewModel PortRegion { get; set; }
-        public string CompanyId { get; set; }
+        public PortRegionViewModel portRegion { get; set; }
+        public string companyId { get; set; }
     }
 
     public class PortRegionViewModelCount

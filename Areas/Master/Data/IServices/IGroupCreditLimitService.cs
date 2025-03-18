@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 {
     public interface IGroupCreditLimitService
     {
-        public Task<GroupCreditLimitViewModelCount> GetGroupCreditLimitListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<GroupCreditLimitViewModelCount> GetGroupCreditLimitListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_GroupCreditLimit> GetGroupCreditLimitByIdAsync(short CompanyId, short UserId, short COACategoryId);
 

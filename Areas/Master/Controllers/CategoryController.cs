@@ -1,194 +1,315 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
         private readonly ILogger<CategoryController> _logger;
-        private readonly ICategoryService _countryService;
+        private readonly ICategoryService _categoryService;
 
-        public CategoryController(ILogger<CategoryController> logger, ICategoryService countryService)
+        public CategoryController(ILogger<CategoryController> logger,
+            IBaseService baseService,
+            ICategoryService categoryService)
+            : base(logger, baseService)
         {
             _logger = logger;
-            _countryService = countryService;
+            _categoryService = categoryService;
         }
 
-        // GET: /master/Category/Index
-        public IActionResult Index()
+        #region Category CRUD
+
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _countryService.GetCategoryListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching countries.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Category/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short countryId, string companyId)
-        {
-            if (countryId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Category ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Category);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _countryService.GetCategoryByIdAsync(companyIdShort, parsedUserId, countryId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Category not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _categoryService.GetCategoryListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching country by ID.");
+                _logger.LogError(ex, "Error fetching category list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Category/Save
+        [HttpGet]
+        public async Task<JsonResult> GetById(short categoryId, string companyId)
+        {
+            if (categoryId <= 0)
+                return Json(new { success = false, message = "Invalid Category ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _categoryService.GetCategoryByIdAsync(companyIdShort, parsedUserId.Value, categoryId);
+                return data == null
+                    ? Json(new { success = false, message = "Category not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching category by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] SaveCategoryViewModel model)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-            var country = model.Category;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var countryToSave = new M_Category
-            {
-                CategoryId = country.CategoryId,
-                CompanyId = companyIdShort,
-                CategoryCode = country.CategoryCode ?? string.Empty,
-                CategoryName = country.CategoryName ?? string.Empty,
-                Remarks = country.Remarks?.Trim() ?? string.Empty,
-                IsActive = country.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = country.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _countryService.SaveCategoryAsync(companyIdShort, parsedUserId, countryToSave);
-
-                if (data == null)
+                var categoryToSave = new M_Category
                 {
-                    return Json(new { success = false, message = "Failed to save country." });
-                }
+                    CategoryId = model.category.CategoryId,
+                    CompanyId = companyIdShort,
+                    CategoryCode = model.category.CategoryCode ?? string.Empty,
+                    CategoryName = model.category.CategoryName ?? string.Empty,
+                    Remarks = model.category.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.category.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.category.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
 
-                return Json(new { success = true, data });
+                var result = await _categoryService.SaveCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);
+                return Json(new { success = true, message = "Category saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the country.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error saving category");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Category/Delete
         [HttpDelete]
-        public async Task<IActionResult> Delete(short countryId, string companyId)
+        public async Task<IActionResult> Delete(short categoryId, string companyId)
         {
-            if (countryId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+            if (categoryId <= 0)
+                return Json(new { success = false, message = "Invalid Category ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Category);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var countryGet = await _countryService.GetCategoryByIdAsync(companyIdShort, parsedUserId, countryId);
+                var category = await _categoryService.GetCategoryByIdAsync(companyIdShort, parsedUserId.Value, categoryId);
+                if (category == null)
+                    return Json(new { success = false, message = "Category not found" });
 
-                var data = await _countryService.DeleteCategoryAsync(companyIdShort, 1, countryGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save country." });
-                }
-
-                return Json(new { success = true, data });
+                await _categoryService.DeleteCategoryAsync(companyIdShort, parsedUserId.Value, category);
+                return Json(new { success = true, message = "Category deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the country.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting category");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Category CRUD
+
+        #region SubCategory CRUD
+
+        [Authorize]
+        public async Task<IActionResult> SubCategoryIndex(int? companyId)
+        {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
+
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.SubCategory);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> ListSubCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _categoryService.GetSubCategoryListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching subcategory list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSubCategoryById(short subCategoryId, string companyId)
+        {
+            if (subCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid SubCategory ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _categoryService.GetSubCategoryByIdAsync(companyIdShort, parsedUserId.Value, subCategoryId);
+                return data == null
+                    ? Json(new { success = false, message = "SubCategory not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching subcategory by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveSubCategory([FromBody] SaveSubCategoryViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var subCategoryToSave = new M_SubCategory
+                {
+                    SubCategoryId = model.subCategory.SubCategoryId,
+                    CompanyId = companyIdShort,
+                    SubCategoryCode = model.subCategory.SubCategoryCode ?? string.Empty,
+                    SubCategoryName = model.subCategory.SubCategoryName ?? string.Empty,
+                    Remarks = model.subCategory.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.subCategory.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.subCategory.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _categoryService.SaveSubCategoryAsync(companyIdShort, parsedUserId.Value, subCategoryToSave);
+                return Json(new { success = true, message = "SubCategory saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving subcategory");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSubCategory(short subCategoryId, string companyId)
+        {
+            if (subCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid SubCategory ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.SubCategory);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                var subCategory = await _categoryService.GetSubCategoryByIdAsync(companyIdShort, parsedUserId.Value, subCategoryId);
+                if (subCategory == null)
+                    return Json(new { success = false, message = "SubCategory not found" });
+
+                await _categoryService.DeleteSubCategoryAsync(companyIdShort, parsedUserId.Value, subCategory);
+                return Json(new { success = true, message = "SubCategory deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting subcategory");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion SubCategory CRUD
     }
 }

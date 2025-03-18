@@ -8,7 +8,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         #region Header
 
-        public Task<AccountSetupViewModelCount> GetAccountSetupListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<AccountSetupViewModelCount> GetAccountSetupListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_AccountSetup> GetAccountSetupByIdAsync(short CompanyId, short UserId, short AccSetupId);
 
@@ -20,7 +20,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         #region Details
 
-        public Task<AccountSetupDtViewModelCount> GetAccountSetupDtListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<AccountSetupDtViewModelCount> GetAccountSetupDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short AccSetupId);
 
@@ -32,7 +32,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         #region AccountSetupCategory
 
-        public Task<AccountSetupCategoryViewModelCount> GetAccountSetupCategoryListAsync(short CompanyId, short UserId, short pageSize, short pageNumber, string searchString);
+        public Task<AccountSetupCategoryViewModelCount> GetAccountSetupCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<M_AccountSetupCategory> GetAccountSetupCategoryByIdAsync(short CompanyId, short UserId, short AccSetupCategoryId);
 

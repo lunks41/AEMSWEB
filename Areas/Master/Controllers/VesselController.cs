@@ -1,199 +1,170 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class VesselController : Controller
+    public class VesselController : BaseController
     {
         private readonly ILogger<VesselController> _logger;
         private readonly IVesselService _vesselService;
 
-        public VesselController(ILogger<VesselController> logger, IVesselService vesselService)
+        public VesselController(ILogger<VesselController> logger, IBaseService baseService, IVesselService vesselService)
+            : base(logger, baseService)
         {
             _logger = logger;
             _vesselService = vesselService;
         }
 
-        // GET: /master/Vessel/Index
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _vesselService.GetVesselListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching vessels.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/Vessel/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(int vesselId, string companyId)
-        {
-            if (vesselId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid Vessel ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Vessel);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _vesselService.GetVesselByIdAsync(companyIdShort, parsedUserId, vesselId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Vessel not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _vesselService.GetVesselListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching vessel by ID.");
+                _logger.LogError(ex, "Error fetching vessel list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/Vessel/Save
-        [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveVesselViewModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetById(int vesselId, string companyId)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (vesselId <= 0)
+                return Json(new { success = false, message = "Invalid Vessel ID" });
 
-            var vessel = model.Vessel;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var vesselToSave = new M_Vessel
-            {
-                VesselId = vessel.VesselId,
-                CompanyId = companyIdShort,
-                VesselCode = vessel.VesselCode ?? string.Empty,
-                VesselName = vessel.VesselName ?? string.Empty,
-                CallSign = vessel.CallSign ?? string.Empty,
-                IMOCode = vessel.IMOCode ?? string.Empty,
-                GRT = vessel.GRT ?? string.Empty,
-                LicenseNo = vessel.LicenseNo ?? string.Empty,
-                VesselType = vessel.VesselType ?? string.Empty,
-                Flag = vessel.Flag ?? string.Empty,
-                Remarks = vessel.Remarks?.Trim() ?? string.Empty,
-                IsActive = vessel.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = vessel.EditById ?? 0,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _vesselService.SaveVesselAsync(companyIdShort, parsedUserId, vesselToSave);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save vessel." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _vesselService.GetVesselByIdAsync(companyIdShort, parsedUserId.Value, vesselId);
+                return data == null
+                    ? Json(new { success = false, message = "Vessel not found" })
+                    : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the vessel.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error fetching vessel by ID");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/Vessel/Delete
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] SaveVesselViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var vesselToSave = new M_Vessel
+                {
+                    VesselId = model.vessel.VesselId,
+                    CompanyId = companyIdShort,
+                    VesselCode = model.vessel.VesselCode ?? string.Empty,
+                    VesselName = model.vessel.VesselName ?? string.Empty,
+                    CallSign = model.vessel.CallSign ?? string.Empty,
+                    IMOCode = model.vessel.IMOCode ?? string.Empty,
+                    GRT = model.vessel.GRT ?? string.Empty,
+                    LicenseNo = model.vessel.LicenseNo ?? string.Empty,
+                    VesselType = model.vessel.VesselType ?? string.Empty,
+                    Flag = model.vessel.Flag ?? string.Empty,
+                    Remarks = model.vessel.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.vessel.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = model.vessel.EditById ?? 0,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _vesselService.SaveVesselAsync(companyIdShort, parsedUserId.Value, vesselToSave);
+                return Json(new { success = true, message = "Vessel saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving vessel");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(int vesselId, string companyId)
         {
             if (vesselId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+                return Json(new { success = false, message = "Invalid Vessel ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.Vessel);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var vesselGet = await _vesselService.GetVesselByIdAsync(companyIdShort, parsedUserId, vesselId);
+                var vessel = await _vesselService.GetVesselByIdAsync(companyIdShort, parsedUserId.Value, vesselId);
+                if (vessel == null)
+                    return Json(new { success = false, message = "Vessel not found" });
 
-                var data = await _vesselService.DeleteVesselAsync(companyIdShort, 1, vesselGet);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save vessel." });
-                }
-
-                return Json(new { success = true, data });
+                await _vesselService.DeleteVesselAsync(companyIdShort, parsedUserId.Value, vessel);
+                return Json(new { success = true, message = "Vessel deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the vessel.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting vessel");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
     }

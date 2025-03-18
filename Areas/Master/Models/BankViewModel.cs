@@ -30,8 +30,8 @@ namespace AEMSWEB.Areas.Master.Models
 
     public class SaveBankViewModel
     {
-        public BankViewModel Bank { get; set; }
-        public string CompanyId { get; set; }
+        public BankViewModel bank { get; set; }
+        public string companyId { get; set; }
     }
 
     public class BankViewModelCount

@@ -6,7 +6,7 @@ namespace AEMSWEB.Areas.Account.Data.IServices.AP
 {
     public interface IAPAdjustmentService
     {
-        public Task<APAdjustmentViewModelCount> GetAPAdjustmentListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId);
+        public Task<APAdjustmentViewModelCount> GetAPAdjustmentListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId);
 
         public Task<APAdjustmentViewModel> GetAPAdjustmentByIdAsync(short CompanyId, long InvoiceId, string InvoiceNo, short UserId);
 

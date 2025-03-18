@@ -11,21 +11,21 @@ namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class OrderTypeController : BaseController
+    public class CreditTermsController : BaseController
     {
-        private readonly ILogger<OrderTypeController> _logger;
-        private readonly IOrderTypeService _orderTypeService;
+        private readonly ILogger<CreditTermsController> _logger;
+        private readonly ICreditTermsService _creditTermService;
 
-        public OrderTypeController(ILogger<OrderTypeController> logger,
+        public CreditTermsController(ILogger<CreditTermsController> logger,
             IBaseService baseService,
-            IOrderTypeService orderTypeService)
+            ICreditTermsService creditTermService)
             : base(logger, baseService)
         {
             _logger = logger;
-            _orderTypeService = orderTypeService;
+            _creditTermService = creditTermService;
         }
 
-        #region OrderType CRUD
+        #region CreditTerms CRUD
 
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
@@ -44,7 +44,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
 
             var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.OrderType);
+                (short)E_Modules.Master, (short)E_Master.CreditTerms);
 
             ViewBag.IsRead = permissions?.IsRead ?? false;
             ViewBag.IsCreate = permissions?.IsCreate ?? false;
@@ -66,42 +66,42 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _orderTypeService.GetOrderTypeListAsync(companyIdShort, parsedUserId.Value,
+                var data = await _creditTermService.GetCreditTermListAsync(companyIdShort, parsedUserId.Value,
                     pageSize, pageNumber, searchString ?? string.Empty);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching order type list");
+                _logger.LogError(ex, "Error fetching credit term list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short orderTypeId, string companyId)
+        public async Task<JsonResult> GetById(short creditTermId, string companyId)
         {
-            if (orderTypeId <= 0)
-                return Json(new { success = false, message = "Invalid Order Type ID" });
+            if (creditTermId <= 0)
+                return Json(new { success = false, message = "Invalid Credit Term ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _orderTypeService.GetOrderTypeByIdAsync(companyIdShort, parsedUserId.Value, orderTypeId);
+                var data = await _creditTermService.GetCreditTermByIdAsync(companyIdShort, parsedUserId.Value, creditTermId);
                 return data == null
-                    ? Json(new { success = false, message = "Order Type not found" })
+                    ? Json(new { success = false, message = "Credit Term not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching order type by ID");
+                _logger.LogError(ex, "Error fetching credit term by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveOrderTypeViewModel model)
+        public async Task<IActionResult> Save([FromBody] SaveCreditTermViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -111,96 +111,68 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var orderTypeToSave = new M_OrderType
+                var creditTermToSave = new M_CreditTerm
                 {
-                    OrderTypeId = model.orderType.OrderTypeId,
+                    CreditTermId = model.creditTerm.CreditTermId,
                     CompanyId = companyIdShort,
-                    OrderTypeCode = model.orderType.OrderTypeCode ?? string.Empty,
-                    OrderTypeName = model.orderType.OrderTypeName ?? string.Empty,
-                    OrderTypeCategoryId = model.orderType.OrderTypeCategoryId,
-                    Remarks = model.orderType.Remarks?.Trim() ?? string.Empty,
-                    IsActive = model.orderType.IsActive,
+                    CreditTermCode = model.creditTerm.CreditTermCode ?? string.Empty,
+                    CreditTermName = model.creditTerm.CreditTermName ?? string.Empty,
+                    NoDays = model.creditTerm.NoDays,
+                    Remarks = model.creditTerm.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.creditTerm.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.orderType.EditById ?? 0,
+                    EditById = model.creditTerm.EditById ?? 0,
                     EditDate = DateTime.UtcNow
                 };
 
-                var result = await _orderTypeService.SaveOrderTypeAsync(companyIdShort, parsedUserId.Value, orderTypeToSave);
-                return Json(new { success = true, message = "Order Type saved successfully", data = result });
+                var result = await _creditTermService.SaveCreditTermAsync(companyIdShort, parsedUserId.Value, creditTermToSave);
+                return Json(new { success = true, message = "Credit Term saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving order type");
+                _logger.LogError(ex, "Error saving credit term");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short orderTypeId, string companyId)
+        public async Task<IActionResult> Delete(short creditTermId, string companyId)
         {
-            if (orderTypeId <= 0)
-                return Json(new { success = false, message = "Invalid Order Type ID" });
+            if (creditTermId <= 0)
+                return Json(new { success = false, message = "Invalid Credit Term ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.OrderType);
+                (short)E_Modules.Master, (short)E_Master.CreditTerms);
 
             if (permissions == null || !permissions.IsDelete)
                 return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var orderType = await _orderTypeService.GetOrderTypeByIdAsync(companyIdShort, parsedUserId.Value, orderTypeId);
-                if (orderType == null)
-                    return Json(new { success = false, message = "Order Type not found" });
+                var creditTerm = await _creditTermService.GetCreditTermByIdAsync(companyIdShort, parsedUserId.Value, creditTermId);
+                if (creditTerm == null)
+                    return Json(new { success = false, message = "Credit Term not found" });
 
-                await _orderTypeService.DeleteOrderTypeAsync(companyIdShort, parsedUserId.Value, orderType);
-                return Json(new { success = true, message = "Order Type deleted successfully" });
+                await _creditTermService.DeleteCreditTermAsync(companyIdShort, parsedUserId.Value, creditTerm);
+                return Json(new { success = true, message = "Credit Term deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting order type");
+                _logger.LogError(ex, "Error deleting credit term");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        #endregion OrderType CRUD
+        #endregion CreditTerms CRUD
 
-        #region OrderTypeCategory CRUD
-
-        [Authorize]
-        public async Task<IActionResult> CategoryIndex(int? companyId)
-        {
-            if (!companyId.HasValue || companyId <= 0)
-            {
-                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var parsedUserId = GetParsedUserId();
-            if (!parsedUserId.HasValue)
-            {
-                _logger.LogWarning("User not logged in or invalid user ID.");
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.OrderTypeCategory);
-
-            ViewBag.IsRead = permissions?.IsRead ?? false;
-            ViewBag.IsCreate = permissions?.IsCreate ?? false;
-            ViewBag.IsEdit = permissions?.IsEdit ?? false;
-            ViewBag.IsDelete = permissions?.IsDelete ?? false;
-            ViewBag.CompanyId = companyId;
-
-            return View();
-        }
+        #region CreditTermsDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -210,42 +182,42 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _orderTypeService.GetOrderTypeCategoryListAsync(companyIdShort, parsedUserId.Value,
+                var data = await _creditTermService.GetCreditTermDtListAsync(companyIdShort, parsedUserId.Value,
                     pageSize, pageNumber, searchString ?? string.Empty);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching order type category list");
+                _logger.LogError(ex, "Error fetching credit term details list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCategoryById(short orderTypeCategoryId, string companyId)
+        public async Task<JsonResult> GetDetailById(short creditTermDtId, short fromDay, string companyId)
         {
-            if (orderTypeCategoryId <= 0)
-                return Json(new { success = false, message = "Invalid Order Type Category ID" });
+            if (creditTermDtId <= 0)
+                return Json(new { success = false, message = "Invalid Credit Term Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _orderTypeService.GetOrderTypeCategoryByIdAsync(companyIdShort, parsedUserId.Value, orderTypeCategoryId);
+                var data = await _creditTermService.GetCreditTermDtByIdAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
                 return data == null
-                    ? Json(new { success = false, message = "Order Type Category not found" })
+                    ? Json(new { success = false, message = "Credit Term Detail not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching order type category by ID");
+                _logger.LogError(ex, "Error fetching credit term detail by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCategory([FromBody] SaveOrderTypeCategoryViewModel model)
+        public async Task<IActionResult> SaveDetail([FromBody] SaveCreditTermDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -255,61 +227,58 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var categoryToSave = new M_OrderTypeCategory
+                var detailToSave = new M_CreditTermDt
                 {
-                    OrderTypeCategoryId = model.orderTypeCategory.OrderTypeCategoryId,
+                    CreditTermId = model.creditTermDt.CreditTermId,
                     CompanyId = companyIdShort,
-                    OrderTypeCategoryCode = model.orderTypeCategory.OrderTypeCategoryCode ?? string.Empty,
-                    OrderTypeCategoryName = model.orderTypeCategory.OrderTypeCategoryName ?? string.Empty,
-                    Remarks = model.orderTypeCategory.Remarks?.Trim() ?? string.Empty,
-                    IsActive = model.orderTypeCategory.IsActive,
+                    FromDay = model.creditTermDt.FromDay,
+                    ToDay = model.creditTermDt.ToDay,
+                    IsEndOfMonth = model.creditTermDt.IsEndOfMonth,
+                    DueDay = model.creditTermDt.DueDay,
+                    NoMonth = model.creditTermDt.NoMonth,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.orderTypeCategory.EditById ?? 0,
+                    EditById = model.creditTermDt.EditById ?? 0,
                     EditDate = DateTime.UtcNow
                 };
 
-                var result = await _orderTypeService.SaveOrderTypeCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);
-                return Json(new { success = true, message = "Order Type Category saved successfully", data = result });
+                var result = await _creditTermService.SaveCreditTermDtAsync(companyIdShort, parsedUserId.Value, detailToSave);
+                return Json(new { success = true, message = "Credit Term Detail saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving order type category");
+                _logger.LogError(ex, "Error saving credit term detail");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCategory(short orderTypeCategoryId, string companyId)
+        public async Task<IActionResult> DeleteDetail(short creditTermDtId, short fromDay, string companyId)
         {
-            if (orderTypeCategoryId <= 0)
-                return Json(new { success = false, message = "Invalid Order Type Category ID" });
+            if (creditTermDtId <= 0)
+                return Json(new { success = false, message = "Invalid Credit Term Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.OrderTypeCategory);
+                (short)E_Modules.Master, (short)E_Master.CreditTermDt);
 
             if (permissions == null || !permissions.IsDelete)
                 return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var category = await _orderTypeService.GetOrderTypeCategoryByIdAsync(companyIdShort, parsedUserId.Value, orderTypeCategoryId);
-                if (category == null)
-                    return Json(new { success = false, message = "Order Type Category not found" });
-
-                await _orderTypeService.DeleteOrderTypeCategoryAsync(companyIdShort, parsedUserId.Value, category);
-                return Json(new { success = true, message = "Order Type Category deleted successfully" });
+                await _creditTermService.DeleteCreditTermDtAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
+                return Json(new { success = true, message = "Credit Term Detail deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting order type category");
+                _logger.LogError(ex, "Error deleting credit term detail");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        #endregion OrderTypeCategory CRUD
+        #endregion CreditTermsDt CRUD
     }
 }

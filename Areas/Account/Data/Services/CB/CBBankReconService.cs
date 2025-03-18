@@ -27,7 +27,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.CB
             _accountService = accountService;
         }
 
-        public async Task<CBBankReconViewModel> GetCBBankReconListAsync(short CompanyId, short pageSize, short pageNumber, string searchString, string fromDate, string toDate, short UserId)
+        public async Task<CBBankReconViewModel> GetCBBankReconListAsync(short CompanyId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate, short UserId)
         {
             CBBankReconViewModel countViewModel = new CBBankReconViewModel();
             try

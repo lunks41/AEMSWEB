@@ -18,8 +18,8 @@
 
     public class SaveCountryViewModel
     {
-        public CountryViewModel Country { get; set; }
-        public string CompanyId { get; set; }
+        public CountryViewModel country { get; set; }
+        public string companyId { get; set; }
     }
 
     public class CountryViewModelCount
