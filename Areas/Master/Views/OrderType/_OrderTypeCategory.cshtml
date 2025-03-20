@@ -5,11 +5,14 @@
                 <h3>Order Type Categories</h3>
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
-                        <div class="flex-grow-1" style="min-width: 200px;">
-                            <input type="text" id="txtCategorySearch" class="form-control" placeholder="Search categories...">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadCategoryGrid();">
+                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
                             <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                            <i class="mdi mdi-close"></i> Clear
                         </button>
                     </div>
                     <div class="ms-auto">

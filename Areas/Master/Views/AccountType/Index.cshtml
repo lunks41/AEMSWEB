@@ -13,11 +13,14 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
-                        <div class="flex-grow-1" style="min-width: 200px;">
+                        <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
                         <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i>Search
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                            <i class="mdi mdi-close"></i> Clear
                         </button>
                     </div>
 
@@ -28,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="grid"></div>
+                <div id="gridAccountType"></div>
             </div>
         </div>
     </div>
@@ -179,9 +182,9 @@
         }
 
         function loadGrid() {
+            debugger;
             let searchString = $('#txtsearch').val();
-            const gridname = 'grid';
-            const url = "/Master/AccountType/List";
+            let url = '@Url.Action("List", "AccountType", new { area = "Master" })';
             const columns = [
                 {
                     title: "Actions",
@@ -213,12 +216,11 @@
                 }
             ];
 
-            const params = { selectedTab: gridname, searchString: searchString, companyId: companyId };
-            initializeKendoGrid(gridname, url, params, columns);
+            initializeKendoGrid("gridAccountType", url, { searchString, companyId }, columns);
         }
 
         function openModal(id, mode) {
-            $.get(`/Master/AccountType/GetById?accTypeId=${id}&companyId=${companyId}`)
+            $.get('@Url.Action("GetById", "AccountType", new { area = "Master" })', { accTypeId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
                         const data = response.data;
@@ -311,7 +313,7 @@
             }
 
             $.ajax({
-                url: "/Master/AccountType/Save",
+                 url: '@Url.Action("Save", "AccountType", new { area = "Master" })',
                 type: "POST",
                 data: JSON.stringify({ accountType: data, companyId: companyId }),
                 contentType: "application/json; charset=utf-8",

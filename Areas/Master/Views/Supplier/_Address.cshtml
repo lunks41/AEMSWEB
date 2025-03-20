@@ -1,0 +1,258 @@
+﻿  <!-- Address Modal -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressModalLabel">Supplier Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addressForm">
+                    <input type="hidden" id="supplierId" />
+                    <input type="hidden" id="addressId" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="address1" rows="2" required></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Address Line 2</label>
+                            <textarea class="form-control" id="address2" rows="2" required></textarea>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Address Line 3</label>
+                            <input type="text" class="form-control" id="address3">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Address Line 4</label>
+                            <input type="text" class="form-control" id="address4">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" id="pinCode">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="cmd_country" class="form-label">Country <span class="text-danger">*</span></label>
+                            <select id="cmd_country" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phoneNo">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fax Number</label>
+                            <input type="tel" class="form-control" id="faxNo">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailAdd">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" id="webUrl">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isDefaultAdd">
+                                <label class="form-check-label">Is Default Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isDeliveryAdd">
+                                <label class="form-check-label">Is Delivery Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isFinAdd">
+                                <label class="form-check-label">Is Financial Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isSalesAdd">
+                                <label class="form-check-label">Is Sales Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isActive">
+                                <label class="form-check-label">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveAddress()">Save Address</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadsupplierAddressGrid(supplierId) {
+        let grid = $("#gridaddress").data("kendoGrid");
+        let url = '@Url.Action("ListAddresses", "Supplier", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openSupplierAddressModal('${dataItem.supplierId}','${dataItem.addressId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openSupplierAddressModal('${dataItem.supplierId}','${dataItem.addressId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteSupplierAddress('${dataItem.supplierId}','${dataItem.addressId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "isDefaultAdd", title: "Is Default Address", width: "120px", template: '<input type="checkbox" #= isDefaultAdd ? "checked" : "" # disabled />' },
+            { field: "address1", title: "Address 1", width: "200px" },
+            { field: "address2", title: "Address 2", width: "200px" },
+            { field: "address3", title: "Address 3", width: "200px" },
+            { field: "address4", title: "Address 4", width: "200px" },
+            { field: "pinCode", title: "Postal Code", width: "100px" },
+            { field: "remarks", title: "Remarks", width: "150px" },
+            { field: "phoneNo", title: "Phone No", width: "120px" },
+            { field: "faxNo", title: "Fax No", width: "120px" },
+            { field: "emailAdd", title: "Email", width: "200px" },
+            { field: "webUrl", title: "Website", width: "200px" },
+            { field: "isDeliveryAdd", title: "Delivery Address", width: "120px", template: '<input type="checkbox" #= isDeliveryAdd ? "checked" : "" # disabled />' },
+            { field: "isFinAdd", title: "Is Financial Address", width: "120px", template: '<input type="checkbox" #= isFinAdd ? "checked" : "" # disabled />' },
+            { field: "isSalesAdd", title: "Is Sales Address", width: "120px", template: '<input type="checkbox" #= isSalesAdd ? "checked" : "" # disabled />' },
+            { field: "isActive", title: "Is Active", width: "100px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        if (grid) {
+            // Update the data source with the new supplierId
+            grid.dataSource.read({ supplierId: supplierId, companyId: companyId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("gridaddress", url, { supplierId, companyId }, columns);
+        }
+
+        //initializeKendoGrid("gridaddress", url, { supplierId, companyId }, columns);
+    }
+
+    function openSupplierAddressModal(id, addressId, mode) {
+        debugger;
+        $.get('@Url.Action("GetAddressById", "Supplier", new { area = "Master" })', { supplierId: id, addressId, companyId })
+            .done(function (response) {
+                debugger;
+                console.log("address :" + response);
+                if (response.success) {
+                    populateAddressFields(response.data);
+                    setAddressMode(mode);
+                    $('#addressModal').modal('show');
+                }
+            });
+    }
+
+    function populateAddressFields(data) {
+        debugger;
+        $('#supplierId').val(data.supplierId);
+        $('#addressId').val(data.addressId);
+        $('#address1').val(data.address1);
+        $('#address2').val(data.address2);
+        $('#address3').val(data.address3);
+        $('#address4').val(data.address4);
+        $('#pinCode').val(data.pinCode);
+        $('#cmd_country').data("kendoComboBox").value(data.countryId > 0 ? data.countryId : '');
+        $('#phoneNo').val(data.phoneNo);
+        $('#faxNo').val(data.faxNo);
+        $('#emailAdd').val(data.emailAdd);
+        $('#webUrl').val(data.webUrl);
+        $('#isDefaultAdd').prop('checked', data.isDefaultAdd);
+        $('#isDeliveryAdd').prop('checked', data.isDeliveryAdd);
+        $('#isFinAdd').prop('checked', data.isFinAdd);
+        $('#isSalesAdd').prop('checked', data.isSalesAdd);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createBy').text(data.createBy || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editBy').text(data.editBy || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+       // checkMandatoryFields();
+    }
+
+    function setAddressMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        // Enable/disable fields in address modal
+        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNo, #faxNo, #emailAdd, #webUrl')
+            .prop('readonly', !canEdit);
+        $('#isDefaultAdd, #isDeliveryAdd, #isFinAdd, #isSalesAdd, #isActive').prop('disabled', !canEdit);
+
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteSupplierAddress(id,addressId) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Supplier/DeleteAddress?supplierId=${id}&addressId=${addressId}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveSupplier() {
+        const supplierData = {
+            SupplierId: $('#supplierId').val() || 0,
+            SupplierCode: $('#supplierCode').val().trim(),
+            SupplierName: $('#supplierName').val().trim(),
+            // Add other fields
+        };
+        $.ajax({
+            url: '@Url.Action("SaveAddress", "Supplier", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ supplier: supplierData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addressModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            }
+        });
+    }
+
+    function clearAddressForm() {
+        $('#addressId').val('');
+        $('#supplierId').val(''); // Hidden field in address modal
+        $('#address1').val('');
+        $('#address2').val('');
+        $('#address3').val('');
+        $('#address4').val('');
+        $('#pinCode').val('');
+        $('#cmd_country').data("kendoComboBox").value('');
+        $('#phoneNo').val('');
+        $('#faxNo').val('');
+        $('#emailAdd').val('');
+        $('#webUrl').val('');
+        $('#isDefaultAdd').prop('checked', false);
+        $('#isDeliveryAdd').prop('checked', false);
+        $('#isFinAdd').prop('checked', false);
+        $('#isSalesAdd').prop('checked', false);
+        $('#isActive').prop('checked', false);
+    }
+</script>

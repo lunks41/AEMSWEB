@@ -1,0 +1,166 @@
+﻿<script>
+    function loadGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("List", "Bank", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openBankModal('${dataItem.bankId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openBankModal('${dataItem.bankId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteBank('${dataItem.bankId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "bankCode", title: "Code" },
+            { field: "bankName", title: "Name" },
+            { field: "creditTermCode", title: "Credit Term" },
+            { field: "currencyName", title: "Currency Name" },
+            { field: "remarks", title: "Remarks" },
+            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        initializeKendoGrid("gridbank", url, { searchString, companyId }, columns);
+    }
+
+    function openBankModal(id, mode) {
+        $.get('@Url.Action("GetById", "Bank", new { area = "Master" })', { bankId: id, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateBankFields(response.data);
+                    setBankMode(mode);
+                    $('#bankModal').modal('show');
+                }
+            });
+    }
+
+    function populateBankFields(data) {
+        $('#bankId').val(data.bankId);
+        $('#bankCode').val(data.bankCode);
+        $('#bankName').val(data.bankName);
+        $('#bankOtherName').val(data.bankOtherName);
+        $('#bankShortName').val(data.bankShortName);
+        $('#bankRegNo').val(data.bankRegNo);
+        $('#cmd_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+        $('#cmd_creditTerm').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
+        $('#cmd_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
+        $('#cmd_bank').data("kendoComboBox").value(data.bankId > 0 ? data.bankId : '');
+        $('#remarks').val(data.remarks);
+        $('#isBank').prop('checked', data.isBank);
+        $('#isVendor').prop('checked', data.isVendor);
+        $('#isTrader').prop('checked', data.isTrader);
+        $('#isSupplier').prop('checked', data.isSupplier);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createBy').text(data.createBy || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editBy').text(data.editBy || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        debugger;
+        // Destroy existing grids if they exist
+        if ($("#gridaddress").data("kendoGrid")) {
+            $("#gridaddress").data("kendoGrid").destroy();
+            $("#gridaddress").empty();
+        }
+        if ($("#gridcontact").data("kendoGrid")) {
+            $("#gridcontact").data("kendoGrid").destroy();
+            $("#gridcontact").empty();
+        }
+
+        // Reinitialize grids with new bankId
+        loadbankAddressGrid(data.bankId);
+        loadbankContactGrid(data.bankId);
+       // checkMandatoryFields();
+    }
+
+    function setBankMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#bankCode, #bankName, #remarks').prop('readonly', !canEdit);
+        $('#isActive').prop('disabled', !canEdit);
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteBank(id) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Bank/Delete?bankId=${id}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveBank() {
+        const bankData = {
+            BankId: $('#bankId').val() || 0,
+            BankCode: $('#bankCode').val().trim(),
+            BankName: $('#bankName').val().trim(),
+            // Add other fields
+        };
+        $.ajax({
+            url: '@Url.Action("Save", "Bank", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ bank: bankData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#bankModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            }
+        });
+    }
+
+    function clearBankForm() {
+        $('#bankId').val('');
+        $('#bankCode').val('');
+        $('#bankName').val('');
+        $('#bankOtherName').val('');
+        $('#bankShortName').val('');
+        $('#bankRegNo').val('');
+        $('#cmd_currency').data("kendoComboBox").value('');
+        $('#cmd_creditTerm').data("kendoComboBox").value('');
+        $('#cmd_accSetup').data("kendoComboBox").value('');
+        $('#cmd_bank').data("kendoComboBox").value('');
+        $('#remarks').val('');
+        $('#isBank').prop('checked', false);
+        $('#isVendor').prop('checked', false);
+        $('#isTrader').prop('checked', false);
+        $('#isSupplier').prop('checked', false);
+        $('#isActive').prop('checked', false);
+        $('#createBy').text('');
+        $('#createDate').text('');
+        $('#editBy').text('');
+        $('#editDate').text('');
+        // Clear grids
+        $("#gridaddress").data("kendoGrid").dataSource.data([]);
+        $("#gridcontact").data("kendoGrid").dataSource.data([]);
+    }
+</script>

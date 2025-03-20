@@ -7,8 +7,14 @@
 <!-- Nav Pills -->
 <ul class="nav nav-pills mb-3" id="gstTabs" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="gst-tab" data-bs-toggle="pill"
-                data-bs-target="#gst" type="button" role="tab" aria-controls="gst" aria-selected="true">
+        <button class="nav-link active" id="gstcategory-tab" data-bs-toggle="pill"
+                data-bs-target="#gstcategory" type="button" role="tab" aria-controls="gstcategory" aria-selected="true">
+            <i class="mdi mdi-shape-outline me-1"></i> GST Category
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="gst-tab" data-bs-toggle="pill"
+                data-bs-target="#gst" type="button" role="tab" aria-controls="gst" aria-selected="false">
             <i class="mdi mdi-percent me-1"></i> GST
         </button>
     </li>
@@ -18,25 +24,20 @@
             <i class="mdi mdi-table-large me-1"></i> GST Details
         </button>
     </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="gstcategory-tab" data-bs-toggle="pill"
-                data-bs-target="#gstcategory" type="button" role="tab" aria-controls="gstcategory" aria-selected="false">
-            <i class="mdi mdi-shape-outline me-1"></i> GST Category
-        </button>
-    </li>
 </ul>
 
 <!-- Tab Content -->
 <div class="tab-content" id="gstTabsContent">
-    <div class="tab-pane fade show active" id="gst" role="tabpanel" aria-labelledby="gst-tab">
+    <div class="tab-pane fade show active" id="gstcategory" role="tabpanel" aria-labelledby="gstcategory-tab">
+        @Html.Partial("_GstCategory")
+    </div>
+    <div class="tab-pane fade" id="gst" role="tabpanel" aria-labelledby="gst-tab">
         @Html.Partial("_Gst")
     </div>
     <div class="tab-pane fade" id="gstdt" role="tabpanel" aria-labelledby="gstdt-tab">
         @Html.Partial("_GstDt")
     </div>
-    <div class="tab-pane fade" id="gstcategory" role="tabpanel" aria-labelledby="gstcategory-tab">
-        @Html.Partial("_GstCategory")
-    </div>
+
 </div>
 
 @section Scripts {

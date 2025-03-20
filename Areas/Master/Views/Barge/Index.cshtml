@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Barge Management ";
+    ViewData["Title"] = $"Barge ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -13,11 +13,14 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
-                        <div class="flex-grow-1" style="min-width: 200px;">
+                        <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
                         <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i>Search
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                            <i class="mdi mdi-close"></i> Clear
                         </button>
                     </div>
 

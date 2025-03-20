@@ -26,7 +26,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             _accountTypeService = accountTypeService;
         }
 
-        #region AccountType CRUD
+   
 
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
@@ -55,6 +55,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             return View();
         }
+        #region AccountType CRUD
 
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)

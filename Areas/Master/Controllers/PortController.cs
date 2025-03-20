@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _portService = portService;
         }
 
-        #region Port CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -54,6 +52,8 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             return View();
         }
+
+        #region Port CRUD
 
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)

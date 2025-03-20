@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _creditTermService = creditTermService;
         }
 
-        #region CreditTerms CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -54,6 +52,8 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             return View();
         }
+
+        #region CreditTerms CRUD
 
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)

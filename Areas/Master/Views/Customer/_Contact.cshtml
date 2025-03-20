@@ -8,6 +8,7 @@
             </div>
             <div class="modal-body">
                 <form id="contactForm">
+                    <input type="hidden" id="customerId" />
                     <input type="hidden" id="contactId" />
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -40,29 +41,24 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Messaging Type</label>
-                            <select class="form-select" id="contactMessType">
-                                <option value="">Select Type</option>
-                                <option value="WhatsApp">WhatsApp</option>
-                                <option value="Telegram">Telegram</option>
-                                <option value="Skype">Skype</option>
-                            </select>
+                            <input type="text" class="form-control" id="contactMessType">
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isDefault">
-                                <label class="form-check-label">Default Contact</label>
+                                <label class="form-check-label">Is Default Contact</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isFinance">
-                                <label class="form-check-label">Finance Contact</label>
+                                <label class="form-check-label">Is Finance Contact</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isSales">
-                                <label class="form-check-label">Sales Contact</label>
+                                <label class="form-check-label">Is Sales Contact</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isActive">
-                                <label class="form-check-label">Active</label>
+                                <label class="form-check-label">Is Active</label>
                             </div>
                         </div>
                     </div>
@@ -75,3 +71,160 @@
         </div>
     </div>
 </div>
+
+<script>
+    function loadcustomerContactGrid(customerId) {
+        let grid = $("#gridcontact").data("kendoGrid");
+        let url = '@Url.Action("ListContacts", "Customer", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerContactModal('${dataItem.customerId}','${dataItem.contactId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerContactModal('${dataItem.customerId}','${dataItem.contactId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCustomerContact('${dataItem.customerId}','${dataItem.contactId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "isDefault", title: "Is Default", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "contactName", title: "Name", width: "200px" },
+            { field: "otherName", title: "Othre Name", width: "200px" },
+            { field: "mobileNo", title: "MobileNo", width: "200px" },
+            { field: "offNo", title: "off No", width: "200px" },
+            { field: "faxNo", title: "faxNo", width: "200px" },
+            { field: "emailAdd", title: "emailAdd", width: "200px" },
+            { field: "messId", title: "messId", width: "200px" },
+            { field: "contactMessType", title: "contactMessType", width: "200px" },
+            { field: "isFinance", title: "Is Financial", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "isSales", title: "Is Sales", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "isActive", title: "Is Active", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        if (grid) {
+            // Update the data source with the new customerId
+            grid.dataSource.read({ customerId: customerId, companyId: companyId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("gridcontact", url, { customerId, companyId }, columns);
+        }
+        //initializeKendoGrid("gridcontact", url, { customerId, companyId }, columns);
+    }
+
+    function openCustomerContactModal(id, mode) {
+        $.get('@Url.Action("GetContactById", "Customer", new { area = "Master" })', { customerId: id, contactId, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateContactFields(response.data);
+                    setContactMode(mode);
+                    $('#contactModal').modal('show');
+                    // Ensure customer modal stays open
+                    $('#customerModal').modal('show');
+                }
+            });
+    }
+
+    function populateContactFields(data) {
+        $('#customerId').val(data.customerId);
+        $('#contactId').val(data.contactId);
+        $('#contactName').val(data.contactName);
+        $('#otherName').val(data.otherName);
+        $('#mobileNo').val(data.mobileNo);
+        $('#offNo').val(data.offNo);
+        $('#faxNo').val(data.faxNo);
+        $('#emailAdd').val(data.emailAdd);
+        $('#messId').val(data.messId);
+        $('#contactMessType').val(data.contactMessType);
+        $('#isDefault').prop('checked', data.isDefault);
+        $('#isFinance').prop('checked', data.isFinance);
+        $('#isSales').prop('checked', data.isSales);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createBy').text(data.createBy || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editBy').text(data.editBy || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+       // checkMandatoryFields();
+    }
+
+    function setContactMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#isActive').prop('disabled', !canEdit);
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteCustomerContact(id, contactId) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Customer/DeleteContact?customerId=${id}&contactId=${contactId}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveCustomer() {
+        const customerData = {
+            CustomerId: $('#customerId').val() || 0,
+            CustomerCode: $('#customerCode').val().trim(),
+            CustomerName: $('#customerName').val().trim(),
+            // Add other fields
+        };
+        $.ajax({
+            url: '@Url.Action("SaveContact", "Customer", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ customer: customerData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#contactModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            }
+        });
+    }
+
+    function clearContactForm() {
+        $('#contactId').val('');
+        $('#customerId').val(''); // Hidden field in contact modal
+        $('#contactName').val('');
+        $('#otherName').val('');
+        $('#mobileNo').val('');
+        $('#offNo').val('');
+        $('#faxNo').val('');
+        $('#emailAdd').val('');
+        $('#messId').val('');
+        $('#contactMessType').val('');
+        $('#isDefault').prop('checked', false);
+        $('#isFinance').prop('checked', false);
+        $('#isSales').prop('checked', false);
+        $('#isActive').prop('checked', false);
+    }
+</script>

@@ -1,0 +1,280 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Account Setup</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtAccountSetupSearch" class="form-control" placeholder="Search account setups...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadAccountSetupGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAccountSetupSearch();">
+                            <i class="mdi mdi-close"></i> Clear
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#accountSetupModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Setup
+                        </button>
+                    </div>
+                </div>
+                <div id="accountSetupGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Account Setup Modal -->
+<div class="modal fade" id="accountSetupModal" tabindex="-1" aria-labelledby="accountSetupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accountSetupModalLabel">Account Setup Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearAccountSetupForm()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="accountSetupForm">
+                    <input type="hidden" id="AccSetupId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="AccSetupCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="AccSetupCode" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="AccSetupName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="AccSetupName" maxlength="150" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="AccSetupCategoryId" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="AccSetupCategoryId" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="AccSetupRemarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="AccSetupRemarks" rows="2" maxlength="255"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="AccSetupIsActive">
+                                <label class="form-check-label" for="AccSetupIsActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Section -->
+                    <div class="accordion mt-3" id="accountSetupAudit">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accountSetupAuditBody">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="accountSetupAuditBody" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="AccSetupCreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="AccSetupCreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="AccSetupEditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="AccSetupEditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearAccountSetupForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAccountSetupEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearAccountSetupForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnAccountSetupSave" onclick="saveAccountSetup()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function setAccountSetupDefaultValues() {
+        clearAccountSetupForm();
+        $('#isActive').prop('checked', true);
+        $('#btnSave').prop('disabled', false);
+    }
+
+    function handleAccountSetupEnterKey(event) {
+        if (event.key === 'Enter') loadAccountSetupGrid();
+    }
+
+    function clearAccountSetupSearch() {
+        $('#txtsearch').val('');
+        loadAccountSetupGrid();
+    }
+
+    function loadAccountSetupGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("ListAccountSetup", "AccountSetup", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openAccountSetupModal('${dataItem.accSetupId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openAccountSetupModal('${dataItem.accSetupId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountSetup('${dataItem.accSetupId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "accSetupCode", title: "Code" },
+            { field: "accSetupName", title: "Name" },
+            { field: "accSetupCategoryId", title: "Category ID" },
+            { field: "remarks", title: "Remarks" },
+            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        initializeKendoGrid("accountSetupGrid", url, { searchString, companyId }, columns);
+    }
+
+    function openAccountSetupModal(id, mode) {
+        $.get('@Url.Action("GetAccountSetupById", "AccountSetup", new { area = "Master" })', { accSetupId: id, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateAccountSetupModalFields(response.data);
+                    setAccountSetupMode(mode);
+                    $('#addAccountSetupModal').modal('show');
+                }
+            });
+    }
+
+    function populateAccountSetupModalFields(data) {
+        $('#accSetupId').val(data.AccSetupId);
+        $('#accSetupCode').val(data.AccSetupCode);
+        $('#accSetupName').val(data.AccSetupName);
+        $('#accSetupCategoryId').val(data.AccSetupCategoryId);
+        $('#remarks').val(data.Remarks);
+        $('#isActive').prop('checked', data.IsActive);
+
+        $('#createById').text(data.CreateById || "N/A");
+        $('#createDate').text(data.CreateDate ? new Date(data.CreateDate).toLocaleString() : "N/A");
+        $('#editById').text(data.EditById || "N/A");
+        $('#editDate').text(data.EditDate ? new Date(data.EditDate).toLocaleString() : "N/A");
+
+        checkMandatoryAccountSetupFields();
+    }
+
+    function setAccountSetupMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#accSetupCode, #accSetupName, #accSetupCategoryId, #remarks').prop('readonly', !canEdit);
+        $('#isActive').prop('disabled', !canEdit);
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteAccountSetup(id) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/AccountSetup/DeleteAccountSetup?accSetupId=${id}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadAccountSetupGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveAccountSetup() {
+        let data = {
+            AccSetupId: parseInt($('#accSetupId').val()) || 0,
+            AccSetupCode: $('#accSetupCode').val().trim(),
+            AccSetupName: $('#accSetupName').val().trim(),
+            AccSetupCategoryId: parseInt($('#accSetupCategoryId').val()) || 0,
+            Remarks: $('#remarks').val(),
+            IsActive: $('#isActive').prop('checked'),
+            CreateById: parseInt($('#createById').val()) || 0,
+            CreateDate: new Date($('#createDate').val()) || null,
+            EditById: parseInt($('#editById').val()) || null,
+            EditDate: new Date($('#editDate').val()) || null
+        };
+
+        if (!data.AccSetupCode || !data.AccSetupName) {
+            alert('Code and Name are required!');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveAccountSetup", "AccountSetup", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ accountSetup: data }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addAccountSetupModal').modal('hide');
+                    loadAccountSetupGrid();
+                    clearAccountSetupForm();
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+
+    function clearAccountSetupForm() {
+        $('#accountSetupForm')[0].reset();
+        $('#accSetupId').val(0);
+        $('#createById').text('');
+        $('#createDate').text('');
+        $('#editById').text('');
+        $('#editDate').text('');
+        $('#btnSave').prop('disabled', true);
+    }
+
+    function checkMandatoryAccountSetupFields() {
+        let isValid = $('#accSetupCode').val().trim() && $('#accSetupName').val().trim();
+        $('#btnSave').prop('disabled', !isValid);
+    }
+</script>

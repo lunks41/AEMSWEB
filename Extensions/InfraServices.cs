@@ -57,8 +57,6 @@ public static class InfraServices
         services.AddScoped<IPortRegionService, PortRegionService>();
         services.AddScoped<IPortService, PortService>();
         services.AddScoped<IProductService, ProductService>();
-        services.AddScoped<ISupplierAddressService, SupplierAddressService>();
-        services.AddScoped<ISupplierContactService, SupplierContactService>();
         services.AddScoped<ISupplierService, SupplierService>();
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<IUomService, UomService>();

@@ -11,10 +11,6 @@ namespace AEMSWEB.Entities.Masters
         public Int16 CompanyId { get; set; }
         public string PortRegionCode { get; set; }
         public string PortRegionName { get; set; }
-
-        [ForeignKey("CountryId")]
-        public Int16 CountryId { get; set; }
-
         public string Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }

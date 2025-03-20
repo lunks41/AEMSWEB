@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Port Management ";
+    ViewData["Title"] = $"Port ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -7,7 +7,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Ports</h3>
+                <h3>Port Region</h3>
 
                 <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -31,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="grid"></div>
+                <div id="gridPortRegion"></div>
             </div>
         </div>
     </div>
@@ -48,24 +48,18 @@
                 </div>
                 <div class="modal-body p-4">
                     <form id="portForm">
-                        <input type="hidden" id="portId" />
+                        <input type="hidden" id="portRegionId" />
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="cmb_portRegion" class="form-label">Port Region <span class="text-danger">*</span></label>
-                                    <select id="cmb_portRegion" style="width: 100%"></select>
+                                    <label for="portRegionCode" class="form-label">Port Region Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="portRegionCode" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="portCode" class="form-label">Port Code <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="portCode" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="portName" class="form-label">Port Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="portName" required>
+                                    <label for="portRegionName" class="form-label">Port Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="portRegionName" required>
                                 </div>
                             </div>
 
@@ -153,7 +147,6 @@
         $(document).ready(function () {
             companyId = getUrlParameter('companyId');
             $('#portCode, #portName').on('input', checkMandatoryFields);
-            Refresh();
             loadGrid();
             clearForm();
             setDefaultValues();
@@ -178,44 +171,41 @@
 
         function loadGrid() {
             let searchString = $('#txtsearch').val();
-            const gridname = 'grid';
-            const url = "/Master/port/List";
+            let url = '@Url.Action("List", "PortRegion", new { area = "Master" })';
             const columns = [
                 {
                     title: "Actions",
                     width: "150px",
                     template: function (dataItem) {
-                            return `
-                                <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.portId}', 'view')">
+                        return `
+                                <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.portRegionId}', 'view')">
                                     <i class="mdi mdi-eye"></i>
                                 </button>
-                                <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.portId}', 'edit')">
+                                <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.portRegionId}', 'edit')">
                                     <i class="mdi mdi-pencil"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger" onclick="deletePort('${dataItem.portId}')">
+                                <button class="btn btn-sm btn-danger" onclick="deletePort('${dataItem.portRegionId}')">
                                     <i class="mdi mdi-delete"></i>
                                 </button>
                             `;
-                        },
-                        width: "150px"
                     },
-                    { field: "portCode", title: "Code" },
-                    { field: "portName", title: "Name" },
-                    { field: "portRegionName", title: "Region" },
-                    { field: "remarks", title: "Remarks" },
-                    {
-                        field: "isActive",
-                        title: "Active",
-                        template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
-                    }
+                    width: "150px"
+                },
+                { field: "portRegionCode", title: "Code" },
+                { field: "portRegionName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                {
+                    field: "isActive",
+                    title: "Active",
+                    template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
+                }
             ];
 
-            const params = { selectedTab: gridname, searchString: searchString, companyId: companyId };
-            initializeKendoGrid(gridname, url, params, columns);
+            initializeKendoGrid("gridPortRegion", url, { searchString, companyId }, columns);
         }
 
         function openModal(id, mode) {
-            $.get(`/Master/Port/GetById?portId=${id}&companyId=${companyId}`)
+            $.get('@Url.Action("GetById", "PortRegion", new { area = "Master" })', { portRegionId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
                         const data = response.data;
@@ -228,13 +218,11 @@
 
         function populateModalFields(data) {
             debugger;
-            $('#portId').val(data.portId);
-            $('#portCode').val(data.portCode);
-            $('#portName').val(data.portName);
+            $('#portRegionId').val(data.portRegionId);
+            $('#portRegionCode').val(data.portCode);
+            $('#portRegionName').val(data.portName);
             $('#remarks').val(data.remarks);
             $('#isActive').prop('checked', data.isActive);
-
-            $("#cmb_portRegion").data("kendoComboBox").value(data.portRegionId > 0 ? data.portRegionId : '');
 
             // Load Details History (always read-only)
             $('#createBy').text(data.createBy || "N/A");
@@ -268,7 +256,6 @@
             $('#portName').prop('readonly', isView);
             $('#remarks').prop('readonly', isView);
             $('#isActive').prop('disabled', isView);
-            $("#cmb_portRegion").data("kendoComboBox").enable(!isView);
             $('#btnSave').toggle(!isView);
             $('#btnEdit').toggle(isView);
         }
@@ -277,7 +264,7 @@
             $('#confirmationModal').modal('show');
             $('#confirmDelete').off('click').click(function () {
                 $.ajax({
-                    url: `/Master/Port/Delete?portId=${id}&companyId=${companyId}`,
+                    url: `/Master/PortRegion/Delete?portRegionId=${id}&companyId=${companyId}`,
                     type: "DELETE",
                     success: function (response) {
                         if (response.success) {
@@ -291,10 +278,9 @@
 
         function savePort() {
             const data = {
-                PortId: parseInt($('#portId').val()) || 0,
-                PortCode: $('#portCode').val(),
-                PortName: $('#portName').val(),
-                PortRegionId: parseInt($("#cmb_portRegion").data("kendoComboBox").value()),
+                PortRegionId: parseInt($('#portRegionId').val()) || 0,
+                PortRegionCode: $('#portRegionCode').val(),
+                PortRegionName: $('#portRegionName').val(),
                 Remarks: $('#remarks').val(),
                 IsActive: $('#isActive').prop('checked')
             };
@@ -305,7 +291,7 @@
             }
 
             $.ajax({
-                url: "/Master/port/Save",
+               url: '@Url.Action("Save", "PortRegion", new { area = "Master" })',
                 type: "POST",
                 data: JSON.stringify({ port: data, companyId: companyId }),
                 contentType: "application/json; charset=utf-8",
@@ -325,28 +311,13 @@
 
         function clearForm() {
             $('#portForm')[0].reset();
-            $('#portId').val(0);
-            $("#cmb_portRegion").data("kendoComboBox").value('');
+            $('#portRegionId').val(0);
             $('#btnSave').prop('disabled', true);
         }
 
         function checkMandatoryFields() {
             const isValid = $('#portCode').val().trim() && $('#portName').val().trim();
             $('#btnSave').prop('disabled', !isValid);
-        }
-
-        function Refresh() {
-
-            const accountTypeUrl = '@Url.Action("GetPortRegionLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(accountTypeUrl, "cmb_portRegion", "portRegionName", "portRegionId");
-        }
-
-        function SelectedDropdown(DrpdwnName) {
-
-        }
-
-        function OnSelectDropdown(dataItem, DrpdwnName) {
-
         }
     </script>
 }

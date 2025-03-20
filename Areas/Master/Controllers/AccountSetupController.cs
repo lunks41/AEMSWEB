@@ -26,8 +26,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _accountSetupService = accountSetupService;
         }
 
-        #region AccountSetup CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -56,8 +54,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region AccountSetup CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ListAccountSetup(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -79,7 +79,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short accSetupId, string companyId)
+        public async Task<JsonResult> GetAccountSetupById(short accSetupId, string companyId)
         {
             if (accSetupId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup ID" });
@@ -102,7 +102,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveAccountSetupViewModel model)
+        public async Task<IActionResult> SaveAccountSetup([FromBody] SaveAccountSetupViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -138,7 +138,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short accSetupId, string companyId)
+        public async Task<IActionResult> DeleteAccountSetup(short accSetupId, string companyId)
         {
             if (accSetupId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup ID" });
@@ -173,7 +173,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region AccountSetupDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ListAccountSetupDt(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -195,7 +195,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDetailById(short accSetupDtId, string companyId)
+        public async Task<JsonResult> GetAccountSetupDtDetailById(short accSetupDtId, string companyId)
         {
             if (accSetupDtId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Detail ID" });
@@ -218,7 +218,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveDetail([FromBody] SaveAccountSetupDtViewModel model)
+        public async Task<IActionResult> SaveAccountSetupDt([FromBody] SaveAccountSetupDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -253,7 +253,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteDetail(short accSetupDtId, string companyId)
+        public async Task<IActionResult> DeleteAccountSetupDt(short accSetupDtId, string companyId)
         {
             if (accSetupDtId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Detail ID" });
@@ -287,36 +287,8 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region AccountSetupCategory CRUD
 
-        [Authorize]
-        public async Task<IActionResult> CategoryIndex(int? companyId)
-        {
-            if (!companyId.HasValue || companyId <= 0)
-            {
-                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var parsedUserId = GetParsedUserId();
-            if (!parsedUserId.HasValue)
-            {
-                _logger.LogWarning("User not logged in or invalid user ID.");
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.AccountSetupCategory);
-
-            ViewBag.IsRead = permissions?.IsRead ?? false;
-            ViewBag.IsCreate = permissions?.IsCreate ?? false;
-            ViewBag.IsEdit = permissions?.IsEdit ?? false;
-            ViewBag.IsDelete = permissions?.IsDelete ?? false;
-            ViewBag.CompanyId = companyId;
-
-            return View();
-        }
-
         [HttpGet]
-        public async Task<JsonResult> ListCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ListAccountSetupCategory(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -338,7 +310,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCategoryById(short accSetupCategoryId, string companyId)
+        public async Task<JsonResult> GetAccountSetupCategoryById(short accSetupCategoryId, string companyId)
         {
             if (accSetupCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Category ID" });
@@ -361,7 +333,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCategory([FromBody] SaveAccountSetupCategoryViewModel model)
+        public async Task<IActionResult> SaveAccountSetupCategory([FromBody] SaveAccountSetupCategoryViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -395,7 +367,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCategory(short accSetupCategoryId, string companyId)
+        public async Task<IActionResult> DeleteAccountSetupCategory(short accSetupCategoryId, string companyId)
         {
             if (accSetupCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Category ID" });

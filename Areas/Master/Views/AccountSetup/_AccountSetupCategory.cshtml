@@ -1,0 +1,260 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Account Setup Categories</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtCategorySearch" class="form-control" placeholder="Search categories...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadAccountSetupCategoryGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAccountSetupCategorySearch();">
+                            <i class="mdi mdi-close"></i> Clear
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Category
+                        </button>
+                    </div>
+                </div>
+                <div id="categoryGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Category Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearAccountSetupCategoryForm()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="categoryForm">
+                    <input type="hidden" id="AccSetupCategoryId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="AccSetupCategoryCode" class="form-label">Category Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="AccSetupCategoryCode" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="AccSetupCategoryName" class="form-label">Category Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="AccSetupCategoryName" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="CategoryRemarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="CategoryRemarks" rows="2" maxlength="255"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="CategoryIsActive">
+                                <label class="form-check-label" for="CategoryIsActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Section -->
+                    <div class="accordion mt-3" id="categoryAudit">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryAuditBody">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="categoryAuditBody" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="CategoryCreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="CategoryCreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="CategoryEditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="CategoryEditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearAccountSetupCategoryForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCategoryEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearAccountSetupCategoryForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCategorySave" onclick="saveAccountSetupCategory()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+
+        function setAccountSetupCategoryDefaultValues() {
+            clearSetupDtForm();
+            $('#isActive').prop('checked', true);
+            $('#btnSave').prop('disabled', false);
+        }
+
+        function handleAccountSetupCategoryEnterKey(event) {
+            if (event.key === 'Enter') loadAccountSetupCategoryGrid();
+        }
+
+        function clearAccountSetupCategorySearch() {
+            $('#txtsearch').val('');
+            loadAccountSetupCategoryGrid();
+        }
+
+        function loadAccountSetupCategoryGrid() {
+            debugger;
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("ListAccountSetupCategory", "AccountSetup", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accSetupCategoryId}', 'view')">
+                                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accSetupCategoryId}', 'edit')">
+                                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountSetupCategory('${dataItem.accSetupCategoryId}')">
+                                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "accSetupCategoryCode", title: "Code" },
+                { field: "accSetupCategoryName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            initializeKendoGrid("categoryGrid", url, { searchString, companyId }, columns);
+        }
+
+        function openModal(id, mode) {
+            $.get('@Url.Action("GetAccountSetupCategoryGetById", "AccountSetup", new { area= "Master" })', { accSetupCategoryId: id })
+                .done(function (response) {
+                    if (response.success) {
+                        populateModalFields(response.data);
+                        setMode(mode);
+                        $('#addAccountSetupCategoryModal').modal('show');
+                    }
+                });
+        }
+
+        function populateModalFields(data) {
+            $('#accSetupCategoryId').val(data.AccSetupCategoryId);
+            $('#accSetupCategoryCode').val(data.AccSetupCategoryCode);
+            $('#accSetupCategoryName').val(data.AccSetupCategoryName);
+            $('#remarks').val(data.Remarks);
+            $('#isActive').prop('checked', data.IsActive);
+
+            $('#createById').text(data.CreateById || "N/A");
+            $('#createDate').text(data.CreateDate ? new Date(data.CreateDate).toLocaleString() : "N/A");
+            $('#editById').text(data.EditById || "N/A");
+            $('#editDate').text(data.EditDate ? new Date(data.EditDate).toLocaleString() : "N/A");
+        }
+
+        function setMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#accSetupCategoryCode, #accSetupCategoryName, #remarks').prop('readonly', !canEdit);
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnSave').toggle(canEdit);
+            $('#btnClose').show();
+        }
+
+        function saveAccountSetupCategory() {
+            let data = {
+                AccSetupCategoryId: parseInt($('#accSetupCategoryId').val()) || 0,
+                AccSetupCategoryCode: $('#accSetupCategoryCode').val().trim(),
+                AccSetupCategoryName: $('#accSetupCategoryName').val().trim(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked'),
+                CreateById: parseInt($('#createById').val()) || 0,
+                CreateDate: new Date($('#createDate').val()) || new Date(),
+                EditById: parseInt($('#editById').val()) || null,
+                EditDate: new Date($('#editDate').val()) || null
+            };
+
+            if (!data.AccSetupCategoryCode || !data.AccSetupCategoryName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveAccountSetupCategory", "AccountSetup", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ accountSetupCategory: data }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#addAccountSetupCategoryModal').modal('hide');
+                        loadGrid();
+                        clearForm();
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+
+        function deleteAccountSetupCategory(id) {
+            if (!permissions.canDelete) {
+                alert('You do not have permission to delete records.');
+                return;
+            }
+
+            $('#confirmationModal').modal('show');
+            $('#confirmDelete').off('click').click(function () {
+                $.ajax({
+                    url: `/Master/AccountSetup/DeleteAccountSetupCategory?accSetupCategoryId=${id}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.success) {
+                            loadGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function clearForm() {
+            $('#accountSetupCategoryForm')[0].reset();
+            $('#createById').text('');
+            $('#createDate').text('');
+            $('#editById').text('');
+            $('#editDate').text('');
+        }
+
+    </script>

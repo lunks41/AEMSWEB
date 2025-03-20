@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Suppliers";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
+}
+
+<style>
+    .modal-backdrop.show:not(:first-child) {
+        opacity: 0;
+    }
+    /* Ensure the parent modal stays behind the child modal */
+    .modal-backdrop.custom-backdrop {
+        z-index: 1040;
+    }
+
+    .modal.custom-modal {
+        z-index: 1050;
+    }
+
+    /* Optionally, for additional stacking if more modals are used */
+    .modal.modal-child {
+        z-index: 1060;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Suppliers</h3>
+
+                <!-- Action Row -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                            <i class="mdi mdi-close"></i> Clear
+                        </button>
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="ms-auto">
+                        @if (canCreate)
+                        {
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#supplierModal" id="addSupplier">
+                                <i class="mdi mdi-plus me-1"></i> Add Supplier
+                            </button>
+                        }
+                    </div>
+                </div>
+                <div id="gridsupplier"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section externalhtml {
+    <!-- Include Modals -->
+    @await Html.PartialAsync("_Supplier")
+    @await Html.PartialAsync("_Address")
+    @await Html.PartialAsync("_Contact")
+}
+@section Scripts {
+    @await Html.PartialAsync("_Scripts")
+
+    <script>
+
+    let companyId = 0;
+    let permissions = {};
+    $(document).ready(function () {
+        companyId = getUrlParameter('companyId') || 0;
+        debugger;
+        permissions = {
+            canCreate: @Json.Serialize(canCreate),
+            canEdit: @Json.Serialize(canEdit),
+            canDelete: @Json.Serialize(canDelete),
+            canRead: @Json.Serialize(canRead),
+        };
+
+        //$('#accGroupCode, #accGroupName').on('input', checkMandatoryFields);
+        Refresh();
+        loadGrid();
+        //setDefaultValues();
+        //clearForm();
+
+        //$('#btnEdit').on('click', function () { setMode("edit"); });
+        //$('#btnClose').on('click', function () { $('#addAccountGroupModal').modal('hide'); });
+        //$('#addrecord').on('click', function () {
+        //    clearForm();
+        //    setDefaultValues();
+        //    $('#addAccountGroupModal').modal('show');
+        //});
+    });
+
+    function Refresh() {
+        const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        BindComboBox(supplierUrl, "cmd_supplier", "supplierName", "supplierId");
+
+        const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
+
+        const creditTermsUrl = '@Url.Action("GetCreditTermsLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
+
+        const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        BindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
+
+         const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        BindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
+
+    }
+
+    function SelectedDropdown(DrpdwnName) { }
+
+    function OnSelectDropdown(dataItem, DrpdwnName) { }
+
+    // Supplier modal close event
+    $('#supplierModal').on('hidden.bs.modal', function () {
+        clearSupplierForm();
+    });
+
+    // Address modal close event
+    $('#addressModal').on('hidden.bs.modal', function () {
+        clearAddressForm();
+    });
+
+    // Contact modal close event
+    $('#contactModal').on('hidden.bs.modal', function () {
+        clearContactForm();
+    });
+    </script>
+}

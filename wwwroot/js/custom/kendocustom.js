@@ -60,6 +60,7 @@ function initializeKendoGrid(gridId, url, params, columns) {
                 total: "total" // Field containing the total record count
             }
         },
+        scrollable: true,
         columnMenu: {
                     filterable: false
                 },

@@ -23,8 +23,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _productService = productService;
         }
 
-        #region Product CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -52,6 +50,8 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             return View();
         }
+
+        #region Product CRUD
 
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)

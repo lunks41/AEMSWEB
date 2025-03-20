@@ -439,7 +439,7 @@
 		}
 	} catch { }
 
-	// Project Management Calendar JS
+	// Project Calendar JS
 	const getProjectManagementId = document.getElementById('calendari');
 	if (getProjectManagementId) {
 		var mesos = [

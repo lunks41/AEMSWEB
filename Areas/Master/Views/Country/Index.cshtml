@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Country Management ";
+    ViewData["Title"] = $"Country ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -31,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="grid"></div>
+                <div id="gridCountry"></div>
             </div>
         </div>
     </div>
@@ -170,8 +170,7 @@
 
         function loadGrid() {
             let searchString = $('#txtsearch').val();
-            const gridname = 'grid';
-            const url = "/Master/country/List";
+             let url = '@Url.Action("List", "Country", new { area = "Master" })';
             const columns = [
                 {
                     title: "Actions",
@@ -201,12 +200,11 @@
                 }
             ];
 
-            const params = { selectedTab: gridname, searchString: searchString, companyId: companyId };
-            initializeKendoGrid(gridname, url, params, columns);
+            initializeKendoGrid("gridCountry", url, { searchString, companyId }, columns);
         }
 
         function openModal(id, mode) {
-            $.get(`/Master/Country/GetById?countryId=${id}&companyId=${companyId}`)
+           $.get('@Url.Action("GetById", "Country", new { area = "Master" })', { countryId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
                         const data = response.data;

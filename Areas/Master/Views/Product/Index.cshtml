@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Product Management ";
+    ViewData["Title"] = $"Product ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -7,17 +7,20 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Products</h3>
+                <h3>Product </h3>
 
                 <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
-                        <div class="flex-grow-1" style="min-width: 200px;">
+                        <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
                         <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i>Search
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                            <i class="mdi mdi-close"></i> Clear
                         </button>
                     </div>
 
@@ -28,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="grid"></div>
+                <div id="gridProduct"></div>
             </div>
         </div>
     </div>
@@ -47,18 +50,19 @@
                     <form id="productForm">
                         <input type="hidden" id="productId" />
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="productCode" class="form-label">Product Code <span class="text-danger">*</span></label>
+                                    <label for="productCode" class="form-label">Product Region Code <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="productCode" required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="productName" class="form-label">Product Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="productName" required>
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="remarks" class="form-label">Remarks</label>
@@ -139,47 +143,51 @@
 
 @section Scripts {
     <script>
-    let companyId = 0;
-    $(document).ready(function () {
-        companyId = getUrlParameter('companyId');
-        $('#productCode, #productName').on('input', checkMandatoryFields);
-        loadGrid();
-        clearForm();
-    });
+        let companyId = 0;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId');
+            $('#productCode, #productName').on('input', checkMandatoryFields);
+            loadGrid();
+            clearForm();
+            setDefaultValues();
+            window.clearForm = clearForm;
+        });
 
-    function loadGrid() {
-        const search = $('#txtsearch').val();
-        $('#grid').kendoGrid({
-            dataSource: {
-                transport: {
-                    read: {
-                        url: `/Master/Product/List?companyId=${companyId}&searchString=${search}`,
-                        dataType: "json"
-                    }
-                },
-                schema: {
-                    data: "data",
-                    total: "total"
-                },
-                pageSize: 20
-            },
-            height: 550,
-            pageable: true,
-            columns: [
+        function setDefaultValues() {
+            clearForm();
+            document.getElementById('isActive').checked = true;
+            document.getElementById('btnSave').disabled = false;
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                loadGrid();
+            }
+        }
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadGrid();
+        }
+
+        function loadGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("List", "Product", new { area = "Master" })';
+            const columns = [
                 {
                     title: "Actions",
-                    template: function(dataItem) {
+                    width: "150px",
+                    template: function (dataItem) {
                         return `
-                            <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.productId}', 'view')">
-                                <i class="mdi mdi-eye"></i>
-                            </button>
-                            <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.productId}', 'edit')">
-                                <i class="mdi mdi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteProduct('${dataItem.productId}')">
-                                <i class="mdi mdi-delete"></i>
-                            </button>
-                        `;
+                                <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.productId}', 'view')">
+                                    <i class="mdi mdi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.productId}', 'edit')">
+                                    <i class="mdi mdi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteProduct('${dataItem.productId}')">
+                                    <i class="mdi mdi-delete"></i>
+                                </button>
+                            `;
                     },
                     width: "150px"
                 },
@@ -191,93 +199,126 @@
                     title: "Active",
                     template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
                 }
-            ]
-        });
-    }
+            ];
 
-    function openModal(id, mode) {
-        $.get(`/Master/Product/GetById?productId=${id}&companyId=${companyId}`)
-            .done(function(response) {
-                if (response.success) {
-                    const data = response.data;
-                    $('#productId').val(data.productId);
-                    $('#productCode').val(data.productCode);
-                    $('#productName').val(data.productName);
-                    $('#remarks').val(data.remarks);
-                    $('#isActive').prop('checked', data.isActive);
-
-                    // Audit fields
-                    $('#createBy').text(data.createBy || 'N/A');
-                    $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : 'N/A');
-                    $('#editBy').text(data.editBy || 'N/A');
-                    $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : 'N/A');
-
-                    setMode(mode);
-                    $('#addProductModal').modal('show');
-                }
-            });
-    }
-
-    function setMode(mode) {
-        const isView = mode === 'view';
-        $('#productCode').prop('readonly', isView);
-        $('#productName').prop('readonly', isView);
-        $('#remarks').prop('readonly', isView);
-        $('#isActive').prop('disabled', isView);
-        $('#btnSave').toggle(!isView);
-        $('#btnEdit').toggle(isView);
-    }
-
-    function deleteProduct(id) {
-        $('#confirmationModal').modal('show');
-        $('#confirmDelete').off('click').click(function() {
-            $.ajax({
-                url: `/Master/Product/Delete?productId=${id}&companyId=${companyId}`,
-                type: "DELETE",
-                success: function(response) {
-                    if (response.success) {
-                        loadGrid();
-                        $('#confirmationModal').modal('hide');
-                    }
-                }
-            });
-        });
-    }
-
-    function saveProduct() {
-        const data = {
-            ProductId: $('#productId').val() || 0,
-            ProductCode: $('#productCode').val(),
-            ProductName: $('#productName').val(),
-            Remarks: $('#remarks').val(),
-            IsActive: $('#isActive').prop('checked'),
-            CompanyId: companyId
-        };
-
-        if (!data.ProductCode || !data.ProductName) {
-            alert('Product Code and Name are required!');
-            return;
+            initializeKendoGrid("gridProduct", url, { searchString, companyId }, columns);
         }
 
-        $.post("/Master/Product/Save", data)
-            .done(function(response) {
-                if (response.success) {
-                    $('#addProductModal').modal('hide');
-                    loadGrid();
-                    clearForm();
+        function openModal(id, mode) {
+            $.get('@Url.Action("GetById", "Product", new { area = "Master" })', { productId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        const data = response.data;
+                        populateModalFields(data)
+                        setMode(mode);
+                        $('#addProductModal').modal('show');
+                    }
+                });
+        }
+
+        function populateModalFields(data) {
+            debugger;
+            $('#productId').val(data.productId);
+            $('#productCode').val(data.productCode);
+            $('#productName').val(data.productName);
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+            // Load Details History (always read-only)
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkMandatoryFields();
+        }
+
+        $('#btnEdit').on('click', function () {
+            setMode("edit");
+        });
+
+        $('#btnClose').on('click', function () {
+            $('#addProductModal').modal('hide');
+        });
+
+        $('#addrecord').on('click', function () {
+            clearForm();
+            setDefaultValues();
+            $('#btnClose').show();
+            $('#btnClear').show();
+            $('#btnSave').show();
+            $('#btnEdit').hide();
+        });
+
+        function setMode(mode) {
+            const isView = mode === 'view';
+            $('#productCode').prop('readonly', isView);
+            $('#productName').prop('readonly', isView);
+            $('#remarks').prop('readonly', isView);
+            $('#isActive').prop('disabled', isView);
+            $('#btnSave').toggle(!isView);
+            $('#btnEdit').toggle(isView);
+        }
+
+        function deleteProduct(id) {
+            $('#confirmationModal').modal('show');
+            $('#confirmDelete').off('click').click(function () {
+                $.ajax({
+                    url: `/Master/Product/Delete?productId=${id}&companyId=${companyId}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.success) {
+                            loadGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveProduct() {
+            const data = {
+                ProductId: parseInt($('#productId').val()) || 0,
+                ProductCode: $('#productCode').val(),
+                ProductName: $('#productName').val(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            if (!data.ProductCode || !data.ProductName || !data.ProductId) {
+                alert('Product Code, Name, and Region are required!');
+                return;
+            }
+
+            $.ajax({
+               url: '@Url.Action("Save", "Product", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ product: data, companyId: companyId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#addProductModal').modal('hide');
+                        loadGrid();
+                        clearForm();
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
                 }
             });
-    }
+        }
 
-    function clearForm() {
-        $('#productForm')[0].reset();
-        $('#productId').val(0);
-        $('#btnSave').prop('disabled', true);
-    }
+        function clearForm() {
+            $('#productForm')[0].reset();
+            $('#productId').val(0);
+            $('#btnSave').prop('disabled', true);
+        }
 
-    function checkMandatoryFields() {
-        const isValid = $('#productCode').val().trim() && $('#productName').val().trim();
-        $('#btnSave').prop('disabled', !isValid);
-    }
+        function checkMandatoryFields() {
+            const isValid = $('#productCode').val().trim() && $('#productName').val().trim();
+            $('#btnSave').prop('disabled', !isValid);
+        }
+
+        
     </script>
 }

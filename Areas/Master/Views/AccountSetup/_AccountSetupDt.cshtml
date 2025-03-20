@@ -1,0 +1,265 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Account Setup Details</h3>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtSetupDtSearch" class="form-control" placeholder="Search setup details...">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadAccountSetupDtGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAccountSetupDtSearch();">
+                            <i class="mdi mdi-close"></i> Clear
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#setupDtModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Detail
+                        </button>
+                    </div>
+                </div>
+                <div id="setupDtGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Setup Detail Modal -->
+<div class="modal fade" id="setupDtModal" tabindex="-1" aria-labelledby="setupDtModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="setupDtModalLabel">Setup Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearSetupDtForm()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="setupDtForm">
+                    <input type="hidden" id="SetupDtId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="SetupAccount" class="form-label">Account Setup <span class="text-danger">*</span></label>
+                                <select id="SetupAccount" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="CurrencyId" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="CurrencyId" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="GLId" class="form-label">GL Account <span class="text-danger">*</span></label>
+                                <select id="GLId" class="form-select" required>
+                                    <!-- Populate via API -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="ApplyAllCurr">
+                                <label class="form-check-label" for="ApplyAllCurr">Apply to All Currencies</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Section -->
+                    <div class="accordion mt-3" id="setupDtAudit">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#setupDtAuditBody">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="setupDtAuditBody" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="SetupDtCreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="SetupDtCreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="SetupDtEditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="SetupDtEditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearSetupDtForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSetupDtEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearSetupDtForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnSetupDtSave" onclick="saveSetupDt()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function setAccountSetupDtDefaultValues() {
+        clearSetupDtForm();
+        $('#isActive').prop('checked', true);
+        $('#btnSave').prop('disabled', false);
+    }
+
+    function handleAccountSetupDtEnterKey(event) {
+        if (event.key === 'Enter') loadAccountSetupDtGrid();
+    }
+
+    function clearAccountSetupDtSearch() {
+        $('#txtsearch').val('');
+        loadAccountSetupDtGrid();
+    }
+
+function loadAccountSetupDtGrid() {
+    let url = '@Url.Action("ListAccountSetupDt", "AccountSetup", new { area = "Master" })';
+    let columns = [
+        {
+            title: "Actions",
+            width: "150px",
+            template: function (dataItem) {
+                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accSetupId}', '${dataItem.companyId}', '${dataItem.currencyId}', '${dataItem.gLId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                if (permissions.canEdit) {
+                    buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accSetupId}', '${dataItem.companyId}', '${dataItem.currencyId}', '${dataItem.gLId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                }
+
+                if (permissions.canDelete) {
+                    buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountSetupDt('${dataItem.accSetupId}', '${dataItem.companyId}', '${dataItem.currencyId}', '${dataItem.gLId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                }
+                return buttons;
+            }
+        },
+        { field: "currencyId", title: "Currency ID" },
+        { field: "gLId", title: "GL ID" },
+        { field: "applyAllCurr", title: "Apply All Currency", template: '<input type="checkbox" #= applyAllCurr ? "checked" : "" # disabled />' },
+        { field: "createDate", title: "Created On", template: function (dataItem) { return new Date(dataItem.createDate).toLocaleString(); } },
+        { field: "editDate", title: "Edited On", template: function (dataItem) { return dataItem.editDate ? new Date(dataItem.editDate).toLocaleString() : "N/A"; } }
+    ];
+
+    initializeKendoGrid("setupDtGrid", url, { searchString, companyId }, columns);
+}
+
+function openModal(accSetupId, companyId, currencyId, gLId, mode) {
+    $.get('@Url.Action("GetAccountSetupDtGetById", "AccountSetup", new { area = "Master" })', { accSetupId, companyId, currencyId, gLId })
+        .done(function (response) {
+            if (response.success) {
+                populateModalFields(response.data);
+                setMode(mode);
+                $('#addAccountSetupDtModal').modal('show');
+            }
+        });
+}
+
+function populateModalFields(data) {
+    $('#accSetupId').val(data.AccSetupId);
+    $('#companyId').val(data.CompanyId);
+    $('#currencyId').val(data.CurrencyId);
+    $('#gLId').val(data.GLId);
+    $('#applyAllCurr').prop('checked', data.ApplyAllCurr);
+
+    $('#createById').text(data.CreateById || "N/A");
+    $('#createDate').text(data.CreateDate ? new Date(data.CreateDate).toLocaleString() : "N/A");
+    $('#editById').text(data.EditById || "N/A");
+    $('#editDate').text(data.EditDate ? new Date(data.EditDate).toLocaleString() : "N/A");
+}
+
+function setMode(mode) {
+    const isView = mode === 'view';
+    const canEdit = permissions.canEdit && !isView;
+
+    $('#currencyId, #gLId').prop('readonly', !canEdit);
+    $('#applyAllCurr').prop('disabled', !canEdit);
+    $('#btnSave').toggle(canEdit);
+    $('#btnClose').show();
+}
+
+function saveAccountSetupDt() {
+    let data = {
+        CompanyId: parseInt($('#companyId').val()) || 0,
+        AccSetupId: parseInt($('#accSetupId').val()) || 0,
+        CurrencyId: parseInt($('#currencyId').val()) || 0,
+        GLId: parseInt($('#gLId').val()) || 0,
+        ApplyAllCurr: $('#applyAllCurr').prop('checked'),
+        CreateById: parseInt($('#createById').val()) || 0,
+        CreateDate: new Date($('#createDate').val()) || new Date(),
+        EditById: parseInt($('#editById').val()) || null,
+        EditDate: new Date($('#editDate').val()) || null
+    };
+
+    if (!data.CompanyId || !data.AccSetupId || !data.CurrencyId || !data.GLId) {
+        alert('All mandatory fields must be filled out!');
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("SaveAccountSetupDt", "AccountSetup", new { area = "Master" })',
+        type: "POST",
+        data: JSON.stringify({ accountSetupDt: data }),
+        contentType: "application/json",
+        success: function (response) {
+            if (response.success) {
+                $('#addAccountSetupDtModal').modal('hide');
+                loadAccountSetupDtGrid();
+                clearSetupDtForm();
+            }
+        },
+        error: function (error) {
+            alert("Error: " + error.responseText);
+        }
+    });
+}
+
+function deleteAccountSetupDt(accSetupId, companyId, currencyId, gLId) {
+    if (!permissions.canDelete) {
+        alert('You do not have permission to delete records.');
+        return;
+    }
+
+    $('#confirmationModal').modal('show');
+    $('#confirmDelete').off('click').click(function () {
+        $.ajax({
+            url: `/Master/AccountSetup/DeleteAccountSetupDt?accSetupId=${accSetupId}&companyId=${companyId}&currencyId=${currencyId}&gLId=${gLId}`,
+            type: "DELETE",
+            success: function (response) {
+                if (response.success) {
+                    loadAccountSetupDtGrid();
+                    $('#confirmationModal').modal('hide');
+                }
+            }
+        });
+    });
+}
+
+function clearSetupDtForm() {
+    $('#accountSetupDtForm')[0].reset();
+    $('#createById').text('');
+    $('#createDate').text('');
+    $('#editById').text('');
+    $('#editDate').text('');
+}
+
+</script>

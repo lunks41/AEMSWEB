@@ -1,0 +1,192 @@
+﻿<div class="modal fade" id="bankModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bankModalLabel">Bank Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearBankForm();"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="bankForm">
+                    <!-- Bank Details -->
+                    <input type="hidden" id="bankId" />
+
+                    <!-- Basic Information -->
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label class="form-label">Bank Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="bankCode" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label class="form-label">Bank Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="bankName" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label class="form-label">Short Name</label>
+                                <input type="text" class="form-control" id="bankShortName">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label class="form-label">Other Name</label>
+                                <input type="text" class="form-control" id="bankOtherName">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label class="form-label">Registration No.</label>
+                                <input type="text" class="form-control" id="bankRegNo">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Details -->
+                    <div class="row">
+                        <h5>Financial Details</h5>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="cmd_currency" style="width: 100%"></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label for="cmd_creditTerm" class="form-label">Credit Term <span class="text-danger">*</span></label>
+                                <select id="cmd_creditTerm" style="width: 100%"></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label for="cmd_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
+                                <select id="cmd_accSetup" style="width: 100%"></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label for="cmd_bank" class="form-label">Bank <span class="text-danger">*</span></label>
+                                <select id="cmd_bank" style="width: 100%"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Flags -->
+                    <div class="row ">
+                        <h5>Status Flags</h5>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isBank">
+                                <label class="form-check-label">Is Bank</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isVendor">
+                                <label class="form-check-label">Is Vendor</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isTrader">
+                                <label class="form-check-label">Is Trader</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isSupplier">
+                                <label class="form-check-label">Is Supplier</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isActive">
+                                <label class="form-check-label">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remarks -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="remarks" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Address & Contact Tabs -->
+                    <ul class="nav nav-pills mt-4" id="bankTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-3">
+                        <!-- Addresses Tab -->
+                        <div class="tab-pane fade show active" id="addresses">
+                            <div class="d-flex justify-content-end mb-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
+                                    <i class="mdi mdi-plus"></i> Add Address
+                                </button>
+                            </div>
+                            <div id="gridaddress"></div>
+                        </div>
+
+                        <!-- Contacts Tab -->
+                        <div class="tab-pane fade" id="contacts">
+                            <div class="d-flex justify-content-end mb-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                    <i class="mdi mdi-plus"></i> Add Contact
+                                </button>
+                            </div>
+                            <div id="gridcontact"></div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="createBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="createDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="editBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="editDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveBank">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

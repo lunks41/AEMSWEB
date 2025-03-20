@@ -1,0 +1,230 @@
+﻿  <!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Bank Contact</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm">
+                    <input type="hidden" id="bankId" />
+                    <input type="hidden" id="contactId" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Contact Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="contactName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Other Name</label>
+                            <input type="text" class="form-control" id="otherName">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="mobileNo" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Office Number</label>
+                            <input type="tel" class="form-control" id="offNo">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Fax Number</label>
+                            <input type="tel" class="form-control" id="faxNo">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="emailAdd" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Messaging ID</label>
+                            <input type="text" class="form-control" id="messId">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Messaging Type</label>
+                            <input type="text" class="form-control" id="contactMessType">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isDefault">
+                                <label class="form-check-label">Is Default Contact</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isFinance">
+                                <label class="form-check-label">Is Finance Contact</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isSales">
+                                <label class="form-check-label">Is Sales Contact</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isActive">
+                                <label class="form-check-label">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveContact()">Save Contact</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadbankContactGrid(bankId) {
+        let grid = $("#gridcontact").data("kendoGrid");
+        let url = '@Url.Action("ListContacts", "Bank", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openBankContactModal('${dataItem.bankId}','${dataItem.contactId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openBankContactModal('${dataItem.bankId}','${dataItem.contactId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteBankContact('${dataItem.bankId}','${dataItem.contactId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "isDefault", title: "Is Default", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "contactName", title: "Name", width: "200px" },
+            { field: "otherName", title: "Othre Name", width: "200px" },
+            { field: "mobileNo", title: "MobileNo", width: "200px" },
+            { field: "offNo", title: "off No", width: "200px" },
+            { field: "faxNo", title: "faxNo", width: "200px" },
+            { field: "emailAdd", title: "emailAdd", width: "200px" },
+            { field: "messId", title: "messId", width: "200px" },
+            { field: "contactMessType", title: "contactMessType", width: "200px" },
+            { field: "isFinance", title: "Is Financial", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "isSales", title: "Is Sales", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "isActive", title: "Is Active", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        if (grid) {
+            // Update the data source with the new bankId
+            grid.dataSource.read({ bankId: bankId, companyId: companyId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("gridcontact", url, { bankId, companyId }, columns);
+        }
+        //initializeKendoGrid("gridcontact", url, { bankId, companyId }, columns);
+    }
+
+    function openBankContactModal(id, mode) {
+        $.get('@Url.Action("GetContactById", "Bank", new { area = "Master" })', { bankId: id, contactId, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateContactFields(response.data);
+                    setContactMode(mode);
+                    $('#contactModal').modal('show');
+                    // Ensure bank modal stays open
+                    $('#bankModal').modal('show');
+                }
+            });
+    }
+
+    function populateContactFields(data) {
+        $('#bankId').val(data.bankId);
+        $('#contactId').val(data.contactId);
+        $('#contactName').val(data.contactName);
+        $('#otherName').val(data.otherName);
+        $('#mobileNo').val(data.mobileNo);
+        $('#offNo').val(data.offNo);
+        $('#faxNo').val(data.faxNo);
+        $('#emailAdd').val(data.emailAdd);
+        $('#messId').val(data.messId);
+        $('#contactMessType').val(data.contactMessType);
+        $('#isDefault').prop('checked', data.isDefault);
+        $('#isFinance').prop('checked', data.isFinance);
+        $('#isSales').prop('checked', data.isSales);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createBy').text(data.createBy || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editBy').text(data.editBy || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+       // checkMandatoryFields();
+    }
+
+    function setContactMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#isActive').prop('disabled', !canEdit);
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteBankContact(id, contactId) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Bank/DeleteContact?bankId=${id}&contactId=${contactId}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveBank() {
+        const bankData = {
+            BankId: $('#bankId').val() || 0,
+            BankCode: $('#bankCode').val().trim(),
+            BankName: $('#bankName').val().trim(),
+            // Add other fields
+        };
+        $.ajax({
+            url: '@Url.Action("SaveContact", "Bank", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ bank: bankData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#contactModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            }
+        });
+    }
+
+    function clearContactForm() {
+        $('#contactId').val('');
+        $('#bankId').val(''); // Hidden field in contact modal
+        $('#contactName').val('');
+        $('#otherName').val('');
+        $('#mobileNo').val('');
+        $('#offNo').val('');
+        $('#faxNo').val('');
+        $('#emailAdd').val('');
+        $('#messId').val('');
+        $('#contactMessType').val('');
+        $('#isDefault').prop('checked', false);
+        $('#isFinance').prop('checked', false);
+        $('#isSales').prop('checked', false);
+        $('#isActive').prop('checked', false);
+    }
+</script>

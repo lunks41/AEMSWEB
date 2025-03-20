@@ -1127,7 +1127,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1188,7 +1188,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1249,7 +1249,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<CustomerLookupModel>> GetCustomerLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1310,7 +1310,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<SupplierLookupModel>> GetSupplierLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1371,7 +1371,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try
@@ -1432,7 +1432,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupAsync_V1(Int16 CompanyId, string searchString, Int16 RecordCount, Int16 UserId)
+        public async Task<IEnumerable<VoyageLookupModel>> GetVoyageLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount)
         {
             RecordCount = RecordCount == 0 ? recordCount : RecordCount;
             try

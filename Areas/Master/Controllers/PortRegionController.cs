@@ -117,7 +117,6 @@ namespace AEMSWEB.Areas.Master.Controllers
                     CompanyId = companyIdShort,
                     PortRegionCode = model.portRegion.PortRegionCode ?? string.Empty,
                     PortRegionName = model.portRegion.PortRegionName ?? string.Empty,
-                    CountryId = model.portRegion.CountryId,
                     Remarks = model.portRegion.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.portRegion.IsActive,
                     CreateById = parsedUserId.Value,

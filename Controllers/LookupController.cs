@@ -1,14 +1,15 @@
 ﻿using AEMSWEB.IServices;
+using AEMSWEB.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AEMSWEB.Controllers
 {
-    public class LookupController : Controller
+    public class LookupController : BaseController
     {
         private readonly ILogger<LookupController> _logger;
         private readonly IMasterLookupService _masterLookupService;
 
-        public LookupController(ILogger<LookupController> logger, IMasterLookupService masterLookupService)
+        public LookupController(ILogger<LookupController> logger, IBaseService baseService, IMasterLookupService masterLookupService) : base(logger, baseService)
         {
             _logger = logger;
             _masterLookupService = masterLookupService;
@@ -59,216 +60,180 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCurrencyLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetBankLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetChartOfAccountLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetChartOfAccountLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCountryLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCountryLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetVesselDynamic(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetBargeLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetAccountSetupCategoryLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetAccountSetupCategoryLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetAccountSetupLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetAccountSetupLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCOACategory1Lookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCOACategory1LookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCOACategory2Lookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCOACategory2LookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCOACategory3Lookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCOACategory3LookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetAccountTypeLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetAccountTypeLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetAccountGroupLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetAccountGroupLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetPortRegionLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetOrderTypeCategoryLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetDepartmentLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetBankLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetCreditTermsLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCreditTermsLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetChartOfAccountLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetChartOfAccountLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetAccountSetupCategoryLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetAccountSetupCategoryLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetAccountSetupLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetAccountSetupLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCountryLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCountryLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetVesselDynamic(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetBargeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetBargeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCOACategory1Lookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCOACategory1LookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCOACategory2Lookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCOACategory2LookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCOACategory3Lookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCOACategory3LookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetAccountTypeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetAccountTypeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetAccountGroupLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetAccountGroupLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetPortRegionLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetPortRegionLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetOrderTypeCategoryLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetOrderTypeCategoryLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDepartmentLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetDepartmentLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
@@ -289,252 +254,165 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetGstCategoryLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetGstCategoryLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetTaxCategoryLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetTaxCategoryLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetProductLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetProductLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetGstLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetGstLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetUomLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetUomLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetPortLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetPortLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetVoyageLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetVoyageLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetEmployeeLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetEmployeeLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetTaxLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetTaxLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCustomerAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetCustomerContactLookupFin(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetCustomerContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetSupplierAddressLookupFin(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetSupplierAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetSupplierContactLookupFin(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetSupplierContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetSupplierLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            //if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            //{
+            //    return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
+            //}
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetSupplierLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetPaymentTypeLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetPaymentTypeLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetVesselLookup(string companyId)
         {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetBargeDynamicLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerDynamicLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetSupplierDynamicLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetProductDynamicLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetDocumentTypeLookup(string companyId)
-        {
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            }
-
-            var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, 1);
+            var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
     }

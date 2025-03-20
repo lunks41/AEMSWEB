@@ -3,12 +3,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="customerModalLabel">Customer Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCustomerForm();"></button>
             </div>
             <div class="modal-body p-4">
                 <form id="customerForm">
-                    <input type="hidden" id="customerId" />
-
                     <!-- Customer Details -->
                     <input type="hidden" id="customerId" />
 
@@ -51,34 +49,26 @@
                         <h5>Financial Details</h5>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label class="form-label">Currency</label>
-                                <select class="form-select" id="currencyId">
-                                    <!-- Options populated dynamically -->
-                                </select>
+                                <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="cmd_currency" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label class="form-label">Credit Term</label>
-                                <select class="form-select" id="creditTermId">
-                                    <!-- Options populated dynamically -->
-                                </select>
+                                <label for="cmd_creditTerm" class="form-label">Credit Term <span class="text-danger">*</span></label>
+                                <select id="cmd_creditTerm" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label class="form-label">Account Setup</label>
-                                <select class="form-select" id="accSetupId">
-                                    <!-- Options populated dynamically -->
-                                </select>
+                                <label for="cmd_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
+                                <select id="cmd_accSetup" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label class="form-label">Bank</label>
-                                <select class="form-select" id="bankId">
-                                    <!-- Options populated dynamically -->
-                                </select>
+                                <label for="cmd_bank" class="form-label">Bank <span class="text-danger">*</span></label>
+                                <select id="cmd_bank" style="width: 100%"></select>
                             </div>
                         </div>
                     </div>
@@ -122,9 +112,42 @@
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <label class="form-label">Remarks</label>
-                            <textarea class="form-control" id="remarks" rows="3"></textarea>
+                            <textarea class="form-control" id="remarks" rows="2"></textarea>
                         </div>
                     </div>
+
+                    <!-- Address & Contact Tabs -->
+                    <ul class="nav nav-pills mt-4" id="customerTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-3">
+                        <!-- Addresses Tab -->
+                        <div class="tab-pane fade show active" id="addresses">
+                            <div class="d-flex justify-content-end mb-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
+                                    <i class="mdi mdi-plus"></i> Add Address
+                                </button>
+                            </div>
+                            <div id="gridaddress"></div>
+                        </div>
+
+                        <!-- Contacts Tab -->
+                        <div class="tab-pane fade" id="contacts">
+                            <div class="d-flex justify-content-end mb-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                    <i class="mdi mdi-plus"></i> Add Contact
+                                </button>
+                            </div>
+                            <div id="gridcontact"></div>
+                        </div>
+                    </div>
+
 
                     <!-- Audit Fields -->
                     <div class="accordion mt-3" id="auditAccordion">
@@ -158,65 +181,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Address & Contact Tabs -->
-                    <ul class="nav nav-tabs mt-4" id="customerTabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#addresses">Addresses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#contacts">Contacts</a>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content mt-3">
-                        <!-- Addresses Tab -->
-                        <div class="tab-pane fade show active" id="addresses">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
-                                    <i class="mdi mdi-plus"></i> Add Address
-                                </button>
-                            </div>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Address</th>
-                                        <th>Country</th>
-                                        <th>Postal Code</th>
-                                        <th>Default</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="addressTable"></tbody>
-                            </table>
-                        </div>
-
-                        <!-- Contacts Tab -->
-                        <div class="tab-pane fade" id="contacts">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
-                                    <i class="mdi mdi-plus"></i> Add Contact
-                                </button>
-                            </div>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Mobile</th>
-                                        <th>Email</th>
-                                        <th>Default</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="contactTable"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Audit Fields -->
-                    <div class="accordion mt-4" id="auditAccordion">
-                        <!-- Similar to account group audit section -->
                     </div>
                 </form>
             </div>

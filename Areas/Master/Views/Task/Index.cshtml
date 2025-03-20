@@ -1,0 +1,322 @@
+﻿@{
+    ViewData["Title"] = $"Task ";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Task </h3>
+
+                <!-- Action Row -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                            <i class="mdi mdi-magnify"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                            <i class="mdi mdi-close"></i> Clear
+                        </button>
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTaskModal" id="addrecord">
+                            <i class="mdi mdi-plus me-1"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+                <div id="gridTask"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section externalhtml {
+    <!-- Add/Edit Modal -->
+    <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTaskModalLabel">Task Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="taskForm">
+                        <input type="hidden" id="taskId" />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="taskCode" class="form-label">Task Region Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="taskCode" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="taskName" class="form-label">Task Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="taskName" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="remarks" class="form-label">Remarks</label>
+                                    <textarea class="form-control" id="remarks" rows="2"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="isActive">
+                                    <label class="form-check-label" for="isActive">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Audit Fields -->
+                        <div class="accordion mt-3" id="auditAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                        Audit Details
+                                    </button>
+                                </h2>
+                                <div id="auditCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Created By</label>
+                                                <p id="createBy" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Created Date</label>
+                                                <p id="createDate" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Modified By</label>
+                                                <p id="editBy" class="form-control-plaintext"></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Modified Date</label>
+                                                <p id="editDate" class="form-control-plaintext"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnSave" onclick="saveTask()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this task?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        let companyId = 0;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId');
+            $('#taskCode, #taskName').on('input', checkMandatoryFields);
+            loadGrid();
+            clearForm();
+            setDefaultValues();
+            window.clearForm = clearForm;
+        });
+
+        function setDefaultValues() {
+            clearForm();
+            document.getElementById('isActive').checked = true;
+            document.getElementById('btnSave').disabled = false;
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                loadGrid();
+            }
+        }
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadGrid();
+        }
+
+        function loadGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("List", "Task", new { area = "Master" })';
+            const columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        return `
+                                <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.taskId}', 'view')">
+                                    <i class="mdi mdi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.taskId}', 'edit')">
+                                    <i class="mdi mdi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteTask('${dataItem.taskId}')">
+                                    <i class="mdi mdi-delete"></i>
+                                </button>
+                            `;
+                    },
+                    width: "150px"
+                },
+                { field: "taskCode", title: "Code" },
+                { field: "taskName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                {
+                    field: "isActive",
+                    title: "Active",
+                    template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
+                }
+            ];
+
+            initializeKendoGrid("gridTask", url, { searchString, companyId }, columns);
+        }
+
+        function openModal(id, mode) {
+            $.get('@Url.Action("GetById", "Task", new { area = "Master" })', { taskId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        const data = response.data;
+                        populateModalFields(data)
+                        setMode(mode);
+                        $('#addTaskModal').modal('show');
+                    }
+                });
+        }
+
+        function populateModalFields(data) {
+            debugger;
+            $('#taskId').val(data.taskId);
+            $('#taskCode').val(data.taskCode);
+            $('#taskName').val(data.taskName);
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+            // Load Details History (always read-only)
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkMandatoryFields();
+        }
+
+        $('#btnEdit').on('click', function () {
+            setMode("edit");
+        });
+
+        $('#btnClose').on('click', function () {
+            $('#addTaskModal').modal('hide');
+        });
+
+        $('#addrecord').on('click', function () {
+            clearForm();
+            setDefaultValues();
+            $('#btnClose').show();
+            $('#btnClear').show();
+            $('#btnSave').show();
+            $('#btnEdit').hide();
+        });
+
+        function setMode(mode) {
+            const isView = mode === 'view';
+            $('#taskCode').prop('readonly', isView);
+            $('#taskName').prop('readonly', isView);
+            $('#remarks').prop('readonly', isView);
+            $('#isActive').prop('disabled', isView);
+            $('#btnSave').toggle(!isView);
+            $('#btnEdit').toggle(isView);
+        }
+
+        function deleteTask(id) {
+            $('#confirmationModal').modal('show');
+            $('#confirmDelete').off('click').click(function () {
+                $.ajax({
+                    url: `/Master/Task/Delete?taskId=${id}&companyId=${companyId}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.success) {
+                            loadGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveTask() {
+            const data = {
+                TaskId: parseInt($('#taskId').val()) || 0,
+                TaskCode: $('#taskCode').val(),
+                TaskName: $('#taskName').val(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            if (!data.TaskCode || !data.TaskName || !data.TaskId) {
+                alert('Task Code, Name, and Region are required!');
+                return;
+            }
+
+            $.ajax({
+               url: '@Url.Action("Save", "Task", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ task: data, companyId: companyId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#addTaskModal').modal('hide');
+                        loadGrid();
+                        clearForm();
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+
+        function clearForm() {
+            $('#taskForm')[0].reset();
+            $('#taskId').val(0);
+            $('#btnSave').prop('disabled', true);
+        }
+
+        function checkMandatoryFields() {
+            const isValid = $('#taskCode').val().trim() && $('#taskName').val().trim();
+            $('#btnSave').prop('disabled', !isValid);
+        }
+    </script>
+}

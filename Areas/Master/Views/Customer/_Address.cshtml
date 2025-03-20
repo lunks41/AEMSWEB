@@ -8,66 +8,69 @@
             </div>
             <div class="modal-body">
                 <form id="addressForm">
+                    <input type="hidden" id="customerId" />
                     <input type="hidden" id="addressId" />
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="address1" required>
+                            <textarea class="form-control" id="address1" rows="2" required></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Address Line 2</label>
-                            <input type="text" class="form-control" id="address2">
+                            <textarea class="form-control" id="address2" rows="2" required></textarea>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Address Line 3</label>
                             <input type="text" class="form-control" id="address3">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Address Line 4</label>
                             <input type="text" class="form-control" id="address4">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Postal Code</label>
                             <input type="text" class="form-control" id="pinCode">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Country <span class="text-danger">*</span></label>
-                            <select class="form-select" id="countryId" required>
-                                <!-- Options populated dynamically -->
-                            </select>
+                        <div class="col-md-3">
+                            <label for="cmd_country" class="form-label">Country <span class="text-danger">*</span></label>
+                            <select id="cmd_country" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Phone Number</label>
                             <input type="tel" class="form-control" id="phoneNo">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Fax Number</label>
                             <input type="tel" class="form-control" id="faxNo">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Email</label>
                             <input type="email" class="form-control" id="emailAdd">
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-3">
                             <label class="form-label">Website</label>
                             <input type="url" class="form-control" id="webUrl">
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isDefaultAdd">
-                                <label class="form-check-label">Default Address</label>
+                                <label class="form-check-label">Is Default Add.</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isDeliveryAdd">
-                                <label class="form-check-label">Delivery Address</label>
+                                <label class="form-check-label">Is Delivery Add.</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isFinAdd">
-                                <label class="form-check-label">Financial Address</label>
+                                <label class="form-check-label">Is Financial Add.</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="isSalesAdd">
-                                <label class="form-check-label">Sales Address</label>
+                                <label class="form-check-label">Is Sales Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isActive">
+                                <label class="form-check-label">Is Active</label>
                             </div>
                         </div>
                     </div>
@@ -80,3 +83,176 @@
         </div>
     </div>
 </div>
+
+<script>
+    function loadcustomerAddressGrid(customerId) {
+        let grid = $("#gridaddress").data("kendoGrid");
+        let url = '@Url.Action("ListAddresses", "Customer", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerAddressModal('${dataItem.customerId}','${dataItem.addressId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerAddressModal('${dataItem.customerId}','${dataItem.addressId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCustomerAddress('${dataItem.customerId}','${dataItem.addressId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "isDefaultAdd", title: "Is Default Address", width: "120px", template: '<input type="checkbox" #= isDefaultAdd ? "checked" : "" # disabled />' },
+            { field: "address1", title: "Address 1", width: "200px" },
+            { field: "address2", title: "Address 2", width: "200px" },
+            { field: "address3", title: "Address 3", width: "200px" },
+            { field: "address4", title: "Address 4", width: "200px" },
+            { field: "pinCode", title: "Postal Code", width: "100px" },
+            { field: "remarks", title: "Remarks", width: "150px" },
+            { field: "phoneNo", title: "Phone No", width: "120px" },
+            { field: "faxNo", title: "Fax No", width: "120px" },
+            { field: "emailAdd", title: "Email", width: "200px" },
+            { field: "webUrl", title: "Website", width: "200px" },
+            { field: "isDeliveryAdd", title: "Delivery Address", width: "120px", template: '<input type="checkbox" #= isDeliveryAdd ? "checked" : "" # disabled />' },
+            { field: "isFinAdd", title: "Is Financial Address", width: "120px", template: '<input type="checkbox" #= isFinAdd ? "checked" : "" # disabled />' },
+            { field: "isSalesAdd", title: "Is Sales Address", width: "120px", template: '<input type="checkbox" #= isSalesAdd ? "checked" : "" # disabled />' },
+            { field: "isActive", title: "Is Active", width: "100px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        if (grid) {
+            // Update the data source with the new customerId
+            grid.dataSource.read({ customerId: customerId, companyId: companyId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("gridaddress", url, { customerId, companyId }, columns);
+        }
+
+        //initializeKendoGrid("gridaddress", url, { customerId, companyId }, columns);
+    }
+
+    function openCustomerAddressModal(id, addressId, mode) {
+        debugger;
+        $.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId, companyId })
+            .done(function (response) {
+                debugger;
+                console.log("address :" + response);
+                if (response.success) {
+                    populateAddressFields(response.data);
+                    setAddressMode(mode);
+                    $('#addressModal').modal('show');
+                }
+            });
+    }
+
+    function populateAddressFields(data) {
+        debugger;
+        $('#customerId').val(data.customerId);
+        $('#addressId').val(data.addressId);
+        $('#address1').val(data.address1);
+        $('#address2').val(data.address2);
+        $('#address3').val(data.address3);
+        $('#address4').val(data.address4);
+        $('#pinCode').val(data.pinCode);
+        $('#cmd_country').data("kendoComboBox").value(data.countryId > 0 ? data.countryId : '');
+        $('#phoneNo').val(data.phoneNo);
+        $('#faxNo').val(data.faxNo);
+        $('#emailAdd').val(data.emailAdd);
+        $('#webUrl').val(data.webUrl);
+        $('#isDefaultAdd').prop('checked', data.isDefaultAdd);
+        $('#isDeliveryAdd').prop('checked', data.isDeliveryAdd);
+        $('#isFinAdd').prop('checked', data.isFinAdd);
+        $('#isSalesAdd').prop('checked', data.isSalesAdd);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createBy').text(data.createBy || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editBy').text(data.editBy || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+       // checkMandatoryFields();
+    }
+
+    function setAddressMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        // Enable/disable fields in address modal
+        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNo, #faxNo, #emailAdd, #webUrl')
+            .prop('readonly', !canEdit);
+        $('#isDefaultAdd, #isDeliveryAdd, #isFinAdd, #isSalesAdd, #isActive').prop('disabled', !canEdit);
+
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteCustomerAddress(id,addressId) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Customer/DeleteAddress?customerId=${id}&addressId=${addressId}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveCustomer() {
+        const customerData = {
+            CustomerId: $('#customerId').val() || 0,
+            CustomerCode: $('#customerCode').val().trim(),
+            CustomerName: $('#customerName').val().trim(),
+            // Add other fields
+        };
+        $.ajax({
+            url: '@Url.Action("SaveAddress", "Customer", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ customer: customerData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addressModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            }
+        });
+    }
+
+    function clearAddressForm() {
+        $('#addressId').val('');
+        $('#customerId').val(''); // Hidden field in address modal
+        $('#address1').val('');
+        $('#address2').val('');
+        $('#address3').val('');
+        $('#address4').val('');
+        $('#pinCode').val('');
+        $('#cmd_country').data("kendoComboBox").value('');
+        $('#phoneNo').val('');
+        $('#faxNo').val('');
+        $('#emailAdd').val('');
+        $('#webUrl').val('');
+        $('#isDefaultAdd').prop('checked', false);
+        $('#isDeliveryAdd').prop('checked', false);
+        $('#isFinAdd').prop('checked', false);
+        $('#isSalesAdd').prop('checked', false);
+        $('#isActive').prop('checked', false);
+    }
+</script>
