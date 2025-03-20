@@ -137,10 +137,10 @@
     }
 
     function openSupplierAddressModal(id, addressId, mode) {
-        debugger;
+        
         $.get('@Url.Action("GetAddressById", "Supplier", new { area = "Master" })', { supplierId: id, addressId, companyId })
             .done(function (response) {
-                debugger;
+                
                 console.log("address :" + response);
                 if (response.success) {
                     populateAddressFields(response.data);
@@ -151,7 +151,7 @@
     }
 
     function populateAddressFields(data) {
-        debugger;
+        
         $('#supplierId').val(data.supplierId);
         $('#addressId').val(data.addressId);
         $('#address1').val(data.address1);

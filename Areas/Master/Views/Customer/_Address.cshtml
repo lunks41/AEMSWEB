@@ -137,10 +137,10 @@
     }
 
     function openCustomerAddressModal(id, addressId, mode) {
-        debugger;
+        
         $.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId, companyId })
             .done(function (response) {
-                debugger;
+                
                 console.log("address :" + response);
                 if (response.success) {
                     populateAddressFields(response.data);
@@ -151,7 +151,7 @@
     }
 
     function populateAddressFields(data) {
-        debugger;
+        
         $('#customerId').val(data.customerId);
         $('#addressId').val(data.addressId);
         $('#address1').val(data.address1);

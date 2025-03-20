@@ -202,11 +202,11 @@
             BindComboBox(currencyUrl, "cmb_localcurrency", "currencyName", "currencyId");
 
             function updateAndBindComboBox(isVisible, isMandatory, dropdownId) {
-                debugger;
+                
                 // Convert numbers to booleans explicitly
                 const isVisibleBool = !!isVisible; // Converts 0->false, 1->true
                 const isMandatoryBool = !!isMandatory;
-                debugger;
+                
                 const moduleUrl = `@Url.Action("GetModuleTransCategoryLookup", "Lookup", new { area = "" })?IsVisible=${isVisibleBool}&IsMandatory=${isMandatoryBool}`;
                 BindComboBox(moduleUrl, dropdownId, "transCategoryName", "transCategoryId");
             }

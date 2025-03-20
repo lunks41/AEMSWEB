@@ -182,7 +182,7 @@
         }
 
         function loadGrid() {
-            debugger;
+            
             let searchString = $('#txtsearch').val();
             let url = '@Url.Action("List", "AccountType", new { area = "Master" })';
             const columns = [
@@ -233,7 +233,7 @@
         }
 
         function populateModalFields(data) {
-            debugger;
+            
             $('#accTypeId').val(data.accTypeId);
             $('#accTypeCode').val(data.accTypeCode);
             $('#accTypeName').val(data.accTypeName);

@@ -121,7 +121,7 @@
 <script>
 
         function loadUserGrid() {
-            debugger;
+            
             let searchString = $('#txtsearch').val();
             let url = '@Url.Action("UserList", "User", new { area = "Admin" })';
             let columns = [
@@ -154,11 +154,11 @@
         }
 
     function openUserModal(id, mode) {
-        debugger;
+        
             $.get('@Url.Action("GetUserById", "User", new { area = "Admin" })', { selectedUserId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
-                        debugger;
+                        
                         userPopulateModalFields(response.data);
                         setMode(mode);
                         $('#addUserModal').modal('show');

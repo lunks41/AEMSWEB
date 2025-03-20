@@ -6,7 +6,6 @@ using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
@@ -154,11 +153,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var setup = await _accountSetupService.GetAccountSetupByIdAsync(companyIdShort, parsedUserId.Value, accSetupId);
-                if (setup == null)
-                    return Json(new { success = false, message = "Account Setup not found" });
-
-                await _accountSetupService.DeleteAccountSetupAsync(companyIdShort, parsedUserId.Value, setup);
+                await _accountSetupService.DeleteAccountSetupAsync(companyIdShort, parsedUserId.Value, accSetupId);
                 return Json(new { success = true, message = "Account Setup deleted successfully" });
             }
             catch (Exception ex)
@@ -195,9 +190,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetAccountSetupDtDetailById(short accSetupDtId, string companyId)
+        public async Task<JsonResult> GetAccountSetupDtById(short accSetupId, short currencyId, short gLId, string companyId)
         {
-            if (accSetupDtId <= 0)
+            if (accSetupId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -205,7 +200,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _accountSetupService.GetAccountSetupDtByIdAsync(companyIdShort, parsedUserId.Value, accSetupDtId);
+                var data = await _accountSetupService.GetAccountSetupDtByIdAsync(companyIdShort, parsedUserId.Value, accSetupId, currencyId, gLId);
                 return data == null
                     ? Json(new { success = false, message = "Account Setup Detail not found" })
                     : Json(new { success = true, data });
@@ -253,9 +248,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAccountSetupDt(short accSetupDtId, string companyId)
+        public async Task<IActionResult> DeleteAccountSetupDt(short accSetupId, short currencyId, short gLId, string companyId)
         {
-            if (accSetupDtId <= 0)
+            if (accSetupId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -269,11 +264,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var detail = await _accountSetupService.GetAccountSetupDtByIdAsync(companyIdShort, parsedUserId.Value, accSetupDtId);
-                if (detail == null)
-                    return Json(new { success = false, message = "Account Setup Detail not found" });
-
-                await _accountSetupService.DeleteAccountSetupDtAsync(companyIdShort, parsedUserId.Value, detail);
+                await _accountSetupService.DeleteAccountSetupDtAsync(companyIdShort, parsedUserId.Value, accSetupId, currencyId, gLId);
                 return Json(new { success = true, message = "Account Setup Detail deleted successfully" });
             }
             catch (Exception ex)

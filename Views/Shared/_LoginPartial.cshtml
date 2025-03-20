@@ -77,7 +77,7 @@
 
 <script>
     function switchCompanyAndOpenNewTab(event, newcompanyId) {
-        debugger;
+        
         event.preventDefault();
         const form = event.target;
         const originalPath = window.location.pathname; // Get the original page's path
@@ -94,7 +94,7 @@
             },
             success: function (response) {
                 if (response) {
-                    debugger;
+                    
                     window.open(response.url, '_blank');
                 } else {
                     alert('An error occurred while SwitchCompany the company selection.');

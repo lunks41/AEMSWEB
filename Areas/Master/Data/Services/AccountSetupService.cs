@@ -66,11 +66,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_AccountSetup> GetAccountSetupByIdAsync(short CompanyId, short UserId, short AccSetupId)
+        public async Task<AccountSetupViewModel> GetAccountSetupByIdAsync(short CompanyId, short UserId, short AccSetupId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_AccountSetup>($"SELECT AccSetupId,AccSetupCode,AccSetupName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_AccountSetup WHERE AccSetupId={AccSetupId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetup}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountSetupViewModel>($"SELECT M_ACC.AccSetupId,M_ACC.AccSetupCode,M_ACC.AccSetupName,M_ACC.CompanyId,M_ACC.AccSetupCategoryId,M_Accsc.AccSetupCategoryCode,M_Accsc.AccSetupCategoryName,M_ACC.Remarks,M_ACC.IsActive,M_ACC.CreateById,M_ACC.CreateDate,M_ACC.EditById,M_ACC.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountSetup M_ACC  LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACC.EditById INNER JOIN dbo.M_AccountSetupCategory M_Accsc ON M_Accsc.AccSetupCategoryId = M_ACC.AccSetupCategoryId WHERE M_ACC.AccSetupId={AccSetupId} AND M_ACC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetup}))");
 
                 return result;
             }
@@ -194,7 +194,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     {
                         CompanyId = CompanyId,
                         ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
+                        TransactionId = (short)E_Master.AccountSetup,
                         DocumentId = 0,
                         DocumentNo = "",
                         TblName = "M_COACategory1",
@@ -238,15 +238,15 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountSetupAsync(short CompanyId, short UserId, M_AccountSetup AccountSetup)
+        public async Task<SqlResponse> DeleteAccountSetupAsync(short CompanyId, short UserId, short accSetupId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {
-                    if (AccountSetup.AccSetupId > 0)
+                    if (accSetupId > 0)
                     {
-                        var AccountSetupToRemove = _context.M_AccountSetup.Where(x => x.AccSetupId == AccountSetup.AccSetupId).ExecuteDelete();
+                        var AccountSetupToRemove = _context.M_AccountSetup.Where(x => x.AccSetupId == accSetupId).ExecuteDelete();
 
                         if (AccountSetupToRemove > 0)
                         {
@@ -255,8 +255,8 @@ namespace AEMSWEB.Areas.Master.Data.Services
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.AccountSetup,
-                                DocumentId = AccountSetup.AccSetupId,
-                                DocumentNo = AccountSetup.AccSetupCode,
+                                DocumentId = accSetupId,
+                                DocumentNo = "",
                                 TblName = "M_AccountSetup",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "AccountSetup Delete Successfully",
@@ -290,7 +290,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     {
                         CompanyId = CompanyId,
                         ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
+                        TransactionId = (short)E_Master.AccountSetup,
                         DocumentId = 0,
                         DocumentNo = "",
                         TblName = "M_COACategory1",
@@ -377,11 +377,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short AccSetupId)
+        public async Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountSetupDtViewModel>($"SELECT M_ACCdt.CompanyId,M_ACCdt.AccSetupId,M_ACC.AccSetupCode,M_ACC.AccSetupName,M_ACCdt.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_ACCdt.GLId,M_Chacc.GLCode,M_Chacc.GLName,M_ACCdt.CreateById,M_ACCdt.CreateDate,M_ACCdt.EditById,M_ACCdt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountSetupDt M_ACCdt INNER JOIN dbo.M_AccountSetup M_Acc ON M_Acc.AccSetupId = M_ACCdt.AccSetupId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_ACCdt.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chacc ON M_Chacc.GLId = M_ACCdt.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACCdt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACCdt.EditById WHERE M_ACCdt.AccSetupId={AccSetupId} AND M_ACCdt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupDt}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountSetupDtViewModel>($"SELECT M_ACCdt.CompanyId,M_ACCdt.AccSetupId,M_ACC.AccSetupCode,M_ACC.AccSetupName,M_ACCdt.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_ACCdt.GLId,M_Chacc.GLCode,M_Chacc.GLName,M_ACCdt.CreateById,M_ACCdt.CreateDate,M_ACCdt.EditById,M_ACCdt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountSetupDt M_ACCdt INNER JOIN dbo.M_AccountSetup M_Acc ON M_Acc.AccSetupId = M_ACCdt.AccSetupId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_ACCdt.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chacc ON M_Chacc.GLId = M_ACCdt.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACCdt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACCdt.EditById WHERE M_ACCdt.AccSetupId={accSetupId} AND M_ACCdt.CurrencyId={currencyId} AND M_ACCdt.GLId={gLId} AND M_ACCdt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupDt}))");
 
                 return result;
             }
@@ -527,15 +527,15 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, AccountSetupDtViewModel accountSetupDtViewModel)
+        public async Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {
-                    if (accountSetupDtViewModel.AccSetupId > 0)
+                    if (accSetupId > 0)
                     {
-                        var AccountSetupDtToRemove = _context.M_AccountSetupDt.Where(x => x.AccSetupId == accountSetupDtViewModel.AccSetupId && x.CurrencyId == accountSetupDtViewModel.CurrencyId && x.GLId == accountSetupDtViewModel.GLId).ExecuteDelete();
+                        var AccountSetupDtToRemove = _context.M_AccountSetupDt.Where(x => x.AccSetupId == accSetupId && x.CurrencyId == currencyId && x.GLId == gLId).ExecuteDelete();
 
                         if (AccountSetupDtToRemove > 0)
                         {
@@ -544,7 +544,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.AccountSetupDt,
-                                DocumentId = accountSetupDtViewModel.AccSetupId,
+                                DocumentId = accSetupId,
                                 DocumentNo = "",
                                 TblName = "M_AccountSetupDt",
                                 ModeId = (short)E_Mode.Delete,

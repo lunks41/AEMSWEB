@@ -10,11 +10,11 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<AccountSetupViewModelCount> GetAccountSetupListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_AccountSetup> GetAccountSetupByIdAsync(short CompanyId, short UserId, short AccSetupId);
+        public Task<AccountSetupViewModel> GetAccountSetupByIdAsync(short CompanyId, short UserId, short AccSetupId);
 
         public Task<SqlResponse> SaveAccountSetupAsync(short CompanyId, short UserId, M_AccountSetup M_AccountSetup);
 
-        public Task<SqlResponse> DeleteAccountSetupAsync(short CompanyId, short UserId, M_AccountSetup M_AccountSetup);
+        public Task<SqlResponse> DeleteAccountSetupAsync(short CompanyId, short UserId, short accSetupId);
 
         #endregion Header
 
@@ -22,11 +22,11 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<AccountSetupDtViewModelCount> GetAccountSetupDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short AccSetupId);
+        public Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId);
 
         public Task<SqlResponse> SaveAccountSetupDtAsync(short CompanyId, short UserId, M_AccountSetupDt m_AccountSetupDt);
 
-        public Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, AccountSetupDtViewModel accountSetupDtViewModel);
+        public Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId);
 
         #endregion Details
 

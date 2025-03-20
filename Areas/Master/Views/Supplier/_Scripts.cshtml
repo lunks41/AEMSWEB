@@ -66,7 +66,7 @@
         $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
         $('#editBy').text(data.editBy || "N/A");
         $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
-        debugger;
+        
         // Destroy existing grids if they exist
         if ($("#gridaddress").data("kendoGrid")) {
             $("#gridaddress").data("kendoGrid").destroy();

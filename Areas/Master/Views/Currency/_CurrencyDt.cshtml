@@ -165,10 +165,10 @@
         $('#exhRate').val(data.ExhRate);
         $('#validFrom').val(data.ValidFrom);
 
-        $('#createById').text(data.CreateById || "N/A");
-        $('#createDate').text(data.CreateDate ? new Date(data.CreateDate).toLocaleString() : "N/A");
-        $('#editById').text(data.EditById || "N/A");
-        $('#editDate').text(data.EditDate ? new Date(data.EditDate).toLocaleString() : "N/A");
+        $('#createById').text(data.createById || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editById').text(data.editById || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
         checkMandatoryCurrencyDtFields();
     }

@@ -55,7 +55,7 @@
     let permissions = {};
     $(document).ready(function () {
         companyId = getUrlParameter('companyId') || 0;
-        debugger;
+        
         permissions = {
             canCreate: @Json.Serialize(canCreate),
             canEdit: @Json.Serialize(canEdit),
@@ -70,7 +70,7 @@
     });
 
         function Refresh() {
-            const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })';
+            const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             const columnsProperties = [
                 { field: 'glCode', title: 'Code', width: 100 },
                 { field: 'glName', title: 'Name', width: 200 }
@@ -89,22 +89,37 @@
 
         }
 
-    function SelectedDropdown(DrpdwnName) { }
+        function SelectedDropdown(DrpdwnName) { }
 
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
-        $('#btnAddRecord').on('click', function () {
-            clearForm();
-            setDefaultValues();
-            $('#addAccountSetupCategoryModal').modal('show');
+
+        $('#btnAccountSetupEdit').on('click', function () { setMode("edit"); });
+        $('#btnAccountSetupClose').on('click', function () { $('#accountSetupModal').modal('hide'); });
+        $('#btnAccountSetupDtEdit').on('click', function () { setMode("edit"); });
+        $('#btnAccountSetupDtClose').on('click', function () { $('#accountSetupDtModal').modal('hide'); });
+        $('#btnAccountSetupCategoryEdit').on('click', function () { setMode("edit"); });
+        $('#btnAccountSetupCategoryClose').on('click', function () { $('#accountSetupCategoryModal').modal('hide'); });
+        // For Account Setup tab
+        $('#addaccountSetuprecord').on('click', function () {
+            clearAccountSetupForm();        // Updated function name
+            setAccountSetupDefaultValues(); // Updated function name
+            $('#accountSetupModal').modal('show');
         });
 
-        $('#btnSave').on('click', function () {
-            saveAccountSetupCategory();
+        // For Setup Details tab
+        $('#addaccountSetupDtrecord').on('click', function () {
+            clearAccountSetupDtForm();      // Ensure this function exists in _AccountSetupDt.cshtml
+            setAccountSetupDtDefaultValues();
+            $('#accountSetupDtModal').modal('show');
         });
 
-        $('#btnClose').on('click', function () {
-            $('#addAccountSetupCategoryModal').modal('hide');
+        // For Category tab
+        $('#addaccountSetupCategoryrecord').on('click', function () {
+            clearAccountSetupCategoryForm(); // Updated function name
+            setAccountSetupCategoryDefaultValues();
+            $('#accountSetupCategoryModal').modal('show');
         });
+       
     </script>
 }

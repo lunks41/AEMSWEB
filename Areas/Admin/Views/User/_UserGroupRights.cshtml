@@ -38,7 +38,7 @@
 <script>
 
     function loadGroupRights() {
-        debugger;
+        
         var moduleId = $("#cmb_usergroup").data("kendoComboBox").value();
 
         if (moduleId > 0) {
@@ -56,7 +56,7 @@
                 success: function (result) {
                     var tbody = $('#rightsTableBody');
                     tbody.empty();
-                    debugger;
+                    
                     if (result.data) {
                         result.data.forEach(function (item) {
                             var row = `<tr data-right-id="${item.rightId}">

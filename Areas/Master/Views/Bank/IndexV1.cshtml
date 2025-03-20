@@ -189,7 +189,7 @@
         }
 
         function loadGrid() {
-    debugger;
+    
     let searchString = $('#txtsearch').val();
     let url = '@Url.Action("List", "Bank", new { area = "Master" })';
     const columns = [
@@ -240,7 +240,7 @@ function openModal(id, mode) {
 }
 
 function populateModalFields(data) {
-    debugger;
+    
     $('#bankId').val(data.bankId);
     $('#bankCode').val(data.bankCode);
     $('#bankName').val(data.bankName);
@@ -336,9 +336,9 @@ function setMode(mode) {
                    url: "/Master/Bank/GetBankById",
                    data: { bankId: bankId },
                    success: function (response) {
-                       debugger;
+                       
                        if (response.success) {
-                           debugger;
+                           
                            let bank = response.data;
                            $('#bankId').val(bank.bankId);
                            $('#bankCode').val(bank.bankCode);

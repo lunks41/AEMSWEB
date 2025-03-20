@@ -242,7 +242,7 @@
         }
 
         function populateModalFields(data) {
-            debugger;
+            
             $('#glId').val(data.glId);
             $('#glCode').val(data.glCode);
             $('#glName').val(data.glName);
@@ -339,7 +339,7 @@
             if (!validateChartOfAccountForm()) return;
 
             const isUpdate = data.glId !== '0';
-            debugger;
+            
             $.ajax({
                 type: "POST",
                  url: '@Url.Action("Save", "ChartOfAccount", new { area = "Master" })',
