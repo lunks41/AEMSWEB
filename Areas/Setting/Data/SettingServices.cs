@@ -567,7 +567,7 @@ namespace AEMSWEB.Areas.Setting.Data
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
                 countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
-                countViewModel.data = result == null ? null : result.ToList();
+                countViewModel.data = result?.ToList() ?? new List<ModelNameViewModel>();
 
                 return countViewModel;
             }
@@ -753,7 +753,7 @@ namespace AEMSWEB.Areas.Setting.Data
                 countViewModel.responseMessage = "success";
 
                 countViewModel.totalRecords = 0;
-                countViewModel.data = result == null ? null : result.ToList();
+                countViewModel.data = result?.ToList() ?? new List<UserGridViewModel>();
 
                 return countViewModel;
             }

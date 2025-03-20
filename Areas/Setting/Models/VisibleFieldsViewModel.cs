@@ -3,10 +3,10 @@
     public class VisibleFieldsViewModel
     {
         public short ModuleId { get; set; }
-        public string ModuleName { get; set; }
+        public string? ModuleName { get; set; }
         public short TransactionId { get; set; }
-        public string TransactionCode { get; set; }
-        public string TransactionName { get; set; }
+        public string? TransactionCode { get; set; }
+        public string? TransactionName { get; set; }
         public bool M_ProductId { get; set; }
         public bool M_QTY { get; set; }
         public bool M_BillQTY { get; set; }

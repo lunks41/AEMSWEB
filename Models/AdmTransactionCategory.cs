@@ -7,10 +7,10 @@ namespace AEMSWEB.Models
         [Key]
         public Int16 TransCategoryId { get; set; }
 
-        public string TransCategoryCode { get; set; }
-        public string TransCategoryName { get; set; }
+        public string? TransCategoryCode { get; set; }
+        public string? TransCategoryName { get; set; }
         public Int16 SeqNo { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

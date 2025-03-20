@@ -22,7 +22,7 @@ namespace AEMSWEB.Models
         public Int16 pageNumber { get; set; }
 
         [FromHeader]
-        public string searchString
+        public string? searchString
         { get { return _searchStr == null ? string.Empty : _searchStr.Trim(); } set { _searchStr = value; } }
 
         [FromHeader]
@@ -32,17 +32,17 @@ namespace AEMSWEB.Models
         public Int16 TransactionId { get; set; }
 
         [FromHeader]
-        public string DocumentId { get; set; }
+        public string? DocumentId { get; set; }
 
         [FromHeader]
-        public string fromDate
+        public string? fromDate
         {
             get { return DateHelperStatic.FormatDate(_fromdate); }
             set { _fromdate = DateHelperStatic.ParseDBDate(value); }
         }
 
         [FromHeader]
-        public string toDate
+        public string? toDate
         {
             get { return DateHelperStatic.FormatDate(_todate); }
             set { _todate = DateHelperStatic.ParseDBDate(value); }
@@ -66,7 +66,7 @@ namespace AEMSWEB.Models
         public Int16 pageNumber { get; set; }
 
         [FromHeader]
-        public string searchString
+        public string? searchString
         { get { return _searchStr == null ? string.Empty : _searchStr.Trim(); } set { _searchStr = value; } }
     }
 }

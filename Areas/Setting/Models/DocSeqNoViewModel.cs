@@ -81,7 +81,7 @@
         public DateTime CreateDate { get; set; }
         public short? EditById { get; set; }
         public DateTime? EditDate { get; set; }
-        public string CreateBy { get; set; }
-        public string EditBy { get; set; }
+        public string? CreateBy { get; set; }
+        public string? EditBy { get; set; }
     }
 }

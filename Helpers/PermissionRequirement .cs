@@ -9,7 +9,7 @@ namespace AEMSWEB.Helpers
     {
         public short ModuleId { get; }
         public short TransactionId { get; }
-        public string PermissionType { get; }
+        public string? PermissionType { get; }
 
         public PermissionRequirement(short moduleId, short transactionId, string permissionType)
         {
@@ -22,7 +22,6 @@ namespace AEMSWEB.Helpers
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public PermissionHandler(ApplicationDbContext context)
         {

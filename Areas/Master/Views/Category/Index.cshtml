@@ -23,10 +23,10 @@
 <!-- Tab Content -->
 <div class="tab-content" id="categoryTabsContent">
     <div class="tab-pane fade show active" id="category" role="tabpanel" aria-labelledby="category-tab">
-        @Html.Partial("_Category")
+        @await Html.PartialAsync("_Category")
     </div>
     <div class="tab-pane fade" id="subcategory" role="tabpanel" aria-labelledby="subcategory-tab">
-        @Html.Partial("_SubCategory")
+        @await Html.PartialAsync("_SubCategory")
     </div>
 </div>
 

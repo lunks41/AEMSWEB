@@ -9,8 +9,8 @@ namespace AEMSWEB.Entities.Masters
         public Int16 GLId { get; set; }
 
         public Int16 CompanyId { get; set; }
-        public string GLCode { get; set; }
-        public string GLName { get; set; }
+        public string? GLCode { get; set; }
+        public string? GLName { get; set; }
         public Int16 AccTypeId { get; set; }
         public Int16 AccGroupId { get; set; }
 
@@ -25,7 +25,7 @@ namespace AEMSWEB.Entities.Masters
 
         public bool IsSysControl { get; set; }
         public Int16 SeqNo { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

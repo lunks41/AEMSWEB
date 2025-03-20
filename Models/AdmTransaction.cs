@@ -7,8 +7,8 @@ namespace AEMSWEB.Models
     public class AdmTransaction
     {
         public Int16 TransactionId { get; set; }
-        public string TransactionCode { get; set; }
-        public string TransactionName { get; set; }
+        public string? TransactionCode { get; set; }
+        public string? TransactionName { get; set; }
 
         [ForeignKey("Module")]
         public byte ModuleId { get; set; }
@@ -18,7 +18,7 @@ namespace AEMSWEB.Models
 
         public bool IsNumber { get; set; }
         public Int16 SeqNo { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
 
         public Int16 CreateById { get; set; }

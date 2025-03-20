@@ -10,14 +10,14 @@ namespace AEMSWEB.Entities.Setting
         public Int16 UserId { get; set; }
         public Int16 ModuleId { get; set; }
         public Int16 TransactionId { get; set; }
-        public string GrdName { get; set; }
-        public string GrdKey { get; set; }
-        public string GrdColVisible { get; set; }
-        public string GrdColOrder { get; set; }
-        public string GrdColSize { get; set; }
-        public string GrdSort { get; set; }
+        public string? GrdName { get; set; }
+        public string? GrdKey { get; set; }
+        public string? GrdColVisible { get; set; }
+        public string? GrdColOrder { get; set; }
+        public string? GrdColSize { get; set; }
+        public string? GrdSort { get; set; }
 
-        public string GrdString { get; set; }
+        public string? GrdString { get; set; }
         public Int16 CreateById { get; set; }
 
         [NotMapped]

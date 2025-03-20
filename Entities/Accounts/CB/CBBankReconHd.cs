@@ -11,11 +11,11 @@ namespace AEMSWEB.Entities.Accounts.CB
         [Key]
         public Int64 ReconId { get; set; }
 
-        public string ReconNo { get; set; }
+        public string? ReconNo { get; set; }
         public Int64 PrevReconId { get; set; }
 
-        public string PrevReconNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? PrevReconNo { get; set; }
+        public string? ReferenceNo { get; set; }
 
         public DateTime TrnDate { get; set; }
         public DateTime AccountDate { get; set; }
@@ -28,7 +28,7 @@ namespace AEMSWEB.Entities.Accounts.CB
 
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotAmt { get; set; }
@@ -49,7 +49,7 @@ namespace AEMSWEB.Entities.Accounts.CB
         public bool IsCancel { get; set; }
         public Int16? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
+        public string? CancelRemarks { get; set; }
         public byte EditVersion { get; set; }
     }
 }

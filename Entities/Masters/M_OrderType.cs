@@ -10,13 +10,13 @@ namespace AEMSWEB.Entities.Masters
         [Key]
         public Int16 OrderTypeId { get; set; }
 
-        public string OrderTypeCode { get; set; }
-        public string OrderTypeName { get; set; }
+        public string? OrderTypeCode { get; set; }
+        public string? OrderTypeName { get; set; }
 
         [ForeignKey("OrderTypeCategoryId")]
         public Int16 OrderTypeCategoryId { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

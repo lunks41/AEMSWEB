@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AEMSWEB.Controllers
 {
-    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly SignInManager<AdmUser> _signInManager;
@@ -34,9 +33,11 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult AccessDenied() => View();
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login() => View();
 
         [HttpPost]
@@ -261,7 +262,7 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [AllowAnonymous]
         public IActionResult Register() => View();
 
         [HttpPost]
@@ -328,6 +329,7 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult VerifyEmail() => View();
 
         [HttpPost]
@@ -356,6 +358,7 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult ChangePassword(string username)
         {
             if (string.IsNullOrEmpty(username))
@@ -405,6 +408,7 @@ namespace AEMSWEB.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

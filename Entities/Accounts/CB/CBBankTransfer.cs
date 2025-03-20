@@ -11,8 +11,8 @@ namespace AEMSWEB.Entities.Accounts.CB
         [Key]
         public Int64 TransferId { get; set; }
 
-        public string TransferNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? TransferNo { get; set; }
+        public string? ReferenceNo { get; set; }
         public DateTime TrnDate { get; set; }
         public DateTime AccountDate { get; set; }
         public Int16 FromBankId { get; set; }
@@ -22,7 +22,7 @@ namespace AEMSWEB.Entities.Accounts.CB
         public decimal FromExhRate { get; set; }
 
         public Int16 PaymentTypeId { get; set; }
-        public string ChequeNo { get; set; }
+        public string? ChequeNo { get; set; }
         public DateTime ChequeDate { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
@@ -64,13 +64,13 @@ namespace AEMSWEB.Entities.Accounts.CB
         [Column(TypeName = "decimal(18,4)")]
         public decimal BankTotLocalAmt { get; set; }
 
-        public string Remarks { get; set; }
-        public string PayeeTo { get; set; }
+        public string? Remarks { get; set; }
+        public string? PayeeTo { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal ExhGainLoss { get; set; }
 
-        public string ModuleFrom { get; set; }
+        public string? ModuleFrom { get; set; }
 
         public Int16 CreateById { get; set; }
 
@@ -82,7 +82,7 @@ namespace AEMSWEB.Entities.Accounts.CB
         public bool IsCancel { get; set; }
         public Int16? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
+        public string? CancelRemarks { get; set; }
         public byte EditVersion { get; set; }
     }
 }

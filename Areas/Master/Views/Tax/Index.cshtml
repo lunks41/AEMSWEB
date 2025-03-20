@@ -29,17 +29,17 @@
 <div class="tab-content" id="taxTabsContent">
     <!-- Tax Tab -->
     <div class="tab-pane fade show active" id="tax" role="tabpanel" aria-labelledby="tax-tab">
-        @Html.Partial("_Tax")
+        @await Html.PartialAsync("_Tax")
     </div>
 
     <!-- Tax Details Tab -->
     <div class="tab-pane fade" id="taxdt" role="tabpanel" aria-labelledby="taxdt-tab">
-        @Html.Partial("_TaxDt")
+        @await Html.PartialAsync("_TaxDt")
     </div>
 
     <!-- Tax Category Tab -->
     <div class="tab-pane fade" id="taxcategory" role="tabpanel" aria-labelledby="taxcategory-tab">
-        @Html.Partial("_TaxCategory")
+        @await Html.PartialAsync("_TaxCategory")
     </div>
 </div>
 
@@ -99,16 +99,16 @@
                         title: "Actions",
                         template: function (dataItem) {
                             return `
-                                            <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.taxId}', 'view')">
-                                                <i class="mdi mdi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.taxId}', 'edit')">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" onclick="deleteTax('${dataItem.taxId}')">
-                                                <i class="mdi mdi-delete"></i>
-                                            </button>
-                                        `;
+                                                    <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.taxId}', 'view')">
+                                                        <i class="mdi mdi-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.taxId}', 'edit')">
+                                                        <i class="mdi mdi-pencil"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" onclick="deleteTax('${dataItem.taxId}')">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                `;
                         },
                         width: "150px"
                     },

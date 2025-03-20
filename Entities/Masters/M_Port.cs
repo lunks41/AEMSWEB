@@ -13,9 +13,9 @@ namespace AEMSWEB.Entities.Masters
         [ForeignKey("PortRegionId")]
         public Int16 PortRegionId { get; set; }
 
-        public string PortCode { get; set; }
-        public string PortName { get; set; }
-        public string Remarks { get; set; }
+        public string? PortCode { get; set; }
+        public string? PortName { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

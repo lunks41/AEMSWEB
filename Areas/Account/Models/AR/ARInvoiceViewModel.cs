@@ -16,40 +16,40 @@ namespace AEMSWEB.Areas.Account.Models.AR
         //actual Model
         public short CompanyId { get; set; }
 
-        public string InvoiceId { get; set; }
-        public string InvoiceNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? InvoiceId { get; set; }
+        public string? InvoiceNo { get; set; }
+        public string? ReferenceNo { get; set; }
 
-        public string TrnDate
+        public string? TrnDate
         {
             get { return DateHelperStatic.FormatDate(_trnDate); }
             set { _trnDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string AccountDate
+        public string? AccountDate
         {
             get { return DateHelperStatic.FormatDate(_accountDate); }
             set { _accountDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string DeliveryDate
+        public string? DeliveryDate
         {
             get { return DateHelperStatic.FormatDate(_deliveryDate); }
             set { _deliveryDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string DueDate
+        public string? DueDate
         {
             get { return DateHelperStatic.FormatDate(_dueDate); }
             set { _dueDate = DateHelperStatic.ParseDBDate(value); }
         }
 
         public int CustomerId { get; set; }
-        public string CustomerCode { get; set; }
-        public string CustomerName { get; set; }
+        public string? CustomerCode { get; set; }
+        public string? CustomerName { get; set; }
         public short CurrencyId { get; set; }
-        public string CurrencyCode { get; set; }
-        public string CurrencyName { get; set; }
+        public string? CurrencyCode { get; set; }
+        public string? CurrencyName { get; set; }
 
         [Column(TypeName = "decimal(18,10)")]
         public decimal ExhRate { get; set; }
@@ -58,11 +58,11 @@ namespace AEMSWEB.Areas.Account.Models.AR
         public decimal CtyExhRate { get; set; }
 
         public short CreditTermId { get; set; }
-        public string CreditTermCode { get; set; }
-        public string CreditTermName { get; set; }
+        public string? CreditTermCode { get; set; }
+        public string? CreditTermName { get; set; }
         public short BankId { get; set; }
-        public string BankCode { get; set; }
-        public string BankName { get; set; }
+        public string? BankCode { get; set; }
+        public string? BankName { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotAmt { get; set; }
@@ -73,7 +73,7 @@ namespace AEMSWEB.Areas.Account.Models.AR
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmt { get; set; }
 
-        public string GstClaimDate
+        public string? GstClaimDate
         {
             get { return DateHelperStatic.FormatDate(_gstClaimDate); }
             set { _gstClaimDate = DateHelperStatic.ParseDBDate(value); }
@@ -117,29 +117,29 @@ namespace AEMSWEB.Areas.Account.Models.AR
         [Column(TypeName = "decimal(18,4)")]
         public decimal ExGainLoss { get; set; }
 
-        public string SalesOrderId { get; set; }
-        public string SalesOrderNo { get; set; }
-        public string OperationId { get; set; }
-        public string OperationNo { get; set; }
-        public string Remarks { get; set; }
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string Address3 { get; set; }
-        public string Address4 { get; set; }
-        public string PinCode { get; set; }
+        public string? SalesOrderId { get; set; }
+        public string? SalesOrderNo { get; set; }
+        public string? OperationId { get; set; }
+        public string? OperationNo { get; set; }
+        public string? Remarks { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Address3 { get; set; }
+        public string? Address4 { get; set; }
+        public string? PinCode { get; set; }
         public short CountryId { get; set; }
-        public string CountryCode { get; set; }
-        public string CountryName { get; set; }
-        public string PhoneNo { get; set; }
-        public string FaxNo { get; set; }
-        public string ContactName { get; set; }
-        public string MobileNo { get; set; }
-        public string EmailAdd { get; set; }
-        public string ModuleFrom { get; set; }
-        public string SupplierName { get; set; }
-        public string SuppInvoiceNo { get; set; }
-        public string APInvoiceId { get; set; }
-        public string APInvoiceNo { get; set; }
+        public string? CountryCode { get; set; }
+        public string? CountryName { get; set; }
+        public string? PhoneNo { get; set; }
+        public string? FaxNo { get; set; }
+        public string? ContactName { get; set; }
+        public string? MobileNo { get; set; }
+        public string? EmailAdd { get; set; }
+        public string? ModuleFrom { get; set; }
+        public string? SupplierName { get; set; }
+        public string? SuppInvoiceNo { get; set; }
+        public string? APInvoiceId { get; set; }
+        public string? APInvoiceNo { get; set; }
         public short CreateById { get; set; }
         public DateTime? CreateDate { get; set; }
         public short? EditById { get; set; }
@@ -147,10 +147,10 @@ namespace AEMSWEB.Areas.Account.Models.AR
         public bool IsCancel { get; set; }
         public short? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
-        public string CreateBy { get; set; }
-        public string EditBy { get; set; }
-        public string CancelBy { get; set; }
+        public string? CancelRemarks { get; set; }
+        public string? CreateBy { get; set; }
+        public string? EditBy { get; set; }
+        public string? CancelBy { get; set; }
         public byte EditVersion { get; set; }
         public List<ARInvoiceDtViewModel> data_details { get; set; }
     }
@@ -158,6 +158,6 @@ namespace AEMSWEB.Areas.Account.Models.AR
     public class SaveARInvoiceViewModel
     {
         public ARInvoiceViewModel ARInvoice { get; set; }
-        public string CompanyId { get; set; }
+        public string? CompanyId { get; set; }
     }
 }

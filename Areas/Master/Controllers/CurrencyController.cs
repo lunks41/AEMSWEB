@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _currencyService = currencyService;
         }
 
-        #region Currency CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -55,8 +53,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Currency CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ListCurrency(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short currencyId, string companyId)
+        public async Task<JsonResult> GetCurrencyById(short currencyId, string companyId)
         {
             if (currencyId <= 0)
                 return Json(new { success = false, message = "Invalid Currency ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveCurrencyViewModel model)
+        public async Task<IActionResult> SaveCurrency([FromBody] SaveCurrencyViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -118,7 +118,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     CurrencyCode = model.currency.CurrencyCode ?? string.Empty,
                     CurrencyName = model.currency.CurrencyName ?? string.Empty,
                     IsMultiply = model.currency.IsMultiply,
-                    Remarks = model.currency.Remarks?.Trim() ?? string.Empty,
+                    Remarks = model.currency.Remarks?.Trim() ??string.Empty,
                     IsActive = model.currency.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
@@ -137,7 +137,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short currencyId, string companyId)
+        public async Task<IActionResult> DeleteCurrency(short currencyId, string companyId)
         {
             if (currencyId <= 0)
                 return Json(new { success = false, message = "Invalid Currency ID" });
@@ -168,7 +168,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region CurrencyDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ListCurrencyDt(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -190,9 +190,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDetailById(short currencyDtId, DateTime validFrom, string companyId)
+        public async Task<JsonResult> GetCurrencyDtById(short currencyId, DateTime validFrom, string companyId)
         {
-            if (currencyDtId <= 0)
+            if (currencyId <= 0)
                 return Json(new { success = false, message = "Invalid Currency Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -200,7 +200,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _currencyService.GetCurrencyDtByIdAsync(companyIdShort, parsedUserId.Value, currencyDtId, validFrom);
+                var data = await _currencyService.GetCurrencyDtByIdAsync(companyIdShort, parsedUserId.Value, currencyId, validFrom);
                 return data == null
                     ? Json(new { success = false, message = "Currency Detail not found" })
                     : Json(new { success = true, data });
@@ -213,7 +213,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveDetail([FromBody] SaveCurrencyDtViewModel model)
+        public async Task<IActionResult> SaveCurrencyDt([FromBody] SaveCurrencyDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -246,9 +246,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteDetail(short currencyDtId, DateTime validFrom, string companyId)
+        public async Task<IActionResult> DeleteCurrencyDt(short currencyId, DateTime validFrom, string companyId)
         {
-            if (currencyDtId <= 0)
+            if (currencyId <= 0)
                 return Json(new { success = false, message = "Invalid Currency Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -262,7 +262,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var detail = await _currencyService.GetCurrencyDtByIdAsync(companyIdShort, parsedUserId.Value, currencyDtId, validFrom);
+                var detail = await _currencyService.GetCurrencyDtByIdAsync(companyIdShort, parsedUserId.Value, currencyId, validFrom);
                 if (detail == null)
                     return Json(new { success = false, message = "Currency Detail not found" });
 
@@ -281,7 +281,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region CurrencyLocalDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListLocalDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ListCurrencyLocalDt(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -303,9 +303,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetLocalDetailById(short currencyLocalDtId, DateTime validFrom, string companyId)
+        public async Task<JsonResult> GetCurrencyLocalDtById(short currencyId, DateTime validFrom, string companyId)
         {
-            if (currencyLocalDtId <= 0)
+            if (currencyId <= 0)
                 return Json(new { success = false, message = "Invalid Local Currency Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -313,7 +313,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _currencyService.GetCurrencyLocalDtByIdAsync(companyIdShort, parsedUserId.Value, currencyLocalDtId, validFrom);
+                var data = await _currencyService.GetCurrencyLocalDtByIdAsync(companyIdShort, parsedUserId.Value, currencyId, validFrom);
                 return data == null
                     ? Json(new { success = false, message = "Local Currency Detail not found" })
                     : Json(new { success = true, data });
@@ -326,7 +326,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveLocalDetail([FromBody] SaveCurrencyLocalDtViewModel model)
+        public async Task<IActionResult> SaveCurrencyLocalDt([FromBody] SaveCurrencyLocalDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -359,9 +359,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteLocalDetail(short currencyLocalDtId, DateTime validFrom, string companyId)
+        public async Task<IActionResult> DeleteCurrencyLocalDt(short currencyId, DateTime validFrom, string companyId)
         {
-            if (currencyLocalDtId <= 0)
+            if (currencyId <= 0)
                 return Json(new { success = false, message = "Invalid Local Currency Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -375,7 +375,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var localDetail = await _currencyService.GetCurrencyLocalDtByIdAsync(companyIdShort, parsedUserId.Value, currencyLocalDtId, validFrom);
+                var localDetail = await _currencyService.GetCurrencyLocalDtByIdAsync(companyIdShort, parsedUserId.Value, currencyId, validFrom);
                 if (localDetail == null)
                     return Json(new { success = false, message = "Local Currency Detail not found" });
 

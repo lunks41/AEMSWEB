@@ -7,14 +7,14 @@ namespace AEMSWEB.Entities.Accounts.GL
     public class GLJournalDt
     {
         public Int64 JournalId { get; set; }
-        public string JournalNo { get; set; }
+        public string? JournalNo { get; set; }
         public Int16 ItemNo { get; set; }
         public Int16 SeqNo { get; set; }
 
         [ForeignKey(nameof(GLId))]
         public Int16 GLId { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public Int16 ProductId { get; set; }
         public bool IsDebit { get; set; }
 

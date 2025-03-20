@@ -8,7 +8,7 @@ namespace AEMSWEB.ViewModels
         public string? Name { get; set; }
 
         [Required(ErrorMessage = "UserCode is required.")]
-        public string UserCode { get; set; }
+        public string? UserCode { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress]

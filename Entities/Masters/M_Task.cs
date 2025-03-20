@@ -8,10 +8,10 @@ namespace AEMSWEB.Entities.Masters
         [Key]
         public Int32 TaskId { get; set; }
 
-        public string TaskCode { get; set; }
-        public string TaskName { get; set; }
+        public string? TaskCode { get; set; }
+        public string? TaskName { get; set; }
         public byte TaskOrder { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

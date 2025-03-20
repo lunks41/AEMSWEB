@@ -7,14 +7,14 @@ namespace AEMSWEB.Entities.Accounts.CB
     public class CBGenReceiptDt
     {
         public Int64 ReceiptId { get; set; }
-        public string ReceiptNo { get; set; }
+        public string? ReceiptNo { get; set; }
         public Int16 ItemNo { get; set; }
         public Int16 SeqNo { get; set; }
 
         [ForeignKey(nameof(GLId))]
         public Int16 GLId { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotAmt { get; set; }

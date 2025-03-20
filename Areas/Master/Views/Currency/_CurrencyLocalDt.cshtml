@@ -2,13 +2,13 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Local Currency Rates</h3>
+                <h3>Exchange Rates</h3>
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
-                        <div style="width: 150px;">
+                        <div style="wiLocalDth: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                        <button type="button" class="btn btn-primary" onclick="loadCurrencyLocalDtGrid();">
                             <i class="mdi mdi-magnify"></i> Search
                         </button>
                         <button type="button" class="btn btn-secondary" onclick="clearSearch();">
@@ -16,82 +16,74 @@
                         </button>
                     </div>
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#localCurrencyModal">
-                            <i class="mdi mdi-plus me-1"></i> Add Local Rate
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#currencyLocalDtModal">
+                            <i class="mdi mdi-plus me-1"></i> Add Exchange Rate
                         </button>
                     </div>
                 </div>
-                <div id="localCurrencyGrid"></div>
+                <div id="currencyLocalDtGrid"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Local Currency Modal -->
-<div class="modal fade" id="localCurrencyModal" tabindex="-1" aria-labelledby="localCurrencyModalLabel" aria-hidden="true">
+<!-- Currency Detail Modal -->
+<div class="modal fade" id="currencyLocalDtModal" tabindex="-1" aria-labelledby="currencyLocalDtModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="localCurrencyModalLabel">Local Rate Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearLocalCurrencyForm()"></button>
+                <h5 class="modal-title" id="currencyLocalDtModalLabel">Exchange Rate Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCurrencyLocalDtForm()"></button>
             </div>
             <div class="modal-body p-4">
-                <form id="localCurrencyForm">
-                    <input type="hidden" id="LocalCurrencyId" />
+                <form id="currencyLocalDtForm">
+                    <input type="hidden" id="CurrencyLocalDtId" />
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="cmbLocalCurrency" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <select id="cmbLocalCurrency" class="form-select" required>
-                                    <!-- Populate via API -->
-                                </select>
+                            <div class="mb-2">
+                                <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="cmd_currency" style="wiLocalDth: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="LocalExhRate" class="form-label">Exchange Rate <span class="text-danger">*</span></label>
-                                <input type="number" step="0.0000000001" class="form-control" id="LocalExhRate" required>
+                                <label for="exhRate" class="form-label">Exchange Rate <span class="text-danger">*</span></label>
+                                <input type="number" step="0.0000000001" class="form-control" id="exhRate" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="LocalValidFrom" class="form-label">Valid From <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="LocalValidFrom" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="IsActiveLocal">
-                                <label class="form-check-label" for="IsActiveLocal">Is Active</label>
+                                <label for="validFrom" class="form-label">Valid From <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="validFrom" required>
                             </div>
                         </div>
                     </div>
                     <!-- Audit Section -->
-                    <div class="accordion mt-3" id="localCurrencyAudit">
+                    <div class="accordion mt-3" id="currencyLocalDtAudit">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#localCurrencyAuditBody">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#currencyLocalDtAuditBody">
                                     Audit Details
                                 </button>
                             </h2>
-                            <div id="localCurrencyAuditBody" class="accordion-collapse collapse">
+                            <div id="currencyLocalDtAuditBody" class="accordion-collapse collapse">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="CreateByLocal" class="form-control-plaintext"></p>
+                                            <p id="createByLocalDt" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="CreateDateLocal" class="form-control-plaintext"></p>
+                                            <p id="createDateLocalDt" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="EditByLocal" class="form-control-plaintext"></p>
+                                            <p id="editByLocalDt" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="EditDateLocal" class="form-control-plaintext"></p>
+                                            <p id="editDateLocalDt" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -101,11 +93,164 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearLocalCurrencyForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnLocalCurrencyEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" onclick="clearLocalCurrencyForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnLocalCurrencySave" onclick="saveLocalCurrency()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearCurrencyLocalDtForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencyLocalDtEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" onclick="clearCurrencyLocalDtForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencyLocalDtSave" onclick="saveCurrencyLocalDt()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+
+    function setCurrencyLocalDtDefaultValues() {
+        clearCurrencyLocalDtForm();
+        $('#btnSave').prop('disabled', false);
+    }
+
+    function handleCurrencyLocalDtEnterKey(event) {
+        if (event.key === 'Enter') loadCurrencyLocalDtGrid();
+    }
+
+    function clearCurrencyLocalDtSearch() {
+        $('#txtsearch').val('');
+        loadCurrencyLocalDtGrid();
+    }
+
+    function loadCurrencyLocalDtGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("ListCurrencyLocalDt", "Currency", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                wiLocalDth: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCurrencyLocalDtModal('${dataItem.currencyId}','${dataItem.validFrom}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCurrencyLocalDtModal('${dataItem.currencyId}','${dataItem.validFrom}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCurrencyLocalDt('${dataItem.currencyId}','${dataItem.validFrom}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "currency", title: "Currency Name" },
+            { field: "exhRate", title: "Exh-Rate" },
+            { field: "validFrom", title: "Valid From" }
+        ];
+
+        initializeKendoGrid("currencyLocalDtGrid", url, { searchString, companyId }, columns);
+    }
+
+    function openCurrencyLocalDtModal(id, validFrom, mode) {
+        $.get('@Url.Action("GetCurrencyLocalDtById", "Currency", new { area = "Master" })', { cmd_currency: id, validFrom, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateCurrencyLocalDtModalFields(response.data);
+                    setCurrencyLocalDtMode(mode);
+                    $('#addCurrencyLocalDtModal').modal('show');
+                }
+            });
+    }
+
+    function populateCurrencyLocalDtModalFields(data) {
+        $('#cmd_currency').data("kendoComboBox").value(data.CurrencyId);
+        $('#exhRate').val(data.ExhRate);
+        $('#validFrom').val(data.ValidFrom);
+
+        $('#createById').text(data.CreateById || "N/A");
+        $('#createDate').text(data.CreateDate ? new Date(data.CreateDate).toLocaleString() : "N/A");
+        $('#editById').text(data.EditById || "N/A");
+        $('#editDate').text(data.EditDate ? new Date(data.EditDate).toLocaleString() : "N/A");
+
+        checkMandatoryCurrencyLocalDtFields();
+    }
+
+    function setCurrencyLocalDtMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#cmd_currency,#exhRate, #validFrom').prop('readonly', !canEdit);
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteCurrencyLocalDt(id, validFrom) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Currency/DeleteCurrencyLocalDt?currencyId=${id}&validFrom=${validFrom}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadCurrencyLocalDtGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveCurrencyLocalDt() {
+        let data = {
+            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
+            ExhRate: $('#exhRate').val().trim(),
+            ValidFrom: $('#validFrom').val().trim(),
+            CreateById: parseInt($('#createById').val()) || 0,
+            CreateDate: new Date($('#createDate').val()) || null,
+            EditById: parseInt($('#editById').val()) || null,
+            EditDate: new Date($('#editDate').val()) || null
+        };
+
+        if (!data.ExhRate || !data.ValidFrom) {
+            alert('Code and Name are required!');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveCurrencyLocalDt", "Currency", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ currencyLocalDt: data }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addCurrencyLocalDtModal').modal('hide');
+                    loadCurrencyLocalDtGrid();
+                    clearCurrencyLocalDtForm();
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+
+    function clearCurrencyLocalDtForm() {
+        $('#currencyLocalDtForm')[0].reset();
+        $('#cmd_currency').val(0);
+        $('#createById').text('');
+        $('#createDate').text('');
+        $('#editById').text('');
+        $('#editDate').text('');
+        $('#btnSave').prop('disabled', true);
+    }
+
+    function checkMandatoryCurrencyLocalDtFields() {
+        let isValid = $('#exhRate').val().trim() && $('#validFrom').val().trim();
+        $('#btnSave').prop('disabled', !isValid);
+    }
+</script>

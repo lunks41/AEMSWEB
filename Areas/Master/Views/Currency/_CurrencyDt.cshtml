@@ -8,7 +8,7 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                        <button type="button" class="btn btn-primary" onclick="loadCurrencyDtGrid();">
                             <i class="mdi mdi-magnify"></i> Search
                         </button>
                         <button type="button" class="btn btn-secondary" onclick="clearSearch();">
@@ -40,29 +40,21 @@
                     <input type="hidden" id="CurrencyDtId" />
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="cmbCurrency" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <select id="cmbCurrency" class="form-select" required>
-                                    <!-- Populate via API -->
-                                </select>
+                            <div class="mb-2">
+                                <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="cmd_currency" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="ExhRate" class="form-label">Exchange Rate <span class="text-danger">*</span></label>
-                                <input type="number" step="0.0000000001" class="form-control" id="ExhRate" required>
+                                <label for="exhRate" class="form-label">Exchange Rate <span class="text-danger">*</span></label>
+                                <input type="number" step="0.0000000001" class="form-control" id="exhRate" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="ValidFrom" class="form-label">Valid From <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="ValidFrom" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="IsActiveDt">
-                                <label class="form-check-label" for="IsActiveDt">Is Active</label>
+                                <label for="validFrom" class="form-label">Valid From <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="validFrom" required>
                             </div>
                         </div>
                     </div>
@@ -79,19 +71,19 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="CreateByDt" class="form-control-plaintext"></p>
+                                            <p id="createByDt" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="CreateDateDt" class="form-control-plaintext"></p>
+                                            <p id="createDateDt" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="EditByDt" class="form-control-plaintext"></p>
+                                            <p id="editByDt" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="EditDateDt" class="form-control-plaintext"></p>
+                                            <p id="editDateDt" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -109,3 +101,156 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    function setCurrencyDtDefaultValues() {
+        clearCurrencyDtForm();
+        $('#btnSave').prop('disabled', false);
+    }
+
+    function handleCurrencyDtEnterKey(event) {
+        if (event.key === 'Enter') loadCurrencyDtGrid();
+    }
+
+    function clearCurrencyDtSearch() {
+        $('#txtsearch').val('');
+        loadCurrencyDtGrid();
+    }
+
+    function loadCurrencyDtGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("ListCurrencyDt", "Currency", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCurrencyDtModal('${dataItem.currencyId}','${dataItem.validFrom}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCurrencyDtModal('${dataItem.currencyId}','${dataItem.validFrom}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCurrencyDt('${dataItem.currencyId}','${dataItem.validFrom}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "currency", title: "Currency Name" },
+            { field: "exhRate", title: "Exh-Rate" },
+            { field: "validFrom", title: "Valid From" }
+        ];
+
+        initializeKendoGrid("currencyDtGrid", url, { searchString, companyId }, columns);
+    }
+
+    function openCurrencyDtModal(id, validFrom, mode) {
+        $.get('@Url.Action("GetCurrencyDtById", "Currency", new { area = "Master" })', { cmd_currency: id, validFrom, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateCurrencyDtModalFields(response.data);
+                    setCurrencyDtMode(mode);
+                    $('#addCurrencyDtModal').modal('show');
+                }
+            });
+    }
+
+    function populateCurrencyDtModalFields(data) {
+        $('#cmd_currency').data("kendoComboBox").value(data.CurrencyId);
+        $('#exhRate').val(data.ExhRate);
+        $('#validFrom').val(data.ValidFrom);
+
+        $('#createById').text(data.CreateById || "N/A");
+        $('#createDate').text(data.CreateDate ? new Date(data.CreateDate).toLocaleString() : "N/A");
+        $('#editById').text(data.EditById || "N/A");
+        $('#editDate').text(data.EditDate ? new Date(data.EditDate).toLocaleString() : "N/A");
+
+        checkMandatoryCurrencyDtFields();
+    }
+
+    function setCurrencyDtMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#cmd_currency,#exhRate, #validFrom').prop('readonly', !canEdit);
+        $('#btnSave').toggle(canEdit);
+        $('#btnEdit').toggle(isView && permissions.canEdit);
+        $('#btnClose').show();
+        $('#btnClear').hide();
+    }
+
+    function deleteCurrencyDt(id, validFrom) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Currency/DeleteCurrencyDt?currencyId=${id}&validFrom=${validFrom}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadCurrencyDtGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveCurrencyDt() {
+        let data = {
+            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
+            ExhRate: $('#exhRate').val().trim(),
+            ValidFrom: $('#validFrom').val().trim(),
+            CreateById: parseInt($('#createById').val()) || 0,
+            CreateDate: new Date($('#createDate').val()) || null,
+            EditById: parseInt($('#editById').val()) || null,
+            EditDate: new Date($('#editDate').val()) || null
+        };
+
+        if (!data.ExhRate || !data.ValidFrom) {
+            alert('Code and Name are required!');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveCurrencyDt", "Currency", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ currencyDt: data }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addCurrencyDtModal').modal('hide');
+                    loadCurrencyDtGrid();
+                    clearCurrencyDtForm();
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+
+    function clearCurrencyDtForm() {
+        $('#currencyDtForm')[0].reset();
+        $('#cmd_currency').val(0);
+        $('#createById').text('');
+        $('#createDate').text('');
+        $('#editById').text('');
+        $('#editDate').text('');
+        $('#btnSave').prop('disabled', true);
+    }
+
+    function checkMandatoryCurrencyDtFields() {
+        let isValid = $('#exhRate').val().trim() && $('#validFrom').val().trim();
+        $('#btnSave').prop('disabled', !isValid);
+    }
+</script>

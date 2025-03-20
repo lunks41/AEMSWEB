@@ -3,6 +3,16 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    bool canExport = ViewBag.IsExport ?? false;
+    bool canPrint = ViewBag.IsPrint ?? false;
+    int companyId = ViewBag.CompanyId;
+}
+
 <!-- Nav Pills -->
 <ul class="nav nav-pills mb-3" id="currencyTabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -28,18 +38,61 @@
 <!-- Tab Content -->
 <div class="tab-content" id="currencyTabsContent">
     <div class="tab-pane fade show active" id="currency" role="tabpanel" aria-labelledby="currency-tab">
-        @Html.Partial("_Currency")
+        @await Html.PartialAsync("_Currency" )
     </div>
     <div class="tab-pane fade" id="currencydt" role="tabpanel" aria-labelledby="currencydt-tab">
-        @Html.Partial("_CurrencyDt")
+        @await Html.PartialAsync("_CurrencyDt" )
     </div>
     <div class="tab-pane fade" id="currencylocaldt" role="tabpanel" aria-labelledby="currencylocaldt-tab">
-        @Html.Partial("_CurrencyLocalDt")
+        @await Html.PartialAsync("_CurrencyLocalDt" )
     </div>
 </div>
 
 @section Scripts {
-    <script src="~/js/currency.js"></script>
-    <script src="~/js/currencydt.js"></script>
-    <script src="~/js/currencylocaldt.js"></script>
+    <script>
+
+    let companyId = 0;
+    let permissions = {};
+    $(document).ready(function () {
+        companyId = getUrlParameter('companyId') || 0;
+        debugger;
+        permissions = {
+            canCreate: @Json.Serialize(canCreate),
+            canEdit: @Json.Serialize(canEdit),
+            canDelete: @Json.Serialize(canDelete),
+            canRead: @Json.Serialize(canRead),
+        };
+
+        Refresh();
+        loadCurrencyGrid();
+        loadCurrencyDtGrid();
+        loadCurrencyLocalDtGrid();
+    });
+
+        function Refresh() {
+            const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
+
+             const currencylocalUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(currencylocalUrl, "cmd_currencylocal", "currencyName", "currencyId");
+        }
+
+        function SelectedDropdown(DrpdwnName) { }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
+
+        $('#btnAddRecord').on('click', function () {
+            clearForm();
+            setDefaultValues();
+            $('#addCurrencyCategoryModal').modal('show');
+        });
+
+        $('#btnSave').on('click', function () {
+            saveCurrencyCategory();
+        });
+
+        $('#btnClose').on('click', function () {
+            $('#addCurrencyCategoryModal').modal('hide');
+        });
+    </script>
 }

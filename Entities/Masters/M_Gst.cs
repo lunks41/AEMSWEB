@@ -13,9 +13,9 @@ namespace AEMSWEB.Entities.Masters
         [ForeignKey("GstCategoryId")]
         public Int16 GstCategoryId { get; set; }
 
-        public string GstCode { get; set; }
-        public string GstName { get; set; }
-        public string Remarks { get; set; }
+        public string? GstCode { get; set; }
+        public string? GstName { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

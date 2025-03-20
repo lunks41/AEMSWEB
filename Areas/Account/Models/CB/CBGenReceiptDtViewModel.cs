@@ -4,14 +4,14 @@ namespace AEMSWEB.Areas.Account.Models.CB
 {
     public class CBGenReceiptDtViewModel
     {
-        public string ReceiptId { get; set; }
-        public string ReceiptNo { get; set; }
+        public string? ReceiptId { get; set; }
+        public string? ReceiptNo { get; set; }
         public short ItemNo { get; set; }
         public short SeqNo { get; set; }
         public short GLId { get; set; }
-        public string GLCode { get; set; }
-        public string GLName { get; set; }
-        public string Remarks { get; set; }
+        public string? GLCode { get; set; }
+        public string? GLName { get; set; }
+        public string? Remarks { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotAmt { get; set; }

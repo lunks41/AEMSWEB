@@ -8,9 +8,9 @@ namespace AEMSWEB.Entities.Masters
         [Key]
         public Int16 AccSetupCategoryId { get; set; }
 
-        public string AccSetupCategoryCode { get; set; }
-        public string AccSetupCategoryName { get; set; }
-        public string Remarks { get; set; }
+        public string? AccSetupCategoryCode { get; set; }
+        public string? AccSetupCategoryName { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

@@ -24,10 +24,10 @@
 <!-- Tab Content -->
 <div class="tab-content" id="uomTabsContent">
     <div class="tab-pane fade show active" id="uom" role="tabpanel" aria-labelledby="uom-tab">
-        @Html.Partial("_Uom")
+        @await Html.PartialAsync("_Uom")
     </div>
     <div class="tab-pane fade" id="uomdt" role="tabpanel" aria-labelledby="uomdt-tab">
-        @Html.Partial("_UomDt")
+        @await Html.PartialAsync("_UomDt")
     </div>
 </div>
 

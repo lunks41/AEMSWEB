@@ -38,13 +38,13 @@
 <!-- Tab Content -->
 <div class="tab-content" id="accountSetupTabsContent">
     <div class="tab-pane fade show active" id="accountsetup" role="tabpanel" aria-labelledby="accountsetup-tab">
-        @Html.Partial("_AccountSetup")
+        @await Html.PartialAsync("_AccountSetup")
     </div>
     <div class="tab-pane fade" id="accountsetupdt" role="tabpanel" aria-labelledby="accountsetupdt-tab">
-        @Html.Partial("_AccountSetupDt")
+        @await Html.PartialAsync("_AccountSetupDt")
     </div>
     <div class="tab-pane fade" id="accountsetupcategory" role="tabpanel" aria-labelledby="accountsetupcategory-tab">
-        @Html.Partial("_AccountSetupCategory")
+        @await Html.PartialAsync("_AccountSetupCategory")
     </div>
 </div>
 
@@ -106,6 +106,5 @@
         $('#btnClose').on('click', function () {
             $('#addAccountSetupCategoryModal').modal('hide');
         });
-
     </script>
 }

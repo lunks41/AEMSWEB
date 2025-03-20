@@ -13,8 +13,8 @@ namespace AEMSWEB.Entities.Accounts.GL
         [Key]
         public Int64 JournalId { get; set; }
 
-        public string JournalNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? JournalNo { get; set; }
+        public string? ReferenceNo { get; set; }
 
         public DateTime TrnDate { get; set; }
         public DateTime AccountDate { get; set; }
@@ -57,12 +57,12 @@ namespace AEMSWEB.Entities.Accounts.GL
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmtAftGst { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsReverse { get; set; }
         public bool IsRecurrency { get; set; }
         public DateTime RevDate { get; set; }
         public DateTime RecurrenceUntil { get; set; }
-        public string ModuleFrom { get; set; }
+        public string? ModuleFrom { get; set; }
 
         public Int16 CreateById { get; set; }
 
@@ -74,7 +74,7 @@ namespace AEMSWEB.Entities.Accounts.GL
         public bool IsCancel { get; set; }
         public Int16? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
+        public string? CancelRemarks { get; set; }
         public byte EditVersion { get; set; }
     }
 }

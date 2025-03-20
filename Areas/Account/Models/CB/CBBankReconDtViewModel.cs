@@ -7,26 +7,26 @@ namespace AEMSWEB.Areas.Account.Models.CB
     {
         private DateTime _accountDate;
         private DateTime _chequeDate;
-        public string ReconId { get; set; }
-        public string ReconNo { get; set; }
+        public string? ReconId { get; set; }
+        public string? ReconNo { get; set; }
         public short ItemNo { get; set; }
         public bool IsSel { get; set; }
         public byte ModuleId { get; set; }
         public byte TransactionId { get; set; }
-        public string DocumentId { get; set; }
-        public string DocumentNo { get; set; }
-        public string DocReferenceNo { get; set; }
+        public string? DocumentId { get; set; }
+        public string? DocumentNo { get; set; }
+        public string? DocReferenceNo { get; set; }
 
-        public string AccountDate
+        public string? AccountDate
         {
             get { return DateHelperStatic.FormatDate(_accountDate); }
             set { _accountDate = DateHelperStatic.ParseDBDate(value); }
         }
 
         public short PaymentTypeId { get; set; }
-        public string ChequeNo { get; set; }
+        public string? ChequeNo { get; set; }
 
-        public string ChequeDate
+        public string? ChequeDate
         {
             get { return DateHelperStatic.FormatDate(_chequeDate); }
             set { _chequeDate = DateHelperStatic.ParseDBDate(value); }
@@ -38,8 +38,8 @@ namespace AEMSWEB.Areas.Account.Models.CB
         [ForeignKey(nameof(GLId))]
         public short GLId { get; set; }
 
-        public string GLCode { get; set; }
-        public string GLName { get; set; }
+        public string? GLCode { get; set; }
+        public string? GLName { get; set; }
 
         public bool IsDebit { get; set; }
 
@@ -52,8 +52,8 @@ namespace AEMSWEB.Areas.Account.Models.CB
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotLocalAmt { get; set; }
 
-        public string PaymentFromTo { get; set; }
-        public string Remarks { get; set; }
+        public string? PaymentFromTo { get; set; }
+        public string? Remarks { get; set; }
 
         public byte EditVersion { get; set; }
     }

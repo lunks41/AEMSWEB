@@ -13,8 +13,8 @@ namespace AEMSWEB.Entities.Accounts.GL
         [Key]
         public Int64 ContraId { get; set; }
 
-        public string ContraNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? ContraNo { get; set; }
+        public string? ReferenceNo { get; set; }
 
         public DateTime TrnDate { get; set; }
         public DateTime AccountDate { get; set; }
@@ -40,8 +40,8 @@ namespace AEMSWEB.Entities.Accounts.GL
         [Column(TypeName = "decimal(18,4)")]
         public decimal ExhGainLoss { get; set; }
 
-        public string Remarks { get; set; }
-        public string ModuleFrom { get; set; }
+        public string? Remarks { get; set; }
+        public string? ModuleFrom { get; set; }
 
         public Int16 CreateById { get; set; }
 
@@ -53,7 +53,7 @@ namespace AEMSWEB.Entities.Accounts.GL
         public bool IsCancel { get; set; }
         public Int16? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
+        public string? CancelRemarks { get; set; }
         public byte EditVersion { get; set; }
     }
 }

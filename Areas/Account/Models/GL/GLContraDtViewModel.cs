@@ -7,26 +7,26 @@ namespace AEMSWEB.Areas.Account.Models.GL
     {
         private DateTime _docaccountDate;
         private DateTime _docdueDate;
-        public string ContraId { get; set; }
-        public string ContraNo { get; set; }
+        public string? ContraId { get; set; }
+        public string? ContraNo { get; set; }
         public short ItemNo { get; set; }
         public short ModuleId { get; set; }
         public short TransactionId { get; set; }
-        public string DocReferenceNo { get; set; }
-        public string DocumentId { get; set; }
-        public string DocumentNo { get; set; }
+        public string? DocReferenceNo { get; set; }
+        public string? DocumentId { get; set; }
+        public string? DocumentNo { get; set; }
         public short DocCurrencyId { get; set; }
 
         [Column(TypeName = "decimal(18,10)")]
         public decimal DocExhRate { get; set; }
 
-        public string DocAccountDate
+        public string? DocAccountDate
         {
             get { return DateHelperStatic.FormatDate(_docaccountDate); }
             set { _docaccountDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string DocDueDate
+        public string? DocDueDate
         {
             get { return DateHelperStatic.FormatDate(_docdueDate); }
             set { _docdueDate = DateHelperStatic.ParseDBDate(value); }

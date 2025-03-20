@@ -9,10 +9,10 @@ namespace AEMSWEB.Entities.Masters
         public Int16 COACategoryId { get; set; }
 
         public Int16 CompanyId { get; set; }
-        public string COACategoryCode { get; set; }
-        public string COACategoryName { get; set; }
+        public string? COACategoryCode { get; set; }
+        public string? COACategoryName { get; set; }
         public Int16 SeqNo { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

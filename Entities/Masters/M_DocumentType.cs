@@ -9,9 +9,9 @@ namespace AEMSWEB.Entities.Masters
         public Int16 DocTypeId { get; set; }
 
         public Int16 CompanyId { get; set; }
-        public string DocTypeCode { get; set; }
-        public string DocTypeName { get; set; }
-        public string Remarks { get; set; }
+        public string? DocTypeCode { get; set; }
+        public string? DocTypeName { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

@@ -21,14 +21,14 @@ namespace AEMSWEB.Models
     public class UserTransactionRights
     {
         public short ModuleId { get; set; }
-        public string ModuleCode { get; set; }
-        public string ModuleName { get; set; }
+        public string? ModuleCode { get; set; }
+        public string? ModuleName { get; set; }
         public short TransactionId { get; set; }
-        public string TransactionCode { get; set; }
-        public string TransactionName { get; set; }
+        public string? TransactionCode { get; set; }
+        public string? TransactionName { get; set; }
         public int TransCategoryId { get; set; }
-        public string TransCategoryCode { get; set; }
-        public string TransCategoryName { get; set; }
+        public string? TransCategoryCode { get; set; }
+        public string? TransCategoryName { get; set; }
         public short SeqNo { get; set; }
         public short TransCatSeqNo { get; set; }
         public bool IsRead { get; set; }

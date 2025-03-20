@@ -8,6 +8,6 @@ namespace AEMSWEB.Entities.Admin
         public Int16 UserId { get; set; }
         public bool IsLogin { get; set; }
         public DateTime LoginDate { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
     }
 }

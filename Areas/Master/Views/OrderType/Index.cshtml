@@ -23,10 +23,10 @@
 <!-- Tab Content -->
 <div class="tab-content" id="orderTypeTabsContent">
     <div class="tab-pane fade show active" id="ordertype" role="tabpanel" aria-labelledby="ordertype-tab">
-        @Html.Partial("_OrderType")
+        @await Html.PartialAsync("_OrderType")
     </div>
     <div class="tab-pane fade" id="ordertypecategory" role="tabpanel" aria-labelledby="ordertypecategory-tab">
-        @Html.Partial("_OrderTypeCategory")
+        @await Html.PartialAsync("_OrderTypeCategory")
     </div>
 </div>
 

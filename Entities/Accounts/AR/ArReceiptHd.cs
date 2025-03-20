@@ -11,13 +11,13 @@ namespace AEMSWEB.Entities.Accounts.AR
         [Key]
         public Int64 ReceiptId { get; set; }
 
-        public string ReceiptNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? ReceiptNo { get; set; }
+        public string? ReferenceNo { get; set; }
         public DateTime TrnDate { get; set; }
         public DateTime AccountDate { get; set; }
         public Int16 BankId { get; set; }
         public Int16 PaymentTypeId { get; set; }
-        public string ChequeNo { get; set; }
+        public string? ChequeNo { get; set; }
         public DateTime ChequeDate { get; set; }
         public Int32 CustomerId { get; set; }
         public Int16 CurrencyId { get; set; }
@@ -65,8 +65,8 @@ namespace AEMSWEB.Entities.Accounts.AR
         [Column(TypeName = "decimal(18,4)")]
         public decimal BankChargesLocalAmt { get; set; }
 
-        public string Remarks { get; set; }
-        public string ModuleFrom { get; set; }
+        public string? Remarks { get; set; }
+        public string? ModuleFrom { get; set; }
         public Int16 CreateById { get; set; }
 
         [NotMapped]
@@ -77,7 +77,7 @@ namespace AEMSWEB.Entities.Accounts.AR
         public bool IsCancel { get; set; }
         public Int16? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
+        public string? CancelRemarks { get; set; }
         public byte EditVersion { get; set; }
     }
 }

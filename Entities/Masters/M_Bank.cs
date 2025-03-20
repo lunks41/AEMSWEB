@@ -9,13 +9,13 @@ namespace AEMSWEB.Entities.Masters
         public Int16 BankId { get; set; }
 
         public Int16 CompanyId { get; set; }
-        public string BankCode { get; set; }
-        public string BankName { get; set; }
+        public string? BankCode { get; set; }
+        public string? BankName { get; set; }
         public Int16 CurrencyId { get; set; }
-        public string AccountNo { get; set; }
-        public string SwiftCode { get; set; }
-        public string Remarks1 { get; set; }
-        public string Remarks2 { get; set; }
+        public string? AccountNo { get; set; }
+        public string? SwiftCode { get; set; }
+        public string? Remarks1 { get; set; }
+        public string? Remarks2 { get; set; }
         public Int16 GLId { get; set; }
         public bool IsActive { get; set; }
         public bool IsOwnBank { get; set; }

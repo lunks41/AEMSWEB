@@ -10,9 +10,9 @@ namespace AEMSWEB.Entities.Masters
         [Key]
         public Int16 OrderTypeCategoryId { get; set; }
 
-        public string OrderTypeCategoryCode { get; set; }
-        public string OrderTypeCategoryName { get; set; }
-        public string Remarks { get; set; }
+        public string? OrderTypeCategoryCode { get; set; }
+        public string? OrderTypeCategoryName { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

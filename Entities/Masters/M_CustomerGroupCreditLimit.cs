@@ -10,9 +10,9 @@ namespace AEMSWEB.Entities.Masters
         [Key]
         public Int16 GroupCreditLimitId { get; set; }
 
-        public string GroupCreditLimitCode { get; set; }
-        public string GroupCreditLimitName { get; set; }
-        public string Remarks { get; set; }
+        public string? GroupCreditLimitCode { get; set; }
+        public string? GroupCreditLimitName { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
 
         public Int16 CreateById { get; set; }

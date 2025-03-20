@@ -7,7 +7,7 @@ namespace AEMSWEB.Entities.Accounts.AR
     public class ArInvoiceDt
     {
         public Int64 InvoiceId { get; set; }
-        public string InvoiceNo { get; set; }
+        public string? InvoiceNo { get; set; }
         public Int16 ItemNo { get; set; }
         public Int16 SeqNo { get; set; }
         public Int16 DocItemNo { get; set; }
@@ -39,7 +39,7 @@ namespace AEMSWEB.Entities.Accounts.AR
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmt { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
 
         [ForeignKey(nameof(UomId))]
         public byte GstId { get; set; }
@@ -77,15 +77,15 @@ namespace AEMSWEB.Entities.Accounts.AR
         public Int16 VoyageId { get; set; }
 
         public Int64 OperationId { get; set; }
-        public string OperationNo { get; set; }
-        public string OPRefNo { get; set; }
+        public string? OperationNo { get; set; }
+        public string? OPRefNo { get; set; }
         public Int64 SalesOrderId { get; set; }
-        public string SalesOrderNo { get; set; }
+        public string? SalesOrderNo { get; set; }
         public DateTime? SupplyDate { get; set; }
-        public string SupplierName { get; set; }
-        public string SuppInvoiceNo { get; set; }
+        public string? SupplierName { get; set; }
+        public string? SuppInvoiceNo { get; set; }
         public Int64 APInvoiceId { get; set; }
-        public string APInvoiceNo { get; set; }
+        public string? APInvoiceNo { get; set; }
         public byte EditVersion { get; set; }
     }
 }

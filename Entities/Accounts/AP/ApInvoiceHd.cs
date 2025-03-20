@@ -11,9 +11,9 @@ namespace AEMSWEB.Entities.Accounts.AP
         [Key]
         public Int64 InvoiceId { get; set; }
 
-        public string InvoiceNo { get; set; }
-        public string ReferenceNo { get; set; }
-        public string SuppInvoiceNo { get; set; }
+        public string? InvoiceNo { get; set; }
+        public string? ReferenceNo { get; set; }
+        public string? SuppInvoiceNo { get; set; }
         public DateTime TrnDate { get; set; }
         public DateTime AccountDate { get; set; }
         public DateTime DeliveryDate { get; set; }
@@ -87,26 +87,26 @@ namespace AEMSWEB.Entities.Accounts.AP
         public decimal ExGainLoss { get; set; }
 
         public Int64 PurchaseOrderId { get; set; }
-        public string PurchaseOrderNo { get; set; }
+        public string? PurchaseOrderNo { get; set; }
         public Int64 OperationId { get; set; }
-        public string OperationNo { get; set; }
-        public string Remarks { get; set; }
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string Address3 { get; set; }
-        public string Address4 { get; set; }
-        public string PinCode { get; set; }
+        public string? OperationNo { get; set; }
+        public string? Remarks { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Address3 { get; set; }
+        public string? Address4 { get; set; }
+        public string? PinCode { get; set; }
         public Int16 CountryId { get; set; }
-        public string PhoneNo { get; set; }
-        public string FaxNo { get; set; }
-        public string ContactName { get; set; }
-        public string MobileNo { get; set; }
-        public string EmailAdd { get; set; }
-        public string ModuleFrom { get; set; }
-        public string CustomerName { get; set; }
+        public string? PhoneNo { get; set; }
+        public string? FaxNo { get; set; }
+        public string? ContactName { get; set; }
+        public string? MobileNo { get; set; }
+        public string? EmailAdd { get; set; }
+        public string? ModuleFrom { get; set; }
+        public string? CustomerName { get; set; }
 
         public Int64 ArInvoiceId { get; set; }
-        public string ArInvoiceNo { get; set; }
+        public string? ArInvoiceNo { get; set; }
         public Int16 CreateById { get; set; }
 
         [NotMapped]
@@ -117,7 +117,7 @@ namespace AEMSWEB.Entities.Accounts.AP
         public bool IsCancel { get; set; }
         public Int16? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
+        public string? CancelRemarks { get; set; }
         public byte EditVersion { get; set; }
     }
 }

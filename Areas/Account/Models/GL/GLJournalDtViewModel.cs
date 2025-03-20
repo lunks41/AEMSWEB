@@ -4,17 +4,17 @@ namespace AEMSWEB.Areas.Account.Models.GL
 {
     public class GLJournalDtViewModel
     {
-        public string JournalId { get; set; }
-        public string JournalNo { get; set; }
+        public string? JournalId { get; set; }
+        public string? JournalNo { get; set; }
         public short ItemNo { get; set; }
         public short SeqNo { get; set; }
         public short GLId { get; set; }
-        public string GLCode { get; set; }
-        public string GLName { get; set; }
-        public string Remarks { get; set; }
+        public string? GLCode { get; set; }
+        public string? GLName { get; set; }
+        public string? Remarks { get; set; }
         public short ProductId { get; set; }
-        public string ProductCode { get; set; }
-        public string ProductName { get; set; }
+        public string? ProductCode { get; set; }
+        public string? ProductName { get; set; }
         public bool IsDebit { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]

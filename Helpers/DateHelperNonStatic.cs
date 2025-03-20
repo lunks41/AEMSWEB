@@ -29,7 +29,7 @@
         }
 
         // Static method to format a DateTime object into a string
-        public string GetFormattedDate(DateTime date)
+        public string? GetFormattedDate(DateTime date)
         {
             string formats = _configuration.GetSection("DateFormatSettings").Value;
 

@@ -29,15 +29,14 @@
 <!-- Tab Content -->
 <div class="tab-content" id="gstTabsContent">
     <div class="tab-pane fade show active" id="gstcategory" role="tabpanel" aria-labelledby="gstcategory-tab">
-        @Html.Partial("_GstCategory")
+        @await Html.PartialAsync("_GstCategory")
     </div>
     <div class="tab-pane fade" id="gst" role="tabpanel" aria-labelledby="gst-tab">
-        @Html.Partial("_Gst")
+        @await Html.PartialAsync("_Gst")
     </div>
     <div class="tab-pane fade" id="gstdt" role="tabpanel" aria-labelledby="gstdt-tab">
-        @Html.Partial("_GstDt")
+        @await Html.PartialAsync("_GstDt")
     </div>
-
 </div>
 
 @section Scripts {

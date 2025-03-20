@@ -11,18 +11,18 @@ namespace AEMSWEB.Areas.Account.Models.AP
         private DateTime _deliveryDate;
 
         //actual Model
-        public string DebitNoteId { get; set; }
+        public string? DebitNoteId { get; set; }
 
-        public string DebitNoteNo { get; set; }
+        public string? DebitNoteNo { get; set; }
         public short ItemNo { get; set; }
         public short SeqNo { get; set; }
         public short DocItemNo { get; set; }
         public short ProductId { get; set; }
-        public string ProductCode { get; set; }
-        public string ProductName { get; set; }
+        public string? ProductCode { get; set; }
+        public string? ProductName { get; set; }
         public short GLId { get; set; }
-        public string GLCode { get; set; }
-        public string GLName { get; set; }
+        public string? GLCode { get; set; }
+        public string? GLName { get; set; }
 
         [Column(TypeName = "decimal(9,4)")]
         public decimal QTY { get; set; }
@@ -31,8 +31,8 @@ namespace AEMSWEB.Areas.Account.Models.AP
         public decimal BillQTY { get; set; }
 
         public short UomId { get; set; }
-        public string UomCode { get; set; }
-        public string UomName { get; set; }
+        public string? UomCode { get; set; }
+        public string? UomName { get; set; }
 
         [Column(TypeName = "decimal(9,4)")]
         public decimal UnitPrice { get; set; }
@@ -46,10 +46,10 @@ namespace AEMSWEB.Areas.Account.Models.AP
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmt { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public byte GstId { get; set; }
-        public string GstCode { get; set; }
-        public string GstName { get; set; }
+        public string? GstCode { get; set; }
+        public string? GstName { get; set; }
 
         [Column(TypeName = "decimal(4,2)")]
         public decimal GstPercentage { get; set; }
@@ -63,46 +63,46 @@ namespace AEMSWEB.Areas.Account.Models.AP
         [Column(TypeName = "decimal(18,4)")]
         public decimal GstCtyAmt { get; set; }
 
-        public string DeliveryDate
+        public string? DeliveryDate
         {
             get { return DateHelperStatic.FormatDate(_deliveryDate); }
             set { _deliveryDate = DateHelperStatic.ParseDBDate(value); }
         }
 
         public short DepartmentId { get; set; }
-        public string DepartmentCode { get; set; }
-        public string DepartmentName { get; set; }
+        public string? DepartmentCode { get; set; }
+        public string? DepartmentName { get; set; }
         public short EmployeeId { get; set; }
-        public string EmployeeCode { get; set; }
-        public string EmployeeName { get; set; }
+        public string? EmployeeCode { get; set; }
+        public string? EmployeeName { get; set; }
         public short PortId { get; set; }
-        public string PortCode { get; set; }
-        public string PortName { get; set; }
+        public string? PortCode { get; set; }
+        public string? PortName { get; set; }
         public int VesselId { get; set; }
-        public string VesselCode { get; set; }
-        public string VesselName { get; set; }
+        public string? VesselCode { get; set; }
+        public string? VesselName { get; set; }
         public short BargeId { get; set; }
-        public string BargeCode { get; set; }
-        public string BargeName { get; set; }
+        public string? BargeCode { get; set; }
+        public string? BargeName { get; set; }
         public short VoyageId { get; set; }
-        public string VoyageNo { get; set; }
-        public string VoyageReferenceNo { get; set; }
-        public string OperationId { get; set; }
-        public string OperationNo { get; set; }
-        public string OPRefNo { get; set; }
-        public string PurchaseOrderId { get; set; }
-        public string PurchaseOrderNo { get; set; }
+        public string? VoyageNo { get; set; }
+        public string? VoyageReferenceNo { get; set; }
+        public string? OperationId { get; set; }
+        public string? OperationNo { get; set; }
+        public string? OPRefNo { get; set; }
+        public string? PurchaseOrderId { get; set; }
+        public string? PurchaseOrderNo { get; set; }
 
-        public string SupplyDate
+        public string? SupplyDate
         {
             get { return DateHelperStatic.FormatDate(_supplyDate); }
             set { _supplyDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string CustomerName { get; set; }
-        public string CustDebitNoteNo { get; set; }
-        public string ArDebitNoteId { get; set; }
-        public string ArDebitNoteNo { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustDebitNoteNo { get; set; }
+        public string? ArDebitNoteId { get; set; }
+        public string? ArDebitNoteNo { get; set; }
         public byte EditVersion { get; set; }
     }
 }

@@ -7,13 +7,13 @@ namespace AEMSWEB.Entities.Accounts.GL
     public class GLContraDt
     {
         public Int64 ContraId { get; set; }
-        public string ContraNo { get; set; }
+        public string? ContraNo { get; set; }
         public Int16 ItemNo { get; set; }
         public Int16 ModuleId { get; set; }
         public Int16 TransactionId { get; set; }
         public Int64 DocumentId { get; set; }
-        public string DocumentNo { get; set; }
-        public string DocReferenceNo { get; set; }
+        public string? DocumentNo { get; set; }
+        public string? DocReferenceNo { get; set; }
         public Int16 DocCurrencyId { get; set; }
 
         [Column(TypeName = "decimal(18,10)")]

@@ -7,7 +7,7 @@ namespace AEMSWEB.Entities.Accounts.AP
     public class ApDebitNoteDt
     {
         public Int64 DebitNoteId { get; set; }
-        public string DebitNoteNo { get; set; }
+        public string? DebitNoteNo { get; set; }
         public Int16 ItemNo { get; set; }
         public Int16 SeqNo { get; set; }
         public Int16 DocItemNo { get; set; }
@@ -39,7 +39,7 @@ namespace AEMSWEB.Entities.Accounts.AP
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmt { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
 
         [ForeignKey(nameof(UomId))]
         public byte GstId { get; set; }
@@ -77,15 +77,15 @@ namespace AEMSWEB.Entities.Accounts.AP
         public Int16 VoyageId { get; set; }
 
         public Int64 OperationId { get; set; }
-        public string OperationNo { get; set; }
-        public string OPRefNo { get; set; }
+        public string? OperationNo { get; set; }
+        public string? OPRefNo { get; set; }
         public Int64 PurchaseOrderId { get; set; }
-        public string PurchaseOrderNo { get; set; }
+        public string? PurchaseOrderNo { get; set; }
         public DateTime SupplyDate { get; set; }
-        public string CustomerName { get; set; }
-        public string CustDebitNoteNo { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustDebitNoteNo { get; set; }
         public Int64 ArDebitNoteId { get; set; }
-        public string ArDebitNoteNo { get; set; }
+        public string? ArDebitNoteNo { get; set; }
         public byte EditVersion { get; set; }
     }
 }

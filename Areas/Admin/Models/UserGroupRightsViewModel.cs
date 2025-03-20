@@ -4,10 +4,10 @@
     {
         public Int16 UserGroupId { get; set; }
         public Int16 ModuleId { get; set; }
-        public string ModuleName { get; set; }
+        public string? ModuleName { get; set; }
         public Int16 TransactionId { get; set; }
-        public string TransactionName { get; set; }
-        public string TransCategoryName { get; set; }
+        public string? TransactionName { get; set; }
+        public string? TransCategoryName { get; set; }
         public bool IsRead { get; set; }
         public bool IsCreate { get; set; }
         public bool IsEdit { get; set; }

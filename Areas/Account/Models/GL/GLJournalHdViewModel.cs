@@ -12,18 +12,18 @@ namespace AEMSWEB.Areas.Account.Models.GL
         private DateTime _revcurrenceUntilDate;
         public short CompanyId { get; set; }
 
-        public string JournalId { get; set; }
+        public string? JournalId { get; set; }
 
-        public string JournalNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? JournalNo { get; set; }
+        public string? ReferenceNo { get; set; }
 
-        public string TrnDate
+        public string? TrnDate
         {
             get { return DateHelperStatic.FormatDate(_trnDate); }
             set { _trnDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string AccountDate
+        public string? AccountDate
         {
             get { return DateHelperStatic.FormatDate(_accountDate); }
             set { _accountDate = DateHelperStatic.ParseDBDate(value); }
@@ -32,8 +32,8 @@ namespace AEMSWEB.Areas.Account.Models.GL
         [ForeignKey(nameof(CurrencyId))]
         public short CurrencyId { get; set; }
 
-        public string CurrencyCode { get; set; }
-        public string CurrencyName { get; set; }
+        public string? CurrencyCode { get; set; }
+        public string? CurrencyName { get; set; }
 
         [Column(TypeName = "decimal(18,10)")]
         public decimal ExhRate { get; set; }
@@ -50,7 +50,7 @@ namespace AEMSWEB.Areas.Account.Models.GL
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmt { get; set; }
 
-        public string GstClaimDate
+        public string? GstClaimDate
         {
             get { return DateHelperStatic.FormatDate(_gstClaimDate); }
             set { _gstClaimDate = DateHelperStatic.ParseDBDate(value); }
@@ -74,23 +74,23 @@ namespace AEMSWEB.Areas.Account.Models.GL
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmtAftGst { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsReverse { get; set; }
         public bool IsRecurrency { get; set; }
 
-        public string RevDate
+        public string? RevDate
         {
             get { return DateHelperStatic.FormatDate(_revDate); }
             set { _revDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string RecurrenceUntil
+        public string? RecurrenceUntil
         {
             get { return DateHelperStatic.FormatDate(_revcurrenceUntilDate); }
             set { _revcurrenceUntilDate = DateHelperStatic.ParseDBDate(value); }
         }
 
-        public string ModuleFrom { get; set; }
+        public string? ModuleFrom { get; set; }
         public short CreateById { get; set; }
         public DateTime CreateDate { get; set; }
         public short? EditById { get; set; }
@@ -98,10 +98,10 @@ namespace AEMSWEB.Areas.Account.Models.GL
         public bool IsCancel { get; set; }
         public short? CancelById { get; set; }
         public DateTime? CancelDate { get; set; }
-        public string CancelRemarks { get; set; }
-        public string CreateBy { get; set; }
-        public string EditBy { get; set; }
-        public string CancelBy { get; set; }
+        public string? CancelRemarks { get; set; }
+        public string? CreateBy { get; set; }
+        public string? EditBy { get; set; }
+        public string? CancelBy { get; set; }
         public byte EditVersion { get; set; }
         public List<GLJournalDtViewModel> data_details { get; set; }
     }

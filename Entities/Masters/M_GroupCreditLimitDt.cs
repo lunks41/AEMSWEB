@@ -11,7 +11,7 @@ namespace AEMSWEB.Entities.Masters
         public DateOnly EffectFrom { get; set; }
         public DateOnly EffectUntil { get; set; }
         public bool IsExpires { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal CreditLimitAmt { get; set; }

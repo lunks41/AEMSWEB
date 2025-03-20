@@ -9,11 +9,11 @@ namespace AEMSWEB.Entities.Masters
         public Int32 SupplierId { get; set; }
 
         public Int16 CompanyId { get; set; }
-        public string SupplierCode { get; set; }
-        public string SupplierName { get; set; }
-        public string SupplierOtherName { get; set; }
-        public string SupplierShortName { get; set; }
-        public string SupplierRegNo { get; set; }
+        public string? SupplierCode { get; set; }
+        public string? SupplierName { get; set; }
+        public string? SupplierOtherName { get; set; }
+        public string? SupplierShortName { get; set; }
+        public string? SupplierRegNo { get; set; }
 
         [ForeignKey(nameof(CurrencyId))]
         public Int16 CurrencyId { get; set; }
@@ -28,7 +28,7 @@ namespace AEMSWEB.Entities.Masters
         public bool IsVendor { get; set; }
         public bool IsTrader { get; set; }
         public bool IsSupplier { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

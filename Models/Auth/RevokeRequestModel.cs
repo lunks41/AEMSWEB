@@ -2,6 +2,6 @@
 {
     public class RevokeRequestModel
     {
-        public string refreshToken { get; set; }
+        public string? refreshToken { get; set; }
     }
 }

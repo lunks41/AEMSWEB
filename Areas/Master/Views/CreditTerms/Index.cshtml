@@ -24,12 +24,12 @@
 <div class="tab-content" id="creditTermTabsContent">
     <!-- Credit Term Tab -->
     <div class="tab-pane fade show active" id="creditterm" role="tabpanel" aria-labelledby="creditterm-tab">
-        @Html.Partial("_CreditTerm")
+        @await Html.PartialAsync("_CreditTerm")
     </div>
 
     <!-- Credit Term Details Tab -->
     <div class="tab-pane fade" id="credittermdt" role="tabpanel" aria-labelledby="credittermdt-tab">
-        @Html.Partial("_CreditTermDt")
+        @await Html.PartialAsync("_CreditTermDt")
     </div>
 </div>
 

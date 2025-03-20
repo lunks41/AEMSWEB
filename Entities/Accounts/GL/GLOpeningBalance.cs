@@ -10,7 +10,7 @@ namespace AEMSWEB.Entities.Accounts.GL
         public Int32 DocumentId { get; set; }
         public Int32 ItemNo { get; set; }
         public Int32 GLId { get; set; }
-        public string DocumentNo { get; set; }
+        public string? DocumentNo { get; set; }
         public DateTime AccountDate { get; set; }
         public Int32 CustomerId { get; set; }
         public Int32 SupplierId { get; set; }

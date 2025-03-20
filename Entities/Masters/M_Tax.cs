@@ -13,9 +13,9 @@ namespace AEMSWEB.Entities.Masters
         [ForeignKey(nameof(TaxCategoryId))]
         public Int16 TaxCategoryId { get; set; }
 
-        public string TaxCode { get; set; }
-        public string TaxName { get; set; }
-        public string Remarks { get; set; }
+        public string? TaxCode { get; set; }
+        public string? TaxName { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

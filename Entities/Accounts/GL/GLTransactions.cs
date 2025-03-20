@@ -9,8 +9,8 @@ namespace AEMSWEB.Entities.Accounts.GL
         public Int32 ItemNo { get; set; }
         public Int16 ModuleId { get; set; }
         public Int16 TransactionId { get; set; }
-        public string DocumentNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? DocumentNo { get; set; }
+        public string? ReferenceNo { get; set; }
         public DateTime AccountDate { get; set; }
         public Int32 CustomerId { get; set; }
         public Int16 CurrencyId { get; set; }
@@ -32,19 +32,19 @@ namespace AEMSWEB.Entities.Accounts.GL
         public decimal GstAmt { get; set; }
         public decimal GstLocalAmt { get; set; }
         public decimal GstCtyAmt { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public Int16 DepartmentId { get; set; }
         public Int16 EmployeeId { get; set; }
         public Int16 PortId { get; set; }
         public Int32 VesselId { get; set; }
         public Int16 BargeId { get; set; }
-        public string PaymentFromTo { get; set; }
-        public string PaymentType { get; set; }
-        public string PaymentNo { get; set; }
+        public string? PaymentFromTo { get; set; }
+        public string? PaymentType { get; set; }
+        public string? PaymentNo { get; set; }
         public bool IsSystem { get; set; }
         public bool IsMaster { get; set; }
-        public string ModuleFrom { get; set; }
-        public string CreateBy { get; set; }
+        public string? ModuleFrom { get; set; }
+        public string? CreateBy { get; set; }
         public DateTime CreateDate { get; set; }
     }
 }

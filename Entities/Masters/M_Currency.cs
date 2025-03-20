@@ -9,10 +9,10 @@ namespace AEMSWEB.Entities.Masters
         public Int16 CurrencyId { get; set; }
 
         public Int16 CompanyId { get; set; }
-        public string CurrencyCode { get; set; }
-        public string CurrencyName { get; set; }
+        public string? CurrencyCode { get; set; }
+        public string? CurrencyName { get; set; }
         public bool IsMultiply { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 

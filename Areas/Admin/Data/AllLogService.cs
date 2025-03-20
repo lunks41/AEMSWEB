@@ -60,7 +60,7 @@ namespace AEMSWEB.Areas.Admin.Data
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "Success";
                 countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
-                countViewModel.data = result == null ? null : result.ToList();
+                countViewModel.data = result?.ToList() ?? new List<UserLogViewModel>();
 
                 return countViewModel;
             }

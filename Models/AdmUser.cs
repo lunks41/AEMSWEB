@@ -48,10 +48,10 @@ namespace AEMSWEB.Models
         public override bool TwoFactorEnabled { get; set; }
 
         // Custom properties
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
 
-        public string UserCode { get; set; }
-        public string Remarks { get; set; }
+        public string? UserCode { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public short CreateById { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;

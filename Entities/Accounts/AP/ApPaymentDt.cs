@@ -8,12 +8,12 @@ namespace AEMSWEB.Entities.Accounts.AP
     {
         public Int16 CompanyId { get; set; }
         public Int64 PaymentId { get; set; }
-        public string PaymentNo { get; set; }
+        public string? PaymentNo { get; set; }
         public Int16 ItemNo { get; set; }
         public Int16 TransactionId { get; set; }
         public Int64 DocumentId { get; set; }
-        public string DocumentNo { get; set; }
-        public string ReferenceNo { get; set; }
+        public string? DocumentNo { get; set; }
+        public string? ReferenceNo { get; set; }
         public Int16 DocCurrencyId { get; set; }
 
         [Column(TypeName = "decimal(18,10)")]

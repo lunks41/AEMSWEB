@@ -7,7 +7,7 @@ namespace AEMSWEB.Entities.Accounts.AR
     public class ArAdjustmentDt
     {
         public Int64 AdjustmentId { get; set; }
-        public string AdjustmentNo { get; set; }
+        public string? AdjustmentNo { get; set; }
         public Int16 ItemNo { get; set; }
         public Int16 SeqNo { get; set; }
         public Int16 DocItemNo { get; set; }
@@ -41,7 +41,7 @@ namespace AEMSWEB.Entities.Accounts.AR
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmt { get; set; }
 
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
 
         [ForeignKey(nameof(UomId))]
         public byte GstId { get; set; }
@@ -79,13 +79,13 @@ namespace AEMSWEB.Entities.Accounts.AR
         public Int16 VoyageId { get; set; }
 
         public Int64 OperationId { get; set; }
-        public string OperationNo { get; set; }
-        public string OPRefNo { get; set; }
+        public string? OperationNo { get; set; }
+        public string? OPRefNo { get; set; }
         public Int64 SalesOrderId { get; set; }
-        public string SalesOrderNo { get; set; }
+        public string? SalesOrderNo { get; set; }
         public DateTime SupplyDate { get; set; }
-        public string SupplierName { get; set; }
-        public string SuppAdjustmentNo { get; set; }
+        public string? SupplierName { get; set; }
+        public string? SuppAdjustmentNo { get; set; }
 
         public byte EditVersion { get; set; }
     }

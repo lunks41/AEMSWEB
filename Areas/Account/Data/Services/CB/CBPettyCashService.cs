@@ -38,7 +38,7 @@ namespace AEMSWEB.Areas.Account.Data.Services.CB
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "Success";
                 countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
-                countViewModel.data = result == null ? null : result.ToList();
+                countViewModel.data = result?.ToList() ?? new List<CBPettyCashHdViewModel>();
 
                 return countViewModel;
             }

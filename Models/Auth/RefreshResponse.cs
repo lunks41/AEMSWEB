@@ -2,6 +2,6 @@
 {
     public class RefreshResponse
     {
-        public string token { get; set; }
+        public string? token { get; set; }
     }
 }

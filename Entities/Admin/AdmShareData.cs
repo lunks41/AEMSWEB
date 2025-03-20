@@ -11,7 +11,7 @@ namespace AEMSWEB.Entities.Admin
         public bool ShareToAll { get; set; }
         public Int16 CompanyId { get; set; }
         public Int16 SetId { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }
 
