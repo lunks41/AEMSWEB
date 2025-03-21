@@ -120,7 +120,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.tax.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.tax.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -233,7 +233,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ValidFrom = model.taxDt.ValidFrom,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.taxDt.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -376,7 +376,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.taxCategory.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.taxCategory.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

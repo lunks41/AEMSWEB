@@ -60,17 +60,10 @@
                                 <input type="text" class="form-control" id="orderTypeCategoryName" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="seqNo">Sequence Number</label>
-                                <input type="number" class="form-control" id="seqNo" min="0" max="254" value="0">
-                                <div class="invalid-feedback">Value must be between 0 and 254</div>
-                            </div>
-                        </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="remarks" class="form-label">Remarks</label>
-                                <textarea class="form-control" id="remarks" rows="2"></textarea>
+                                <label for="orderTypeCategoryremarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="orderTypeCategoryremarks" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -93,20 +86,20 @@
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="createBy" class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <label for="orderTypeCategorycreateBy" class="form-label">Created By</label>
+                                            <p id="orderTypeCategorycreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="createDate" class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <label for="orderTypeCategorycreateDate" class="form-label">Created Date</label>
+                                            <p id="orderTypeCategorycreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editBy" class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <label for="orderTypeCategoryeditBy" class="form-label">Modified By</label>
+                                            <p id="orderTypeCategoryeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editDate" class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <label for="orderTypeCategoryeditDate" class="form-label">Modified Date</label>
+                                            <p id="orderTypeCategoryeditDate" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -136,13 +129,13 @@
             $('#orderTypeCategoryForm')[0].reset();
 
             $('#orderTypeCategoryId').val(0);
-            $('#createBy').text('');
-            $('#createDate').text('');
-            $('#editBy').text('');
-            $('#editDate').text('');
+            $('#orderTypeCategorycreateBy').text('');
+            $('#orderTypeCategorycreateDate').text('');
+            $('#orderTypeCategoryeditBy').text('');
+            $('#orderTypeCategoryeditDate').text('');
 
             // Reset readonly and disabled states
-            $('#orderTypeCategoryCode, #orderTypeCategoryName, #seqNo, #remarks').prop('readonly', false);
+            $('#orderTypeCategoryCode, #orderTypeCategoryName, #orderTypeCategoryremarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
 
             $('#isActive').prop('checked', true);
@@ -223,26 +216,27 @@
                 .always(() => $modal.find('.modal-overlay').remove());
         }
 
-        function populateOrderTypeCategoryModalFields(data) {
-            $('#orderTypeCategoryId').val(data.orderTypeCategoryId);
-            $('#orderTypeCategoryCode').val(data.orderTypeCategoryCode);
-            $('#orderTypeCategoryName').val(data.orderTypeCategoryName);
-            $('#remarks').val(data.remarks);
-            $('#isActive').prop('checked', data.isActive);
+    function populateOrderTypeCategoryModalFields(data) {
+        debugger;
+        $('#orderTypeCategoryId').val(data.orderTypeCategoryId);
+        $('#orderTypeCategoryCode').val(data.orderTypeCategoryCode);
+        $('#orderTypeCategoryName').val(data.orderTypeCategoryName);
+        $('#orderTypeCategoryremarks').val(data.remarks);
+        $('#isActive').prop('checked', data.isActive);
 
-            $('#createBy').text(data.createBy || "N/A");
-            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-            $('#editBy').text(data.editBy || "N/A");
-            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#orderTypeCategorycreateBy').text(data.createBy || "N/A");
+        $('#orderTypeCategorycreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#orderTypeCategoryeditBy').text(data.editBy || "N/A");
+        $('#orderTypeCategoryeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-            checkOrderTypeCategoryMandatoryFields();
-        }
+        checkOrderTypeCategoryMandatoryFields();
+    }
 
         function setOrderTypeCategoryMode(mode) {
             const isView = mode === 'view';
             const canEdit = permissions.canEdit && !isView;
 
-            $('#orderTypeCategoryCode, #orderTypeCategoryName,  #remarks').prop('readonly', !canEdit);
+            $('#orderTypeCategoryCode, #orderTypeCategoryName,  #orderTypeCategoryremarks').prop('readonly', !canEdit);
             $('#isActive').prop('disabled', !canEdit);
             $('#btnOrderTypeCategorySave').toggle(canEdit);
             $('#btnOrderTypeCategoryEdit').toggle(isView && permissions.canEdit);
@@ -272,7 +266,7 @@
                OrderTypeCategoryId: parseInt($('#orderTypeCategoryId').val()) || 0,
                OrderTypeCategoryCode: $('#orderTypeCategoryCode').val().trim(),
                OrderTypeCategoryName: $('#orderTypeCategoryName').val().trim(),
-                Remarks: $('#remarks').val(),
+                Remarks: $('#orderTypeCategoryremarks').val(),
                 IsActive: $('#isActive').prop('checked')
             };
 

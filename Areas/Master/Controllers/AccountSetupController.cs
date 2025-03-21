@@ -122,7 +122,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.accountSetup.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.accountSetup.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -233,7 +233,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ApplyAllCurr = model.accountSetupDt.ApplyAllCurr,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.accountSetupDt.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -343,7 +343,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.accountSetupCategory.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.accountSetupCategory.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

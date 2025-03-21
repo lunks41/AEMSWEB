@@ -122,7 +122,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.creditTerm.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.creditTerm.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -238,7 +238,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     NoMonth = model.creditTermDt.NoMonth,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.creditTermDt.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

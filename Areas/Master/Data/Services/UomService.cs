@@ -3,9 +3,11 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -63,11 +65,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Uom> GetUomByIdAsync(short CompanyId, short UserId, short UomId)
+        public async Task<UomViewModel> GetUomByIdAsync(short CompanyId, short UserId, short UomId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Uom>($"SELECT UomId,CompanyId,UomCode,UomName,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Uom WHERE UomId={UomId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<UomViewModel>($"SELECT M_Um.UomId,M_Um.CompanyId,M_Um.UomCode,M_Um.UomName,M_Um.Remarks,M_Um.IsActive,M_Um.CreateById,M_Um.CreateDate,M_Um.EditById,M_Um.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Uom M_Um LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Um.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Um.EditById WHERE M_Um.UomId={UomId}");
 
                 return result;
             }
@@ -203,25 +205,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteUomAsync(short CompanyId, short UserId, M_Uom Uom)
+        public async Task<SqlResponse> DeleteUomAsync(short CompanyId, short UserId, short uomId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string uomNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Uom.UomId > 0)
-                    {
-                        var UomToRemove = _context.M_Uom.Where(x => x.UomId == Uom.UomId).ExecuteDelete();
+                    uomNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT UomCode FROM dbo.M_Uom WHERE UomId={uomId}");
 
-                        if (UomToRemove > 0)
+                    if (uomId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Uom
+                            .Where(x => x.UomId == uomId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Uom,
-                                DocumentId = Uom.UomId,
-                                DocumentNo = Uom.UomCode,
+                                DocumentId = uomId,
+                                DocumentNo = uomNo,
                                 TblName = "M_Uom",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Uom Delete Successfully",
@@ -229,6 +237,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -246,28 +255,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Uom,
+                    DocumentId = uomId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Uom,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Uom",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Uom,
+                    DocumentId = uomId,
+                    DocumentNo = "",
+                    TblName = "M_Uom",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -317,7 +354,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<UomDtViewModel>($"SELECT M_UmDt.CompanyId,M_UmDt.UomId,M_Um.UomCode,M_Um.UomName,M_UmDt.PackUomId,M_Um.UomCode  PackUomCode,M_Um.UomName PackUomName,M_UmDt.UomFactor,M_UmDt.CreateById,M_UmDt.CreateDate,M_UmDt.EditById,M_UmDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_UomDt M_UmDt INNER JOIN dbo.M_Uom M_Um ON M_Um.UomId = M_UmDt.UomId INNER JOIN dbo.M_Uom M_UmPk ON M_UmPk.UomId = M_UmDt.PackUomId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Um.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Um.EditById WHERE UomId={UomId} AND PackUomId={PackUomId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<UomDtViewModel>($"SELECT M_UmDt.CompanyId,M_UmDt.UomId,M_Um.UomCode,M_Um.UomName,M_UmDt.PackUomId,M_Um.UomCode  PackUomCode,M_Um.UomName PackUomName,M_UmDt.UomFactor,M_UmDt.CreateById,M_UmDt.CreateDate,M_UmDt.EditById,M_UmDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_UomDt M_UmDt INNER JOIN dbo.M_Uom M_Um ON M_Um.UomId = M_UmDt.UomId INNER JOIN dbo.M_Uom M_UmPk ON M_UmPk.UomId = M_UmDt.PackUomId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Um.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Um.EditById WHERE M_UmDt.UomId={UomId} AND M_UmDt.PackUomId={PackUomId}");
 
                 return result;
             }
@@ -437,9 +474,10 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         public async Task<SqlResponse> DeleteUomDtAsync(short CompanyId, short UserId, short UomId, short PackUomId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     if (UomId > 0)
                     {
@@ -478,28 +516,28 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.UomDt,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_UomDt",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.UomDt,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_UomDt",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
-
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
 

@@ -122,7 +122,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.orderType.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.orderType.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -153,11 +153,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var orderType = await _orderTypeService.GetOrderTypeByIdAsync(companyIdShort, parsedUserId.Value, orderTypeId);
-                if (orderType == null)
-                    return Json(new { success = false, message = "Order Type not found" });
-
-                await _orderTypeService.DeleteOrderTypeAsync(companyIdShort, parsedUserId.Value, orderType);
+                await _orderTypeService.DeleteOrderTypeAsync(companyIdShort, parsedUserId.Value, orderTypeId);
                 return Json(new { success = true, message = "Order Type deleted successfully" });
             }
             catch (Exception ex)
@@ -237,7 +233,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.orderTypeCategory.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.orderTypeCategory.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -268,11 +264,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var category = await _orderTypeService.GetOrderTypeCategoryByIdAsync(companyIdShort, parsedUserId.Value, orderTypeCategoryId);
-                if (category == null)
-                    return Json(new { success = false, message = "Order Type Category not found" });
-
-                await _orderTypeService.DeleteOrderTypeCategoryAsync(companyIdShort, parsedUserId.Value, category);
+                await _orderTypeService.DeleteOrderTypeCategoryAsync(companyIdShort, parsedUserId.Value, orderTypeCategoryId);
                 return Json(new { success = true, message = "Order Type Category deleted successfully" });
             }
             catch (Exception ex)

@@ -128,7 +128,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                 IsActive = country.IsActive,
                 CreateById = parsedUserId,
                 CreateDate = DateTime.Now,
-                EditById = country.EditById ?? 0,
+                EditById = parsedUserId,
                 EditDate = DateTime.Now
             };
 

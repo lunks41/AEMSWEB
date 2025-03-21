@@ -22,9 +22,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _logger = logger;
             _uomService = uomService;
         }
-
-        #region Uom CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -53,8 +50,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Uom CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> UomList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -76,7 +75,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short uomId, string companyId)
+        public async Task<JsonResult> GetUomById(short uomId, string companyId)
         {
             if (uomId <= 0)
                 return Json(new { success = false, message = "Invalid UOM ID" });
@@ -99,7 +98,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveUomViewModel model)
+        public async Task<IActionResult> SaveUom([FromBody] SaveUomViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -119,7 +118,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.Uom.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.Uom.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -134,7 +133,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short uomId, string companyId)
+        public async Task<IActionResult> DeleteUom(short uomId, string companyId)
         {
             if (uomId <= 0)
                 return Json(new { success = false, message = "Invalid UOM ID" });
@@ -150,11 +149,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var uom = await _uomService.GetUomByIdAsync(companyIdShort, parsedUserId.Value, uomId);
-                if (uom == null)
-                    return Json(new { success = false, message = "UOM not found" });
-
-                await _uomService.DeleteUomAsync(companyIdShort, parsedUserId.Value, uom);
+                await _uomService.DeleteUomAsync(companyIdShort, parsedUserId.Value, uomId);
                 return Json(new { success = true, message = "UOM deleted successfully" });
             }
             catch (Exception ex)
@@ -169,7 +164,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region UomDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> UomDtList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -191,9 +186,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDetailById(short uomDtId, short packUomId, string companyId)
+        public async Task<JsonResult> GetUomDtById(short uomId, short packUomId, string companyId)
         {
-            if (uomDtId <= 0)
+            if (uomId <= 0)
                 return Json(new { success = false, message = "Invalid UOM Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -201,7 +196,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _uomService.GetUomDtByIdAsync(companyIdShort, parsedUserId.Value, uomDtId, packUomId);
+                var data = await _uomService.GetUomDtByIdAsync(companyIdShort, parsedUserId.Value, uomId, packUomId);
                 return data == null
                     ? Json(new { success = false, message = "UOM Detail not found" })
                     : Json(new { success = true, data });
@@ -214,7 +209,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveDetail([FromBody] SaveUomDtViewModel model)
+        public async Task<IActionResult> SaveUomDt([FromBody] SaveUomDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -232,7 +227,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     UomFactor = model.uomDt.UomFactor,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.uomDt.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -247,9 +242,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteDetail(short uomDtId, short packUomId, string companyId)
+        public async Task<IActionResult> DeleteUomDt(short uomId, short packUomId, string companyId)
         {
-            if (uomDtId <= 0)
+            if (uomId <= 0)
                 return Json(new { success = false, message = "Invalid UOM Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -263,7 +258,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                await _uomService.DeleteUomDtAsync(companyIdShort, parsedUserId.Value, uomDtId, packUomId);
+                await _uomService.DeleteUomDtAsync(companyIdShort, parsedUserId.Value, uomId, packUomId);
                 return Json(new { success = true, message = "UOM Detail deleted successfully" });
             }
             catch (Exception ex)

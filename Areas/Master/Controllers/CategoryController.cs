@@ -6,7 +6,6 @@ using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
@@ -122,7 +121,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.category.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.category.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -265,7 +264,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.subCategory.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.subCategory.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

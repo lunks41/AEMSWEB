@@ -121,7 +121,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.paymentType.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.paymentType.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

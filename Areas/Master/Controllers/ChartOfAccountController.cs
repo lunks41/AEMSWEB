@@ -4,10 +4,8 @@ using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
 using AEMSWEB.IServices;
-using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
@@ -130,7 +128,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.chartOfAccount.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.chartOfAccount.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

@@ -120,7 +120,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.charges.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.charges.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

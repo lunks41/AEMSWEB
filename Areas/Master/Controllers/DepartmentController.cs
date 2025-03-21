@@ -121,7 +121,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.department.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.department.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

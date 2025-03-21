@@ -122,7 +122,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.gst.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.gst.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -235,7 +235,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ValidFrom = model.gstDt.ValidFrom,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.gstDt.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -378,7 +378,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.gstCategory.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.gstCategory.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

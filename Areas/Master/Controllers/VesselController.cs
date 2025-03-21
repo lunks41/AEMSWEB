@@ -123,7 +123,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.vessel.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.vessel.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

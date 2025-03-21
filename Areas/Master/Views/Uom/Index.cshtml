@@ -1,8 +1,14 @@
-﻿<!-- UOM -->
-<!-- Uom/Index.cshtml -->
-@{
-    ViewData["Title"] = "UOM Management";
+﻿@{
+    ViewData["Title"] = $"Order Type ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
 }
 
 <!-- Nav Pills -->
@@ -10,13 +16,13 @@
     <li class="nav-item" role="presentation">
         <button class="nav-link active" id="uom-tab" data-bs-toggle="pill"
                 data-bs-target="#uom" type="button" role="tab" aria-controls="uom" aria-selected="true">
-            <i class="mdi mdi-ruler me-1"></i> UOM
+            <i class="mdi mdi-view-list me-1"></i> UOM
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="uomdt-tab" data-bs-toggle="pill"
-                data-bs-target="#uomdt" type="button" role="tab" aria-controls="uomdt" aria-selected="false">
-            <i class="mdi mdi-table-large me-1"></i> UOM Conversions
+        <button class="nav-link" id="uomDt-tab" data-bs-toggle="pill"
+                data-bs-target="#uomDt" type="button" role="tab" aria-controls="uomDt" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> UOM Details
         </button>
     </li>
 </ul>
@@ -26,12 +32,62 @@
     <div class="tab-pane fade show active" id="uom" role="tabpanel" aria-labelledby="uom-tab">
         @await Html.PartialAsync("_Uom")
     </div>
-    <div class="tab-pane fade" id="uomdt" role="tabpanel" aria-labelledby="uomdt-tab">
+    <div class="tab-pane fade" id="uomDt" role="tabpanel" aria-labelledby="uomDt-tab">
         @await Html.PartialAsync("_UomDt")
     </div>
 </div>
 
 @section Scripts {
-    <script src="~/js/uom.js"></script>
-    <script src="~/js/uomdt.js"></script>
+    <script>
+        let companyId = 0;
+        let permissions = {};;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            $('#uomDtCode, #uomDtName').on('input', checkUomDtMandatoryFields);
+            Refresh();
+
+            loadUomGrid();
+            initializeUomForm();
+            clearUomForm();
+            $('#btnUomEdit').on('click', function () { setUomMode("edit"); });
+            $('#btnUomClose').on('click', function () { $('#addUomModal').modal('hide'); });
+            $('#addUomrecord').on('click', function () {
+                initializeUomForm();
+                $('#addUomModal').modal('show');
+            });
+
+
+            loadUomDtGrid();
+            initializeUomDtForm();
+            clearUomDtForm();
+            $('#btnUomDtEdit').on('click', function () { setUomDtMode("edit"); });
+            $('#btnUomDtClose').on('click', function () { $('#addUomDtModal').modal('hide'); });
+            $('#addUomDtrecord').on('click', function () {
+                initializeUomDtForm();
+                $('#addUomDtModal').modal('show');
+            });
+
+            $('#uomCode, #uomName').on('input', checkUomMandatoryFields);
+        });
+
+        function Refresh() {
+            const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(uomUrl, "cmd_uom", "uomName", "uomId");
+
+            const uomDtUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(uomDtUrl, "cmd_packUom", "uomName", "uomId");
+        }
+
+        function SelectedDropdown(DrpdwnName) { }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
+    </script>
 }

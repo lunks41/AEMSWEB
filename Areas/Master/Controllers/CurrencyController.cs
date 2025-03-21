@@ -118,11 +118,11 @@ namespace AEMSWEB.Areas.Master.Controllers
                     CurrencyCode = model.currency.CurrencyCode ?? string.Empty,
                     CurrencyName = model.currency.CurrencyName ?? string.Empty,
                     IsMultiply = model.currency.IsMultiply,
-                    Remarks = model.currency.Remarks?.Trim() ??string.Empty,
+                    Remarks = model.currency.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.currency.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.currency.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -231,7 +231,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ValidFrom = DateTime.Parse(model.currencyDt.ValidFrom), // Assuming ValidFrom is string in ViewModel
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.currencyDt.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -344,7 +344,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ValidFrom = DateTime.Parse(model.currencyLocalDt.ValidFrom), // String to DateTime conversion
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.currencyLocalDt.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 

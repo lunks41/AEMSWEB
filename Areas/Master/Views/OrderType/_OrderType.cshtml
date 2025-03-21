@@ -47,29 +47,22 @@
                 <form id="orderTypeForm">
                     <input type="hidden" id="orderTypeId" />
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="orderTypeCode" class="form-label">Code <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="orderTypeCode" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="orderTypeName" class="form-label">Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="orderTypeName" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="cmd_orderTypeCategory" class="form-label">Category <span class="text-danger">*</span></label>
                                 <select id="cmd_orderTypeCategory" style="width: 100%"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="seqNo">Sequence Number</label>
-                                <input type="number" class="form-control" id="seqNo" min="0" max="254" value="0">
-                                <div class="invalid-feedback">Value must be between 0 and 254</div>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -140,6 +133,7 @@
             $('#orderTypeForm')[0].reset();
 
             $('#orderTypeId').val(0);
+            $('#cmd_orderTypeCategory').data("kendoComboBox").value('');
             $('#createBy').text('');
             $('#createDate').text('');
             $('#editBy').text('');
@@ -232,7 +226,7 @@
             $('#orderTypeName').val(data.orderTypeName);
             $('#remarks').val(data.remarks);
             $('#isActive').prop('checked', data.isActive);
-
+            $('#cmd_orderTypeCategory').data("kendoComboBox").value(data.orderTypeCategoryId > 0 ? data.orderTypeCategoryId : '');
             $('#createBy').text(data.createBy || "N/A");
             $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
             $('#editBy').text(data.editBy || "N/A");
@@ -272,9 +266,10 @@
 
         function saveOrderType() {
             let orderTypeData = {
-               OrderTypeId: parseInt($('#orderTypeId').val()) || 0,
-               OrderTypeCode: $('#orderTypeCode').val().trim(),
-               OrderTypeName: $('#orderTypeName').val().trim(),
+                OrderTypeId: parseInt($('#orderTypeId').val()) || 0,
+                OrderTypeCode: $('#orderTypeCode').val().trim(),
+                OrderTypeName: $('#orderTypeName').val().trim(),
+                OrderTypeCategoryId: parseInt($('#cmd_orderTypeCategory').data("kendoComboBox").value()) || 0,
                 Remarks: $('#remarks').val(),
                 IsActive: $('#isActive').prop('checked')
             };

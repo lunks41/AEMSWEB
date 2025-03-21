@@ -3,9 +3,11 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -61,11 +63,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_OrderType> GetOrderTypeByIdAsync(short CompanyId, short UserId, short OrderTypeId)
+        public async Task<OrderTypeViewModel> GetOrderTypeByIdAsync(short CompanyId, short UserId, short OrderTypeId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_OrderType>($"SELECT OrderTypeId,OrderTypeCode,OrderTypeName,OrderTypeCategoryId,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_OrderType WHERE OrderTypeId={OrderTypeId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderType}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<OrderTypeViewModel>($"SELECT M_Ord.CompanyId,M_Ord.OrderTypeId,M_Ord.OrderTypeCode,M_Ord.OrderTypeName,M_Ord.OrderTypeCategoryId,M_Ordc.OrderTypeCategoryCode,M_Ordc.OrderTypeCategoryName,M_Ord.Remarks,M_Ord.IsActive,M_Ord.CreateById,M_Ord.CreateDate,M_Ord.EditById,M_Ord.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_OrderType M_Ord INNER JOIN dbo.M_OrderTypeCategory M_Ordc ON M_Ordc.OrderTypeCategoryId = M_Ord.OrderTypeCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Ord.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Ord.EditById WHERE M_Ord.OrderTypeId={OrderTypeId} AND M_Ord.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderType}))");
 
                 return result;
             }
@@ -206,25 +208,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteOrderTypeAsync(short CompanyId, short UserId, M_OrderType OrderType)
+        public async Task<SqlResponse> DeleteOrderTypeAsync(short CompanyId, short UserId, short orderTypeId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string orderTypeNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (OrderType.OrderTypeId > 0)
-                    {
-                        var OrderTypeToRemove = _context.M_OrderType.Where(x => x.OrderTypeId == OrderType.OrderTypeId).ExecuteDelete();
+                    orderTypeNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT OrderTypeCode FROM dbo.M_OrderType WHERE OrderTypeId={orderTypeId}");
 
-                        if (OrderTypeToRemove > 0)
+                    if (orderTypeId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_OrderType
+                            .Where(x => x.OrderTypeId == orderTypeId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.OrderType,
-                                DocumentId = OrderType.OrderTypeId,
-                                DocumentNo = OrderType.OrderTypeCode,
+                                DocumentId = orderTypeId,
+                                DocumentNo = orderTypeNo,
                                 TblName = "M_OrderType",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "OrderType Delete Successfully",
@@ -232,6 +240,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -249,28 +258,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.OrderType,
+                    DocumentId = orderTypeId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.OrderType,
-                        DocumentId = OrderType.OrderTypeId,
-                        DocumentNo = OrderType.OrderTypeCode,
-                        TblName = "M_OrderType",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.OrderType,
+                    DocumentId = orderTypeId,
+                    DocumentNo = "",
+                    TblName = "M_OrderType",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -312,11 +349,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_OrderTypeCategory> GetOrderTypeCategoryByIdAsync(short CompanyId, short UserId, int OrderTypeCategoryId)
+        public async Task<OrderTypeCategoryViewModel> GetOrderTypeCategoryByIdAsync(short CompanyId, short UserId, short OrderTypeCategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_OrderTypeCategory>($"SELECT CompanyId,OrderTypeCategoryId,OrderTypeCategoryCode,OrderTypeCategoryName,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_OrderTypeCategory WHERE OrderTypeCategoryId={OrderTypeCategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderTypeCategory}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<OrderTypeCategoryViewModel>($"SELECT M_OrdC.CompanyId,M_OrdC.OrderTypeCategoryId,M_OrdC.OrderTypeCategoryCode,M_OrdC.OrderTypeCategoryName,M_OrdC.Remarks,M_OrdC.IsActive,M_OrdC.CreateById,M_OrdC.CreateDate,M_OrdC.EditById,M_OrdC.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_OrderTypeCategory M_OrdC LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_OrdC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_OrdC.EditById WHERE M_OrdC.OrderTypeCategoryId={OrderTypeCategoryId} AND M_OrdC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderTypeCategory}))");
 
                 return result;
             }
@@ -456,25 +493,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteOrderTypeCategoryAsync(short CompanyId, short UserId, M_OrderTypeCategory OrderTypeCategory)
+        public async Task<SqlResponse> DeleteOrderTypeCategoryAsync(short CompanyId, short UserId, short orderTypeCategoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string orderTypeCategoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (OrderTypeCategory.OrderTypeCategoryId > 0)
-                    {
-                        var OrderTypeCategoryToRemove = _context.M_OrderTypeCategory.Where(x => x.OrderTypeCategoryId == OrderTypeCategory.OrderTypeCategoryId).ExecuteDelete();
+                    orderTypeCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT OrderTypeCategoryCode FROM dbo.M_OrderTypeCategory WHERE OrderTypeCategoryId={orderTypeCategoryId}");
 
-                        if (OrderTypeCategoryToRemove > 0)
+                    if (orderTypeCategoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_OrderTypeCategory
+                            .Where(x => x.OrderTypeCategoryId == orderTypeCategoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.OrderTypeCategory,
-                                DocumentId = OrderTypeCategory.OrderTypeCategoryId,
-                                DocumentNo = OrderTypeCategory.OrderTypeCategoryCode,
+                                DocumentId = orderTypeCategoryId,
+                                DocumentNo = orderTypeCategoryNo,
                                 TblName = "M_OrderTypeCategory",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "OrderTypeCategory Delete Successfully",
@@ -482,6 +525,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -499,28 +543,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.OrderTypeCategory,
+                    DocumentId = orderTypeCategoryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.OrderTypeCategory,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_OrderTypeCategory",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.OrderTypeCategory,
+                    DocumentId = orderTypeCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_OrderTypeCategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

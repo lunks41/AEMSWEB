@@ -8,11 +8,11 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         public Task<UomViewModelCount> GetUomListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_Uom> GetUomByIdAsync(short CompanyId, short UserId, short UomId);
+        public Task<UomViewModel> GetUomByIdAsync(short CompanyId, short UserId, short UomId);
 
         public Task<SqlResponse> SaveUomAsync(short CompanyId, short UserId, M_Uom m_Uom);
 
-        public Task<SqlResponse> DeleteUomAsync(short CompanyId, short UserId, M_Uom m_Uom);
+        public Task<SqlResponse> DeleteUomAsync(short CompanyId, short UserId, short UomId);
 
         public Task<UomDtViewModelCount> GetUomDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
