@@ -8,7 +8,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         public Task<GroupCreditLimit_CustomerViewModelCount> GetGroupCreditLimit_CustomerListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_GroupCreditLimit_Customer> GetGroupCreditLimit_CustomerByIdAsync(short CompanyId, short UserId, short GroupCreditLimitId);
+        public Task<GroupCreditLimit_CustomerViewModel> GetGroupCreditLimit_CustomerByIdAsync(short CompanyId, short UserId, short GroupCreditLimitId);
 
         public Task<SqlResponse> SaveGroupCreditLimit_CustomerAsync(short CompanyId, short UserId, M_GroupCreditLimit_Customer M_GroupCreditLimit_Customer);
 

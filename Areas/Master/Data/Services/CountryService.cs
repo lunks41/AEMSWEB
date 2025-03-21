@@ -65,11 +65,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Country> GetCountryByIdAsync(short CompanyId, short UserId, short CountryId)
+        public async Task<CountryViewModel> GetCountryByIdAsync(short CompanyId, short UserId, short CountryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Country>($"SELECT CountryId,CountryCode,CountryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Country WHERE CountryId={CountryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Country}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<CountryViewModel>($"SELECT CountryId,CountryCode,CountryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Country WHERE CountryId={CountryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Country}))");
 
                 return result;
             }

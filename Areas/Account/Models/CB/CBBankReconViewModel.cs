@@ -5,6 +5,6 @@
         public short responseCode { get; set; }
         public string? responseMessage { get; set; }
         public long totalRecords { get; set; }
-        public List<CBBankReconHdViewModel> data { get; set; }
+        public List<CBBankReconHdViewModel>? data { get; set; }
     }
 }

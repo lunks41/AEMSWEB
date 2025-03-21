@@ -8,7 +8,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         public Task<PaymentTypeViewModelCount> GetPaymentTypeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_PaymentType> GetPaymentTypeByIdAsync(short CompanyId, short UserId, short PaymentTypeId);
+        public Task<PaymentTypeViewModel> GetPaymentTypeByIdAsync(short CompanyId, short UserId, short PaymentTypeId);
 
         public Task<SqlResponse> SavePaymentTypeAsync(short CompanyId, short UserId, M_PaymentType m_PaymentType);
 

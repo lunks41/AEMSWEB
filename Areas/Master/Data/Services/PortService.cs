@@ -4,8 +4,10 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.Models;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -206,25 +208,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeletePortAsync(short CompanyId, short UserId, PortViewModel Port)
+        public async Task<SqlResponse> DeletePortAsync(short CompanyId, short UserId, short portId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string portNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Port.PortId > 0)
-                    {
-                        var PortToRemove = _context.M_Port.Where(x => x.PortId == Port.PortId).ExecuteDelete();
+                    portNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT PortCode FROM dbo.M_Port WHERE PortId={portId}");
 
-                        if (PortToRemove > 0)
+                    if (portId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Port
+                            .Where(x => x.PortId == portId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Port,
-                                DocumentId = Port.PortId,
-                                DocumentNo = Port.PortCode,
+                                DocumentId = portId,
+                                DocumentNo = portNo,
                                 TblName = "M_Port",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Port Delete Successfully",
@@ -232,6 +240,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -249,28 +258,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Port,
+                    DocumentId = portId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Port,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Port",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Port,
+                    DocumentId = portId,
+                    DocumentNo = "",
+                    TblName = "M_Port",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

@@ -51,8 +51,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Vessel
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> VesselList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -74,7 +76,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(int vesselId, string companyId)
+        public async Task<JsonResult> GetVesselById(int vesselId, string companyId)
         {
             if (vesselId <= 0)
                 return Json(new { success = false, message = "Invalid Vessel ID" });
@@ -97,7 +99,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveVesselViewModel model)
+        public async Task<IActionResult> SaveVessel([FromBody] SaveVesselViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -138,7 +140,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int vesselId, string companyId)
+        public async Task<IActionResult> DeleteVessel(int vesselId, string companyId)
         {
             if (vesselId <= 0)
                 return Json(new { success = false, message = "Invalid Vessel ID" });
@@ -154,11 +156,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var vessel = await _vesselService.GetVesselByIdAsync(companyIdShort, parsedUserId.Value, vesselId);
-                if (vessel == null)
-                    return Json(new { success = false, message = "Vessel not found" });
-
-                await _vesselService.DeleteVesselAsync(companyIdShort, parsedUserId.Value, vessel);
+                await _vesselService.DeleteVesselAsync(companyIdShort, parsedUserId.Value, vesselId);
                 return Json(new { success = true, message = "Vessel deleted successfully" });
             }
             catch (Exception ex)
@@ -167,5 +165,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion Vessel
     }
 }

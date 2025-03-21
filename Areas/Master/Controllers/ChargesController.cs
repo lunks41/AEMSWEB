@@ -151,11 +151,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var Charges = await _ChargesService.GetChargesByIdAsync(companyIdShort, parsedUserId.Value, ChargeId);
-                if (Charges == null)
-                    return Json(new { success = false, message = "Charges not found" });
-
-                await _ChargesService.DeleteChargesAsync(companyIdShort, parsedUserId.Value, Charges);
+                await _ChargesService.DeleteChargesAsync(companyIdShort, parsedUserId.Value, ChargeId);
                 return Json(new { success = true, message = "Charges deleted successfully" });
             }
             catch (Exception ex)

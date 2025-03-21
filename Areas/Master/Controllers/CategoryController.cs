@@ -152,11 +152,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var category = await _categoryService.GetCategoryByIdAsync(companyIdShort, parsedUserId.Value, categoryId);
-                if (category == null)
-                    return Json(new { success = false, message = "Category not found" });
-
-                await _categoryService.DeleteCategoryAsync(companyIdShort, parsedUserId.Value, category);
+                await _categoryService.DeleteCategoryAsync(companyIdShort, parsedUserId.Value, categoryId);
                 return Json(new { success = true, message = "Category deleted successfully" });
             }
             catch (Exception ex)
@@ -295,11 +291,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var subCategory = await _categoryService.GetSubCategoryByIdAsync(companyIdShort, parsedUserId.Value, subCategoryId);
-                if (subCategory == null)
-                    return Json(new { success = false, message = "SubCategory not found" });
-
-                await _categoryService.DeleteSubCategoryAsync(companyIdShort, parsedUserId.Value, subCategory);
+                await _categoryService.DeleteSubCategoryAsync(companyIdShort, parsedUserId.Value, subCategoryId);
                 return Json(new { success = true, message = "SubCategory deleted successfully" });
             }
             catch (Exception ex)

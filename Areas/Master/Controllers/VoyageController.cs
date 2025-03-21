@@ -51,8 +51,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Voyage
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> VoyageList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -73,7 +75,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short voyageId, string companyId)
+        public async Task<JsonResult> GetVoyageById(short voyageId, string companyId)
         {
             if (voyageId <= 0)
                 return Json(new { success = false, message = "Invalid Voyage ID" });
@@ -96,7 +98,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveVoyageViewModel model)
+        public async Task<IActionResult> SaveVoyage([FromBody] SaveVoyageViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -133,7 +135,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short voyageId, string companyId)
+        public async Task<IActionResult> DeleteVoyage(short voyageId, string companyId)
         {
             if (voyageId <= 0)
                 return Json(new { success = false, message = "Invalid Voyage ID" });
@@ -149,11 +151,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var voyage = await _voyageService.GetVoyageByIdAsync(companyIdShort, parsedUserId.Value, voyageId);
-                if (voyage == null)
-                    return Json(new { success = false, message = "Voyage not found" });
-
-                await _voyageService.DeleteVoyageAsync(companyIdShort, parsedUserId.Value, voyage);
+                await _voyageService.DeleteVoyageAsync(companyIdShort, parsedUserId.Value, voyageId);
                 return Json(new { success = true, message = "Voyage deleted successfully" });
             }
             catch (Exception ex)
@@ -162,5 +160,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion
     }
 }

@@ -3,11 +3,21 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    bool canExport = ViewBag.IsExport ?? false;
+    bool canPrint = ViewBag.IsPrint ?? false;
+    int companyId = ViewBag.CompanyId;
+}
+
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Voyages</h3>
+                <h3>Voyage</h3>
 
                 <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -16,22 +26,28 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadVoyageGrid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
 
                     <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addVoyageModal" id="addrecord">
-                            <i class="mdi mdi-plus me-1"></i> Add Voyage
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadVoyageGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
                         </button>
+                        @if (canCreate)
+                        {
+                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addVoyageModal" id="addVoyagerecord">
+                                <span class="material-symbols-outlined">add</span>
+                            </button>
+                        }
                     </div>
                 </div>
-                <div id="grid"></div>
+                <div id="gridVoyage"></div>
             </div>
         </div>
     </div>
@@ -40,38 +56,38 @@
 @section externalhtml {
     <!-- Add/Edit Modal -->
     <div class="modal fade" id="addVoyageModal" tabindex="-1" aria-labelledby="addVoyageModalLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addVoyageModalLabel">Voyage Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
+                    <h5 class="modal-title" id="addVoyageModalLabel">Add/Edit Voyage</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearVoyageForm();"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form id="voyageForm">
                         <input type="hidden" id="voyageId" />
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="voyageNo" class="form-label">Voyage No <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="voyageNo" required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="referenceNo" class="form-label">Reference No <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="referenceNo" required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="cmb_vessel" class="form-label">Vessel <span class="text-danger">*</span></label>
-                                    <select id="cmb_vessel" style="width: 100%"></select>
+                                    <label for="cmd_vessel" class="form-label">Vessel <span class="text-danger">*</span></label>
+                                    <select id="cmd_vessel" style="width: 100%"></select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="cmb_barge" class="form-label">Barge <span class="text-danger">*</span></label>
-                                    <select id="cmb_barge" style="width: 100%"></select>
+                                    <label for="cmd_barge" class="form-label">Barge <span class="text-danger">*</span></label>
+                                    <select id="cmd_barge" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -80,7 +96,7 @@
                                     <textarea class="form-control" id="remarks" rows="2"></textarea>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="isActive">
                                     <label class="form-check-label" for="isActive">Is Active</label>
@@ -100,19 +116,19 @@
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label class="form-label">Created By</label>
+                                                <label for="createBy" class="form-label">Created By</label>
                                                 <p id="createBy" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Created Date</label>
+                                                <label for="createDate" class="form-label">Created Date</label>
                                                 <p id="createDate" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Modified By</label>
+                                                <label for="editBy" class="form-label">Modified By</label>
                                                 <p id="editBy" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Modified Date</label>
+                                                <label for="editDate" class="form-label">Modified Date</label>
                                                 <p id="editDate" class="form-control-plaintext"></p>
                                             </div>
                                         </div>
@@ -123,157 +139,179 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                    <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnVoyageClose" onclick="clearVoyageForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnVoyageEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" id="btnVoyageClear" onclick="clearVoyageForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnVoyageSave" onclick="saveVoyage()">Save</button>
                 </div>
             </div>
         </div>
     </div>
-
-    
 }
 
 @section Scripts {
     <script>
         let companyId = 0;
+        let permissions = {};
         $(document).ready(function () {
-            companyId = getUrlParameter('companyId');
-            $('#voyageNo, #referenceNo').on('input', checkMandatoryFields);
-            loadGrid();
-            loadDropdowns();
-            clearForm();
+            companyId = getUrlParameter('companyId') || 0;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            $('#voyageNo, #referenceNo').on('input', checkVoyageMandatoryFields);
+            loadVoyageGrid();
+            initializeVoyageForm();
+            clearVoyageForm();
+
+            $('#btnVoyageEdit').on('click', function () { setVoyageMode("edit"); });
+            $('#btnVoyageClose').on('click', function () { $('#addVoyageModal').modal('hide'); });
+            $('#addVoyagerecord').on('click', function () {
+                initializeVoyageForm();
+                $('#addVoyageModal').modal('show');
+            });
         });
 
-        function loadGrid() {
-            const search = $('#txtsearch').val();
-            $('#grid').kendoGrid({
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: `/Master/Voyage/List?companyId=${companyId}&searchString=${search}`,
-                            dataType: "json"
+        function initializeVoyageForm() {
+            clearVoyageForm();
+            $('#isActive').prop('checked', true);
+        }
+
+        function clearVoyageForm() {
+            $('#voyageForm')[0].reset();
+
+            $('#voyageId').val(0);
+            $('#createBy').text('');
+            $('#createDate').text('');
+            $('#editBy').text('');
+            $('#editDate').text('');
+
+            // Reset readonly and disabled states
+            $('#voyageNo, #referenceNo, #seqNo, #remarks').prop('readonly', false);
+            $('#isActive').prop('disabled', false);
+
+            $('#isActive').prop('checked', true);
+            $('#btnVoyageSave').prop('disabled', false);
+            $('#btnVoyageSave').show();
+            $('#btnVoyageClear').show();
+            $('#btnVoyageEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadVoyageGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadVoyageGrid();
+        }
+
+        function checkVoyageMandatoryFields() {
+            let isValid = $('#voyageNo').val().trim() && $('#referenceNo').val().trim();
+            $('#btnVoyageSave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#voyageNo, #referenceNo').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadVoyageGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("VoyageList", "Voyage", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openVoyageModal('${dataItem.voyageId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openVoyageModal('${dataItem.voyageId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
                         }
-                    },
-                    schema: {
-                        data: "data",
-                        total: "total"
-                    },
-                    pageSize: 20
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteVoyage('${dataItem.voyageId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
                 },
-                height: 550,
-                pageable: true,
-                columns: [
-                    {
-                        title: "Actions",
-                        template: function (dataItem) {
-                            return `
-                                    <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.voyageId}', 'view')">
-                                        <i class="mdi mdi-eye"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.voyageId}', 'edit')">
-                                        <i class="mdi mdi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteVoyage('${dataItem.voyageId}')">
-                                        <i class="mdi mdi-delete"></i>
-                                    </button>
-                                `;
-                        },
-                        width: "150px"
-                    },
-                    { field: "voyageNo", title: "Voyage No" },
-                    { field: "referenceNo", title: "Reference No" },
-                    { field: "vesselName", title: "Vessel" },
-                    { field: "bargeName", title: "Barge" },
-                    { field: "remarks", title: "Remarks" },
-                    {
-                        field: "isActive",
-                        title: "Active",
-                        template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
-                    }
-                ]
-            });
+                { field: "voyageNo", title: "voyage No" },
+                { field: "referenceNo", title: "reference No" },
+                { field: "vesselName", title: "Vessel" },
+                { field: "bargeName", title: "Barge" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridVoyage").data("kendoGrid");
+            if (grid) {
+                // Update the data source with the new bankId
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridVoyage", url, { searchString, companyId }, columns);
+            }
         }
 
-        function loadDropdowns() {
-            // Vessel Dropdown
-            $("#cmbVessel").kendoComboBox({
-                dataTextField: "vesselName",
-                dataValueField: "vesselId",
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: `/Lookup/GetVesselLookup?companyId=${companyId}`,
-                            dataType: "json"
-                        }
-                    }
-                }
-            });
-
-            // Barge Dropdown
-            $("#cmbBarge").kendoComboBox({
-                dataTextField: "bargeName",
-                dataValueField: "bargeId",
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: `/Lookup/GetBargeLookup?companyId=${companyId}`,
-                            dataType: "json"
-                        }
-                    }
-                }
-            });
-        }
-
-        function openModal(id, mode) {
-            $.get(`/Master/Voyage/GetById?voyageId=${id}&companyId=${companyId}`)
+        function openVoyageModal(id, mode) {
+            const $modal = $('#addVoyageModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetVoyageById", "Voyage", new { area = "Master" })', { voyageId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
-                        const data = response.data;
-                        $('#voyageId').val(data.voyageId);
-                        $('#voyageNo').val(data.voyageNo);
-                        $('#referenceNo').val(data.referenceNo);
-                        $('#remarks').val(data.remarks);
-                        $('#isActive').prop('checked', data.isActive);
-
-                        // Set dropdown values
-                        $("#cmbVessel").data("kendoComboBox").value(data.vesselId);
-                        $("#cmbBarge").data("kendoComboBox").value(data.bargeId);
-
-                        // Audit fields
-                        $('#createBy').text(data.createBy || 'N/A');
-                        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : 'N/A');
-                        $('#editBy').text(data.editBy || 'N/A');
-                        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : 'N/A');
-
-                        setMode(mode);
+                        populateVoyageModalFields(response.data);
+                        setVoyageMode(mode);
                         $('#addVoyageModal').modal('show');
                     }
-                });
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
         }
 
-        function setMode(mode) {
+        function populateVoyageModalFields(data) {
+            $('#voyageId').val(data.voyageId);
+            $('#voyageNo').val(data.voyageNo);
+            $('#referenceNo').val(data.referenceNo);
+            $('#cmd_vessel').data("kendoComboBox").value(data.vesselId > 0 ? data.vesselId : '');
+            $('#cmd_barge').data("kendoComboBox").value(data.bargeId > 0 ? data.bargeId : '');
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkVoyageMandatoryFields();
+        }
+
+        function setVoyageMode(mode) {
             const isView = mode === 'view';
-            $('#voyageNo').prop('readonly', isView);
-            $('#referenceNo').prop('readonly', isView);
-            $('#remarks').prop('readonly', isView);
-            $('#isActive').prop('disabled', isView);
-            $("#cmbVessel").data("kendoComboBox").enable(!isView);
-            $("#cmbBarge").data("kendoComboBox").enable(!isView);
-            $('#btnSave').toggle(!isView);
-            $('#btnEdit').toggle(isView);
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#voyageNo, #referenceNo, #seqNo, #remarks').prop('readonly', !canEdit);
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnVoyageSave').toggle(canEdit);
+            $('#btnVoyageEdit').toggle(isView && permissions.canEdit);
+            $('#btnVoyageClose').show();
+            $('#btnVoyageClear').hide();
+            $('#btnClear').hide();
         }
 
         function deleteVoyage(id) {
-            $('#confirmationModal').modal('show');
-            $('#confirmDelete').off('click').click(function () {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
                 $.ajax({
-                    url: `/Master/Voyage/Delete?voyageId=${id}&companyId=${companyId}`,
+                    url: '@Url.Action("DeleteVoyage", "Voyage", new { area = "Master" })',
                     type: "DELETE",
+                    data: { voyageId: id, companyId: companyId },
                     success: function (response) {
                         if (response.success) {
-                            loadGrid();
+                            loadVoyageGrid();
                             $('#confirmationModal').modal('hide');
                         }
                     }
@@ -282,43 +320,42 @@
         }
 
         function saveVoyage() {
-            const data = {
-                VoyageId: $('#voyageId').val() || 0,
-                VoyageNo: $('#voyageNo').val(),
-                ReferenceNo: $('#referenceNo').val(),
-                VesselId: $("#cmbVessel").data("kendoComboBox").value(),
-                BargeId: $("#cmbBarge").data("kendoComboBox").value(),
+            let voyageData = {
+                VoyageId: parseInt($('#voyageId').val()) || 0,
+                VoyageNo: $('#voyageNo').val().trim(),
+                ReferenceNo: $('#referenceNo').val().trim(),
+                VesselId: parseInt($('#cmd_vessel').data("kendoComboBox").value()) || 0,
+                BargeId: parseInt($('#cmd_barge').data("kendoComboBox").value()) || 0,
                 Remarks: $('#remarks').val(),
-                IsActive: $('#isActive').prop('checked'),
-                CompanyId: companyId
+                IsActive: $('#isActive').prop('checked')
             };
 
-            if (!data.VoyageNo || !data.ReferenceNo || !data.VesselId || !data.BargeId) {
-                alert('Voyage No, Reference No, Vessel, and Barge are required!');
+            console.log("voyage Data : " + voyageData);
+
+            if (!voyageData.VoyageNo || !voyageData.ReferenceNo) {
+                alert('VoyageNo and ReferenceNo are required!');
                 return;
             }
 
-            $.post("/Master/Voyage/Save", data)
-                .done(function (response) {
+            $.ajax({
+                url: '@Url.Action("SaveVoyage", "Voyage", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ voyage: voyageData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
                     if (response.success) {
+                        debugger;
+                        loadVoyageGrid();
+                        clearVoyageForm();
                         $('#addVoyageModal').modal('hide');
-                        loadGrid();
-                        clearForm();
+                    } else {
+                        alert(response.message || "Failed to save account group.");
                     }
-                });
-        }
-
-        function clearForm() {
-            $('#voyageForm')[0].reset();
-            $('#voyageId').val(0);
-            $("#cmbVessel").data("kendoComboBox").value('');
-            $("#cmbBarge").data("kendoComboBox").value('');
-            $('#btnSave').prop('disabled', true);
-        }
-
-        function checkMandatoryFields() {
-            const isValid = $('#voyageNo').val().trim() && $('#referenceNo').val().trim();
-            $('#btnSave').prop('disabled', !isValid);
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+                }
+            });
         }
     </script>
 }

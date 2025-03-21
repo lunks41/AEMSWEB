@@ -8,7 +8,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         public Task<DesignationViewModelCount> GetDesignationListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_Designation> GetDesignationByIdAsync(short CompanyId, short UserId, short DesignationId);
+        public Task<DesignationViewModel> GetDesignationByIdAsync(short CompanyId, short UserId, short DesignationId);
 
         public Task<SqlResponse> SaveDesignationAsync(short CompanyId, short UserId, M_Designation M_Designation);
 

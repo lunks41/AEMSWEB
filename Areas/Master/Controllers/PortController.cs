@@ -153,11 +153,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var port = await _portService.GetPortByIdAsync(companyIdShort, parsedUserId.Value, portId);
-                if (port == null)
-                    return Json(new { success = false, message = "Port not found" });
-
-                await _portService.DeletePortAsync(companyIdShort, parsedUserId.Value, port);
+                await _portService.DeletePortAsync(companyIdShort, parsedUserId.Value, portId);
                 return Json(new { success = true, message = "Port deleted successfully" });
             }
             catch (Exception ex)

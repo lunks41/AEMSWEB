@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_AccountType> GetAccountTypeByIdAsync(short CompanyId, short UserId, short AccTypeId)
+        public async Task<AccountTypeViewModel> GetAccountTypeByIdAsync(short CompanyId, short UserId, short AccTypeId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_AccountType>($"SELECT AccTypeId,CompanyId,AccTypeCode,AccTypeName,SeqNo,AccGroupName,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_AccountType WHERE AccTypeId={AccTypeId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountType}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountTypeViewModel>($"SELECT AccTypeId,CompanyId,AccTypeCode,AccTypeName,SeqNo,AccGroupName,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_AccountType WHERE AccTypeId={AccTypeId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountType}))");
 
                 return result;
             }

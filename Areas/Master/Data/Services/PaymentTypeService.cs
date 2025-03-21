@@ -63,11 +63,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_PaymentType> GetPaymentTypeByIdAsync(short CompanyId, short UserId, short PaymentTypeId)
+        public async Task<PaymentTypeViewModel> GetPaymentTypeByIdAsync(short CompanyId, short UserId, short PaymentTypeId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_PaymentType>($"SELECT PaymentTypeId,PaymentTypeCode,PaymentTypeName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_PaymentType WHERE PaymentTypeId={PaymentTypeId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.PaymentType}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<PaymentTypeViewModel>($"SELECT PaymentTypeId,PaymentTypeCode,PaymentTypeName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_PaymentType WHERE PaymentTypeId={PaymentTypeId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.PaymentType}))");
 
                 return result;
             }

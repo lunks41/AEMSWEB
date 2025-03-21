@@ -61,11 +61,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_GroupCreditLimit_Customer> GetGroupCreditLimit_CustomerByIdAsync(short CompanyId, short UserId, short GroupCreditLimitId)
+        public async Task<GroupCreditLimit_CustomerViewModel> GetGroupCreditLimit_CustomerByIdAsync(short CompanyId, short UserId, short GroupCreditLimitId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_GroupCreditLimit_Customer>($"SELECT GroupCreditLimitId,CustomerId,CompanyId,CreateById,CreateDate,EditById,EditDate FROM dbo.M_GroupCreditLimit_Customer WHERE GroupCreditLimitId={GroupCreditLimitId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GroupCreditLimit_Customer}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<GroupCreditLimit_CustomerViewModel>($"SELECT GroupCreditLimitId,CustomerId,CompanyId,CreateById,CreateDate,EditById,EditDate FROM dbo.M_GroupCreditLimit_Customer WHERE GroupCreditLimitId={GroupCreditLimitId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GroupCreditLimit_Customer}))");
 
                 return result;
             }

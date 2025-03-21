@@ -8,7 +8,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         public Task<AccountTypeViewModelCount> GetAccountTypeListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_AccountType> GetAccountTypeByIdAsync(short CompanyId, short UserId, short accTypeId);
+        public Task<AccountTypeViewModel> GetAccountTypeByIdAsync(short CompanyId, short UserId, short accTypeId);
 
         public Task<SqlResponse> SaveAccountTypeAsync(short CompanyId, short UserId, M_AccountType M_AccountType);
 

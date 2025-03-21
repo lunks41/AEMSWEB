@@ -32,7 +32,6 @@ function getCookie(name) {
 }
 
 function initializeKendoGrid(gridId, url, params, columns) {
-    
     $("#" + gridId).kendoGrid({
         dataSource: {
             transport: {
@@ -41,7 +40,6 @@ function initializeKendoGrid(gridId, url, params, columns) {
                     dataType: "json",
                     // Map Kendo's parameters to your server's parameters
                     data: function (options) {
-                        
                         return {
                             ...params, // Static params (searchString, companyId)
                             pageNumber: options.page, // Current page number
@@ -62,8 +60,8 @@ function initializeKendoGrid(gridId, url, params, columns) {
         },
         scrollable: true,
         columnMenu: {
-                    filterable: false
-                },
+            filterable: false
+        },
         filterable: { mode: "row" },
         sortable: true,
         navigatable: true,
@@ -94,11 +92,11 @@ function initializeKendoGrid(gridId, url, params, columns) {
 //            schema: {
 //                // If the server returns a raw array:
 //                data: function (response) {
-//                    
+//
 //                    return response; // Return the raw array
 //                },
 //                total: function (response) {
-//                    
+//
 //                    return response.length; // Use for client-side paging
 //                }
 //            },

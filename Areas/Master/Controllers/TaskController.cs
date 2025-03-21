@@ -76,7 +76,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTaskById(int taskId, string companyId)
+        public async Task<JsonResult> GetTaskById(short taskId, string companyId)
         {
             if (taskId <= 0)
                 return Json(new { success = false, message = "Invalid Task ID" });
@@ -134,7 +134,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteTask(int taskId, string companyId)
+        public async Task<IActionResult> DeleteTask(short taskId, string companyId)
         {
             if (taskId <= 0)
                 return Json(new { success = false, message = "Invalid Task ID" });
@@ -150,11 +150,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var task = await _taskService.GetTaskByIdAsync(companyIdShort, parsedUserId.Value, taskId);
-                if (task == null)
-                    return Json(new { success = false, message = "Task not found" });
-
-                await _taskService.DeleteTaskAsync(companyIdShort, parsedUserId.Value, task);
+                await _taskService.DeleteTaskAsync(companyIdShort, parsedUserId.Value, taskId);
                 return Json(new { success = true, message = "Task deleted successfully" });
             }
             catch (Exception ex)

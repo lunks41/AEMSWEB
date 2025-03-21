@@ -163,11 +163,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var employee = await _employeeService.GetEmployeeByIdAsync(companyIdShort, parsedUserId.Value, employeeId);
-                if (employee == null)
-                    return Json(new { success = false, message = "Employee not found" });
-
-                await _employeeService.DeleteEmployeeAsync(companyIdShort, parsedUserId.Value, employee);
+                await _employeeService.DeleteEmployeeAsync(companyIdShort, parsedUserId.Value, employeeId);
                 return Json(new { success = true, message = "Employee deleted successfully" });
             }
             catch (Exception ex)

@@ -8,11 +8,11 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         public Task<CreditTermViewModelCount> GetCreditTermListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_CreditTerm> GetCreditTermByIdAsync(short CompanyId, short UserId, short CreditTermId);
+        public Task<CreditTermViewModel> GetCreditTermByIdAsync(short CompanyId, short UserId, short CreditTermId);
 
         public Task<SqlResponse> SaveCreditTermAsync(short CompanyId, short UserId, M_CreditTerm m_CreditTerm);
 
-        public Task<SqlResponse> DeleteCreditTermAsync(short CompanyId, short UserId, M_CreditTerm m_CreditTerm);
+        public Task<SqlResponse> DeleteCreditTermAsync(short CompanyId, short UserId, short CreditTermId);
 
         public Task<CreditTermDtViewModelCount> GetCreditTermDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 

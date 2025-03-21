@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Voyage> GetVoyageByIdAsync(short CompanyId, short UserId, short VoyageId)
+        public async Task<VoyageViewModel> GetVoyageByIdAsync(short CompanyId, short UserId, short VoyageId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Voyage>($"SELECT CompanyId,VoyageId,VoyageNo,ReferenceNo,VesselId,BargeId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Voyage WHERE VoyageId={VoyageId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Voyage}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<VoyageViewModel>($"SELECT M_Voy.CompanyId,M_Voy.VoyageId,M_Voy.VoyageNo,M_Voy.ReferenceNo,M_Voy.VesselId,M_Ves.VesselCode,M_Ves.VesselName,M_Voy.BargeId,M_Bar.BargeName,M_Bar.BargeCode,M_Voy.Remarks,M_Voy.IsActive,M_Voy.CreateById,M_Voy.CreateDate,M_Voy.EditById,M_Voy.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Voyage M_Voy INNER JOIN dbo.M_Vessel M_Ves ON M_Ves.VesselId = M_Voy.VesselId INNER JOIN dbo.M_Barge M_Bar ON M_Bar.BargeId = M_Voy.BargeId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Voy.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Voy.EditById WHERE M_Voy.VoyageId={VoyageId} AND M_Voy.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Voyage}))");
 
                 return result;
             }
@@ -191,25 +191,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteVoyageAsync(short CompanyId, short UserId, M_Voyage Voyage)
+        public async Task<SqlResponse> DeleteVoyageAsync(short CompanyId, short UserId, short voyageId)
         {
+            string voyageNo = string.Empty;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Voyage.VoyageId > 0)
-                    {
-                        var VoyageToRemove = _context.M_Voyage.Where(x => x.VoyageId == Voyage.VoyageId).ExecuteDelete();
+                    voyageNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT VoyageCode FROM dbo.M_Voyage WHERE VoyageId={voyageId}");
 
-                        if (VoyageToRemove > 0)
+                    if (voyageId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Voyage
+                            .Where(x => x.VoyageId == voyageId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Voyage,
-                                DocumentId = Voyage.VoyageId,
-                                DocumentNo = Voyage.VoyageNo,
+                                DocumentId = voyageId,
+                                DocumentNo = voyageNo,
                                 TblName = "M_Voyage",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Voyage Delete Successfully",
@@ -217,6 +223,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -237,12 +244,52 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
             catch (SqlException sqlEx)
             {
-                await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Voyage, Voyage.VoyageId, "", "M_Voyage", E_Mode.Delete, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Voyage,
+                    DocumentId = voyageId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
             }
             catch (Exception ex)
             {
-                await _logService.LogErrorAsync(ex, CompanyId, E_Modules.Master, E_Master.Voyage, Voyage.VoyageId, "", "M_Voyage", E_Mode.Delete, "General", UserId);
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Voyage,
+                    DocumentId = voyageId,
+                    DocumentNo = "",
+                    TblName = "M_Voyage",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
                 throw new Exception(ex.ToString());
             }
         }

@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Department> GetDepartmentByIdAsync(short CompanyId, short UserId, short DepartmentId)
+        public async Task<DepartmentViewModel> GetDepartmentByIdAsync(short CompanyId, short UserId, short DepartmentId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Department>($"SELECT DepartmentId,DepartmentCode,DepartmentName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Department WHERE DepartmentId={DepartmentId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Department}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<DepartmentViewModel>($"SELECT DepartmentId,DepartmentCode,DepartmentName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Department WHERE DepartmentId={DepartmentId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Department}))");
 
                 return result;
             }

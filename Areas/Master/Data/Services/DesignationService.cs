@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Designation> GetDesignationByIdAsync(short CompanyId, short UserId, short DesignationId)
+        public async Task<DesignationViewModel> GetDesignationByIdAsync(short CompanyId, short UserId, short DesignationId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Designation>($"SELECT DesignationId,DesignationCode,DesignationName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Designation WHERE DesignationId={DesignationId}  AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Designation})) ");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<DesignationViewModel>($"SELECT DesignationId,DesignationCode,DesignationName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Designation WHERE DesignationId={DesignationId}  AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Designation})) ");
 
                 return result;
             }

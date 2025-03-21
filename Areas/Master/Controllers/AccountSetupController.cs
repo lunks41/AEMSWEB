@@ -374,11 +374,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var category = await _accountSetupService.GetAccountSetupCategoryByIdAsync(companyIdShort, parsedUserId.Value, accSetupCategoryId);
-                if (category == null)
-                    return Json(new { success = false, message = "Account Setup Category not found" });
-
-                await _accountSetupService.DeleteAccountSetupCategoryAsync(companyIdShort, parsedUserId.Value, category);
+                await _accountSetupService.DeleteAccountSetupCategoryAsync(companyIdShort, parsedUserId.Value, accSetupCategoryId);
                 return Json(new { success = true, message = "Account Setup Category deleted successfully" });
             }
             catch (Exception ex)

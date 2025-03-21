@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace AEMSWEB.Models.Masters
+﻿namespace AEMSWEB.Models.Masters
 {
     public class UomViewModel
     {
@@ -44,7 +42,7 @@ namespace AEMSWEB.Models.Masters
 
     public class SaveUomDtViewModel
     {
-        public UomDtViewModel uomDt { get; set; }
+        public UomDtViewModel? uomDt { get; set; }
         public string? companyId { get; set; }
     }
 

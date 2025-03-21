@@ -197,7 +197,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     {
                         CompanyId = CompanyId,
                         ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
+                        TransactionId = (short)E_Master.ChartOfAccount,
                         DocumentId = 0,
                         DocumentNo = "",
                         TblName = "M_COACategory1",
@@ -241,27 +241,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteChartOfAccountAsync(short CompanyId, short UserId, short GLId)
+        public async Task<SqlResponse> DeleteChartOfAccountAsync(short CompanyId, short UserId, short glIdId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string glIdNo = string.Empty;
+            try
             {
-                var GLCode = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT GLCode FROM dbo.M_ChartOfAccount WHERE GLId={GLId}");
-
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (GLId > 0)
-                    {
-                        var ChartOfAccountToRemove = _context.M_ChartOfAccount.Where(x => x.GLId == GLId).ExecuteDelete();
+                    glIdNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT GLCode FROM dbo.M_ChartOfAccount WHERE GLId={glIdId}");
 
-                        if (ChartOfAccountToRemove > 0)
+                    if (glIdId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_ChartOfAccount
+                            .Where(x => x.GLId == glIdId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.ChartOfAccount,
-                                DocumentId = GLId,
-                                DocumentNo = GLCode,
+                                DocumentId = glIdId,
+                                DocumentNo = glIdNo,
                                 TblName = "M_ChartOfAccount",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "ChartOfAccount Delete Successfully",
@@ -269,6 +273,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -282,60 +287,60 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "GLId Should be zero" };
+                        return new SqlResponse { Result = -1, Message = "ChartOfAccountId Should be zero" };
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.ChartOfAccount,
+                    DocumentId = glIdId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.ChartOfAccount,
-                        DocumentId = GLId,
-                        DocumentNo = GLCode,
-                        TblName = "M_ChartOfAccount",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.ChartOfAccount,
+                    DocumentId = glIdId,
+                    DocumentNo = "",
+                    TblName = "M_ChartOfAccount",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
     }

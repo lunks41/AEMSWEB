@@ -3,9 +3,11 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -63,11 +65,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Tax> GetTaxByIdAsync(short CompanyId, short UserId, short TaxId)
+        public async Task<TaxViewModel> GetTaxByIdAsync(short CompanyId, short UserId, short TaxId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Tax>($"SELECT TaxId,TaxCode,TaxName,TaxCategoryId,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Tax WHERE TaxId={TaxId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxViewModel>($"SELECT TaxId,TaxCode,TaxName,TaxCategoryId,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Tax WHERE TaxId={TaxId}");
 
                 return result;
             }
@@ -203,25 +205,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteTaxAsync(short CompanyId, short UserId, M_Tax Tax)
+        public async Task<SqlResponse> DeleteTaxAsync(short CompanyId, short UserId, short taxId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string taxNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Tax.TaxId > 0)
-                    {
-                        var TaxToRemove = _context.M_Tax.Where(x => x.TaxId == Tax.TaxId).ExecuteDelete();
+                    taxNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT TaxCode FROM dbo.M_Tax WHERE TaxId={taxId}");
 
-                        if (TaxToRemove > 0)
+                    if (taxId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Tax
+                            .Where(x => x.TaxId == taxId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Tax,
-                                DocumentId = Tax.TaxId,
-                                DocumentNo = Tax.TaxCode,
+                                DocumentId = taxId,
+                                DocumentNo = taxNo,
                                 TblName = "M_Tax",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Tax Delete Successfully",
@@ -247,28 +255,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Tax,
+                    DocumentId = taxId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Master.TaxCategory,
-                        TransactionId = (short)E_Master.Tax,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_TaxCategory",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Tax,
+                    DocumentId = taxId,
+                    DocumentNo = "",
+                    TblName = "M_Tax",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -437,28 +473,34 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteTaxDtAsync(short CompanyId, short UserId, TaxDtViewModel m_TaxDt)
+        public async Task<SqlResponse> DeleteTaxDtAsync(short CompanyId, short UserId, short taxId, DateTime Validfrom)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string taxNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (m_TaxDt.TaxId > 0)
-                    {
-                        var TaxDtToRemove = await _context.M_TaxDt.Where(x => x.TaxId == m_TaxDt.TaxId && x.ValidFrom == m_TaxDt.ValidFrom && x.CompanyId == CompanyId).ExecuteDeleteAsync();
+                    taxNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT TaxCode FROM dbo.M_Tax WHERE TaxId={taxId}");
 
-                        if (TaxDtToRemove > 0)
+                    if (taxId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_TaxDt
+                            .Where(x => x.TaxId == taxId && x.ValidFrom == Validfrom)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.TaxDt,
-                                DocumentId = m_TaxDt.TaxId,
-                                DocumentNo = "",
+                                DocumentId = taxId,
+                                DocumentNo = taxNo,
                                 TblName = "M_TaxDt",
                                 ModeId = (short)E_Mode.Delete,
-                                Remarks = "TaxDt Delete Successfully",
+                                Remarks = "Tax Delete Successfully",
                                 CreateById = UserId
                             };
                             _context.Add(auditLog);
@@ -481,28 +523,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.TaxDt,
+                    DocumentId = taxId,
+                    DocumentNo = "",
+                    TblName = "TaxDt",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Master.Tax,
-                        TransactionId = (short)E_Master.TaxDt,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_TaxDtCategory",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.TaxDt,
+                    DocumentId = taxId,
+                    DocumentNo = "",
+                    TblName = "TaxDt",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -546,11 +616,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_TaxCategory> GetTaxCategoryByIdAsync(short CompanyId, short UserId, short TaxCategoryId)
+        public async Task<TaxCategoryViewModel> GetTaxCategoryByIdAsync(short CompanyId, short UserId, short TaxCategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_TaxCategory>($"SELECT TaxCategoryId,TaxCategoryCode,TaxCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_TaxCategory WHERE TaxCategoryId={TaxCategoryId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxCategoryViewModel>($"SELECT TaxCategoryId,TaxCategoryCode,TaxCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_TaxCategory WHERE TaxCategoryId={TaxCategoryId}");
 
                 return result;
             }
@@ -691,25 +761,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteTaxCategoryAsync(short CompanyId, short UserId, M_TaxCategory TaxCategory)
+        public async Task<SqlResponse> DeleteTaxCategoryAsync(short CompanyId, short UserId, short taxCategoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string taxCategoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (TaxCategory.TaxCategoryId > 0)
-                    {
-                        var TaxCategoryToRemove = _context.M_TaxCategory.Where(x => x.TaxCategoryId == TaxCategory.TaxCategoryId).ExecuteDelete();
+                    taxCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT TaxCategoryCode FROM dbo.M_TaxCategory WHERE TaxCategoryId={taxCategoryId}");
 
-                        if (TaxCategoryToRemove > 0)
+                    if (taxCategoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_TaxCategory
+                            .Where(x => x.TaxCategoryId == taxCategoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.TaxCategory,
-                                DocumentId = TaxCategory.TaxCategoryId,
-                                DocumentNo = TaxCategory.TaxCategoryCode,
+                                DocumentId = taxCategoryId,
+                                DocumentNo = taxCategoryNo,
                                 TblName = "M_TaxCategory",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "TaxCategory Delete Successfully",
@@ -717,6 +793,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -734,28 +811,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.TaxCategory,
+                    DocumentId = taxCategoryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.TaxCategory,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_TaxCategory",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.TaxCategory,
+                    DocumentId = taxCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_TaxCategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Category> GetCategoryByIdAsync(short CompanyId, short UserId, short CategoryId)
+        public async Task<CategoryViewModel> GetCategoryByIdAsync(short CompanyId, short UserId, short CategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Category>($"SELECT CategoryId,CompanyId,CategoryCode,CategoryName,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Category WHERE CategoryId={CategoryId} AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Category}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<CategoryViewModel>($"SELECT CategoryId,CompanyId,CategoryCode,CategoryName,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Category WHERE CategoryId={CategoryId} AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Category}))");
 
                 return result;
             }
@@ -236,25 +236,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCategoryAsync(short CompanyId, short UserId, M_Category Category)
+        public async Task<SqlResponse> DeleteCategoryAsync(short CompanyId, short UserId, short categoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string categoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Category.CategoryId > 0)
-                    {
-                        var CategoryToRemove = _context.M_Category.Where(x => x.CategoryId == Category.CategoryId).ExecuteDelete();
+                    categoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT CategoryCode FROM dbo.M_Category WHERE CategoryId={categoryId}");
 
-                        if (CategoryToRemove > 0)
+                    if (categoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Category
+                            .Where(x => x.CategoryId == categoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Category,
-                                DocumentId = Category.CategoryId,
-                                DocumentNo = Category.CategoryCode,
+                                DocumentId = categoryId,
+                                DocumentNo = categoryNo,
                                 TblName = "M_Category",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Category Delete Successfully",
@@ -262,6 +268,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -279,56 +286,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Category,
+                    DocumentId = categoryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Category,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Category",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Category,
+                    DocumentId = categoryId,
+                    DocumentNo = "",
+                    TblName = "M_Category",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -370,11 +377,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_SubCategory> GetSubCategoryByIdAsync(short CompanyId, short UserId, short SubCategoryId)
+        public async Task<SubCategoryViewModel> GetSubCategoryByIdAsync(short CompanyId, short UserId, short SubCategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_SubCategory>($"SELECT SubCategoryId,SubCategoryCode,SubCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_SubCategory WHERE SubCategoryId={SubCategoryId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<SubCategoryViewModel>($"SELECT SubCategoryId,SubCategoryCode,SubCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_SubCategory WHERE SubCategoryId={SubCategoryId}");
 
                 return result;
             }
@@ -515,25 +522,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteSubCategoryAsync(short CompanyId, short UserId, M_SubCategory SubCategory)
+        public async Task<SqlResponse> DeleteSubCategoryAsync(short CompanyId, short UserId, short subCategoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string subCategoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (SubCategory.SubCategoryId > 0)
-                    {
-                        var SubCategoryToRemove = _context.M_SubCategory.Where(x => x.SubCategoryId == SubCategory.SubCategoryId).ExecuteDelete();
+                    subCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT SubCategoryCode FROM dbo.M_SubCategory WHERE SubCategoryId={subCategoryId}");
 
-                        if (SubCategoryToRemove > 0)
+                    if (subCategoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_SubCategory
+                            .Where(x => x.SubCategoryId == subCategoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.SubCategory,
-                                DocumentId = SubCategory.SubCategoryId,
-                                DocumentNo = SubCategory.SubCategoryCode,
+                                DocumentId = subCategoryId,
+                                DocumentNo = subCategoryNo,
                                 TblName = "M_SubCategory",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "SubCategory Delete Successfully",
@@ -559,28 +572,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.SubCategory,
+                    DocumentId = subCategoryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Product,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Product",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.SubCategory,
+                    DocumentId = subCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_SubCategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

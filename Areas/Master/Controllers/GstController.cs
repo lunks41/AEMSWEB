@@ -153,11 +153,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var gst = await _gstService.GetGstByIdAsync(companyIdShort, parsedUserId.Value, gstId);
-                if (gst == null)
-                    return Json(new { success = false, message = "GST not found" });
-
-                await _gstService.DeleteGstAsync(companyIdShort, parsedUserId.Value, gst);
+                await _gstService.DeleteGstAsync(companyIdShort, parsedUserId.Value, gstId);
                 return Json(new { success = true, message = "GST deleted successfully" });
             }
             catch (Exception ex)
@@ -266,11 +262,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var gstDt = await _gstService.GetGstDtByIdAsync(companyIdShort, parsedUserId.Value, gstDtId, validFrom);
-                if (gstDt == null)
-                    return Json(new { success = false, message = "GST Detail not found" });
-
-                await _gstService.DeleteGstDtAsync(companyIdShort, parsedUserId.Value, gstDt);
+                await _gstService.DeleteGstDtAsync(companyIdShort, parsedUserId.Value, gstDtId, validFrom);
                 return Json(new { success = true, message = "GST Detail deleted successfully" });
             }
             catch (Exception ex)
@@ -409,11 +401,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var category = await _gstService.GetGstCategoryByIdAsync(companyIdShort, parsedUserId.Value, gstCategoryId);
-                if (category == null)
-                    return Json(new { success = false, message = "GST Category not found" });
-
-                await _gstService.DeleteGstCategoryAsync(companyIdShort, parsedUserId.Value, category);
+                await _gstService.DeleteGstCategoryAsync(companyIdShort, parsedUserId.Value, gstCategoryId);
                 return Json(new { success = true, message = "GST Category deleted successfully" });
             }
             catch (Exception ex)

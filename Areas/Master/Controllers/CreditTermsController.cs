@@ -153,11 +153,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var creditTerm = await _creditTermService.GetCreditTermByIdAsync(companyIdShort, parsedUserId.Value, creditTermId);
-                if (creditTerm == null)
-                    return Json(new { success = false, message = "Credit Term not found" });
-
-                await _creditTermService.DeleteCreditTermAsync(companyIdShort, parsedUserId.Value, creditTerm);
+                await _creditTermService.DeleteCreditTermAsync(companyIdShort, parsedUserId.Value, creditTermId);
                 return Json(new { success = true, message = "Credit Term deleted successfully" });
             }
             catch (Exception ex)

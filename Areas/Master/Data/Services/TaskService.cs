@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Task> GetTaskByIdAsync(short CompanyId, short UserId, int TaskId)
+        public async Task<TaskViewModel> GetTaskByIdAsync(short CompanyId, short UserId, short TaskId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Task>($"SELECT TaskId,CompanyId,TaskCode,TaskName,CallSign,IMOCode,GRT,LicenseNo,TaskType,Flag,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Task WHERE TaskId={TaskId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Task}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TaskViewModel>($"SELECT TaskId,CompanyId,TaskCode,TaskName,CallSign,IMOCode,GRT,LicenseNo,TaskType,Flag,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Task WHERE TaskId={TaskId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Task}))");
 
                 return result;
             }
@@ -197,25 +197,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteTaskAsync(short CompanyId, short UserId, M_Task Task)
+        public async Task<SqlResponse> DeleteTaskAsync(short CompanyId, short UserId, short taskId)
         {
+            string taskNo = string.Empty;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Task.TaskId > 0)
-                    {
-                        var TaskToRemove = _context.M_Task.Where(x => x.TaskId == Task.TaskId).ExecuteDelete();
+                    taskNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT TaskCode FROM dbo.M_Task WHERE TaskId={taskId}");
 
-                        if (TaskToRemove > 0)
+                    if (taskId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Task
+                            .Where(x => x.TaskId == taskId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Task,
-                                DocumentId = Task.TaskId,
-                                DocumentNo = Task.TaskCode,
+                                DocumentId = taskId,
+                                DocumentNo = taskNo,
                                 TblName = "M_Task",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Task Delete Successfully",
@@ -223,6 +229,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -243,12 +250,52 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
             catch (SqlException sqlEx)
             {
-                await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Task, Task.TaskId, "", "M_Task", E_Mode.Delete, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Task,
+                    DocumentId = taskId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
             }
             catch (Exception ex)
             {
-                await _logService.LogErrorAsync(ex, CompanyId, E_Modules.Master, E_Master.Task, Task.TaskId, "", "M_Task", E_Mode.Delete, "General", UserId);
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Task,
+                    DocumentId = taskId,
+                    DocumentNo = "",
+                    TblName = "M_Task",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
                 throw new Exception(ex.ToString());
             }
         }

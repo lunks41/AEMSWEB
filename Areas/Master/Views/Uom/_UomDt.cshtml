@@ -63,7 +63,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="uomFactor" class="form-label">UOM Factor <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="uomFactor" required>
+                                <input type="number" class="form-control" id="uomFactor" min="0" max="9999" required>
                             </div>
                         </div>
                     </div>
@@ -114,89 +114,89 @@
 
 <script>
 
-        function initializeUomDtForm() {
-            clearUomDtForm();
-            $('#isActive').prop('checked', true);
-        }
+    function initializeUomDtForm() {
+        clearUomDtForm();
+        $('#isActive').prop('checked', true);
+    }
 
-        function clearUomDtForm() {
-            $('#uomDtForm')[0].reset();
+    function clearUomDtForm() {
+        $('#uomDtForm')[0].reset();
 
-            $('#uomId').val(0);
-            $('#uomDtcreateBy').text('');
-            $('#uomDtcreateDate').text('');
-            $('#uomDteditBy').text('');
-            $('#uomDteditDate').text('');
-            $('#cmd_uom').data("kendoComboBox").value('');
-            $('#cmd_packUom').data("kendoComboBox").value('');
-            $('#uomFactor').val('');
-            // Reset readonly and disabled states
-            $('#cmd_uom, #cmd_packUom, #uomFactor').prop('readonly', false);
+        $('#uomId').val(0);
+        $('#uomDtcreateBy').text('');
+        $('#uomDtcreateDate').text('');
+        $('#uomDteditBy').text('');
+        $('#uomDteditDate').text('');
+        $('#cmd_uom').data("kendoComboBox").value('');
+        $('#cmd_packUom').data("kendoComboBox").value('');
+        $('#uomFactor').val('0');
+        // Reset readonly and disabled states
+        $('#cmd_uom, #cmd_packUom, #uomFactor').prop('readonly', false);
 
-            $('#btnUomDtSave').prop('disabled', false);
-            $('#btnUomDtSave').show();
-            $('#btnUomDtClear').show();
-            $('#btnUomDtEdit').hide();
+        $('#btnUomDtSave').prop('disabled', false);
+        $('#btnUomDtSave').show();
+        $('#btnUomDtClear').show();
+        $('#btnUomDtEdit').hide();
 
-        }
+    }
 
-        function handleEnterKey(event) {
-            if (event.key === 'Enter') loadUomDtGrid();
-        }
+    function handleEnterKey(event) {
+        if (event.key === 'Enter') loadUomDtGrid();
+    }
 
-        function clearSearch() {
-            $('#txtsearch').val('');
-            loadUomDtGrid();
-        }
+    function clearSearch() {
+        $('#txtsearch').val('');
+        loadUomDtGrid();
+    }
 
     function checkUomDtMandatoryFields() {
         let accSetupCode = $('#cmd_uom').data("kendoComboBox").value() || '';
         let accSetupName = $('#cmd_packUom').data("kendoComboBox").value() || '';
         let isValid = accSetupCode.trim() && accSetupName.trim();
-           
-            $('#btnUomDtSave').prop('disabled', !isValid);
 
-            // Add visual feedback
+        $('#btnUomDtSave').prop('disabled', !isValid);
+
+        // Add visual feedback
         $('#cmd_uom, #cmd_packUom').toggleClass('is-invalid', !isValid);
-        }
+    }
 
-        function loadUomDtGrid() {
-            let searchString = $('#txtsearch').val();
-            let url = '@Url.Action("UomDtList", "Uom", new { area = "Master" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "100px",
-                    template: function (dataItem) {
-                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openUomDtModal('${dataItem.uomId}','${dataItem.packUomId}', 'view')">
+    function loadUomDtGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("UomDtList", "Uom", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "100px",
+                template: function (dataItem) {
+                    let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openUomDtModal('${dataItem.uomId}','${dataItem.packUomId}', 'view')">
                         <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openUomDtModal('${dataItem.uomId}','${dataItem.packUomId}', 'edit')">
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openUomDtModal('${dataItem.uomId}','${dataItem.packUomId}', 'edit')">
                         <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
-
-                        if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteUomDt('${dataItem.uomId}','${dataItem.packUomId}')">
-                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                        }
-                        return buttons;
                     }
-                },
-                { field: "uomName", title: "Uom Name" },
-                { field: "packUomName", title: "Pack-Uom Name" },
-                { field: "uomFactor", title: "UOM Factor" }
-            ];
 
-            let grid = $("#gridUomDt").data("kendoGrid");
-            if (grid) {
-                // Update the data source with the new bankId
-                grid.dataSource.read({ searchString: searchString, companyId: companyId });
-            } else {
-                // Initialize grid if it doesn’t exist
-                initializeKendoGrid("gridUomDt", url, { searchString, companyId }, columns);
-            }
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteUomDt('${dataItem.uomId}','${dataItem.packUomId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "uomName", title: "Uom Name" },
+            { field: "packUomName", title: "Pack-Uom Name" },
+            { field: "uomFactor", title: "UOM Factor" }
+        ];
+
+        let grid = $("#gridUomDt").data("kendoGrid");
+        if (grid) {
+            // Update the data source with the new bankId
+            grid.dataSource.read({ searchString: searchString, companyId: companyId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("gridUomDt", url, { searchString, companyId }, columns);
         }
+    }
 
     function openUomDtModal(id, packUomId, mode) {
             const $modal = $('#addUomDtModal');
@@ -226,66 +226,66 @@
         checkUomDtMandatoryFields();
     }
 
-        function setUomDtMode(mode) {
-            const isView = mode === 'view';
-            const canEdit = permissions.canEdit && !isView;
+    function setUomDtMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
 
-            $('#cmd_uom, #cmd_packUom,  #uomFactor').prop('readonly', !canEdit);
-            $('#btnUomDtSave').toggle(canEdit);
-            $('#btnUomDtEdit').toggle(isView && permissions.canEdit);
-            $('#btnUomDtClose').show();
-            $('#btnUomDtClear').hide();
-            $('#btnClear').hide();
-        }
+        $('#cmd_uom, #cmd_packUom,  #uomFactor').prop('readonly', !canEdit);
+        $('#btnUomDtSave').toggle(canEdit);
+        $('#btnUomDtEdit').toggle(isView && permissions.canEdit);
+        $('#btnUomDtClose').show();
+        $('#btnUomDtClear').hide();
+        $('#btnClear').hide();
+    }
 
     function deleteUomDt(id, packUomId) {
-            showDeleteModal("Are you sure you want to delete this records?", function () {
-                $.ajax({
-                    url: '@Url.Action("DeleteUomDt", "Uom", new { area = "Master" })',
-                    type: "DELETE",
-                    data: { uomId: id, packUomId:packUomId,companyId: companyId },
-                    success: function (response) {
-                        if (response.success) {
-                            loadUomDtGrid();
-                            $('#confirmationModal').modal('hide');
-                        }
-                    }
-                });
-            });
-        }
-
-        function saveUomDt() {
-            let uomDtData = {
-                UomId: parseInt($('#cmd_uom').data("kendoComboBox").value()) || 0,
-                PackUomId: parseInt($('#cmd_uom').data("kendoComboBox").value()) || 0,
-                UomFactor: $('#uomFactor').val()||0,
-            };
-
-            console.log("uomDt Data : " + uomDtData);
-
-            if (!uomDtData.UomId || !uomDtData.PackUomId) {
-                alert('UOM and PACKUOM are required!');
-                return;
-            }
-
+        showDeleteModal("Are you sure you want to delete this records?", function () {
             $.ajax({
-                url: '@Url.Action("SaveUomDt", "Uom", new { area = "Master" })',
-                type: "POST",
-                data: JSON.stringify({ uomDt: uomDtData, companyId }),
-                contentType: "application/json",
+                url: '@Url.Action("DeleteUomDt", "Uom", new { area = "Master" })',
+                type: "DELETE",
+                data: { uomId: id, packUomId: packUomId, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
-                        debugger;
                         loadUomDtGrid();
-                        clearUomDtForm();
-                        $('#addUomDtModal').modal('hide');
-                    } else {
-                        alert(response.message || "Failed to save account group.");
+                        $('#confirmationModal').modal('hide');
                     }
-                },
-                error: function (xhr) {
-                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
                 }
             });
+        });
+    }
+
+    function saveUomDt() {
+        let uomDtData = {
+            UomId: parseInt($('#cmd_uom').data("kendoComboBox").value()) || 0,
+            PackUomId: parseInt($('#cmd_uom').data("kendoComboBox").value()) || 0,
+            UomFactor: $('#uomFactor').val() || 0,
+        };
+
+        console.log("uomDt Data : " + uomDtData);
+
+        if (!uomDtData.UomId || !uomDtData.PackUomId) {
+            alert('UOM and PACKUOM are required!');
+            return;
         }
+
+        $.ajax({
+            url: '@Url.Action("SaveUomDt", "Uom", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ uomDt: uomDtData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    debugger;
+                    loadUomDtGrid();
+                    clearUomDtForm();
+                    $('#addUomDtModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save account group.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
+    }
 </script>

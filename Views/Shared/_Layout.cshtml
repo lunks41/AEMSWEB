@@ -76,7 +76,7 @@
             @RenderBody()
         </main>
     </div>
-    @Html.Partial("_DeleteConfirmationModal")
+    @await Html.PartialAsync("_DeleteConfirmationModal")
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - AEMSWEB - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

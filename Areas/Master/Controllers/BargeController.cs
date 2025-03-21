@@ -158,11 +158,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var barge = await _bargeService.GetBargeByIdAsync(companyIdShort, parsedUserId.Value, bargeId);
-                if (barge == null)
-                    return Json(new { success = false, message = "Barge not found" });
-
-                await _bargeService.DeleteBargeAsync(companyIdShort, parsedUserId.Value, barge);
+                await _bargeService.DeleteBargeAsync(companyIdShort, parsedUserId.Value, bargeId);
                 return Json(new { success = true, message = "Barge deleted successfully" });
             }
             catch (Exception ex)

@@ -62,11 +62,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_CustomerCreditLimit> GetCustomerCreditLimitByIdAsync(short CompanyId, short UserId, int CustomerId)
+        public async Task<CustomerCreditLimitViewModel> GetCustomerCreditLimitByIdAsync(short CompanyId, short UserId, int CustomerId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_CustomerCreditLimit>($"SELECT M_Cusc.CustomerId,M_Cus.CustomerCode,M_Cus.CustomerName,M_Cusc.EffectFrom,M_Cusc.EffectUntil,M_Cusc.IsExpires,M_Cusc.Remarks,M_Cusc.CreditLimitAmt,M_Cusc.CreateById,M_Cusc.CreateDate,M_Cusc.EditById,M_Cusc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_CustomerCreditLimit M_Cusc Inner Join M_Customer M_Cus ON M_Cus.CustomerId = M_Cusc.CustomerId left Join AdmUser Usr ON Usr.UserId = M_Cusc.CreateById left Join AdmUser Usr1 ON Usr1.UserId = M_Cusc.EditById WHERE M_Cusc.CustomerId={CustomerId} AND M_Cusc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CustomerCreditLimit}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<CustomerCreditLimitViewModel>($"SELECT M_Cusc.CustomerId,M_Cus.CustomerCode,M_Cus.CustomerName,M_Cusc.EffectFrom,M_Cusc.EffectUntil,M_Cusc.IsExpires,M_Cusc.Remarks,M_Cusc.CreditLimitAmt,M_Cusc.CreateById,M_Cusc.CreateDate,M_Cusc.EditById,M_Cusc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_CustomerCreditLimit M_Cusc Inner Join M_Customer M_Cus ON M_Cus.CustomerId = M_Cusc.CustomerId left Join AdmUser Usr ON Usr.UserId = M_Cusc.CreateById left Join AdmUser Usr1 ON Usr1.UserId = M_Cusc.EditById WHERE M_Cusc.CustomerId={CustomerId} AND M_Cusc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CustomerCreditLimit}))");
 
                 return result;
             }

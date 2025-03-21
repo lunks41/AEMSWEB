@@ -3,9 +3,11 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -63,11 +65,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Gst> GetGstByIdAsync(short CompanyId, short UserId, short GstId)
+        public async Task<GstViewModel> GetGstByIdAsync(short CompanyId, short UserId, short GstId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Gst>($"SELECT M_Gt.GstId,M_Gt.GstCode,M_Gt.GstName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_gtc.GstCategoryCode,M_gtc.GstCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById  WHERE GstId={GstId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Gst}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<GstViewModel>($"SELECT M_Gt.GstId,M_Gt.GstCode,M_Gt.GstName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_gtc.GstCategoryCode,M_gtc.GstCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById  WHERE GstId={GstId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Gst}))");
 
                 return result;
             }
@@ -192,25 +194,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteGstAsync(short CompanyId, short UserId, M_Gst Gst)
+        public async Task<SqlResponse> DeleteGstAsync(short CompanyId, short UserId, short gstId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string gstNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Gst.GstId > 0)
-                    {
-                        var GstToRemove = _context.M_Gst.Where(x => x.GstId == Gst.GstId).ExecuteDelete();
+                    gstNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT GstCode FROM dbo.M_Gst WHERE GstId={gstId}");
 
-                        if (GstToRemove > 0)
+                    if (gstId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Gst
+                            .Where(x => x.GstId == gstId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Gst,
-                                DocumentId = Gst.GstId,
-                                DocumentNo = Gst.GstCode,
+                                DocumentId = gstId,
+                                DocumentNo = gstNo,
                                 TblName = "M_Gst",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Gst Delete Successfully",
@@ -218,6 +226,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -235,31 +244,58 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Gst,
+                    DocumentId = gstId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Gst,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Gst",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Gst,
+                    DocumentId = gstId,
+                    DocumentNo = "",
+                    TblName = "M_Gst",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
-
         #endregion GST_HD
 
         #region GST_DT
@@ -427,32 +463,39 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteGstDtAsync(short CompanyId, short UserId, GstDtViewModel m_GstDt)
+        public async Task<SqlResponse> DeleteGstDtAsync(short CompanyId, short UserId, short gstId, DateTime validFrom)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string gstNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (m_GstDt.GstId > 0)
-                    {
-                        var GstDtToRemove = await _context.M_GstDt.Where(x => x.GstId == m_GstDt.GstId && x.ValidFrom == m_GstDt.ValidFrom && x.CompanyId == CompanyId).ExecuteDeleteAsync();
+                    gstNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT GstCode FROM dbo.M_Gst WHERE GstId={gstId}");
 
-                        if (GstDtToRemove > 0)
+                    if (gstId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_GstDt
+                            .Where(x => x.GstId == gstId && x.ValidFrom == validFrom)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.GstDt,
-                                DocumentId = m_GstDt.GstId,
-                                DocumentNo = "",
+                                DocumentId = gstId,
+                                DocumentNo = gstNo,
                                 TblName = "M_GstDt",
                                 ModeId = (short)E_Mode.Delete,
-                                Remarks = "GstDt Delete Successfully",
+                                Remarks = "Gst Delete Successfully",
                                 CreateById = UserId
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -470,28 +513,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.GstDt,
+                    DocumentId = gstId,
+                    DocumentNo = "",
+                    TblName = "M_GstDt",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.GstDt,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_GstDt",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.GstDt,
+                    DocumentId = gstId,
+                    DocumentNo = "",
+                    TblName = "M_GstDt",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -535,11 +606,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_GstCategory> GetGstCategoryByIdAsync(short CompanyId, short UserId, int GstCategoryId)
+        public async Task<GstCategoryViewModel> GetGstCategoryByIdAsync(short CompanyId, short UserId, int GstCategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_GstCategory>($"SELECT GstCategoryId,GstCategoryCode,GstCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_GstCategory WHERE GstCategoryId={GstCategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<GstCategoryViewModel>($"SELECT GstCategoryId,GstCategoryCode,GstCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_GstCategory WHERE GstCategoryId={GstCategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory}))");
 
                 return result;
             }
@@ -679,25 +750,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteGstCategoryAsync(short CompanyId, short UserId, M_GstCategory GstCategory)
+        public async Task<SqlResponse> DeleteGstCategoryAsync(short CompanyId, short UserId, short gstCategoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string gstCategoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (GstCategory.GstCategoryId > 0)
-                    {
-                        var GstCategoryToRemove = _context.M_GstCategory.Where(x => x.GstCategoryId == GstCategory.GstCategoryId).ExecuteDelete();
+                    gstCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT GstCategoryCode FROM dbo.M_GstCategory WHERE GstCategoryId={gstCategoryId}");
 
-                        if (GstCategoryToRemove > 0)
+                    if (gstCategoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_GstCategory
+                            .Where(x => x.GstCategoryId == gstCategoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.GstCategory,
-                                DocumentId = GstCategory.GstCategoryId,
-                                DocumentNo = GstCategory.GstCategoryCode,
+                                DocumentId = gstCategoryId,
+                                DocumentNo = gstCategoryNo,
                                 TblName = "M_GstCategory",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "GstCategory Delete Successfully",
@@ -705,6 +782,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -718,32 +796,60 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "GstCategoryId Should be zero" };
+                        return new SqlResponse { Result = -1, Message = "GstId Should be zero" };
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.GstCategory,
+                    DocumentId = gstCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_GstCategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.GstCategory,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_GstCategory",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.GstCategory,
+                    DocumentId = gstCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_GstCategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

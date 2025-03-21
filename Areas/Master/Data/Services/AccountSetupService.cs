@@ -666,11 +666,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_AccountSetupCategory> GetAccountSetupCategoryByIdAsync(short CompanyId, short UserId, short AccSetupCategoryId)
+        public async Task<AccountSetupCategoryViewModel> GetAccountSetupCategoryByIdAsync(short CompanyId, short UserId, short AccSetupCategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_AccountSetupCategory>($"SELECT AccSetupCategoryId,AccSetupCategoryCode,AccSetupCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId={AccSetupCategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupCategory}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountSetupCategoryViewModel>($"SELECT AccSetupCategoryId,AccSetupCategoryCode,AccSetupCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId={AccSetupCategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupCategory}))");
 
                 return result;
             }
@@ -831,25 +831,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountSetupCategoryAsync(short CompanyId, short UserId, M_AccountSetupCategory accountSetupCategory)
+        public async Task<SqlResponse> DeleteAccountSetupCategoryAsync(short CompanyId, short UserId, short accSetupCategoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string accSetupCategoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (accountSetupCategory.AccSetupCategoryId > 0)
-                    {
-                        var accountSetupCategoryToRemove = _context.M_AccountSetupCategory.Where(x => x.AccSetupCategoryId == accountSetupCategory.AccSetupCategoryId).ExecuteDelete();
+                    accSetupCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT AccSetupCategoryCode FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId={accSetupCategoryId}");
 
-                        if (accountSetupCategoryToRemove > 0)
+                    if (accSetupCategoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_AccountSetupCategory
+                            .Where(x => x.AccSetupCategoryId == accSetupCategoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.AccountSetupCategory,
-                                DocumentId = accountSetupCategory.AccSetupCategoryId,
-                                DocumentNo = accountSetupCategory.AccSetupCategoryCode,
+                                DocumentId = accSetupCategoryId,
+                                DocumentNo = accSetupCategoryNo,
                                 TblName = "M_AccountSetupCategory",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "AccountSetupCategory Delete Successfully",
@@ -875,58 +881,60 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountSetupCategory,
+                    DocumentId = accSetupCategoryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.AccountSetupCategory,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_AccountSetupCategory",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountSetupCategory,
+                    DocumentId = accSetupCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_AccountSetupCategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
+
+
 
         #endregion
     }

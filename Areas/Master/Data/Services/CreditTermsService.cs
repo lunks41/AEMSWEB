@@ -66,11 +66,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_CreditTerm> GetCreditTermByIdAsync(short CompanyId, short UserId, short CreditTermId)
+        public async Task<CreditTermViewModel> GetCreditTermByIdAsync(short CompanyId, short UserId, short CreditTermId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_CreditTerm>($"SELECT CreditTermId,CreditTermCode,CreditTermName,CompanyId,NoDays,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_CreditTerm WHERE CreditTermId={CreditTermId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerms}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<CreditTermViewModel>($"SELECT CreditTermId,CreditTermCode,CreditTermName,CompanyId,NoDays,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_CreditTerm WHERE CreditTermId={CreditTermId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerms}))");
 
                 return result;
             }
@@ -195,25 +195,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCreditTermAsync(short CompanyId, short UserId, M_CreditTerm CreditTerm)
+        public async Task<SqlResponse> DeleteCreditTermAsync(short CompanyId, short UserId, short creditTermId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string creditTermNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (CreditTerm.CreditTermId > 0)
-                    {
-                        var CreditTermToRemove = _context.M_CreditTerm.Where(x => x.CreditTermId == CreditTerm.CreditTermId).ExecuteDelete();
+                    creditTermNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT CreditTermCode FROM dbo.M_CreditTerm WHERE CreditTermId={creditTermId}");
 
-                        if (CreditTermToRemove > 0)
+                    if (creditTermId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_CreditTerm
+                            .Where(x => x.CreditTermId == creditTermId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.CreditTerms,
-                                DocumentId = CreditTerm.CreditTermId,
-                                DocumentNo = CreditTerm.CreditTermCode,
+                                DocumentId = creditTermId,
+                                DocumentNo = creditTermNo,
                                 TblName = "M_CreditTerm",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "CreditTerm Delete Successfully",
@@ -221,6 +227,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -238,28 +245,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.CreditTerms,
+                    DocumentId = creditTermId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.CreditTerms,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_CreditTerm",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.CreditTerms,
+                    DocumentId = creditTermId,
+                    DocumentNo = "",
+                    TblName = "M_CreditTerm",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
 

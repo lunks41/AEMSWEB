@@ -3,9 +3,11 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -61,11 +63,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Employee> GetEmployeeByIdAsync(short CompanyId, short UserId, short EmployeeId)
+        public async Task<EmployeeViewModel> GetEmployeeByIdAsync(short CompanyId, short UserId, short EmployeeId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Employee>($"SELECT M_Emp.EmployeeId,M_Emp.EmployeeCode,M_Emp.CompanyId,M_Emp.EmployeeName,M_Emp.EmployeeOtherName,M_Emp.EmployeePhoto,M_Emp.EmployeeSignature,M_Emp.DepartmentId,M_Dep.DepartmentCode,M_Dep.DepartmentName,M_Emp.EmployeeSex,M_Emp.MartialStatus,M_Emp.EmployeeDOB,M_Emp.EmployeeJoinDate,M_Emp.EmployeeOffEmailAdd,M_Emp.EmployeeOtherEmailAdd,M_Emp.Remarks,M_Emp.IsActive,M_Emp.CreateById,M_Emp.CreateDate,M_Emp.EditById,M_Emp.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Employee M_Emp INNER JOIN M_Department M_Dep ON M_Dep.DepartmentId = M_Emp.DepartmentId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Emp.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Emp.EditById M_Emp.EmployeeId={EmployeeId} AND M_Emp.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Employee}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<EmployeeViewModel>($"SELECT M_Emp.EmployeeId,M_Emp.EmployeeCode,M_Emp.CompanyId,M_Emp.EmployeeName,M_Emp.EmployeeOtherName,M_Emp.EmployeePhoto,M_Emp.EmployeeSignature,M_Emp.DepartmentId,M_Dep.DepartmentCode,M_Dep.DepartmentName,M_Emp.EmployeeSex,M_Emp.MartialStatus,M_Emp.EmployeeDOB,M_Emp.EmployeeJoinDate,M_Emp.EmployeeOffEmailAdd,M_Emp.EmployeeOtherEmailAdd,M_Emp.Remarks,M_Emp.IsActive,M_Emp.CreateById,M_Emp.CreateDate,M_Emp.EditById,M_Emp.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Employee M_Emp INNER JOIN M_Department M_Dep ON M_Dep.DepartmentId = M_Emp.DepartmentId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Emp.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Emp.EditById M_Emp.EmployeeId={EmployeeId} AND M_Emp.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Employee}))");
 
                 return result;
             }
@@ -205,25 +207,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteEmployeeAsync(short CompanyId, short UserId, M_Employee Employee)
+        public async Task<SqlResponse> DeleteEmployeeAsync(short CompanyId, short UserId, short employeeId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string employeeNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Employee.EmployeeId > 0)
-                    {
-                        var EmployeeToRemove = _context.M_Employee.Where(x => x.EmployeeId == Employee.EmployeeId).ExecuteDelete();
+                    employeeNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT EmployeeCode FROM dbo.M_Employee WHERE EmployeeId={employeeId}");
 
-                        if (EmployeeToRemove > 0)
+                    if (employeeId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Employee
+                            .Where(x => x.EmployeeId == employeeId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Employee,
-                                DocumentId = Employee.EmployeeId,
-                                DocumentNo = Employee.EmployeeCode,
+                                DocumentId = employeeId,
+                                DocumentNo = employeeNo,
                                 TblName = "M_Employee",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Employee Delete Successfully",
@@ -231,6 +239,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -248,28 +257,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Employee,
+                    DocumentId = employeeId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Employee,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Employee",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Employee,
+                    DocumentId = employeeId,
+                    DocumentNo = "",
+                    TblName = "M_Employee",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

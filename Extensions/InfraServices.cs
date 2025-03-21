@@ -15,7 +15,6 @@ using AEMSWEB.Areas.Setting.Data;
 using AEMSWEB.IServices;
 using AEMSWEB.Repository;
 using AEMSWEB.Services;
-using AEMSWEB.Services.IServices;
 using AEMSWEB.Services.Masters;
 
 namespace AEMSWEB.Extensions;
@@ -36,8 +35,6 @@ public static class InfraServices
         services.AddScoped<IAccountSetupService, AccountSetupService>();
         services.AddScoped<IAccountTypeService, AccountTypeService>();
         services.AddScoped<IBankService, BankService>();
-        services.AddScoped<IBankAddressService, BankAddressService>();
-        services.AddScoped<IBankContactService, BankContactService>();
         services.AddScoped<IBargeService, BargeService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IChartOfAccountService, ChartOfAccountService>();

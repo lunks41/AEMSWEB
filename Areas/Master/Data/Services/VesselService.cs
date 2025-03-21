@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_Vessel> GetVesselByIdAsync(short CompanyId, short UserId, int VesselId)
+        public async Task<VesselViewModel> GetVesselByIdAsync(short CompanyId, short UserId, int VesselId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_Vessel>($"SELECT VesselId,CompanyId,VesselCode,VesselName,CallSign,IMOCode,GRT,LicenseNo,VesselType,Flag,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Vessel WHERE VesselId={VesselId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Vessel}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<VesselViewModel>($"SELECT VesselId,CompanyId,VesselCode,VesselName,CallSign,IMOCode,GRT,LicenseNo,VesselType,Flag,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Vessel WHERE VesselId={VesselId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Vessel}))");
 
                 return result;
             }
@@ -198,25 +198,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteVesselAsync(short CompanyId, short UserId, M_Vessel Vessel)
+        public async Task<SqlResponse> DeleteVesselAsync(short CompanyId, short UserId, int vesselId)
         {
+            string vesselNo = string.Empty;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Vessel.VesselId > 0)
-                    {
-                        var VesselToRemove = _context.M_Vessel.Where(x => x.VesselId == Vessel.VesselId).ExecuteDelete();
+                    vesselNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT VesselCode FROM dbo.M_Vessel WHERE VesselId={vesselId}");
 
-                        if (VesselToRemove > 0)
+                    if (vesselId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Vessel
+                            .Where(x => x.VesselId == vesselId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Vessel,
-                                DocumentId = Vessel.VesselId,
-                                DocumentNo = Vessel.VesselCode,
+                                DocumentId = vesselId,
+                                DocumentNo = vesselNo,
                                 TblName = "M_Vessel",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Vessel Delete Successfully",
@@ -224,6 +230,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -244,12 +251,52 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
             catch (SqlException sqlEx)
             {
-                await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Vessel, Vessel.VesselId, "", "M_Vessel", E_Mode.Delete, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Vessel,
+                    DocumentId = vesselId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
             }
             catch (Exception ex)
             {
-                await _logService.LogErrorAsync(ex, CompanyId, E_Modules.Master, E_Master.Vessel, Vessel.VesselId, "", "M_Vessel", E_Mode.Delete, "General", UserId);
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Vessel,
+                    DocumentId = vesselId,
+                    DocumentNo = "",
+                    TblName = "M_Vessel",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
                 throw new Exception(ex.ToString());
             }
         }

@@ -64,11 +64,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_COACategory1> GetCOACategory1ByIdAsync(short CompanyId, short UserId, short COACategoryId)
+        public async Task<COACategoryViewModel> GetCOACategory1ByIdAsync(short CompanyId, short UserId, short COACategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_COACategory1>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory1 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory1}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory1 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory1}))");
 
                 return result;
             }
@@ -236,35 +236,39 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCOACategory1Async(short CompanyId, short UserId, short COACategoryId)
+        public async Task<SqlResponse> DeleteCOACategory1Async(short CompanyId, short UserId, short coaCategoryId)
         {
-            string COACategoryCode = string.Empty;
+            string coaCategoryNo = string.Empty;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (COACategoryId > 0)
+                    coaCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT COACategoryCode FROM dbo.M_COACategory1 WHERE COACategoryId={coaCategoryId}");
+
+                    if (coaCategoryId > 0)
                     {
-                        COACategoryCode = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT COACategoryCode FROM dbo.M_COACategory1 WHERE COACategoryId={COACategoryId}");
+                        var accountGroupToRemove = _context.M_COACategory1
+                            .Where(x => x.COACategoryId == coaCategoryId)
+                            .ExecuteDelete();
 
-                        var COACategory1ToRemove = _context.M_COACategory1.Where(x => x.COACategoryId == COACategoryId).ExecuteDelete();
 
-                        if (COACategory1ToRemove > 0)
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.COACategory1,
-                                DocumentId = 0,
-                                DocumentNo = "",
-                                TblName = "M_COACategory1",
+                                DocumentId = coaCategoryId,
+                                DocumentNo = coaCategoryNo,
+                                TblName = "M_COACategory",
                                 ModeId = (short)E_Mode.Delete,
-                                Remarks = "COACategory1 Delete Successfully",
+                                Remarks = "COACategory Delete Successfully",
                                 CreateById = UserId
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -292,9 +296,9 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
                     TransactionId = (short)E_Master.COACategory1,
-                    DocumentId = 0,
+                    DocumentId = coaCategoryId,
                     DocumentNo = "",
-                    TblName = "M_COACategory1",
+                    TblName = "AdmUser",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
                     CreateById = UserId,
@@ -320,9 +324,9 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
                     TransactionId = (short)E_Master.COACategory1,
-                    DocumentId = 0,
+                    DocumentId = coaCategoryId,
                     DocumentNo = "",
-                    TblName = "M_COACategory1",
+                    TblName = "M_COACategory",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId,
@@ -373,11 +377,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_COACategory2> GetCOACategory2ByIdAsync(short CompanyId, short UserId, short COACategoryId)
+        public async Task<COACategoryViewModel> GetCOACategory2ByIdAsync(short CompanyId, short UserId, short COACategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_COACategory2>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory2 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory2}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory2 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory2}))");
 
                 return result;
             }
@@ -545,32 +549,39 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCOACategory2Async(short CompanyId, short UserId, M_COACategory2 COACategory2)
+        public async Task<SqlResponse> DeleteCOACategory2Async(short CompanyId, short UserId, short coaCategoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string coaCategoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (COACategory2.COACategoryId > 0)
-                    {
-                        var COACategory2ToRemove = _context.M_COACategory2.Where(x => x.COACategoryId == COACategory2.COACategoryId).ExecuteDelete();
+                    coaCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT COACategoryCode FROM dbo.M_COACategory2 WHERE COACategoryId={coaCategoryId}");
 
-                        if (COACategory2ToRemove > 0)
+                    if (coaCategoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_COACategory2
+                            .Where(x => x.COACategoryId == coaCategoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.COACategory2,
-                                DocumentId = COACategory2.COACategoryId,
-                                DocumentNo = COACategory2.COACategoryCode,
-                                TblName = "M_COACategory2",
+                                DocumentId = coaCategoryId,
+                                DocumentNo = coaCategoryNo,
+                                TblName = "M_COACategory",
                                 ModeId = (short)E_Mode.Delete,
-                                Remarks = "COACategory2 Delete Successfully",
+                                Remarks = "COACategory Delete Successfully",
                                 CreateById = UserId
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -588,56 +599,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.COACategory2,
+                    DocumentId = coaCategoryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory2,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory2",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.COACategory2,
+                    DocumentId = coaCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_COACategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -679,11 +690,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<M_COACategory3> GetCOACategory3ByIdAsync(short CompanyId, short UserId, short COACategoryId)
+        public async Task<COACategoryViewModel> GetCOACategory3ByIdAsync(short CompanyId, short UserId, short COACategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<M_COACategory3>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory3 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory3}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory3 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory3}))");
 
                 return result;
             }
@@ -851,32 +862,39 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCOACategory3Async(short CompanyId, short UserId, M_COACategory3 COACategory3)
+        public async Task<SqlResponse> DeleteCOACategory3Async(short CompanyId, short UserId, short coaCategoryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string coaCategoryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (COACategory3.COACategoryId > 0)
-                    {
-                        var COACategory3ToRemove = _context.M_COACategory3.Where(x => x.COACategoryId == COACategory3.COACategoryId).ExecuteDelete();
+                    coaCategoryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT COACategoryCode FROM dbo.M_COACategory3 WHERE COACategoryId={coaCategoryId}");
 
-                        if (COACategory3ToRemove > 0)
+                    if (coaCategoryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_COACategory3
+                            .Where(x => x.COACategoryId == coaCategoryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.COACategory3,
-                                DocumentId = COACategory3.COACategoryId,
-                                DocumentNo = COACategory3.COACategoryCode,
-                                TblName = "M_COACategory3",
+                                DocumentId = coaCategoryId,
+                                DocumentNo = coaCategoryNo,
+                                TblName = "M_COACategory",
                                 ModeId = (short)E_Mode.Delete,
-                                Remarks = "COACategory3 Delete Successfully",
+                                Remarks = "COACategory Delete Successfully",
                                 CreateById = UserId
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -894,56 +912,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.COACategory3,
+                    DocumentId = coaCategoryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory3,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory3",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.COACategory3,
+                    DocumentId = coaCategoryId,
+                    DocumentNo = "",
+                    TblName = "M_COACategory",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
     }

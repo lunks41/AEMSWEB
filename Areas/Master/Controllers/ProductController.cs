@@ -150,11 +150,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var product = await _productService.GetProductByIdAsync(companyIdShort, parsedUserId.Value, productId);
-                if (product == null)
-                    return Json(new { success = false, message = "Product not found" });
-
-                await _productService.DeleteProductAsync(companyIdShort, parsedUserId.Value, product);
+                await _productService.DeleteProductAsync(companyIdShort, parsedUserId.Value, productId);
                 return Json(new { success = true, message = "Product deleted successfully" });
             }
             catch (Exception ex)

@@ -8,7 +8,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
     {
         public Task<DepartmentViewModelCount> GetDepartmentListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<M_Department> GetDepartmentByIdAsync(short CompanyId, short UserId, short departmentId);
+        public Task<DepartmentViewModel> GetDepartmentByIdAsync(short CompanyId, short UserId, short departmentId);
 
         public Task<SqlResponse> SaveDepartmentAsync(short CompanyId, short UserId, M_Department M_Department);
 

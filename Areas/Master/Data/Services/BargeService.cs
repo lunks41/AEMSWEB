@@ -236,25 +236,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteBargeAsync(short CompanyId, short UserId, BargeViewModel bargeViewModel)
+        public async Task<SqlResponse> DeleteBargeAsync(short CompanyId, short UserId, short bargeId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string bargeNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (bargeViewModel.BargeId > 0)
-                    {
-                        var BargeToRemove = _context.M_Barge.Where(x => x.BargeId == bargeViewModel.BargeId).ExecuteDelete();
+                    bargeNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT BargeCode FROM dbo.M_Barge WHERE BargeId={bargeId}");
 
-                        if (BargeToRemove > 0)
+                    if (bargeId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Barge
+                            .Where(x => x.BargeId == bargeId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Barge,
-                                DocumentId = bargeViewModel.BargeId,
-                                DocumentNo = bargeViewModel.BargeCode,
+                                DocumentId = bargeId,
+                                DocumentNo = bargeNo,
                                 TblName = "M_Barge",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Barge Delete Successfully",
@@ -262,6 +268,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -279,56 +286,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Barge,
+                    DocumentId = bargeId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Barge,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Barge",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Barge,
+                    DocumentId = bargeId,
+                    DocumentNo = "",
+                    TblName = "M_Barge",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
     }
