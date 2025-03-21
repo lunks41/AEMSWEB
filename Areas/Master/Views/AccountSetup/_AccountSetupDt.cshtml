@@ -33,7 +33,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="accountSetupDtModalLabel">Setup Detail</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearAccountSetupForm()"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearAccountSetupDtForm()"></button>
             </div>
             <div class="modal-body p-4">
                 <form id="setupDtForm">
@@ -99,9 +99,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnAccountSetupDtClose" onclick="clearAccountSetupForm()">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnAccountSetupDtClose" onclick="clearAccountSetupDtForm()">Close</button>
                 <button type="button" class="btn btn-primary" id="btnAccountSetupDtEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnAccountSetupDtClear" onclick="clearAccountSetupForm()">Clear</button>
+                <button type="button" class="btn btn-secondary" id="btnAccountSetupDtClear" onclick="clearAccountSetupDtForm()">Clear</button>
                 <button type="button" class="btn btn-primary" id="btnAccountSetupDtSave" onclick="saveAccountSetupDt()">Save</button>
             </div>
         </div>
@@ -161,7 +161,7 @@
     }
 
     function openAccountSetupDtModal(accSetupId, currencyId, gLId, mode) {
-        debugger;
+       
         $.get('@Url.Action("GetAccountSetupDtById", "AccountSetup", new { area = "Master" })', { accSetupId, currencyId, gLId, companyId })
             .done(function (response) {
                 if (response.success) {

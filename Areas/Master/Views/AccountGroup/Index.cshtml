@@ -26,7 +26,7 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                        <button type="button" class="btn btn-primary" onclick="loadAccountGroupGrid();">
                             <i class="mdi mdi-magnify"></i> Search
                         </button>
                         <button type="button" class="btn btn-secondary" onclick="clearSearch();">
@@ -36,10 +36,13 @@
 
                     <!-- Add Button -->
                     <div class="ms-auto">
+                        <button type="button" class="btn btn-success" id="refreshGrid" onclick="loadAccountGroupGrid();">
+                            Refresh
+                        </button>
                         @if (canCreate)
                         {
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAccountGroupModal" id="addrecord">
-                                <i class="mdi mdi-plus me-1"></i> Add
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAccountGroupModal" id="addAccountGrouprecord">
+                                Add
                             </button>
                         }
                     </div>
@@ -56,8 +59,8 @@
         <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addAccountGroupModalLabel">Add Account Group</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
+                    <h5 class="modal-title" id="addAccountGroupModalLabel">Add/Edit Account Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearAccountGroupForm();"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form id="accountGroupForm">
@@ -130,10 +133,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearForm()">Close</button>
-                    <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
-                    <button type="button" class="btn btn-primary" id="btnEdit">Edit</button>
-                    <button type="button" class="btn btn-primary" id="btnSave" onclick="saveAccountGroup()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnAccountGroupClose" onclick="clearAccountGroupForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnAccountGroupEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" id="btnAccountGroupClear" onclick="clearAccountGroupForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnAccountGroupSave" onclick="saveAccountGroup()">Save</button>
                 </div>
             </div>
         </div>
@@ -163,185 +166,191 @@
     <script>
         let companyId = 0;
         let permissions = {};
-    $(document).ready(function () {
-        companyId = getUrlParameter('companyId') || 0;
-        
-        permissions = {
-            canCreate: @Json.Serialize(canCreate),
-            canEdit: @Json.Serialize(canEdit),
-            canDelete: @Json.Serialize(canDelete),
-            canRead: @Json.Serialize(canRead),
-        };
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
 
-        $('#accGroupCode, #accGroupName').on('input', checkMandatoryFields);
-        loadGrid();
-        setDefaultValues();
-        clearForm();
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
 
-        $('#btnEdit').on('click', function () { setMode("edit"); });
-        $('#btnClose').on('click', function () { $('#addAccountGroupModal').modal('hide'); });
-        $('#addrecord').on('click', function () {
-            clearForm();
-            setDefaultValues();
-            $('#addAccountGroupModal').modal('show');
+            $('#accGroupCode, #accGroupName').on('input', checkAccountGroupMandatoryFields);
+            loadAccountGroupGrid();
+            setAccountGroupDefaultValues();
+            clearAccountGroupForm();
+
+            $('#btnAccountGroupEdit').on('click', function () { setAccountGroupMode("edit"); });
+            $('#btnAccountGroupClose').on('click', function () { $('#addAccountGroupModal').modal('hide'); });
+            $('#addAccountGrouprecord').on('click', function () {
+                setAccountGroupDefaultValues();
+                $('#addAccountGroupModal').modal('show');
+            });
         });
-    });
 
-    function setDefaultValues() {
-        clearForm();
-        $('#isActive').prop('checked', true);
-        $('#btnSave').prop('disabled', false);
-    }
+        function setAccountGroupDefaultValues() {
+            clearAccountGroupForm();
+            $('#isActive').prop('checked', true);
+        }
 
-    function handleEnterKey(event) {
-        if (event.key === 'Enter') loadGrid();
-    }
+        function clearAccountGroupForm() {
+            $('#accountGroupForm')[0].reset();
 
-    function clearSearch() {
-        $('#txtsearch').val('');
-        loadGrid();
-    }
+            $('#accGroupId').val(0);
+            $('#createBy').text('');
+            $('#createDate').text('');
+            $('#editBy').text('');
+            $('#editDate').text('');
 
-    function loadGrid() {
-        let searchString = $('#txtsearch').val();
-        let url = '@Url.Action("List", "AccountGroup", new { area = "Master" })';
-        let columns = [
-            {
-                title: "Actions",
-                width: "150px",
-                template: function (dataItem) {
-                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'view')">
+            $('#isActive').prop('checked', true);
+            $('#btnAccountGroupSave').prop('disabled', false);
+            $('#btnAccountGroupSave').show();
+            $('#btnAccountGroupClear').show();
+            $('#btnAccountGroupEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadAccountGroupGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadAccountGroupGrid();
+        }
+
+        function checkAccountGroupMandatoryFields() {
+            let isValid = $('#accGroupCode').val().trim() && $('#accGroupName').val().trim();
+            $('#btnAccountGroupSave').prop('disabled', !isValid);
+        }
+
+        function loadAccountGroupGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("AccountGroupList", "AccountGroup", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openAccountGroupModal('${dataItem.accGroupId}', 'view')">
                         <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                    if (permissions.canEdit) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openModal('${dataItem.accGroupId}', 'edit')">
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openAccountGroupModal('${dataItem.accGroupId}', 'edit')">
                         <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                    }
+                        }
 
-                    if (permissions.canDelete) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountGroup('${dataItem.accGroupId}')">
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountGroup('${dataItem.accGroupId}')">
                         <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
                     }
-                    return buttons;
-                }
-            },
-            { field: "accGroupCode", title: "Code" },
-            { field: "accGroupName", title: "Name" },
-            { field: "seqNo", title: "Sequence" },
-            { field: "remarks", title: "Remarks" },
-            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-        ];
+                },
+                { field: "accGroupCode", title: "Code" },
+                { field: "accGroupName", title: "Name" },
+                { field: "seqNo", title: "Sequence" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
-        initializeKendoGrid("grid", url, { searchString, companyId }, columns);
-    }
-
-    function openModal(id, mode) {
-        $.get('@Url.Action("GetById", "AccountGroup", new { area = "Master" })', { accGroupId: id, companyId })
-            .done(function (response) {
-                if (response.success) {
-                    populateModalFields(response.data);
-                    setMode(mode);
-                    $('#addAccountGroupModal').modal('show');
-                }
-            });
-    }
-
-    function populateModalFields(data) {
-        $('#accGroupId').val(data.accGroupId);
-        $('#accGroupCode').val(data.accGroupCode);
-        $('#accGroupName').val(data.accGroupName);
-        $('#seqNo').val(data.seqNo);
-        $('#remarks').val(data.remarks);
-        $('#isActive').prop('checked', data.isActive);
-
-        $('#createBy').text(data.createBy || "N/A");
-        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-        $('#editBy').text(data.editBy || "N/A");
-        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
-
-        checkMandatoryFields();
-    }
-
-    function setMode(mode) {
-        const isView = mode === 'view';
-        const canEdit = permissions.canEdit && !isView;
-
-        $('#accGroupCode, #accGroupName, #seqNo, #remarks').prop('readonly', !canEdit);
-        $('#isActive').prop('disabled', !canEdit);
-        $('#btnSave').toggle(canEdit);
-        $('#btnEdit').toggle(isView && permissions.canEdit);
-        $('#btnClose').show();
-        $('#btnClear').hide();
-    }
-
-    function deleteAccountGroup(id) {
-        if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
-            return;
+            initializeKendoGrid("grid", url, { searchString, companyId }, columns);
         }
 
-        $('#confirmationModal').modal('show');
-        $('#confirmDelete').off('click').click(function () {
+        function openAccountGroupModal(id, mode) {
+            $.get('@Url.Action("GetAccountGroupById", "AccountGroup", new { area = "Master" })', { accGroupId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateModalFields(response.data);
+                        setAccountGroupMode(mode);
+                        $('#addAccountGroupModal').modal('show');
+                    }
+                });
+        }
+
+        function populateModalFields(data) {
+            $('#accGroupId').val(data.accGroupId);
+            $('#accGroupCode').val(data.accGroupCode);
+            $('#accGroupName').val(data.accGroupName);
+            $('#seqNo').val(data.seqNo);
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkAccountGroupMandatoryFields();
+        }
+
+        function setAccountGroupMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#accGroupCode, #accGroupName, #seqNo, #remarks').prop('readonly', !canEdit);
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnAccountGroupSave').toggle(canEdit);
+            $('#btnAccountGroupEdit').toggle(isView && permissions.canEdit);
+            $('#btnAccountGroupClose').show();
+            $('#btnAccountGroupClear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteAccountGroup(id) {
+            if (!permissions.canDelete) {
+                alert('You do not have permission to delete records.');
+                return;
+            }
+
+            $('#confirmationModal').modal('show');
+            $('#confirmDelete').off('click').click(function () {
+                $.ajax({
+                    url: `/Master/AccountGroup/DeleteAccountGroup?accGroupId=${id}&companyId=${companyId}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.success) {
+                            loadAccountGroupGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveAccountGroup() {
+            let data = {
+                AccGroupId: parseInt($('#accGroupId').val()) || 0,
+                AccGroupCode: $('#accGroupCode').val().trim(),
+                AccGroupName: $('#accGroupName').val().trim(),
+                SeqNo: parseInt($('#seqNo').val()) || 0,
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            if (!data.AccGroupCode || !data.AccGroupName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
             $.ajax({
-                url: `/Master/AccountGroup/Delete?accGroupId=${id}&companyId=${companyId}`,
-                type: "DELETE",
+                url: '@Url.Action("SaveAccountGroup", "AccountGroup", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ accountGroup: data, companyId }),
+                contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        loadGrid();
-                        $('#confirmationModal').modal('hide');
+                        $('#addAccountGroupModal').modal('hide');
+                        loadAccountGroupGrid();
+                        clearAccountGroupForm();
                     }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
                 }
             });
-        });
-    }
-
-    function saveAccountGroup() {
-        let data = {
-            AccGroupId: parseInt($('#accGroupId').val()) || 0,
-            AccGroupCode: $('#accGroupCode').val().trim(),
-            AccGroupName: $('#accGroupName').val().trim(),
-            SeqNo: parseInt($('#seqNo').val()) || 0,
-            Remarks: $('#remarks').val(),
-            IsActive: $('#isActive').prop('checked')
-        };
-
-        if (!data.AccGroupCode || !data.AccGroupName) {
-            alert('Code and Name are required!');
-            return;
         }
 
-        $.ajax({
-            url: '@Url.Action("Save", "AccountGroup", new { area = "Master" })',
-            type: "POST",
-            data: JSON.stringify({ accountGroup: data, companyId }),
-            contentType: "application/json",
-            success: function (response) {
-                if (response.success) {
-                    $('#addAccountGroupModal').modal('hide');
-                    loadGrid();
-                    clearForm();
-                }
-            },
-            error: function (error) {
-                alert("Error: " + error.responseText);
-            }
-        });
-    }
-
-    function clearForm() {
-        $('#accountGroupForm')[0].reset();
-        $('#accGroupId').val(0);
-        $('#createBy').text('');
-        $('#createDate').text('');
-        $('#editBy').text('');
-        $('#editDate').text('');
-        $('#btnSave').prop('disabled', true);
-    }
-
-    function checkMandatoryFields() {
-        let isValid = $('#accGroupCode').val().trim() && $('#accGroupName').val().trim();
-        $('#btnSave').prop('disabled', !isValid);
-    }
+        
     </script>
-
 }

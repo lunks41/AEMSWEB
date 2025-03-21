@@ -64,14 +64,14 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="cmbVessel" class="form-label">Vessel <span class="text-danger">*</span></label>
-                                    <select id="cmbVessel" style="width: 100%"></select>
+                                    <label for="cmb_vessel" class="form-label">Vessel <span class="text-danger">*</span></label>
+                                    <select id="cmb_vessel" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="cmbBarge" class="form-label">Barge <span class="text-danger">*</span></label>
-                                    <select id="cmbBarge" style="width: 100%"></select>
+                                    <label for="cmb_barge" class="form-label">Barge <span class="text-danger">*</span></label>
+                                    <select id="cmb_barge" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -123,10 +123,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearForm()">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnEdit">Edit</button>
-                    <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
-                    <button type="button" class="btn btn-primary" id="btnSave" onclick="saveVoyage()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
                 </div>
             </div>
         </div>

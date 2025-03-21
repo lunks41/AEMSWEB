@@ -16,10 +16,10 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                        <button type="button" class="btn btn-primary" onclick="loadDesignationGrid();">
                             <i class="mdi mdi-magnify"></i> Search
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                        <button type="button" class="btn btn-secondary" onclick="clearDesignationSearch();">
                             <i class="mdi mdi-close"></i> Clear
                         </button>
                     </div>
@@ -44,7 +44,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addDesignationModalLabel">Designation Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearDesignationForm();"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form id="designationForm">
@@ -112,10 +112,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearForm()">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnEdit">Edit</button>
-                    <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
-                    <button type="button" class="btn btn-primary" id="btnSave" onclick="saveDesignation()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
                 </div>
             </div>
         </div>
@@ -147,29 +147,29 @@
         $(document).ready(function () {
             companyId = getUrlParameter('companyId');
             $('#designationCode, #designationName').on('input', checkMandatoryFields);
-            loadGrid();
-            clearForm();
+            loadDesignationGrid();
+            clearDesignationForm();
             setDefaultValues();
-            window.clearForm = clearForm;
+            window.clearDesignationForm = clearDesignationForm;
         });
 
         function setDefaultValues() {
-            clearForm();
+            clearDesignationForm();
             document.getElementById('isActive').checked = true;
             document.getElementById('btnSave').disabled = false;
         }
 
         function handleEnterKey(event) {
             if (event.key === 'Enter') {
-                loadGrid();
+                loadDesignationGrid();
             }
         }
-        function clearSearch() {
+        function clearDesignationSearch() {
             $('#txtsearch').val('');
-            loadGrid();
+            loadDesignationGrid();
         }
 
-        function loadGrid() {
+        function loadDesignationGrid() {
             let searchString = $('#txtsearch').val();
             let url = '@Url.Action("List", "Designation", new { area = "Master" })';
             const columns = [
@@ -241,7 +241,7 @@
         });
 
         $('#addrecord').on('click', function () {
-            clearForm();
+            clearDesignationForm();
             setDefaultValues();
             $('#btnClose').show();
             $('#btnClear').show();
@@ -267,7 +267,7 @@
                     type: "DELETE",
                     success: function (response) {
                         if (response.success) {
-                            loadGrid();
+                            loadDesignationGrid();
                             $('#confirmationModal').modal('hide');
                         }
                     }
@@ -298,8 +298,8 @@
                 success: function (response) {
                     if (response.success) {
                         $('#addDesignationModal').modal('hide');
-                        loadGrid();
-                        clearForm();
+                        loadDesignationGrid();
+                        clearDesignationForm();
                     }
                 },
                 error: function (error) {
@@ -308,7 +308,7 @@
             });
         }
 
-        function clearForm() {
+        function clearDesignationForm() {
             $('#designationForm')[0].reset();
             $('#designationId').val(0);
             $('#btnSave').prop('disabled', true);

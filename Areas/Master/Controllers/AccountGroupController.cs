@@ -57,7 +57,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         // GET: List account groups with pagination and search
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> AccountGroupList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
             {
@@ -88,7 +88,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         // GET: Retrieve a specific account group by ID
         [HttpGet]
-        public async Task<JsonResult> GetById(short accGroupId, string companyId)
+        public async Task<JsonResult> GetAccountGroupById(short accGroupId, string companyId)
         {
             if (accGroupId <= 0)
             {
@@ -119,7 +119,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         // POST: Save or update an account group
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveAccountGroupViewModel model)
+        public async Task<IActionResult> SaveAccountGroup([FromBody] SaveAccountGroupViewModel model)
         {
             if (model == null || !ModelState.IsValid)
             {
@@ -162,7 +162,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         // DELETE: Remove an account group
         [HttpDelete]
-        public async Task<IActionResult> Delete(short accGroupId, string companyId)
+        public async Task<IActionResult> DeleteAccountGroup(short accGroupId, string companyId)
         {
             if (accGroupId <= 0)
             {
