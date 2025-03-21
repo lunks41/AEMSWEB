@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> DepartmentList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short departmentId, string companyId)
+        public async Task<JsonResult> GetDepartmentById(short departmentId, string companyId)
         {
             if (departmentId <= 0)
                 return Json(new { success = false, message = "Invalid Department ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveDepartmentViewModel model)
+        public async Task<IActionResult> SaveDepartment([FromBody] SaveDepartmentViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -136,7 +136,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short departmentId, string companyId)
+        public async Task<IActionResult> DeleteDepartment(short departmentId, string companyId)
         {
             if (departmentId <= 0)
                 return Json(new { success = false, message = "Invalid Department ID" });
@@ -152,11 +152,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var department = await _departmentService.GetDepartmentByIdAsync(companyIdShort, parsedUserId.Value, departmentId);
-                if (department == null)
-                    return Json(new { success = false, message = "Department not found" });
-
-                await _departmentService.DeleteDepartmentAsync(companyIdShort, parsedUserId.Value, department);
+                await _departmentService.DeleteDepartmentAsync(companyIdShort, parsedUserId.Value, departmentId);
                 return Json(new { success = true, message = "Department deleted successfully" });
             }
             catch (Exception ex)

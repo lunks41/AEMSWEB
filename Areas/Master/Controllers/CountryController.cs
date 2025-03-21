@@ -26,8 +26,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _countryService = countryService;
         }
 
-        #region Country CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -56,8 +54,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Country CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> CountryList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -79,7 +79,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short countryId, string companyId)
+        public async Task<JsonResult> GetCountryById(short countryId, string companyId)
         {
             if (countryId <= 0)
                 return Json(new { success = false, message = "Invalid Country ID" });
@@ -102,7 +102,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveCountryViewModel model)
+        public async Task<IActionResult> SaveCountry([FromBody] SaveCountryViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -137,7 +137,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short countryId, string companyId)
+        public async Task<IActionResult> DeleteCountry(short countryId, string companyId)
         {
             if (countryId <= 0)
                 return Json(new { success = false, message = "Invalid Country ID" });
@@ -153,11 +153,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var country = await _countryService.GetCountryByIdAsync(companyIdShort, parsedUserId.Value, countryId);
-                if (country == null)
-                    return Json(new { success = false, message = "Country not found" });
-
-                await _countryService.DeleteCountryAsync(companyIdShort, parsedUserId.Value, country);
+                await _countryService.DeleteCountryAsync(companyIdShort, parsedUserId.Value, countryId);
                 return Json(new { success = true, message = "Country deleted successfully" });
             }
             catch (Exception ex)

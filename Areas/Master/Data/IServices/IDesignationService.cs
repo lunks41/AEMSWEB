@@ -12,6 +12,6 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> SaveDesignationAsync(short CompanyId, short UserId, M_Designation M_Designation);
 
-        public Task<SqlResponse> DeleteDesignationAsync(short CompanyId, short UserId, M_Designation M_Designation);
+        public Task<SqlResponse> DeleteDesignationAsync(short CompanyId, short UserId, short designationId);
     }
 }

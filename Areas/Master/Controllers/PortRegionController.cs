@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _portRegionService = portRegionService;
         }
 
-        #region PortRegion CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -55,8 +53,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region PortRegion CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> PortRegionList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short portRegionId, string companyId)
+        public async Task<JsonResult> GetPortRegionById(short portRegionId, string companyId)
         {
             if (portRegionId <= 0)
                 return Json(new { success = false, message = "Invalid Port Region ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SavePortRegionViewModel model)
+        public async Task<IActionResult> SavePortRegion([FromBody] SavePortRegionViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -136,7 +136,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short portRegionId, string companyId)
+        public async Task<IActionResult> DeletePortRegion(short portRegionId, string companyId)
         {
             if (portRegionId <= 0)
                 return Json(new { success = false, message = "Invalid Port Region ID" });
@@ -152,11 +152,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var portRegion = await _portRegionService.GetPortRegionByIdAsync(companyIdShort, parsedUserId.Value, portRegionId);
-                if (portRegion == null)
-                    return Json(new { success = false, message = "Port Region not found" });
-
-                await _portRegionService.DeletePortRegionAsync(companyIdShort, parsedUserId.Value, portRegion);
+                await _portRegionService.DeletePortRegionAsync(companyIdShort, parsedUserId.Value, portRegionId);
                 return Json(new { success = true, message = "Port Region deleted successfully" });
             }
             catch (Exception ex)

@@ -3,10 +3,12 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.IServices;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -207,25 +209,30 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteDepartmentAsync(short CompanyId, short UserId, M_Department Department)
+        public async Task<SqlResponse> DeleteDepartmentAsync(short CompanyId, short UserId, short departmentId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string departmentNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Department.DepartmentId > 0)
-                    {
-                        var DepartmentToRemove = _context.M_Department.Where(x => x.DepartmentId == Department.DepartmentId).ExecuteDelete();
+                    departmentNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT DepartmentCode FROM dbo.M_Department WHERE DepartmentId={departmentId}");
 
-                        if (DepartmentToRemove > 0)
+                    if (departmentId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Department
+                            .Where(x => x.DepartmentId == departmentId)
+                            .ExecuteDelete();
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Department,
-                                DocumentId = Department.DepartmentId,
-                                DocumentNo = Department.DepartmentCode,
+                                DocumentId = departmentId,
+                                DocumentNo = departmentNo,
                                 TblName = "M_Department",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Department Delete Successfully",
@@ -233,6 +240,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -250,28 +258,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Department,
+                    DocumentId = departmentId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Department,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Department",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Department,
+                    DocumentId = departmentId,
+                    DocumentNo = "",
+                    TblName = "M_Department",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

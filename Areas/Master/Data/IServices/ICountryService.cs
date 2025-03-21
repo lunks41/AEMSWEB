@@ -12,6 +12,6 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> SaveCountryAsync(short CompanyId, short UserId, M_Country M_Country);
 
-        public Task<SqlResponse> DeleteCountryAsync(short CompanyId, short UserId, M_Country M_Country);
+        public Task<SqlResponse> DeleteCountryAsync(short CompanyId, short UserId, short CountryId);
     }
 }

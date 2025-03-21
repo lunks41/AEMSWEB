@@ -15,6 +15,7 @@ using AEMSWEB.Areas.Setting.Data;
 using AEMSWEB.IServices;
 using AEMSWEB.Repository;
 using AEMSWEB.Services;
+using AEMSWEB.Services.IServices;
 using AEMSWEB.Services.Masters;
 
 namespace AEMSWEB.Extensions;
@@ -121,6 +122,10 @@ public static class InfraServices
         services.AddScoped<ISettingService, SettingServices>();
 
         #endregion Setting
+
+        #region System
+
+        #endregion System
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

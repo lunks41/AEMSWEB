@@ -51,23 +51,30 @@
 @section Scripts {
     <script>
 
-    let companyId = 0;
-    let permissions = {};
-    $(document).ready(function () {
-        companyId = getUrlParameter('companyId') || 0;
-        
-        permissions = {
-            canCreate: @Json.Serialize(canCreate),
-            canEdit: @Json.Serialize(canEdit),
-            canDelete: @Json.Serialize(canDelete),
-            canRead: @Json.Serialize(canRead),
-        };
+        let companyId = 0;
+        let permissions = {};
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
 
-        Refresh();
-        loadAccountSetupCategoryGrid();
-        loadAccountSetupGrid();
-        loadAccountSetupDtGrid();
-    });
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            $('#accGroupCode, #accGroupName').on('input', checkAccountGroupMandatoryFields);
+            Refresh();
+            loadAccountSetupCategoryGrid();
+            loadAccountSetupGrid();
+            loadAccountSetupDtGrid();
+
+           
+            $('#addAccountGrouprecord').on('click', function () {
+                initializeAccountGroupForm();
+                $('#addAccountGroupModal').modal('show');
+            });
+        });
 
         function Refresh() {
             const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
@@ -95,31 +102,34 @@
 
 
         $('#btnAccountSetupEdit').on('click', function () { setMode("edit"); });
-        $('#btnAccountSetupClose').on('click', function () { $('#accountSetupModal').modal('hide'); });
         $('#btnAccountSetupDtEdit').on('click', function () { setMode("edit"); });
-        $('#btnAccountSetupDtClose').on('click', function () { $('#accountSetupDtModal').modal('hide'); });
         $('#btnAccountSetupCategoryEdit').on('click', function () { setMode("edit"); });
+
+        $('#btnAccountSetupClose').on('click', function () { $('#accountSetupModal').modal('hide'); });
+        $('#btnAccountSetupDtClose').on('click', function () { $('#accountSetupDtModal').modal('hide'); });
         $('#btnAccountSetupCategoryClose').on('click', function () { $('#accountSetupCategoryModal').modal('hide'); });
+
+
         // For Account Setup tab
         $('#addaccountSetuprecord').on('click', function () {
             clearAccountSetupForm();        // Updated function name
-            setAccountSetupDefaultValues(); // Updated function name
+            setAccountSetupForm(); // Updated function name
             $('#accountSetupModal').modal('show');
         });
 
         // For Setup Details tab
         $('#addaccountSetupDtrecord').on('click', function () {
             clearAccountSetupDtForm();      // Ensure this function exists in _AccountSetupDt.cshtml
-            setAccountSetupDtDefaultValues();
+            setAccountSetupDtForm();
             $('#accountSetupDtModal').modal('show');
         });
 
         // For Category tab
         $('#addaccountSetupCategoryrecord').on('click', function () {
             clearAccountSetupCategoryForm(); // Updated function name
-            setAccountSetupCategoryDefaultValues();
+            setAccountSetupCategoryForm();
             $('#accountSetupCategoryModal').modal('show');
         });
-       
+
     </script>
 }

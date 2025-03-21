@@ -1,4 +1,5 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Areas.Master.Data.Services;
 using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
@@ -25,8 +26,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _logger = logger;
             _accountTypeService = accountTypeService;
         }
-
-   
 
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
@@ -55,10 +54,11 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             return View();
         }
+
         #region AccountType CRUD
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> AccountTypeList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -80,7 +80,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short accTypeId, string companyId)
+        public async Task<JsonResult> GetAccountTypeById(short accTypeId, string companyId)
         {
             if (accTypeId <= 0)
                 return Json(new { success = false, message = "Invalid Account Type ID" });
@@ -103,7 +103,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveAccountTypeViewModel model)
+        public async Task<IActionResult> SaveAccountType([FromBody] SaveAccountTypeViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -140,33 +140,36 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short accTypeId, string companyId)
+        public async Task<IActionResult> DeleteAccountType(short accTypeId, string companyId)
         {
             if (accTypeId <= 0)
-                return Json(new { success = false, message = "Invalid Account Type ID" });
+            {
+                _logger.LogWarning("Delete failed: Invalid Account Type ID {AccTypeId}.", accTypeId);
+                return Json(new { success = false, message = "Invalid Account Type ID." });
+            }
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
 
-            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.AccountType);
-
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Master, (short)E_Master.AccountType);
             if (permissions == null || !permissions.IsDelete)
-                return Json(new { success = false, message = "No delete permission" });
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this account group." });
+            }
 
             try
             {
-                var accountType = await _accountTypeService.GetAccountTypeByIdAsync(companyIdShort, parsedUserId.Value, accTypeId);
-                if (accountType == null)
-                    return Json(new { success = false, message = "Account Type not found" });
-
-                await _accountTypeService.DeleteAccountTypeAsync(companyIdShort, parsedUserId.Value, accountType);
-                return Json(new { success = true, message = "Account Type deleted successfully" });
+                await _accountTypeService.DeleteAccountTypeAsync(companyIdShort, parsedUserId.Value, accTypeId);
+                return Json(new { success = true, message = "Account Type deleted successfully." });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting account type");
-                return Json(new { success = false, message = "An error occurred" });
+                _logger.LogError(ex, "An error occurred while deleting the Account Type. Account Type ID: {AccTypeId}, Company ID: {CompanyId}.", accTypeId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
             }
         }
 

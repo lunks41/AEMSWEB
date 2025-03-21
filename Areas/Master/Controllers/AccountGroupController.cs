@@ -145,9 +145,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.accountGroup.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.accountGroup.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
-                    EditById = model.accountGroup.EditById ?? 0,
-                    EditDate = DateTime.UtcNow
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.Now
                 };
 
                 var data = await _AccountGroupService.SaveAccountGroupAsync(companyIdShort, parsedUserId.Value, accountGroupToSave);
@@ -185,14 +185,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var accountGroup = await _AccountGroupService.GetAccountGroupByIdAsync(companyIdShort, parsedUserId!.Value, accGroupId);
-                if (accountGroup == null)
-                {
-                    _logger.LogWarning("Delete failed: Account Group with ID {AccGroupId} not found for Company ID {CompanyId}.", accGroupId, companyIdShort);
-                    return Json(new { success = false, message = "Account Group not found." });
-                }
-
-                await _AccountGroupService.DeleteAccountGroupAsync(companyIdShort, parsedUserId.Value, accountGroup);
+                await _AccountGroupService.DeleteAccountGroupAsync(companyIdShort, parsedUserId.Value, accGroupId);
                 return Json(new { success = true, message = "Account Group deleted successfully." });
             }
             catch (Exception ex)

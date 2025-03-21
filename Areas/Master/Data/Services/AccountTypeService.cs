@@ -237,25 +237,30 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountTypeAsync(short CompanyId, short UserId, M_AccountType AccountType)
+        public async Task<SqlResponse> DeleteAccountTypeAsync(short CompanyId, short UserId, short accTypeId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string accTypeNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (AccountType.AccTypeId > 0)
-                    {
-                        var AccountTypeToRemove = _context.M_AccountType.Where(x => x.AccTypeId == AccountType.AccTypeId).ExecuteDelete();
+                    accTypeNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT AccTypeCode FROM dbo.M_AccountType WHERE AccTypeId={accTypeId}");
 
-                        if (AccountTypeToRemove > 0)
+                    if (accTypeId > 0)
+                    {
+                        var accountTypeToRemove = _context.M_AccountType
+                            .Where(x => x.AccTypeId == accTypeId)
+                            .ExecuteDelete();
+
+                        if (accountTypeToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.AccountType,
-                                DocumentId = AccountType.AccTypeId,
-                                DocumentNo = AccountType.AccTypeCode,
+                                DocumentId = accTypeId,
+                                DocumentNo = accTypeNo,
                                 TblName = "M_AccountType",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "AccountType Delete Successfully",
@@ -281,56 +286,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountType,
+                    DocumentId = accTypeId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.AccountType,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_AccountType",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountType,
+                    DocumentId = accTypeId,
+                    DocumentNo = "",
+                    TblName = "M_AccountType",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
     }

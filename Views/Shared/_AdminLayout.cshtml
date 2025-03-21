@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
 
-<body class="boxed-size">
+<body class="boxed-size" data-color-theme="purple-gray">
 
     <!-- Dynamic Navigation Menu -->
     @await Component.InvokeAsync("Navigation")
@@ -35,6 +35,8 @@
             @await Html.PartialAsync("~/Views/Shared/Dashboard/_Footer.cshtml")
         </div>
     </div>
+
+    @Html.Partial("_DeleteConfirmationModal")
     <!-- Bootstrap Bundle -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 

@@ -110,10 +110,17 @@
 
 <script>
 
-    function setAccountSetupDtDefaultValues() {
-        clearAccountSetupForm();
+    function initializeAccountSetupDtForm() {
+        clearAccountSetupDtForm();
         $('#isActive').prop('checked', true);
-        $('#btnAccountSetupDtSave').prop('disabled', false);
+    }
+
+    function clearAccountSetupDtForm() {
+        $('#setupDtForm').trigger("reset");
+        $('#SetupDtCreateBy').text('');
+        $('#SetupDtCreateDate').text('');
+        $('#SetupDtEditBy').text('');
+        $('#SetupDtEditDate').text('');
     }
 
     function handleAccountSetupDtEnterKey(event) {
@@ -161,7 +168,7 @@
     }
 
     function openAccountSetupDtModal(accSetupId, currencyId, gLId, mode) {
-       
+
         $.get('@Url.Action("GetAccountSetupDtById", "AccountSetup", new { area = "Master" })', { accSetupId, currencyId, gLId, companyId })
             .done(function (response) {
                 if (response.success) {
@@ -194,68 +201,54 @@
         $('#btnClose').show();
     }
 
-function saveAccountSetupDt() {
-    let data = {
-        AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
-        CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
-        GLId: parseInt($('#applyAllCurr').data("kendoMultiColumnComboBox").value()) || 0,
-        ApplyAllCurr: $('#applyAllCurr').prop('checked'),
-        CreateById: parseInt($('#createById').val()) || 0,
-        CreateDate: new Date($('#createDate').val()) || new Date(),
-        EditById: parseInt($('#editById').val()) || null,
-        EditDate: new Date($('#editDate').val()) || null
-    };
+    function saveAccountSetupDt() {
+        let data = {
+            AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
+            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
+            GLId: parseInt($('#applyAllCurr').data("kendoMultiColumnComboBox").value()) || 0,
+            ApplyAllCurr: $('#applyAllCurr').prop('checked'),
+            CreateById: parseInt($('#createById').val()) || 0,
+            CreateDate: new Date($('#createDate').val()) || new Date(),
+            EditById: parseInt($('#editById').val()) || null,
+            EditDate: new Date($('#editDate').val()) || null
+        };
 
-    if (!data.CompanyId || !data.AccSetupId || !data.CurrencyId || !data.GLId) {
-        alert('All mandatory fields must be filled out!');
-        return;
-    }
-
-    $.ajax({
-        url: '@Url.Action("SaveAccountSetupDt", "AccountSetup", new { area = "Master" })',
-        type: "POST",
-        data: JSON.stringify({ accountSetupDt: data }),
-        contentType: "application/json",
-        success: function (response) {
-            if (response.success) {
-                $('#accountSetupDtModal').modal('hide');
-                loadAccountSetupDtGrid();
-                clearAccountSetupForm();
-            }
-        },
-        error: function (error) {
-            alert("Error: " + error.responseText);
+        if (!data.CompanyId || !data.AccSetupId || !data.CurrencyId || !data.GLId) {
+            alert('All mandatory fields must be filled out!');
+            return;
         }
-    });
-}
 
-function deleteAccountSetupDt(accSetupId, companyId, currencyId, gLId) {
-    if (!permissions.canDelete) {
-        alert('You do not have permission to delete records.');
-        return;
-    }
-
-    $('#confirmationModal').modal('show');
-    $('#confirmDelete').off('click').click(function () {
         $.ajax({
-            url: `/Master/AccountSetup/DeleteAccountSetupDt?accSetupId=${accSetupId}&companyId=${companyId}&currencyId=${currencyId}&gLId=${gLId}`,
-            type: "DELETE",
+            url: '@Url.Action("SaveAccountSetupDt", "AccountSetup", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ accountSetupDt: data }),
+            contentType: "application/json",
             success: function (response) {
                 if (response.success) {
+                    $('#accountSetupDtModal').modal('hide');
                     loadAccountSetupDtGrid();
-                    $('#confirmationModal').modal('hide');
+                    clearAccountSetupForm();
                 }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
             }
         });
-    });
-}
-
-    function clearAccountSetupDtForm() {
-        $('#setupDtForm').trigger("reset");
-        $('#SetupDtCreateBy').text('');
-        $('#SetupDtCreateDate').text('');
-        $('#SetupDtEditBy').text('');
-        $('#SetupDtEditDate').text('');
     }
 
+    function deleteAccountSetupDt(accSetupId, companyId, currencyId, gLId) {
+        showDeleteModal("Are you sure you want to delete this records?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteAccountSetupDt", "AccountSetup", new { area = "Master" })',
+                type: "DELETE",
+                data: { accSetupId: id, companyId: companyId, currencyId: currencyId, glId: gLId },
+                success: function (response) {
+                    if (response.success) {
+                        loadAccountSetupDtGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
 </script>

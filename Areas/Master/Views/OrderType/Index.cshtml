@@ -1,7 +1,14 @@
-﻿<!-- Index.cshtml -->
-@{
-    ViewData["Title"] = "Order Type Management";
+﻿@{
+    ViewData["Title"] = $"Order Type ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
 }
 
 <!-- Nav Pills -->
@@ -31,6 +38,53 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/ordertype.js"></script>
-    <script src="~/js/ordertypecategory.js"></script>
+    <script>
+        let companyId = 0;
+        let permissions = {};;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            $('#orderTypeCategoryCode, #orderTypeCategoryName').on('input', checkOrderTypeCategoryMandatoryFields);
+            Refresh();
+
+            loadOrderTypeGrid();
+            initializeOrderTypeForm();
+            clearOrderTypeForm();
+            $('#btnOrderTypeEdit').on('click', function () { setOrderTypeMode("edit"); });
+            $('#btnOrderTypeClose').on('click', function () { $('#addOrderTypeModal').modal('hide'); });
+            $('#addOrderTyperecord').on('click', function () {
+                initializeOrderTypeForm();
+                $('#addOrderTypeModal').modal('show');
+            });
+
+
+            loadOrderTypeCategoryGrid();
+            initializeOrderTypeCategoryForm();
+            clearOrderTypeCategoryForm();
+            $('#btnOrderTypeCategoryEdit').on('click', function () { setOrderTypeCategoryMode("edit"); });
+            $('#btnOrderTypeCategoryClose').on('click', function () { $('#addOrderTypeCategoryModal').modal('hide'); });
+            $('#addOrderTypeCategoryrecord').on('click', function () {
+                initializeOrderTypeCategoryForm();
+                $('#addOrderTypeCategoryModal').modal('show');
+            });
+
+            $('#orderTypeCode, #orderTypeName').on('input', checkOrderTypeMandatoryFields);
+        });
+
+        function Refresh() {
+            const orderTypeCategoryUrl = '@Url.Action("GetOrderTypeCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(orderTypeCategoryUrl, "cmd_orderTypeCategory", "orderTypeCategoryName", "orderTypeCategoryId");
+        }
+
+        function SelectedDropdown(DrpdwnName) { }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
+    </script>
 }

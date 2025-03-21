@@ -3,10 +3,12 @@ using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.IServices;
 using AEMSWEB.Models;
 using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -207,25 +209,30 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteDesignationAsync(short CompanyId, short UserId, M_Designation Designation)
+        public async Task<SqlResponse> DeleteDesignationAsync(short CompanyId, short UserId, short designationId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string designationNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (Designation.DesignationId > 0)
-                    {
-                        var DesignationToRemove = _context.M_Designation.Where(x => x.DesignationId == Designation.DesignationId).ExecuteDelete();
+                    designationNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT DesignationCode FROM dbo.M_Designation WHERE DesignationId={designationId}");
 
-                        if (DesignationToRemove > 0)
+                    if (designationId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Designation
+                            .Where(x => x.DesignationId == designationId)
+                            .ExecuteDelete();
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Designation,
-                                DocumentId = Designation.DesignationId,
-                                DocumentNo = Designation.DesignationCode,
+                                DocumentId = designationId,
+                                DocumentNo = designationNo,
                                 TblName = "M_Designation",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Designation Delete Successfully",
@@ -233,6 +240,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             };
                             _context.Add(auditLog);
                             var auditLogSave = await _context.SaveChangesAsync();
+
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
@@ -250,28 +258,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Designation,
+                    DocumentId = designationId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Designation,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Designation",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    throw new Exception(ex.ToString());
-                }
+                return new SqlResponse
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Designation,
+                    DocumentId = designationId,
+                    DocumentNo = "",
+                    TblName = "M_Designation",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
             }
         }
     }

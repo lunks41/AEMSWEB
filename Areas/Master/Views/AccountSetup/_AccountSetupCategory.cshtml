@@ -108,157 +108,155 @@
     </div>
 </div>
 
-    <script>
+<script>
 
-        function setAccountSetupCategoryDefaultValues() {
-            clearSetupDtForm();
-            $('#isActive').prop('checked', true);
-            $('#btnAccountSetupCategorySave').prop('disabled', false);
-        }
+    function initializeAccountSetupCategoryForm() {
+        clearAccountSetupCategoryForm();
+        $('#isActive').prop('checked', true);
+    }
 
-        function handleAccountSetupCategoryEnterKey(event) {
-            if (event.key === 'Enter') loadAccountSetupCategoryGrid();
-        }
+    function clearAccountSetupCategoryForm() {
+        $('#categoryForm').trigger("reset");
+        $('#accSetupCategoryId').val(0);
+        $('#createBy').text('');
+        $('#createDate').text('');
+        $('#editBy').text('');
+        $('#editDate').text('');
 
-        function clearAccountSetupCategorySearch() {
-            $('#txtsearch').val('');
-            loadAccountSetupCategoryGrid();
-        }
+        $('#accSetupCategoryCode, #accSetupCategoryName, #remarks').prop('readonly', false);
+        $('#isActive').prop('disabled', false);
+        $('#isActive').prop('checked', true);
+        $('#btnAccountSetupSave').prop('disabled', false);
+        $('#btnAccountSetupSave').show();
+        $('#btnAccountSetupClear').show();
+        $('#btnAccountSetupEdit').hide();
+    }
 
-        function loadAccountSetupCategoryGrid() {
-            
-            let searchString = $('#txtsearch').val();
-            let url = '@Url.Action("ListAccountSetupCategory", "AccountSetup", new { area = "Master" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "150px",
-                    template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openAccountSetupCateogryModal('${dataItem.accSetupCategoryId}', 'view')">
+    function handleAccountSetupCategoryEnterKey(event) {
+        if (event.key === 'Enter') loadAccountSetupCategoryGrid();
+    }
+
+    function clearAccountSetupCategorySearch() {
+        $('#txtsearch').val('');
+        loadAccountSetupCategoryGrid();
+    }
+
+    function loadAccountSetupCategoryGrid() {
+
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("ListAccountSetupCategory", "AccountSetup", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openAccountSetupCateogryModal('${dataItem.accSetupCategoryId}', 'view')">
                                         <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openAccountSetupCateogryModal('${dataItem.accSetupCategoryId}', 'edit')">
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openAccountSetupCateogryModal('${dataItem.accSetupCategoryId}', 'edit')">
                                         <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
+                    }
 
-                        if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountSetupCategory('${dataItem.accSetupCategoryId}')">
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteAccountSetupCategory('${dataItem.accSetupCategoryId}')">
                                         <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                        }
-                        return buttons;
                     }
-                },
-                { field: "accSetupCategoryCode", title: "Code" },
-                { field: "accSetupCategoryName", title: "Name" },
-                { field: "remarks", title: "Remarks" },
-                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-            ];
+                    return buttons;
+                }
+            },
+            { field: "accSetupCategoryCode", title: "Code" },
+            { field: "accSetupCategoryName", title: "Name" },
+            { field: "remarks", title: "Remarks" },
+            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
 
-            initializeKendoGrid("categoryGrid", url, { searchString, companyId }, columns);
-        }
+        initializeKendoGrid("categoryGrid", url, { searchString, companyId }, columns);
+    }
 
-        function openAccountSetupCateogryModal(id, mode) {
-            $.get('@Url.Action("GetAccountSetupCategoryGetById", "AccountSetup", new { area= "Master" })', { accSetupCategoryId: id })
-                .done(function (response) {
-                    if (response.success) {
-                        populateModalFields(response.data);
-                        setMode(mode);
-                        $('#addAccountSetupCategoryModal').modal('show');
-                    }
-                });
-        }
-
-        function populateModalFields(data) {
-            $('#accSetupCategoryId').val(data.accSetupCategoryId);
-            $('#accSetupCategoryCode').val(data.accSetupCategoryCode);
-            $('#accSetupCategoryName').val(data.accSetupCategoryName);
-            $('#remarks').val(data.remarks);
-            $('#isActive').prop('checked', data.isActive);
-
-            $('#createById').text(data.createById || "N/A");
-            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-            $('#editById').text(data.editById || "N/A");
-            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
-        }
-
-        function setMode(mode) {
-            const isView = mode === 'view';
-            const canEdit = permissions.canEdit && !isView;
-
-            $('#accSetupCategoryCode, #accSetupCategoryName, #remarks').prop('readonly', !canEdit);
-            $('#isActive').prop('disabled', !canEdit);
-            $('#btnAccountSetupCategorySave').toggle(canEdit);
-            $('#btnAccountSetupCategoryClose').show();
-        }
-
-        function saveAccountSetupCategory() {
-            let data = {
-                AccSetupCategoryId: parseInt($('#accSetupCategoryId').val()) || 0,
-                AccSetupCategoryCode: $('#accSetupCategoryCode').val().trim(),
-                AccSetupCategoryName: $('#accSetupCategoryName').val().trim(),
-                Remarks: $('#remarks').val(),
-                IsActive: $('#isActive').prop('checked'),
-                CreateById: parseInt($('#createById').val()) || 0,
-                CreateDate: new Date($('#createDate').val()) || new Date(),
-                EditById: parseInt($('#editById').val()) || null,
-                EditDate: new Date($('#editDate').val()) || null
-            };
-
-            if (!data.AccSetupCategoryCode || !data.AccSetupCategoryName) {
-                alert('Code and Name are required!');
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("SaveAccountSetupCategory", "AccountSetup", new { area = "Master" })',
-                type: "POST",
-                data: JSON.stringify({ accountSetupCategory: data }),
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        $('#addAccountSetupCategoryModal').modal('hide');
-                        loadGrid();
-                        clearForm();
-                    }
-                },
-                error: function (error) {
-                    alert("Error: " + error.responseText);
+    function openAccountSetupCateogryModal(id, mode) {
+        $.get('@Url.Action("GetAccountSetupCategoryGetById", "AccountSetup", new { area= "Master" })', { accSetupCategoryId: id })
+            .done(function (response) {
+                if (response.success) {
+                    populateModalFields(response.data);
+                    setMode(mode);
+                    $('#addAccountSetupCategoryModal').modal('show');
                 }
             });
+    }
+
+    function populateModalFields(data) {
+        $('#accSetupCategoryId').val(data.accSetupCategoryId);
+        $('#accSetupCategoryCode').val(data.accSetupCategoryCode);
+        $('#accSetupCategoryName').val(data.accSetupCategoryName);
+        $('#remarks').val(data.remarks);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createById').text(data.createById || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editById').text(data.editById || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+    }
+
+    function setMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#accSetupCategoryCode, #accSetupCategoryName, #remarks').prop('readonly', !canEdit);
+        $('#isActive').prop('disabled', !canEdit);
+        $('#btnAccountSetupCategorySave').toggle(canEdit);
+        $('#btnAccountSetupCategoryClose').show();
+    }
+
+    function saveAccountSetupCategory() {
+        let data = {
+            accSetupCategoryId: parseInt($('#accSetupCategoryId').val()) || 0,
+            AccSetupCategoryCode: $('#accSetupCategoryCode').val().trim(),
+            AccSetupCategoryName: $('#accSetupCategoryName').val().trim(),
+            Remarks: $('#remarks').val(),
+            IsActive: $('#isActive').prop('checked'),
+            CreateById: parseInt($('#createById').val()) || 0,
+            CreateDate: new Date($('#createDate').val()) || new Date(),
+            EditById: parseInt($('#editById').val()) || null,
+            EditDate: new Date($('#editDate').val()) || null
+        };
+
+        if (!data.AccSetupCategoryCode || !data.AccSetupCategoryName) {
+            alert('Code and Name are required!');
+            return;
         }
 
-        function deleteAccountSetupCategory(id) {
-            if (!permissions.canDelete) {
-                alert('You do not have permission to delete records.');
-                return;
+        $.ajax({
+            url: '@Url.Action("SaveAccountSetupCategory", "AccountSetup", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ accountSetupCategory: data }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addAccountSetupCategoryModal').modal('hide');
+                    loadGrid();
+                    clearForm();
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
             }
+        });
+    }
 
-            $('#confirmationModal').modal('show');
-            $('#confirmDelete').off('click').click(function () {
-                $.ajax({
-                    url: `/Master/AccountSetup/DeleteAccountSetupCategory?accSetupCategoryId=${id}`,
-                    type: "DELETE",
-                    success: function (response) {
-                        if (response.success) {
-                            loadGrid();
-                            $('#confirmationModal').modal('hide');
-                        }
+    function deleteAccountSetupCategory(id) {
+        showDeleteModal("Are you sure you want to delete this records?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteAccountSetupCategory", "AccountSetup", new { area = "Master" })',
+                type: "DELETE",
+                data: { accSetupCategoryId: id, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadAccountSetupGrid();
+                        $('#confirmationModal').modal('hide');
                     }
-                });
+                }
             });
-        }
-
-        // Rename the function
-        function clearAccountSetupCategoryForm() {
-            $('#categoryForm').trigger("reset");
-            $('#AccSetupCategoryId').val(0);
-            $('#CategoryCreateBy').text('');
-            $('#CategoryCreateDate').text('');
-            $('#CategoryEditBy').text('');
-            $('#CategoryEditDate').text('');
-        }
-
-        
-
-    </script>
+        });
+    }
+</script>

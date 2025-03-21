@@ -117,10 +117,28 @@
 
 <script>
 
-    function setAccountSetupDefaultValues() {
+    function initializeAccountSetupForm() {
         clearAccountSetupForm();
         $('#isActive').prop('checked', true);
         $('#btnAccountSetupSave').prop('disabled', false);
+    }
+
+    function clearAccountSetupForm() {
+        $('#accountSetupForm').trigger("reset"); // Replace [0].reset() with trigger("reset")
+        $('#accSetupId').val(0);
+        $('#accSetupCreateBy').text('');
+        $('#accSetupCreateDate').text('');
+        $('#accSetupEditBy').text('');
+        $('#accSetupEditDate').text('');
+        // Reset readonly and disabled states
+        $('#accSetupCode, #accSetupName, #seqNo, #remarks').prop('readonly', false);
+        $('#isActive').prop('disabled', false);
+
+        $('#isActive').prop('checked', true);
+        $('#btnAccountSetupSave').prop('disabled', false);
+        $('#btnAccountSetupSave').show();
+        $('#btnAccountSetupClear').show();
+        $('#btnAccountSetupEdit').hide();
     }
 
     function handleAccountSetupEnterKey(event) {
@@ -168,9 +186,9 @@
     function openAccountSetupModal(id, mode) {
         $.get('@Url.Action("GetAccountSetupById", "AccountSetup", new { area = "Master" })', { accSetupId: id, companyId })
             .done(function (response) {
-                
+
                 if (response.success) {
-                    
+
                     populateAccountSetupModalFields(response.data);
                     setAccountSetupMode(mode);
                     $('#accountSetupModal').modal('show');
@@ -179,7 +197,7 @@
     }
 
     function populateAccountSetupModalFields(data) {
-       
+
         $('#accSetupId').val(data.accSetupId);
         $('#accSetupCode').val(data.accSetupCode);
         $('#accSetupName').val(data.accSetupName);
@@ -208,16 +226,11 @@
     }
 
     function deleteAccountSetup(id) {
-        if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
-            return;
-        }
-
-        $('#confirmationModal').modal('show');
-        $('#confirmDelete').off('click').click(function () {
+        showDeleteModal("Are you sure you want to delete this records?", function () {
             $.ajax({
-                url: `/Master/AccountSetup/DeleteAccountSetup?accSetupId=${id}&companyId=${companyId}`,
+                url: '@Url.Action("DeleteAccountSetup", "AccountSetup", new { area = "Master" })',
                 type: "DELETE",
+                data: { accSetupId: id, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
                         loadAccountSetupGrid();
@@ -263,16 +276,6 @@
                 alert("Error: " + error.responseText);
             }
         });
-    }
-
-    function clearAccountSetupForm() {
-        $('#accountSetupForm').trigger("reset"); // Replace [0].reset() with trigger("reset")
-        $('#AccSetupId').val(0);
-        $('#AccSetupCreateBy').text('');
-        $('#AccSetupCreateDate').text('');
-        $('#AccSetupEditBy').text('');
-        $('#AccSetupEditDate').text('');
-        $('#btnAccountSetupSave').prop('disabled', true);
     }
 
     function checkMandatoryAccountSetupFields() {

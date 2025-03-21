@@ -3,11 +3,21 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    bool canExport = ViewBag.IsExport ?? false;
+    bool canPrint = ViewBag.IsPrint ?? false;
+    int companyId = ViewBag.CompanyId;
+}
+
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Department </h3>
+                <h3>Departments</h3>
 
                 <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -16,19 +26,25 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadDepartmentGrid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
 
                     <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addDepartmentModal" id="addrecord">
-                            <i class="mdi mdi-plus me-1"></i> Add Department
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadDepartmentGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
                         </button>
+                        @if (canCreate)
+                        {
+                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addDepartmentModal" id="addDepartmentrecord">
+                                <span class="material-symbols-outlined">add</span>
+                            </button>
+                        }
                     </div>
                 </div>
                 <div id="gridDepartment"></div>
@@ -43,26 +59,25 @@
         <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addDepartmentModalLabel">Department Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
+                    <h5 class="modal-title" id="addDepartmentModalLabel">Add/Edit Department</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearDepartmentForm();"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form id="departmentForm">
                         <input type="hidden" id="departmentId" />
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="departmentCode" class="form-label">Department Region Code <span class="text-danger">*</span></label>
+                                    <label for="departmentCode" class="form-label">Code <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="departmentCode" required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="departmentName" class="form-label">Department Name <span class="text-danger">*</span></label>
+                                    <label for="departmentName" class="form-label">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="departmentName" required>
                                 </div>
                             </div>
-
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="remarks" class="form-label">Remarks</label>
@@ -89,19 +104,19 @@
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label class="form-label">Created By</label>
+                                                <label for="createBy" class="form-label">Created By</label>
                                                 <p id="createBy" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Created Date</label>
+                                                <label for="createDate" class="form-label">Created Date</label>
                                                 <p id="createDate" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Modified By</label>
+                                                <label for="editBy" class="form-label">Modified By</label>
                                                 <p id="editBy" class="form-control-plaintext"></p>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Modified Date</label>
+                                                <label for="editDate" class="form-label">Modified Date</label>
                                                 <p id="editDate" class="form-control-plaintext"></p>
                                             </div>
                                         </div>
@@ -112,29 +127,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                    <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this department?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDepartmentClose" onclick="clearDepartmentForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnDepartmentEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" id="btnDepartmentClear" onclick="clearDepartmentForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnDepartmentSave" onclick="saveDepartment()">Save</button>
                 </div>
             </div>
         </div>
@@ -144,130 +140,162 @@
 @section Scripts {
     <script>
         let companyId = 0;
+        let permissions = {};
         $(document).ready(function () {
-            companyId = getUrlParameter('companyId');
-            $('#departmentCode, #departmentName').on('input', checkMandatoryFields);
-            loadGrid();
-            clearForm();
-            setDefaultValues();
-            window.clearForm = clearForm;
+            companyId = getUrlParameter('companyId') || 0;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            $('#departmentCode, #departmentName').on('input', checkDepartmentMandatoryFields);
+            loadDepartmentGrid();
+            initializeDepartmentForm();
+            clearDepartmentForm();
+
+            $('#btnDepartmentEdit').on('click', function () { setDepartmentMode("edit"); });
+            $('#btnDepartmentClose').on('click', function () { $('#addDepartmentModal').modal('hide'); });
+            $('#addDepartmentrecord').on('click', function () {
+                initializeDepartmentForm();
+                $('#addDepartmentModal').modal('show');
+            });
         });
 
-        function setDefaultValues() {
-            clearForm();
-            document.getElementById('isActive').checked = true;
-            document.getElementById('btnSave').disabled = false;
+        function initializeDepartmentForm() {
+            clearDepartmentForm();
+            $('#isActive').prop('checked', true);
+        }
+
+        function clearDepartmentForm() {
+            $('#departmentForm')[0].reset();
+
+            $('#departmentId').val(0);
+            $('#createBy').text('');
+            $('#createDate').text('');
+            $('#editBy').text('');
+            $('#editDate').text('');
+
+            // Reset readonly and disabled states
+            $('#departmentCode, #departmentName, #seqNo, #remarks').prop('readonly', false);
+            $('#isActive').prop('disabled', false);
+
+            $('#isActive').prop('checked', true);
+            $('#btnDepartmentSave').prop('disabled', false);
+            $('#btnDepartmentSave').show();
+            $('#btnDepartmentClear').show();
+            $('#btnDepartmentEdit').hide();
         }
 
         function handleEnterKey(event) {
-            if (event.key === 'Enter') {
-                loadGrid();
-            }
-        }
-        function clearSearch() {
-            $('#txtsearch').val('');
-            loadGrid();
+            if (event.key === 'Enter') loadDepartmentGrid();
         }
 
-        function loadGrid() {
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadDepartmentGrid();
+        }
+
+        function checkDepartmentMandatoryFields() {
+            let isValid = $('#departmentCode').val().trim() && $('#departmentName').val().trim();
+            $('#btnDepartmentSave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#departmentCode, #departmentName').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadDepartmentGrid() {
             let searchString = $('#txtsearch').val();
-            let url = '@Url.Action("List", "Department", new { area = "Master" })';
-            const columns = [
+            let url = '@Url.Action("DepartmentList", "Department", new { area = "Master" })';
+            let columns = [
                 {
                     title: "Actions",
-                    width: "150px",
+                    width: "100px",
                     template: function (dataItem) {
-                        return `
-                                <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.departmentId}', 'view')">
-                                    <i class="mdi mdi-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.departmentId}', 'edit')">
-                                    <i class="mdi mdi-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteDepartment('${dataItem.departmentId}')">
-                                    <i class="mdi mdi-delete"></i>
-                                </button>
-                            `;
-                    },
-                    width: "150px"
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openDepartmentModal('${dataItem.departmentId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openDepartmentModal('${dataItem.departmentId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteDepartment('${dataItem.departmentId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
                 },
                 { field: "departmentCode", title: "Code" },
                 { field: "departmentName", title: "Name" },
                 { field: "remarks", title: "Remarks" },
-                {
-                    field: "isActive",
-                    title: "Active",
-                    template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
-                }
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
 
-            initializeKendoGrid("gridDepartment", url, { searchString, companyId }, columns);
+            let grid = $("#gridDepartment").data("kendoGrid");
+            if (grid) {
+                // Update the data source with the new bankId
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridDepartment", url, { searchString, companyId }, columns);
+            }
         }
 
-        function openModal(id, mode) {
-            $.get('@Url.Action("GetById", "Department", new { area = "Master" })', { departmentId: id, companyId })
+        function openDepartmentModal(id, mode) {
+            const $modal = $('#addDepartmentModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetDepartmentById", "Department", new { area = "Master" })', { departmentId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
-                        const data = response.data;
-                        populateModalFields(data)
-                        setMode(mode);
+                        populateDepartmentModalFields(response.data);
+                        setDepartmentMode(mode);
                         $('#addDepartmentModal').modal('show');
                     }
-                });
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
         }
 
-        function populateModalFields(data) {
-            
+        function populateDepartmentModalFields(data) {
             $('#departmentId').val(data.departmentId);
             $('#departmentCode').val(data.departmentCode);
             $('#departmentName').val(data.departmentName);
             $('#remarks').val(data.remarks);
             $('#isActive').prop('checked', data.isActive);
-            // Load Details History (always read-only)
+
             $('#createBy').text(data.createBy || "N/A");
             $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
             $('#editBy').text(data.editBy || "N/A");
             $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-            checkMandatoryFields();
+            checkDepartmentMandatoryFields();
         }
 
-        $('#btnEdit').on('click', function () {
-            setMode("edit");
-        });
-
-        $('#btnClose').on('click', function () {
-            $('#addDepartmentModal').modal('hide');
-        });
-
-        $('#addrecord').on('click', function () {
-            clearForm();
-            setDefaultValues();
-            $('#btnClose').show();
-            $('#btnClear').show();
-            $('#btnSave').show();
-            $('#btnEdit').hide();
-        });
-
-        function setMode(mode) {
+        function setDepartmentMode(mode) {
             const isView = mode === 'view';
-            $('#departmentCode').prop('readonly', isView);
-            $('#departmentName').prop('readonly', isView);
-            $('#remarks').prop('readonly', isView);
-            $('#isActive').prop('disabled', isView);
-            $('#btnSave').toggle(!isView);
-            $('#btnEdit').toggle(isView);
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#departmentCode, #departmentName,  #remarks').prop('readonly', !canEdit);
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnDepartmentSave').toggle(canEdit);
+            $('#btnDepartmentEdit').toggle(isView && permissions.canEdit);
+            $('#btnDepartmentClose').show();
+            $('#btnDepartmentClear').hide();
+            $('#btnClear').hide();
         }
 
         function deleteDepartment(id) {
-            $('#confirmationModal').modal('show');
-            $('#confirmDelete').off('click').click(function () {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
                 $.ajax({
-                    url: `/Master/Department/Delete?departmentId=${id}&companyId=${companyId}`,
+                    url: '@Url.Action("DeleteDepartment", "Department", new { area = "Master" })',
                     type: "DELETE",
+                    data: { departmentId: id, companyId: companyId },
                     success: function (response) {
                         if (response.success) {
-                            loadGrid();
+                            loadDepartmentGrid();
                             $('#confirmationModal').modal('hide');
                         }
                     }
@@ -276,49 +304,40 @@
         }
 
         function saveDepartment() {
-            const data = {
-                DepartmentId: parseInt($('#departmentId').val()) || 0,
-                DepartmentCode: $('#departmentCode').val(),
-                DepartmentName: $('#departmentName').val(),
+            let departmentData = {
+               DepartmentId: parseInt($('#departmentId').val()) || 0,
+               DepartmentCode: $('#departmentCode').val().trim(),
+               DepartmentName: $('#departmentName').val().trim(),
                 Remarks: $('#remarks').val(),
                 IsActive: $('#isActive').prop('checked')
             };
 
-            if (!data.DepartmentCode || !data.DepartmentName || !data.DepartmentId) {
-                alert('Department Code, Name, and Region are required!');
+            console.log("department Data : " + departmentData);
+
+            if (!departmentData.DepartmentCode || !departmentData.DepartmentName) {
+                alert('Code and Name are required!');
                 return;
             }
 
             $.ajax({
-               url: '@Url.Action("Save", "Department", new { area = "Master" })',
+                url: '@Url.Action("SaveDepartment", "Department", new { area = "Master" })',
                 type: "POST",
-                data: JSON.stringify({ department: data, companyId: companyId }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
+                data: JSON.stringify({ department: departmentData, companyId }),
+                contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
+                        debugger;
+                        loadDepartmentGrid();
+                        clearDepartmentForm();
                         $('#addDepartmentModal').modal('hide');
-                        loadGrid();
-                        clearForm();
+                    } else {
+                        alert(response.message || "Failed to save Department.");
                     }
                 },
-                error: function (error) {
-                    alert("Error: " + error.responseText);
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
                 }
             });
         }
-
-        function clearForm() {
-            $('#departmentForm')[0].reset();
-            $('#departmentId').val(0);
-            $('#btnSave').prop('disabled', true);
-        }
-
-        function checkMandatoryFields() {
-            const isValid = $('#departmentCode').val().trim() && $('#departmentName').val().trim();
-            $('#btnSave').prop('disabled', !isValid);
-        }
-
-
     </script>
 }

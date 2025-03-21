@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _paymentTypeService = paymentTypeService;
         }
 
-        #region PaymentType CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -55,8 +53,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region PaymentType CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> PaymentTypeList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short paymentTypeId, string companyId)
+        public async Task<JsonResult> GetPaymentTypeById(short paymentTypeId, string companyId)
         {
             if (paymentTypeId <= 0)
                 return Json(new { success = false, message = "Invalid Payment Type ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SavePaymentTypeViewModel model)
+        public async Task<IActionResult> SavePaymentType([FromBody] SavePaymentTypeViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -136,7 +136,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short paymentTypeId, string companyId)
+        public async Task<IActionResult> DeletePaymentType(short paymentTypeId, string companyId)
         {
             if (paymentTypeId <= 0)
                 return Json(new { success = false, message = "Invalid Payment Type ID" });
@@ -152,11 +152,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var paymentType = await _paymentTypeService.GetPaymentTypeByIdAsync(companyIdShort, parsedUserId.Value, paymentTypeId);
-                if (paymentType == null)
-                    return Json(new { success = false, message = "Payment Type not found" });
-
-                await _paymentTypeService.DeletePaymentTypeAsync(companyIdShort, parsedUserId.Value, paymentType);
+                await _paymentTypeService.DeletePaymentTypeAsync(companyIdShort, parsedUserId.Value, paymentTypeId);
                 return Json(new { success = true, message = "Payment Type deleted successfully" });
             }
             catch (Exception ex)

@@ -1398,3 +1398,72 @@ try {
 		}
 	})();
 } catch { }
+
+
+
+// formValidation.js
+
+// Initialize validation on DOM ready
+document.addEventListener('DOMContentLoaded', function () {
+	// You can pass a specific selector (e.g., 'form.validate-form') if you want to restrict validation.
+	initializeFormValidation();
+});
+
+/**
+ * Initializes validation on forms.
+ * If a selector is provided, only those forms will have validation.
+ * Otherwise, all forms on the page will be processed.
+ */
+function initializeFormValidation(selector) {
+	// Get the targeted forms; if no selector is provided, select all forms.
+	const forms = selector ? document.querySelectorAll(selector) : document.querySelectorAll('form');
+
+	forms.forEach(form => {
+		// Add real-time validation for each number input in the form.
+		form.querySelectorAll('input[type="number"]').forEach(input => {
+			input.addEventListener('input', function () {
+				validateNumberInput(this);
+			});
+		});
+
+		// Validate on form submission.
+		form.addEventListener('submit', function (e) {
+			let isValid = true;
+
+			form.querySelectorAll('input[type="number"]').forEach(input => {
+				if (!validateNumberInput(input)) {
+					isValid = false;
+				}
+			});
+
+			// If any field is invalid, prevent form submission.
+			if (!isValid) {
+				e.preventDefault();
+				alert('Please fix the invalid fields before saving');
+			}
+		});
+	});
+}
+
+/**
+ * Validates a single number input.
+ * Returns true if the value is a number and within the min and max values.
+ * Otherwise, adds the 'is-invalid' class and returns false.
+ */
+function validateNumberInput(input) {
+	const min = parseInt(input.min, 10);
+	const max = parseInt(input.max, 10);
+	const value = parseInt(input.value, 10);
+
+	// Check if value is not a number or is out of range.
+	if (isNaN(value) || value < min || value > max) {
+		input.classList.add('is-invalid');
+		return false;
+	} else {
+		input.classList.remove('is-invalid');
+		return true;
+	}
+}
+
+
+

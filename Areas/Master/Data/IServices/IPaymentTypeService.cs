@@ -12,6 +12,6 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> SavePaymentTypeAsync(short CompanyId, short UserId, M_PaymentType m_PaymentType);
 
-        public Task<SqlResponse> DeletePaymentTypeAsync(short CompanyId, short UserId, M_PaymentType m_PaymentType);
+        public Task<SqlResponse> DeletePaymentTypeAsync(short CompanyId, short UserId, short PaymentTypeId);
     }
 }

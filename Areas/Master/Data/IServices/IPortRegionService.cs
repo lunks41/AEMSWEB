@@ -12,6 +12,6 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> SavePortRegionAsync(short CompanyId, short UserId, M_PortRegion M_PortRegion);
 
-        public Task<SqlResponse> DeletePortRegionAsync(short CompanyId, short UserId, PortRegionViewModel M_PortRegion);
+        public Task<SqlResponse> DeletePortRegionAsync(short CompanyId, short UserId, short PortRegionId);
     }
 }

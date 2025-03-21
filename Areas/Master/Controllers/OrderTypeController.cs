@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _orderTypeService = orderTypeService;
         }
 
-        #region OrderType CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -55,8 +53,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region OrderType CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> OrderTypeList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short orderTypeId, string companyId)
+        public async Task<JsonResult> GetOrderTypeById(short orderTypeId, string companyId)
         {
             if (orderTypeId <= 0)
                 return Json(new { success = false, message = "Invalid Order Type ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveOrderTypeViewModel model)
+        public async Task<IActionResult> SaveOrderType([FromBody] SaveOrderTypeViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -137,7 +137,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short orderTypeId, string companyId)
+        public async Task<IActionResult> DeleteOrderType(short orderTypeId, string companyId)
         {
             if (orderTypeId <= 0)
                 return Json(new { success = false, message = "Invalid Order Type ID" });
@@ -171,36 +171,8 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region OrderTypeCategory CRUD
 
-        [Authorize]
-        public async Task<IActionResult> CategoryIndex(int? companyId)
-        {
-            if (!companyId.HasValue || companyId <= 0)
-            {
-                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var parsedUserId = GetParsedUserId();
-            if (!parsedUserId.HasValue)
-            {
-                _logger.LogWarning("User not logged in or invalid user ID.");
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.OrderTypeCategory);
-
-            ViewBag.IsRead = permissions?.IsRead ?? false;
-            ViewBag.IsCreate = permissions?.IsCreate ?? false;
-            ViewBag.IsEdit = permissions?.IsEdit ?? false;
-            ViewBag.IsDelete = permissions?.IsDelete ?? false;
-            ViewBag.CompanyId = companyId;
-
-            return View();
-        }
-
         [HttpGet]
-        public async Task<JsonResult> ListCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> OrderTypeCategoryList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -222,7 +194,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCategoryById(short orderTypeCategoryId, string companyId)
+        public async Task<JsonResult> GetOrderTypeCategoryById(short orderTypeCategoryId, string companyId)
         {
             if (orderTypeCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid Order Type Category ID" });
@@ -245,7 +217,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCategory([FromBody] SaveOrderTypeCategoryViewModel model)
+        public async Task<IActionResult> SaveOrderTypeCategory([FromBody] SaveOrderTypeCategoryViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -280,7 +252,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCategory(short orderTypeCategoryId, string companyId)
+        public async Task<IActionResult> DeleteOrderTypeCategory(short orderTypeCategoryId, string companyId)
         {
             if (orderTypeCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid Order Type Category ID" });

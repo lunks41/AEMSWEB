@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region Port CRUD
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> PortList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short portId, string companyId)
+        public async Task<JsonResult> GetPortById(short portId, string companyId)
         {
             if (portId <= 0)
                 return Json(new { success = false, message = "Invalid Port ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SavePortViewModel model)
+        public async Task<IActionResult> SavePort([FromBody] SavePortViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -137,7 +137,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short portId, string companyId)
+        public async Task<IActionResult> DeletePort(short portId, string companyId)
         {
             if (portId <= 0)
                 return Json(new { success = false, message = "Invalid Port ID" });

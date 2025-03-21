@@ -9,11 +9,11 @@
     <link href="~/css/account.css" rel="stylesheet" />
     <link href="~/css/all.min.css" rel="stylesheet" />
 </head>
-<body>
+<body data-color-theme="soft-blue-gray">
     <div>
         @RenderBody()
     </div>
-
+    @Html.Partial("_DeleteConfirmationModal")
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

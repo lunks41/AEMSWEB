@@ -12,6 +12,6 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> SaveAccountGroupAsync(short CompanyId, short UserId, M_AccountGroup m_AccountGroup);
 
-        public Task<SqlResponse> DeleteAccountGroupAsync(short CompanyId, short UserId, AccountGroupViewModel m_AccountGroup);
+        public Task<SqlResponse> DeleteAccountGroupAsync(short CompanyId, short UserId, short accGroupId);
     }
 }

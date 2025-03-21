@@ -138,6 +138,8 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
+                            m_AccountGroup.EditById = null;
+                            m_AccountGroup.EditDate = null;
                             m_AccountGroup.AccGroupId = Convert.ToInt16(sqlMissingResponse.NextId);
                             _context.Add(m_AccountGroup);
                         }
@@ -237,25 +239,31 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountGroupAsync(short CompanyId, short UserId, AccountGroupViewModel accountGroupViewModel)
+        public async Task<SqlResponse> DeleteAccountGroupAsync(short CompanyId, short UserId, short accGroupId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string accGroupNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (accountGroupViewModel.AccGroupId > 0)
-                    {
-                        var AccountGroupToRemove = _context.M_AccountGroup.Where(x => x.AccGroupId == accountGroupViewModel.AccGroupId).ExecuteDelete();
+                    accGroupNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT AccGroupCode FROM dbo.M_AccountGroup WHERE AccGroupId={accGroupId}");
 
-                        if (AccountGroupToRemove > 0)
+                    if (accGroupId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_AccountGroup
+                            .Where(x => x.IsSystemGenerated == false && x.AccGroupId == accGroupId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.AccountGroup,
-                                DocumentId = accountGroupViewModel.AccGroupId,
-                                DocumentNo = accountGroupViewModel.AccGroupCode,
+                                DocumentId = accGroupId,
+                                DocumentNo = accGroupNo,
                                 TblName = "M_AccountGroup",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "AccountGroup Delete Successfully",
@@ -281,56 +289,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountGroup,
+                    DocumentId = accGroupId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.AccountGroup,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "AdmUser",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.AccountGroup,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_AccountGroup",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountGroup,
+                    DocumentId = accGroupId,
+                    DocumentNo = "",
+                    TblName = "M_AccountGroup",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
     }

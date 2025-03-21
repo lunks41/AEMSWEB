@@ -23,8 +23,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _taskService = taskService;
         }
 
-        #region Task CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -53,8 +51,10 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Task CRUD
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> TaskList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -76,7 +76,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(int taskId, string companyId)
+        public async Task<JsonResult> GetTaskById(int taskId, string companyId)
         {
             if (taskId <= 0)
                 return Json(new { success = false, message = "Invalid Task ID" });
@@ -99,7 +99,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveTaskViewModel model)
+        public async Task<IActionResult> SaveTask([FromBody] SaveTaskViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -134,7 +134,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int taskId, string companyId)
+        public async Task<IActionResult> DeleteTask(int taskId, string companyId)
         {
             if (taskId <= 0)
                 return Json(new { success = false, message = "Invalid Task ID" });

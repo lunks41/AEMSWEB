@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> DesignationList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short designationId, string companyId)
+        public async Task<JsonResult> GetDesignationById(short designationId, string companyId)
         {
             if (designationId <= 0)
                 return Json(new { success = false, message = "Invalid Designation ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveDesignationViewModel model)
+        public async Task<IActionResult> SaveDesignation([FromBody] SaveDesignationViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -121,7 +121,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.designation.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.UtcNow,
-                    EditById = model.designation.EditById ?? 0,
+                    EditById = parsedUserId.Value,
                     EditDate = DateTime.UtcNow
                 };
 
@@ -136,7 +136,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short designationId, string companyId)
+        public async Task<IActionResult> DeleteDesignation(short designationId, string companyId)
         {
             if (designationId <= 0)
                 return Json(new { success = false, message = "Invalid Designation ID" });
@@ -152,11 +152,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var designation = await _designationService.GetDesignationByIdAsync(companyIdShort, parsedUserId.Value, designationId);
-                if (designation == null)
-                    return Json(new { success = false, message = "Designation not found" });
-
-                await _designationService.DeleteDesignationAsync(companyIdShort, parsedUserId.Value, designation);
+                await _designationService.DeleteDesignationAsync(companyIdShort, parsedUserId.Value, designationId);
                 return Json(new { success = true, message = "Designation deleted successfully" });
             }
             catch (Exception ex)

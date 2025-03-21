@@ -54,7 +54,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region Product CRUD
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> ProductList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -76,7 +76,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short productId, string companyId)
+        public async Task<JsonResult> GetProductById(short productId, string companyId)
         {
             if (productId <= 0)
                 return Json(new { success = false, message = "Invalid Product ID" });
@@ -99,7 +99,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveProductViewModel model)
+        public async Task<IActionResult> SaveProduct([FromBody] SaveProductViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -134,7 +134,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short productId, string companyId)
+        public async Task<IActionResult> DeleteProduct(short productId, string companyId)
         {
             if (productId <= 0)
                 return Json(new { success = false, message = "Invalid Product ID" });

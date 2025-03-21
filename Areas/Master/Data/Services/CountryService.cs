@@ -97,10 +97,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         public async Task<SqlResponse> SaveCountryAsync(short CompanyId, short UserId, M_Country m_Country)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+
+            bool IsEdit = m_Country.CountryId != 0;
+            try
             {
-                bool IsEdit = m_Country.CountryId != 0;
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Country WHERE CountryId<>@CountryId AND CountryCode=@CountryCode",
@@ -185,77 +186,83 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.COACategory1,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_COACategory1",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Country,
-                        DocumentId = m_Country.CountryId,
-                        DocumentNo = m_Country.CountryCode,
-                        TblName = "AdmUser",
-                        ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId
-                    };
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Country,
+                    DocumentId = m_Country.CountryId,
+                    DocumentNo = m_Country.CountryCode,
+                    TblName = "AdmUser",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw;
-                }
+                throw;
             }
         }
 
-        public async Task<SqlResponse> DeleteCountryAsync(short CompanyId, short UserId, M_Country country)
+        public async Task<SqlResponse> DeleteCountryAsync(short CompanyId, short UserId, short countryId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string countryNo = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (country.CountryId > 0)
-                    {
-                        var countryToRemove = _context.M_Country.Where(x => x.CountryId == country.CountryId).ExecuteDelete();
+                    countryNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT CountryCode FROM dbo.M_Country WHERE CountryId={countryId}");
 
-                        if (countryToRemove > 0)
+                    if (countryId > 0)
+                    {
+                        var accountGroupToRemove = _context.M_Country
+                            .Where(x => x.CountryId == countryId)
+                            .ExecuteDelete();
+
+
+                        if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Country,
-                                DocumentId = country.CountryId,
-                                DocumentNo = country.CountryCode,
+                                DocumentId = countryId,
+                                DocumentNo = countryNo,
                                 TblName = "M_Country",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Country Delete Successfully",
@@ -281,56 +288,56 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Country,
+                    DocumentId = countryId,
+                    DocumentNo = "",
+                    TblName = "AdmUser",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Country,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Country",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Country,
+                    DocumentId = countryId,
+                    DocumentNo = "",
+                    TblName = "M_Country",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw;
-                }
+                throw new Exception(ex.ToString());
             }
         }
 
