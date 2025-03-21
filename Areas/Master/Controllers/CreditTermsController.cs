@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region CreditTerms CRUD
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> CreditTermList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short creditTermId, string companyId)
+        public async Task<JsonResult> GetCreditTermById(short creditTermId, string companyId)
         {
             if (creditTermId <= 0)
                 return Json(new { success = false, message = "Invalid Credit Term ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveCreditTermViewModel model)
+        public async Task<IActionResult> SaveCreditTerm([FromBody] SaveCreditTermViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -137,7 +137,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short creditTermId, string companyId)
+        public async Task<IActionResult> DeleteCreditTerm(short creditTermId, string companyId)
         {
             if (creditTermId <= 0)
                 return Json(new { success = false, message = "Invalid Credit Term ID" });
@@ -168,7 +168,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region CreditTermsDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> CreditTermDtList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -190,7 +190,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDetailById(short creditTermDtId, short fromDay, string companyId)
+        public async Task<JsonResult> GetCreditTermDtById(short creditTermDtId, short fromDay, string companyId)
         {
             if (creditTermDtId <= 0)
                 return Json(new { success = false, message = "Invalid Credit Term Detail ID" });
@@ -213,7 +213,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveDetail([FromBody] SaveCreditTermDtViewModel model)
+        public async Task<IActionResult> SaveCreditTermDt([FromBody] SaveCreditTermDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -249,7 +249,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteDetail(short creditTermDtId, short fromDay, string companyId)
+        public async Task<IActionResult> DeleteCreditTermDt(short creditTermDtId, short fromDay, string companyId)
         {
             if (creditTermDtId <= 0)
                 return Json(new { success = false, message = "Invalid Credit Term Detail ID" });

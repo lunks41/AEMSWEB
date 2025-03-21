@@ -2,94 +2,104 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>GST Categories</h3>
+                <h3>Order Type Category</h3>
+
+                <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadGstCategoryGrid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
+
+                    <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#gstCategoryModal">
-                            <i class="mdi mdi-plus me-1"></i> Add Category
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadGstCategoryGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addGstCategoryModal" id="addGstCategoryrecord">
+                            <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
                 </div>
-                <div id="gstCategoryGrid"></div>
+                <div id="gridGstCategory"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- GST Category Modal -->
-<div class="modal fade" id="gstCategoryModal" tabindex="-1" aria-labelledby="gstCategoryModalLabel" aria-hidden="true">
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addGstCategoryModal" tabindex="-1" aria-labelledby="addGstCategoryModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="gstCategoryModalLabel">GST Category Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearGstCategoryForm()"></button>
+                <h5 class="modal-title" id="addGstCategoryModalLabel">Add/Edit Order Type Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearGstCategoryForm();"></button>
             </div>
             <div class="modal-body p-4">
                 <form id="gstCategoryForm">
-                    <input type="hidden" id="GstCategoryId" />
+                    <input type="hidden" id="gstCategoryId" />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="GstCategoryCode" class="form-label">Category Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="GstCategoryCode" maxlength="10" required>
+                                <label for="gstCategoryCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="gstCategoryCode" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="GstCategoryName" class="form-label">Category Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="GstCategoryName" maxlength="100" required>
+                                <label for="gstCategoryName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="gstCategoryName" required>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="CategoryRemarks" class="form-label">Remarks</label>
-                                <textarea class="form-control" id="CategoryRemarks" rows="2" maxlength="500"></textarea>
+                                <label for="gstCategoryremarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="gstCategoryremarks" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="CategoryIsActive">
-                                <label class="form-check-label" for="CategoryIsActive">Is Active</label>
+                                <input type="checkbox" class="form-check-input" id="gstCategoryisActive">
+                                <label class="form-check-label" for="gstCategoryisActive">Is Active</label>
                             </div>
                         </div>
                     </div>
-                    <!-- Audit Section -->
-                    <div class="accordion mt-3" id="gstCategoryAudit">
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#gstCategoryAuditBody">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
-                            <div id="gstCategoryAuditBody" class="accordion-collapse collapse">
+                            <div id="auditCollapse" class="accordion-collapse collapse">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="createBy" class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <label for="gstCategorycreateBy" class="form-label">Created By</label>
+                                            <p id="gstCategorycreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="createDate" class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <label for="gstCategorycreateDate" class="form-label">Created Date</label>
+                                            <p id="gstCategorycreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editBy" class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <label for="gstCategoryeditBy" class="form-label">Modified By</label>
+                                            <p id="gstCategoryeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editDate" class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <label for="gstCategoryeditDate" class="form-label">Modified Date</label>
+                                            <p id="gstCategoryeditDate" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -99,11 +109,192 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnGstCategoryClose" onclick="clearGstCategoryForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnGstCategoryEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnGstCategoryClear" onclick="clearGstCategoryForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnGstCategorySave" onclick="saveGstCategory()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+
+        function initializeGstCategoryForm() {
+            clearGstCategoryForm();
+            $('#gstCategoryisActive').prop('checked', true);
+        }
+
+        function clearGstCategoryForm() {
+            $('#gstCategoryForm')[0].reset();
+
+            $('#gstCategoryId').val(0);
+            $('#gstCategorycreateBy').text('');
+            $('#gstCategorycreateDate').text('');
+            $('#gstCategoryeditBy').text('');
+            $('#gstCategoryeditDate').text('');
+
+            // Reset readonly and disabled states
+            $('#gstCategoryCode, #gstCategoryName, #gstCategoryremarks').prop('readonly', false);
+            $('#gstCategoryisActive').prop('disabled', false);
+
+            $('#gstCategoryisActive').prop('checked', true);
+            $('#btnGstCategorySave').prop('disabled', false);
+            $('#btnGstCategorySave').show();
+            $('#btnGstCategoryClear').show();
+            $('#btnGstCategoryEdit').hide();
+
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadGstCategoryGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadGstCategoryGrid();
+        }
+
+        function checkGstCategoryMandatoryFields() {
+            let isValid = $('#gstCategoryCode').val().trim() && $('#gstCategoryName').val().trim();
+            $('#btnGstCategorySave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#gstCategoryCode, #gstCategoryName').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadGstCategoryGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("GstCategoryList", "Gst", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openGstCategoryModal('${dataItem.gstCategoryId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openGstCategoryModal('${dataItem.gstCategoryId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteGstCategory('${dataItem.gstCategoryId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "gstCategoryCode", title: "Code" },
+                { field: "gstCategoryName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridGstCategory").data("kendoGrid");
+            if (grid) {
+                // Update the data source with the new bankId
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridGstCategory", url, { searchString, companyId }, columns);
+            }
+        }
+
+        function openGstCategoryModal(id, mode) {
+            const $modal = $('#addGstCategoryModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetGstCategoryById", "Gst", new { area = "Master" })', { gstCategoryId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateGstCategoryModalFields(response.data);
+                        setGstCategoryMode(mode);
+                        $('#addGstCategoryModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
+
+    function populateGstCategoryModalFields(data) {
+        debugger;
+        $('#gstCategoryId').val(data.gstCategoryId);
+        $('#gstCategoryCode').val(data.gstCategoryCode);
+        $('#gstCategoryName').val(data.gstCategoryName);
+        $('#gstCategoryremarks').val(data.remarks);
+        $('#gstCategoryisActive').prop('checked', data.isActive);
+
+        $('#gstCategorycreateBy').text(data.createBy || "N/A");
+        $('#gstCategorycreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#gstCategoryeditBy').text(data.editBy || "N/A");
+        $('#gstCategoryeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+        checkGstCategoryMandatoryFields();
+    }
+
+        function setGstCategoryMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#gstCategoryCode, #gstCategoryName,  #gstCategoryremarks').prop('readonly', !canEdit);
+            $('#gstCategoryisActive').prop('disabled', !canEdit);
+            $('#btnGstCategorySave').toggle(canEdit);
+            $('#btnGstCategoryEdit').toggle(isView && permissions.canEdit);
+            $('#btnGstCategoryClose').show();
+            $('#btnGstCategoryClear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteGstCategory(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteGstCategory", "Gst", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { gstCategoryId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadGstCategoryGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveGstCategory() {
+            let gstCategoryData = {
+               GstCategoryId: parseInt($('#gstCategoryId').val()) || 0,
+               GstCategoryCode: $('#gstCategoryCode').val().trim(),
+               GstCategoryName: $('#gstCategoryName').val().trim(),
+                Remarks: $('#gstCategoryremarks').val(),
+                IsActive: $('#gstCategoryisActive').prop('checked')
+            };
+
+            console.log("gstCategory Data : " + gstCategoryData);
+
+            if (!gstCategoryData.GstCategoryCode || !gstCategoryData.GstCategoryName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveGstCategory", "Gst", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ gstCategory: gstCategoryData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        debugger;
+                        loadGstCategoryGrid();
+                        clearGstCategoryForm();
+                        $('#addGstCategoryModal').modal('hide');
+                    } else {
+                        alert(response.message || "Failed to save account group.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+                }
+            });
+        }
+</script>

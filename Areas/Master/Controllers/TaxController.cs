@@ -23,8 +23,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _taxService = taxService;
         }
 
-        #region Tax CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -53,8 +51,12 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Tax CRUD
+
+
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> TaxList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -76,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short taxId, string companyId)
+        public async Task<JsonResult> GetTaxById(short taxId, string companyId)
         {
             if (taxId <= 0)
                 return Json(new { success = false, message = "Invalid Tax ID" });
@@ -99,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveTaxViewModel model)
+        public async Task<IActionResult> SaveTax([FromBody] SaveTaxViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -135,7 +137,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short taxId, string companyId)
+        public async Task<IActionResult> DeleteTax(short taxId, string companyId)
         {
             if (taxId <= 0)
                 return Json(new { success = false, message = "Invalid Tax ID" });
@@ -166,7 +168,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region TaxDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> TaxDtList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -188,7 +190,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDetailById(short taxDtId, DateTime validFrom, string companyId)
+        public async Task<JsonResult> GetTaxDtById(short taxDtId, DateTime validFrom, string companyId)
         {
             if (taxDtId <= 0)
                 return Json(new { success = false, message = "Invalid Tax Detail ID" });
@@ -211,7 +213,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveDetail([FromBody] SaveTaxDtViewModel model)
+        public async Task<IActionResult> SaveTaxDt([FromBody] SaveTaxDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -244,7 +246,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteDetail(short taxDtId, DateTime validFrom, string companyId)
+        public async Task<IActionResult> DeleteTaxDt(short taxDtId, DateTime validFrom, string companyId)
         {
             if (taxDtId <= 0)
                 return Json(new { success = false, message = "Invalid Tax Detail ID" });
@@ -274,36 +276,8 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region TaxCategory CRUD
 
-        [Authorize]
-        public async Task<IActionResult> CategoryIndex(int? companyId)
-        {
-            if (!companyId.HasValue || companyId <= 0)
-            {
-                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var parsedUserId = GetParsedUserId();
-            if (!parsedUserId.HasValue)
-            {
-                _logger.LogWarning("User not logged in or invalid user ID.");
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.TaxCategory);
-
-            ViewBag.IsRead = permissions?.IsRead ?? false;
-            ViewBag.IsCreate = permissions?.IsCreate ?? false;
-            ViewBag.IsEdit = permissions?.IsEdit ?? false;
-            ViewBag.IsDelete = permissions?.IsDelete ?? false;
-            ViewBag.CompanyId = companyId;
-
-            return View();
-        }
-
         [HttpGet]
-        public async Task<JsonResult> ListCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> TaxCategoryList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -325,7 +299,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCategoryById(short taxCategoryId, string companyId)
+        public async Task<JsonResult> GetTaxCategoryById(short taxCategoryId, string companyId)
         {
             if (taxCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid Tax Category ID" });
@@ -348,7 +322,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCategory([FromBody] SaveTaxCategoryViewModel model)
+        public async Task<IActionResult> SaveTaxCategory([FromBody] SaveTaxCategoryViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -383,7 +357,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCategory(short taxCategoryId, string companyId)
+        public async Task<IActionResult> DeleteTaxCategory(short taxCategoryId, string companyId)
         {
             if (taxCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid Tax Category ID" });

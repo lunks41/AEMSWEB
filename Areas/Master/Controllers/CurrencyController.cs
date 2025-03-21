@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region Currency CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListCurrency(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> CurrencyList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -168,7 +168,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region CurrencyDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListCurrencyDt(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> CurrencyDtList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -281,7 +281,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region CurrencyLocalDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListCurrencyLocalDt(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> CurrencyLocalDtList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });

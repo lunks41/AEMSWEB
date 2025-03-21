@@ -2,102 +2,109 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>GST</h3>
+                <h3>Gst</h3>
+
+                <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadGstGrid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
+
+                    <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#gstModal">
-                            <i class="mdi mdi-plus me-1"></i> Add GST
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadGstGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addGstModal" id="addGstrecord">
+                            <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
                 </div>
-                <div id="gstGrid"></div>
+                <div id="gridGst"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- GST Modal -->
-<div class="modal fade" id="gstModal" tabindex="-1" aria-labelledby="gstModalLabel" aria-hidden="true">
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addGstModal" tabindex="-1" aria-labelledby="addGstModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="gstModalLabel">GST Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearGstForm()"></button>
+                <h5 class="modal-title" id="addGstModalLabel">Add/Edit Gst</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearGstForm();"></button>
             </div>
             <div class="modal-body p-4">
                 <form id="gstForm">
-                    <input type="hidden" id="GstId" />
+                    <input type="hidden" id="gstId" />
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="GstCode" class="form-label">GST Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="GstCode" maxlength="10" required>
+                                <label for="gstCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="gstCode" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="GstName" class="form-label">GST Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="GstName" maxlength="100" required>
+                                <label for="gstName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="gstName" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="GstCategoryId" class="form-label">GST Category <span class="text-danger">*</span></label>
-                                <select id="GstCategoryId" class="form-select" required>
-                                    <!-- Populate via API -->
-                                </select>
+                                <label for="cmd_gstCategory" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="cmd_gstCategory" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="Remarks" class="form-label">Remarks</label>
-                                <textarea class="form-control" id="Remarks" rows="2" maxlength="500"></textarea>
+                                <label for="gstremarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="gstremarks" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="IsActive">
-                                <label class="form-check-label" for="IsActive">Is Active</label>
+                                <input type="checkbox" class="form-check-input" id="gstisActive">
+                                <label class="form-check-label" for="gstisActive">Is Active</label>
                             </div>
                         </div>
                     </div>
-                    <!-- Audit Section -->
-                    <div class="accordion mt-3" id="gstAudit">
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#gstAuditBody">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
-                            <div id="gstAuditBody" class="accordion-collapse collapse">
+                            <div id="auditCollapse" class="accordion-collapse collapse">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="createBy" class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <label for="gstcreateBy" class="form-label">Created By</label>
+                                            <p id="gstcreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="createDate" class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <label for="gstcreateDate" class="form-label">Created Date</label>
+                                            <p id="gstcreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editBy" class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <label for="gsteditBy" class="form-label">Modified By</label>
+                                            <p id="gsteditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editDate" class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <label for="gsteditDate" class="form-label">Modified Date</label>
+                                            <p id="gsteditDate" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -107,11 +114,191 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnGstClose" onclick="clearGstForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnGstEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnGstClear" onclick="clearGstForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnGstSave" onclick="saveGst()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+        function initializeGstForm() {
+            clearGstForm();
+            $('#gstisActive').prop('checked', true);
+        }
+
+        function clearGstForm() {
+            $('#gstForm')[0].reset();
+
+            $('#gstId').val(0);
+            $('#cmd_gstCategory').data("kendoComboBox").value('');
+            $('#gstcreateBy').text('');
+            $('#gstcreateDate').text('');
+            $('#gsteditBy').text('');
+            $('#gsteditDate').text('');
+
+            // Reset readonly and disabled states
+            $('#gstCode, #gstName, #seqNo, #remarks').prop('readonly', false);
+            $('#gstisActive').prop('disabled', false);
+
+            $('#gstisActive').prop('checked', true);
+            $('#btnGstSave').prop('disabled', false);
+            $('#btnGstSave').show();
+            $('#btnGstClear').show();
+            $('#btnGstEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadGstGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadGstGrid();
+        }
+
+        function checkGstMandatoryFields() {
+            let isValid = $('#gstCode').val().trim() && $('#gstName').val().trim();
+            $('#btnGstSave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#gstCode, #gstName').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadGstGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("GstList", "Gst", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openGstModal('${dataItem.gstId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openGstModal('${dataItem.gstId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteGst('${dataItem.gstId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "gstCode", title: "Code" },
+                { field: "gstName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridGst").data("kendoGrid");
+            if (grid) {
+                // Update the data source with the new bankId
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridGst", url, { searchString, companyId }, columns);
+            }
+        }
+
+        function openGstModal(id, mode) {
+            const $modal = $('#addGstModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetGstById", "Gst", new { area = "Master" })', { gstId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateGstModalFields(response.data);
+                        setGstMode(mode);
+                        $('#addGstModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
+
+        function populateGstModalFields(data) {
+            $('#gstId').val(data.gstId);
+            $('#gstCode').val(data.gstCode);
+            $('#gstName').val(data.gstName);
+            $('#gstremarks').val(data.remarks);
+            $('#gstisActive').prop('checked', data.isActive);
+            $('#cmd_gstCategory').data("kendoComboBox").value(data.gstCategoryId > 0 ? data.gstCategoryId : '');
+            $('#gstcreateBy').text(data.createBy || "N/A");
+            $('#gstcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#gsteditBy').text(data.editBy || "N/A");
+            $('#gsteditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkGstMandatoryFields();
+        }
+
+        function setGstMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#gstCode, #gstName,  #gstremarks').prop('readonly', !canEdit);
+            $('#gstisActive').prop('disabled', !canEdit);
+            $('#btnGstSave').toggle(canEdit);
+            $('#btnGstEdit').toggle(isView && permissions.canEdit);
+            $('#btnGstClose').show();
+            $('#btnGstClear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteGst(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteGst", "Gst", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { gstId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadGstGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveGst() {
+            let gstData = {
+                GstId: parseInt($('#gstId').val()) || 0,
+                GstCode: $('#gstCode').val().trim(),
+                GstName: $('#gstName').val().trim(),
+                GstCategoryId: parseInt($('#cmd_gstCategory').data("kendoComboBox").value()) || 0,
+                Remarks: $('#gstremarks').val(),
+                IsActive: $('#gstisActive').prop('checked')
+            };
+
+            console.log("gst Data : " + gstData);
+
+            if (!gstData.GstCode || !gstData.GstName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveGst", "Gst", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ gst: gstData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        debugger;
+                        loadGstGrid();
+                        clearGstForm();
+                        $('#addGstModal').modal('hide');
+                    } else {
+                        alert(response.message || "Failed to save account group.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+                }
+            });
+        }
+</script>

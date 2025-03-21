@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _gstService = gstService;
         }
 
-        #region Gst CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -55,8 +53,12 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
+        #region Gst CRUD
+
+
+
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> GstList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +80,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short gstId, string companyId)
+        public async Task<JsonResult> GetGstById(short gstId, string companyId)
         {
             if (gstId <= 0)
                 return Json(new { success = false, message = "Invalid GST ID" });
@@ -101,7 +103,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveGstViewModel model)
+        public async Task<IActionResult> SaveGst([FromBody] SaveGstViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -137,7 +139,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short gstId, string companyId)
+        public async Task<IActionResult> DeleteGst(short gstId, string companyId)
         {
             if (gstId <= 0)
                 return Json(new { success = false, message = "Invalid GST ID" });
@@ -168,7 +170,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region GstDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListDetails(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> GstDtList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -190,7 +192,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDetailById(short gstDtId, DateTime validFrom, string companyId)
+        public async Task<JsonResult> GetGstDtById(short gstDtId, DateTime validFrom, string companyId)
         {
             if (gstDtId <= 0)
                 return Json(new { success = false, message = "Invalid GST Detail ID" });
@@ -213,7 +215,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveDetail([FromBody] SaveGstDtViewModel model)
+        public async Task<IActionResult> SaveGstDt([FromBody] SaveGstDtViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -246,7 +248,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteDetail(short gstDtId, DateTime validFrom, string companyId)
+        public async Task<IActionResult> DeleteGstDt(short gstDtId, DateTime validFrom, string companyId)
         {
             if (gstDtId <= 0)
                 return Json(new { success = false, message = "Invalid GST Detail ID" });
@@ -276,36 +278,10 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region GstCategory CRUD
 
-        [Authorize]
-        public async Task<IActionResult> CategoryIndex(int? companyId)
-        {
-            if (!companyId.HasValue || companyId <= 0)
-            {
-                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
 
-            var parsedUserId = GetParsedUserId();
-            if (!parsedUserId.HasValue)
-            {
-                _logger.LogWarning("User not logged in or invalid user ID.");
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.GstCategory);
-
-            ViewBag.IsRead = permissions?.IsRead ?? false;
-            ViewBag.IsCreate = permissions?.IsCreate ?? false;
-            ViewBag.IsEdit = permissions?.IsEdit ?? false;
-            ViewBag.IsDelete = permissions?.IsDelete ?? false;
-            ViewBag.CompanyId = companyId;
-
-            return View();
-        }
 
         [HttpGet]
-        public async Task<JsonResult> ListCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> GstCategoryList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -327,7 +303,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCategoryById(short gstCategoryId, string companyId)
+        public async Task<JsonResult> GetGstCategoryById(short gstCategoryId, string companyId)
         {
             if (gstCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid GST Category ID" });
@@ -350,7 +326,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCategory([FromBody] SaveGstCategoryViewModel model)
+        public async Task<IActionResult> SaveGstCategory([FromBody] SaveGstCategoryViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -385,7 +361,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCategory(short gstCategoryId, string companyId)
+        public async Task<IActionResult> DeleteGstCategory(short gstCategoryId, string companyId)
         {
             if (gstCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid GST Category ID" });

@@ -1,46 +1,111 @@
-﻿<!-- Index.cshtml -->
-@{
-    ViewData["Title"] = "GST Management";
+﻿@{
+    ViewData["Title"] = $"Order Type ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
 }
 
 <!-- Nav Pills -->
 <ul class="nav nav-pills mb-3" id="gstTabs" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="gstcategory-tab" data-bs-toggle="pill"
-                data-bs-target="#gstcategory" type="button" role="tab" aria-controls="gstcategory" aria-selected="true">
-            <i class="mdi mdi-shape-outline me-1"></i> GST Category
+        <button class="nav-link active" id="gst-tab" data-bs-toggle="pill"
+                data-bs-target="#gst" type="button" role="tab" aria-controls="gst" aria-selected="true">
+            <i class="mdi mdi-view-list me-1"></i> Gst
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="gst-tab" data-bs-toggle="pill"
-                data-bs-target="#gst" type="button" role="tab" aria-controls="gst" aria-selected="false">
-            <i class="mdi mdi-percent me-1"></i> GST
+        <button class="nav-link" id="gstDt-tab" data-bs-toggle="pill"
+                data-bs-target="#gstDt" type="button" role="tab" aria-controls="gstDt" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> Gst Dt
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="gstdt-tab" data-bs-toggle="pill"
-                data-bs-target="#gstdt" type="button" role="tab" aria-controls="gstdt" aria-selected="false">
-            <i class="mdi mdi-table-large me-1"></i> GST Details
+        <button class="nav-link" id="gstcategory-tab" data-bs-toggle="pill"
+                data-bs-target="#gstcategory" type="button" role="tab" aria-controls="gstcategory" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> Gst Categories
         </button>
     </li>
 </ul>
 
 <!-- Tab Content -->
 <div class="tab-content" id="gstTabsContent">
-    <div class="tab-pane fade show active" id="gstcategory" role="tabpanel" aria-labelledby="gstcategory-tab">
-        @await Html.PartialAsync("_GstCategory")
-    </div>
-    <div class="tab-pane fade" id="gst" role="tabpanel" aria-labelledby="gst-tab">
+    <div class="tab-pane fade show active" id="gst" role="tabpanel" aria-labelledby="gst-tab">
         @await Html.PartialAsync("_Gst")
     </div>
-    <div class="tab-pane fade" id="gstdt" role="tabpanel" aria-labelledby="gstdt-tab">
+    <div class="tab-pane fade" id="gstDt" role="tabpanel" aria-labelledby="gstDt-tab">
         @await Html.PartialAsync("_GstDt")
+    </div>
+    <div class="tab-pane fade" id="gstcategory" role="tabpanel" aria-labelledby="gstcategory-tab">
+        @await Html.PartialAsync("_GstCategory")
     </div>
 </div>
 
 @section Scripts {
-    <script src="~/js/gst.js"></script>
-    <script src="~/js/gstdt.js"></script>
-    <script src="~/js/gstcategory.js"></script>
+    <script>
+        let companyId = 0;
+        let permissions = {};;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            Refresh();
+
+            loadGstGrid();
+            initializeGstForm();
+            clearGstForm();
+            $('#btnGstEdit').on('click', function () { setGstMode("edit"); });
+            $('#btnGstClose').on('click', function () { $('#addGstModal').modal('hide'); });
+            $('#addGstrecord').on('click', function () {
+                initializeGstForm();
+                $('#addGstModal').modal('show');
+            });
+
+            loadGstDtGrid();
+            initializeGstDtForm();
+            clearGstDtForm();
+            $('#btnGstDtEdit').on('click', function () { setGstDtMode("edit"); });
+            $('#btnGstDtClose').on('click', function () { $('#addGstDtModal').modal('hide'); });
+            $('#addGstDtrecord').on('click', function () {
+                initializeGstDtForm();
+                $('#addGstDtModal').modal('show');
+            });
+
+
+            loadGstCategoryGrid();
+            initializeGstCategoryForm();
+            clearGstCategoryForm();
+            $('#btnGstCategoryEdit').on('click', function () { setGstCategoryMode("edit"); });
+            $('#btnGstCategoryClose').on('click', function () { $('#addGstCategoryModal').modal('hide'); });
+            $('#addGstCategoryrecord').on('click', function () {
+                initializeGstCategoryForm();
+                $('#addGstCategoryModal').modal('show');
+            });
+
+            $('#gstCode, #gstName').on('input', checkGstMandatoryFields);
+        });
+
+        function Refresh() {
+             const gstUrl = '@Url.Action("GetGstLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(gstUrl, "cmd_gst", "gstName", "gstId");
+
+            const gstCategoryUrl = '@Url.Action("GetGstCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(gstCategoryUrl, "cmd_gstCategory", "gstCategoryName", "gstCategoryId");
+        }
+
+        function SelectedDropdown(DrpdwnName) { }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
+    </script>
 }
