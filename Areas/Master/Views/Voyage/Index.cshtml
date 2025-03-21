@@ -164,6 +164,7 @@
             };
 
             $('#voyageNo, #referenceNo').on('input', checkVoyageMandatoryFields);
+            Refresh();
             loadVoyageGrid();
             initializeVoyageForm();
             clearVoyageForm();
@@ -175,6 +176,20 @@
                 $('#addVoyageModal').modal('show');
             });
         });
+
+        function Refresh() {
+
+    const vesselUrl = '@Url.Action("GetVesselLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(vesselUrl, "cmd_vessel", "vesselName", "vesselId");
+
+    const bargeUrl = '@Url.Action("GetBargeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(bargeUrl, "cmd_barge", "bargeName", "bargeId");
+
+}
+
+function SelectedDropdown(DrpdwnName) { }
+
+function OnSelectDropdown(dataItem, DrpdwnName) { }
 
         function initializeVoyageForm() {
             clearVoyageForm();
@@ -189,7 +204,8 @@
             $('#createDate').text('');
             $('#editBy').text('');
             $('#editDate').text('');
-
+            $('#cmd_vessel').data("kendoComboBox").value('');
+            $('#cmd_barge').data("kendoComboBox").value('');
             // Reset readonly and disabled states
             $('#voyageNo, #referenceNo, #seqNo, #remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);

@@ -25,8 +25,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             _ChargesService = ChargesService;
         }
 
-        #region Charges CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -54,6 +52,10 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             return View();
         }
+
+        #region Charges CRUD
+
+
 
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)

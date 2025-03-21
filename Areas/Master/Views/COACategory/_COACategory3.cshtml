@@ -2,100 +2,108 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>COA Categories - Level 3</h3>
+                <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadCOACategory3Grid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
+
+                    <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#coa3Modal">
-                            <i class="mdi mdi-plus me-1"></i> Add Level 3
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadCOACategory3Grid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addCOACategory3Modal" id="addCOACategory3record">
+                            <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
                 </div>
-                <div id="coa3Grid"></div>
+                <div id="gridCOACategory3"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Level 3 Modal -->
-<div class="modal fade" id="coa3Modal" tabindex="-1" aria-labelledby="coa3ModalLabel" aria-hidden="true">
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addCOACategory3Modal" tabindex="-1" aria-labelledby="addCOACategory3ModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="coa3ModalLabel">Level 3 Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCOA3Form()"></button>
+                <h5 class="modal-title" id="addCOACategory3ModalLabel">Add/Edit COA-Category3</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCOACategory3Form();"></button>
             </div>
             <div class="modal-body p-4">
-                <form id="coa3Form">
-                    <input type="hidden" id="COA3CategoryId" />
+                <form id="coaCategory3Form">
+                    <input type="hidden" id="coaCategory3Id" />
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="COA3Code" class="form-label">Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="COA3Code" maxlength="10" required>
+                                <label for="coaCategory3Code" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="coaCategory3Code" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="COA3Name" class="form-label">Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="COA3Name" maxlength="100" required>
+                                <label for="coaCategory3Name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="coaCategory3Name" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="COA3SeqNo" class="form-label">Sequence No <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="COA3SeqNo" min="1" required>
+                                <label class="form-label" for="coaCategory3seqNo">Sequence Number</label>
+                                <input type="number" class="form-control" id="coaCategory3seqNo" min="0" max="254" value="0">
+                                <div class="invalid-feedback">Value must be between 0 and 254</div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="COA3Remarks" class="form-label">Remarks</label>
-                                <textarea class="form-control" id="COA3Remarks" rows="2" maxlength="500"></textarea>
+                                <label for="coaCategory3remarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="coaCategory3remarks" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="COA3IsActive">
-                                <label class="form-check-label" for="COA3IsActive">Is Active</label>
+                                <input type="checkbox" class="form-check-input" id="coaCategory3isActive">
+                                <label class="form-check-label" for="coaCategory3isActive">Is Active</label>
                             </div>
                         </div>
                     </div>
-                    <!-- Audit Section -->
-                    <div class="accordion mt-3" id="coa3Audit">
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#coa3AuditBody">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
-                            <div id="coa3AuditBody" class="accordion-collapse collapse">
+                            <div id="auditCollapse" class="accordion-collapse collapse">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="createBy" class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <label for="coaCategory3createBy" class="form-label">Created By</label>
+                                            <p id="coaCategory3createBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="createDate" class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <label for="coaCategory3createDate" class="form-label">Created Date</label>
+                                            <p id="coaCategory3createDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editBy" class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <label for="coaCategory3editBy" class="form-label">Modified By</label>
+                                            <p id="coaCategory3editBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="editDate" class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <label for="coaCategory3editDate" class="form-label">Modified Date</label>
+                                            <p id="coaCategory3editDate" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -105,11 +113,191 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCOACategory3Close" onclick="clearCOACategory3Form()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCOACategory3Edit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnCOACategory3Clear" onclick="clearCOACategory3Form()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCOACategory3Save" onclick="saveCOACategory3()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+        function initializeCOACategory3Form() {
+            clearCOACategory3Form();
+            $('#coaCategory3isActive').prop('checked', true);
+        }
+
+        function clearCOACategory3Form() {
+            $('#coaCategory3Form')[0].reset();
+
+            $('#coaCategory3Id').val(0);
+            $('#coaCategory3createBy').text('');
+            $('#coaCategory3createDate').text('');
+            $('#coaCategory3editBy').text('');
+            $('#coaCategory3editDate').text('');
+
+            // Reset readonly and disabled states
+            $('#coaCategory3Code, #coaCategory3Name, #coaCategory3seqNo, #coaCategory3remarks').prop('readonly', false);
+            $('#coaCategory3isActive').prop('disabled', false);
+
+            $('#coaCategory3isActive').prop('checked', true);
+            $('#btnCOACategory3Save').prop('disabled', false);
+            $('#btnCOACategory3Save').show();
+            $('#btnCOACategory3Clear').show();
+            $('#btnCOACategory3Edit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadCOACategory3Grid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadCOACategory3Grid();
+        }
+
+        function checkCOACategory3MandatoryFields() {
+            let isValid = $('#coaCategory3Code').val().trim() && $('#coaCategory3Name').val().trim();
+            $('#btnCOACategory3Save').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#coaCategory3Code, #coaCategory3Name').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadCOACategory3Grid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("COACategory3List", "COACategory", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openCOACategory3Modal('${dataItem.coaCategoryId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCOACategory3Modal('${dataItem.coaCategoryId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCOACategory3('${dataItem.coaCategoryId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "coaCategoryCode", title: "Code" },
+                { field: "coaCategoryName", title: "Name" },
+                { field: "seqNo", title: "Seq No" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridCOACategory3").data("kendoGrid");
+            if (grid) {
+                // Update the data source with the new bankId
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridCOACategory3", url, { searchString, companyId }, columns);
+            }
+        }
+
+        function openCOACategory3Modal(id, mode) {
+            const $modal = $('#addCOACategory3Modal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetCOACategory3ById", "COACategory", new { area = "Master" })', { coaCategoryId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateCOACategory3ModalFields(response.data);
+                        setCOACategory3Mode(mode);
+                        $('#addCOACategory3Modal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
+
+        function populateCOACategory3ModalFields(data) {
+            $('#coaCategory3Id').val(data.coaCategoryId);
+            $('#coaCategory3Code').val(data.coaCategoryCode);
+            $('#coaCategory3Name').val(data.coaCategoryName);
+            $('#coaCategory3seqNo').val(data.seqNo);
+            $('#coaCategory3remarks').val(data.remarks);
+            $('#coaCategory3isActive').prop('checked', data.isActive);
+            $('#coaCategory3createBy').text(data.createBy || "N/A");
+            $('#coaCategory3createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#coaCategory3editBy').text(data.editBy || "N/A");
+            $('#coaCategory3editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkCOACategory3MandatoryFields();
+        }
+
+        function setCOACategory3Mode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#coaCategory3Code, #coaCategory3Name,#coaCategory3seqNo,  #coaCategory3remarks').prop('readonly', !canEdit);
+            $('#coaCategory3isActive').prop('disabled', !canEdit);
+            $('#btnCOACategory3Save').toggle(canEdit);
+            $('#btnCOACategory3Edit').toggle(isView && permissions.canEdit);
+            $('#btnCOACategory3Close').show();
+            $('#btnCOACategory3Clear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteCOACategory3(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteCOACategory3", "COACategory", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { coaCategoryId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadCOACategory3Grid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveCOACategory3() {
+            let coaCategory3Data = {
+                COACategoryId: parseInt($('#coaCategory3Id').val()) || 0,
+                COACategoryCode: $('#coaCategory3Code').val().trim(),
+                COACategoryName: $('#coaCategory3Name').val().trim(),
+                SeqNo: parseInt($('#coaCategory3seqNo').val())||0,
+                Remarks: $('#coaCategory3remarks').val(),
+                IsActive: $('#coaCategory3isActive').prop('checked')
+            };
+
+            console.log("coaCategory3 Data : " + coaCategory3Data);
+
+            if (!coaCategory3Data.COACategoryCode || !coaCategory3Data.COACategoryName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveCOACategory3", "COACategory", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ coaCategory: coaCategory3Data, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        debugger;
+                        loadCOACategory3Grid();
+                        clearCOACategory3Form();
+                        $('#addCOACategory3Modal').modal('hide');
+                    } else {
+                        alert(response.message || "Failed to save account group.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+                }
+            });
+        }
+</script>

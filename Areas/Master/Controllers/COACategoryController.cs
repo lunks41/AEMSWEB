@@ -1,192 +1,389 @@
 ﻿using AEMSWEB.Areas.Master.Data.IServices;
+using AEMSWEB.Controllers;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Enums;
+using AEMSWEB.IServices;
 using AEMSWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class COACategoryController : Controller
+    public class COACategoryController : BaseController
     {
         private readonly ILogger<COACategoryController> _logger;
-        private readonly ICOACategoryService _countryService;
+        private readonly ICOACategoryService _coaCategoryService;
 
-        public COACategoryController(ILogger<COACategoryController> logger, ICOACategoryService countryService)
+        public COACategoryController(ILogger<COACategoryController> logger, IBaseService baseService, ICOACategoryService coaCategoryService) : base(logger, baseService)
         {
             _logger = logger;
-            _countryService = countryService;
+            _coaCategoryService = coaCategoryService;
         }
 
-        // GET: /master/COACategory/Index
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
-            return View();
-        }
-
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId)
-        {
-            try
+            if (!companyId.HasValue || companyId <= 0)
             {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _countryService.GetCOACategory1ListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching countries.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
-        // GET: /master/COACategory/GetById
-        [HttpGet]
-        public async Task<JsonResult> GetById(short countryId, string companyId)
-        {
-            if (countryId <= 0)
-            {
-                return Json(new { success = false, message = "Invalid COACategory ID." });
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
             }
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
             {
-                return Json(new { Result = -1, Message = "Invalid company ID" });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
                 return Json(new { success = false, message = "User not logged in or invalid user ID." });
             }
 
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.COACategory1);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.CompanyId = companyId;
+
+            return View();
+        }
+
+        #region COACategory1 CRUD
+
+        [HttpGet]
+        public async Task<JsonResult> COACategory1List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
             try
             {
-                var data = await _countryService.GetCOACategory1ByIdAsync(companyIdShort, parsedUserId, countryId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "COACategory not found." });
-                }
-
-                return Json(new { success = true, data });
+                var data = await _coaCategoryService.GetCOACategory1ListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching country by ID.");
+                _logger.LogError(ex, "Error fetching barge list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // POST: /master/COACategory/Save
+        [HttpGet]
+        public async Task<JsonResult> GetCOACategory1ById(short coaCategoryId, string companyId)
+        {
+            if (coaCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid COACategory ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _coaCategoryService.GetCOACategory1ByIdAsync(companyIdShort, parsedUserId.Value, coaCategoryId);
+                return data == null
+                    ? Json(new { success = false, message = "COACategory not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching barge by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveCOACategoryViewModel model)
+        public async Task<IActionResult> SaveCOACategory1([FromBody] SaveCOACategoryViewModel model)
         {
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Data operation failed due to null model." });
-            }
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
 
-            var country = model.COACategory;
-
-            if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var countryToSave = new M_COACategory1
-            {
-                COACategoryId = country.COACategoryId,
-                CompanyId = companyIdShort,
-                COACategoryCode = country.COACategoryCode ?? string.Empty,
-                COACategoryName = country.COACategoryName ?? string.Empty,
-                Remarks = country.Remarks?.Trim() ?? string.Empty,
-                IsActive = country.IsActive,
-                CreateById = parsedUserId,
-                CreateDate = DateTime.Now,
-                EditById = parsedUserId,
-                EditDate = DateTime.Now
-            };
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _countryService.SaveCOACategory1Async(companyIdShort, parsedUserId, countryToSave);
-
-                if (data == null)
+                var coaCategoryToSave = new M_COACategory1
                 {
-                    return Json(new { success = false, message = "Failed to save country." });
-                }
+                    COACategoryId = model.coaCategory.COACategoryId,
+                    CompanyId = companyIdShort,
+                    COACategoryCode = model.coaCategory.COACategoryCode ?? string.Empty,
+                    COACategoryName = model.coaCategory.COACategoryName ?? string.Empty,
+                    SeqNo = model.coaCategory.SeqNo,
+                    Remarks = model.coaCategory.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.coaCategory.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.UtcNow
+                };
 
-                return Json(new { success = true, data });
+                var result = await _coaCategoryService.SaveCOACategory1Async(companyIdShort, parsedUserId.Value, coaCategoryToSave);
+                return Json(new { success = true, message = "COACategory saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the country.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error saving barge");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 
-        // DELETE: /master/COACategory/Delete
         [HttpDelete]
-        public async Task<IActionResult> Delete(short countryId, string companyId)
+        public async Task<IActionResult> DeleteCOACategory1(short coaCategoryId, string companyId)
         {
-            if (countryId <= 0)
-            {
-                return BadRequest(new { success = false, message = "Invalid ID." });
-            }
+            if (coaCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid COACategory ID" });
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            {
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
 
-            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.COACategory1);
 
-            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-            {
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
 
             try
             {
-                var data = await _countryService.DeleteCOACategory1Async(companyIdShort, 1, countryId);
-
-                if (data == null)
-                {
-                    return Json(new { success = false, message = "Failed to save country." });
-                }
-
-                return Json(new { success = true, data });
+                await _coaCategoryService.DeleteCOACategory1Async(companyIdShort, parsedUserId.Value, coaCategoryId);
+                return Json(new { success = true, message = "COACategory deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the country.");
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "Error deleting barge");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion COACategory CRUD
+
+        #region COACategory2 CRUD
+
+        [HttpGet]
+        public async Task<JsonResult> COACategory2List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _coaCategoryService.GetCOACategory2ListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching barge list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCOACategory2ById(short coaCategoryId, string companyId)
+        {
+            if (coaCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid COACategory ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _coaCategoryService.GetCOACategory2ByIdAsync(companyIdShort, parsedUserId.Value, coaCategoryId);
+                return data == null
+                    ? Json(new { success = false, message = "COACategory not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching barge by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCOACategory2([FromBody] SaveCOACategoryViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var coaCategoryToSave = new M_COACategory2
+                {
+                    COACategoryId = model.coaCategory.COACategoryId,
+                    CompanyId = companyIdShort,
+                    COACategoryCode = model.coaCategory.COACategoryCode ?? string.Empty,
+                    COACategoryName = model.coaCategory.COACategoryName ?? string.Empty,
+                    SeqNo = model.coaCategory.SeqNo,
+                    Remarks = model.coaCategory.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.coaCategory.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _coaCategoryService.SaveCOACategory2Async(companyIdShort, parsedUserId.Value, coaCategoryToSave);
+                return Json(new { success = true, message = "COACategory saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving barge");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCOACategory2(short coaCategoryId, string companyId)
+        {
+            if (coaCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid COACategory ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.COACategory2);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                await _coaCategoryService.DeleteCOACategory2Async(companyIdShort, parsedUserId.Value, coaCategoryId);
+                return Json(new { success = true, message = "COACategory deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting barge");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion COACategory CRUD
+
+        #region COACategory3 CRUD
+
+        [HttpGet]
+        public async Task<JsonResult> COACategory3List(int pageNumber, int pageSize, string searchString, string companyId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _coaCategoryService.GetCOACategory3ListAsync(companyIdShort, parsedUserId.Value,
+                    pageSize, pageNumber, searchString ?? string.Empty);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching barge list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCOACategory3ById(short coaCategoryId, string companyId)
+        {
+            if (coaCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid COACategory ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _coaCategoryService.GetCOACategory3ByIdAsync(companyIdShort, parsedUserId.Value, coaCategoryId);
+                return data == null
+                    ? Json(new { success = false, message = "COACategory not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching barge by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCOACategory3([FromBody] SaveCOACategoryViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var coaCategoryToSave = new M_COACategory3
+                {
+                    COACategoryId = model.coaCategory.COACategoryId,
+                    CompanyId = companyIdShort,
+                    COACategoryCode = model.coaCategory.COACategoryCode ?? string.Empty,
+                    COACategoryName = model.coaCategory.COACategoryName ?? string.Empty,
+                    SeqNo = model.coaCategory.SeqNo,
+                    Remarks = model.coaCategory.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.coaCategory.IsActive,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.UtcNow,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.UtcNow
+                };
+
+                var result = await _coaCategoryService.SaveCOACategory3Async(companyIdShort, parsedUserId.Value, coaCategoryToSave);
+                return Json(new { success = true, message = "COACategory saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving barge");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCOACategory3(short coaCategoryId, string companyId)
+        {
+            if (coaCategoryId <= 0)
+                return Json(new { success = false, message = "Invalid COACategory ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
+                (short)E_Modules.Master, (short)E_Master.COACategory3);
+
+            if (permissions == null || !permissions.IsDelete)
+                return Json(new { success = false, message = "No delete permission" });
+
+            try
+            {
+                await _coaCategoryService.DeleteCOACategory3Async(companyIdShort, parsedUserId.Value, coaCategoryId);
+                return Json(new { success = true, message = "COACategory deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting barge");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion COACategory CRUD
     }
 }

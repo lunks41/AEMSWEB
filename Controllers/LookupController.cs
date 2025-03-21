@@ -1,5 +1,4 @@
 ﻿using AEMSWEB.IServices;
-using AEMSWEB.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AEMSWEB.Controllers
@@ -129,6 +128,16 @@ namespace AEMSWEB.Controllers
 
         [HttpGet]
         public async Task<JsonResult> GetVesselDynamic(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetVesselLookup(string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -406,14 +415,6 @@ namespace AEMSWEB.Controllers
             return Json(data);
         }
 
-        [HttpGet]
-        public async Task<JsonResult> GetVesselLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
     }
 }

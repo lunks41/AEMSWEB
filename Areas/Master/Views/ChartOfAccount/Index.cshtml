@@ -144,10 +144,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                    <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnChartOfAccountClose" onclick="clearChartOfAccountForm()">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnChartOfAccountEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" id="btnChartOfAccountClear" onclick="clearChartOfAccountForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" id="btnChartOfAccountSave" onclick="saveChartOfAccount()">Save</button>
                 </div>
             </div>
         </div>
@@ -174,7 +174,7 @@
         function setDefaultValues() {
             clearForm();
             document.getElementById('isActive').checked = true;
-            document.getElementById('btnSave').disabled = false;
+            document.getElementById('btnChartOfAccountSave').disabled = false;
         }
 
         function handleEnterKey(event) {
@@ -242,7 +242,7 @@
         }
 
         function populateModalFields(data) {
-            
+
             $('#glId').val(data.glId);
             $('#glCode').val(data.glCode);
             $('#glName').val(data.glName);
@@ -276,33 +276,43 @@
             $('#remarks').prop('readonly', isView);
             $('#isActive').prop('disabled', isView);
             $('#isSysControl').prop('disabled', isView);
-            $('#btnSave').toggle(!isView);
-            $('#btnEdit').toggle(isView);
-            $('#btnClose').show();
-            $('#btnClear').toggle(!isView);
+            $('#btnChartOfAccountSave').toggle(!isView);
+            $('#btnChartOfAccountEdit').toggle(isView);
+            $('#btnChartOfAccountClose').show();
+            $('#btnChartOfAccountClear').toggle(!isView);
         }
 
-        $('#btnEdit').on('click', function () {
+        $('#btnChartOfAccountEdit').on('click', function () {
             setMode("edit");
         });
 
-        $('#btnClose').on('click', function () {
+        $('#btnChartOfAccountClose').on('click', function () {
             $('#addChartOfAccountModal').modal('hide');
         });
 
         $('#addrecord').on('click', function () {
             clearForm();
             setDefaultValues();
-            $('#btnClose').show();
-            $('#btnClear').show();
-            $('#btnSave').show();
-            $('#btnEdit').hide();
+            $('#btnChartOfAccountClose').show();
+            $('#btnChartOfAccountClear').show();
+            $('#btnChartOfAccountSave').show();
+            $('#btnChartOfAccountEdit').hide();
         });
 
-        function deleteChartOfAccount(glId) {
-            if (confirm("Are you sure you want to delete this chartOfAccount?")) {
-                alert("Delete chartOfAccount with ID: " + glId);
-            }
+        function deleteChartOfAccount(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("Delete", "ChartOfAccount", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { glId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadCategoryGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
         }
 
            // Enhanced validation function
@@ -339,7 +349,7 @@
             if (!validateChartOfAccountForm()) return;
 
             const isUpdate = data.glId !== '0';
-            
+
             $.ajax({
                 type: "POST",
                  url: '@Url.Action("Save", "ChartOfAccount", new { area = "Master" })',

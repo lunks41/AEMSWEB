@@ -1,7 +1,14 @@
-﻿<!-- Index.cshtml -->
-@{
-    ViewData["Title"] = "COA Category Management";
+﻿@{
+    ViewData["Title"] = $"COA-Category ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
 }
 
 <!-- Nav Pills -->
@@ -9,19 +16,19 @@
     <li class="nav-item" role="presentation">
         <button class="nav-link active" id="coa1-tab" data-bs-toggle="pill"
                 data-bs-target="#coa1" type="button" role="tab" aria-controls="coa1" aria-selected="true">
-            <i class="mdi mdi-numeric-1-circle me-1"></i> Level 1
+            <i class="mdi mdi-numeric-1-circle me-1"></i> COA-Category 1
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="coa2-tab" data-bs-toggle="pill"
                 data-bs-target="#coa2" type="button" role="tab" aria-controls="coa2" aria-selected="false">
-            <i class="mdi mdi-numeric-2-circle me-1"></i> Level 2
+            <i class="mdi mdi-numeric-2-circle me-1"></i> COA-Category 2
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="coa3-tab" data-bs-toggle="pill"
                 data-bs-target="#coa3" type="button" role="tab" aria-controls="coa3" aria-selected="false">
-            <i class="mdi mdi-numeric-3-circle me-1"></i> Level 3
+            <i class="mdi mdi-numeric-3-circle me-1"></i> COA-Category 3
         </button>
     </li>
 </ul>
@@ -40,7 +47,52 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/coacategory1.js"></script>
-    <script src="~/js/coacategory2.js"></script>
-    <script src="~/js/coacategory3.js"></script>
+    <script>
+        let companyId = 0;
+        let permissions = {};;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            $('#COACategory1Code, #COACategory1Name').on('input', checkCOACategory1MandatoryFields);
+
+            loadCOACategory1Grid();
+            initializeCOACategory1Form();
+            clearCOACategory1Form();
+            $('#btnCOACategory1Edit').on('click', function () { setCOACategory1Mode("edit"); });
+            $('#btnCOACategory1Close').on('click', function () { $('#addCOACategory1Modal').modal('hide'); });
+            $('#addCOACategory1record').on('click', function () {
+                initializeCOACategory1Form();
+                $('#addCOACategory1Modal').modal('show');
+            });
+
+
+            loadCOACategory2Grid();
+            initializeCOACategory2Form();
+            clearCOACategory2Form();
+            $('#btnCOACategory2Edit').on('click', function () { setCOACategory2Mode("edit"); });
+            $('#btnCOACategory2Close').on('click', function () { $('#addCOACategory2Modal').modal('hide'); });
+            $('#addCOACategory2record').on('click', function () {
+                initializeCOACategory2Form();
+                $('#addCOACategory2Modal').modal('show');
+            });
+
+            loadCOACategory3Grid();
+            initializeCOACategory3Form();
+            clearCOACategory3Form();
+            $('#btnCOACategory3Edit').on('click', function () { setCOACategory3Mode("edit"); });
+            $('#btnCOACategory3Close').on('click', function () { $('#addCOACategory3Modal').modal('hide'); });
+            $('#addCOACategory3record').on('click', function () {
+                initializeCOACategory3Form();
+                $('#addCOACategory3Modal').modal('show');
+            });
+        });
+        
+    </script>
 }

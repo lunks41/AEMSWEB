@@ -68,7 +68,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory1 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory1}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT M_Catg.COACategoryId,M_Catg.COACategoryCode,M_Catg.COACategoryName,M_Catg.seqNo,M_Catg.CompanyId,M_Catg.Remarks,M_Catg.IsActive,M_Catg.CreateById,M_Catg.CreateDate,M_Catg.EditById,M_Catg.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_COACategory1 M_Catg LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Catg.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Catg.EditById WHERE M_Catg.COACategoryId={COACategoryId} AND M_Catg.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory1}))");
 
                 return result;
             }
@@ -381,7 +381,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory2 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory2}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT M_Catg.COACategoryId,M_Catg.COACategoryCode,M_Catg.COACategoryName,M_Catg.seqNo,M_Catg.CompanyId,M_Catg.Remarks,M_Catg.IsActive,M_Catg.CreateById,M_Catg.CreateDate,M_Catg.EditById,M_Catg.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_COACategory2 M_Catg LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Catg.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Catg.EditById WHERE M_Catg.COACategoryId={COACategoryId} AND M_Catg.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory2}))");
 
                 return result;
             }
@@ -694,7 +694,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT COACategoryId,COACategoryCode,COACategoryName,seqNo,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_COACategory3 WHERE COACategoryId={COACategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory3}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<COACategoryViewModel>($"SELECT M_Catg.COACategoryId,M_Catg.COACategoryCode,M_Catg.COACategoryName,M_Catg.seqNo,M_Catg.CompanyId,M_Catg.Remarks,M_Catg.IsActive,M_Catg.CreateById,M_Catg.CreateDate,M_Catg.EditById,M_Catg.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_COACategory3 M_Catg LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Catg.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Catg.EditById WHERE M_Catg.COACategoryId={COACategoryId} AND M_Catg.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.COACategory3}))");
 
                 return result;
             }

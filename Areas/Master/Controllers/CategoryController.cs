@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> CategoryList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short categoryId, string companyId)
+        public async Task<JsonResult> GetCategoryById(short categoryId, string companyId)
         {
             if (categoryId <= 0)
                 return Json(new { success = false, message = "Invalid Category ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveCategoryViewModel model)
+        public async Task<IActionResult> SaveCategory([FromBody] SaveCategoryViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -136,7 +136,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short categoryId, string companyId)
+        public async Task<IActionResult> DeleteCategory(short categoryId, string companyId)
         {
             if (categoryId <= 0)
                 return Json(new { success = false, message = "Invalid Category ID" });
@@ -166,36 +166,8 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region SubCategory CRUD
 
-        [Authorize]
-        public async Task<IActionResult> SubCategoryIndex(int? companyId)
-        {
-            if (!companyId.HasValue || companyId <= 0)
-            {
-                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
-                return Json(new { success = false, message = "Invalid company ID." });
-            }
-
-            var parsedUserId = GetParsedUserId();
-            if (!parsedUserId.HasValue)
-            {
-                _logger.LogWarning("User not logged in or invalid user ID.");
-                return Json(new { success = false, message = "User not logged in or invalid user ID." });
-            }
-
-            var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.SubCategory);
-
-            ViewBag.IsRead = permissions?.IsRead ?? false;
-            ViewBag.IsCreate = permissions?.IsCreate ?? false;
-            ViewBag.IsEdit = permissions?.IsEdit ?? false;
-            ViewBag.IsDelete = permissions?.IsDelete ?? false;
-            ViewBag.CompanyId = companyId;
-
-            return View();
-        }
-
         [HttpGet]
-        public async Task<JsonResult> ListSubCategories(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> SubCategoryList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });

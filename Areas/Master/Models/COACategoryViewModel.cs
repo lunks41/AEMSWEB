@@ -19,8 +19,8 @@
 
     public class SaveCOACategoryViewModel
     {
-        public COACategoryViewModel COACategory { get; set; }
-        public string? CompanyId { get; set; }
+        public COACategoryViewModel coaCategory { get; set; }
+        public string? companyId { get; set; }
     }
 
     public class COACategoryViewModelCount

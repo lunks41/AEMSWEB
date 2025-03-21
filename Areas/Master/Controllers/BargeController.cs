@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> BargeList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -78,7 +78,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(short bargeId, string companyId)
+        public async Task<JsonResult> GetBargeById(short bargeId, string companyId)
         {
             if (bargeId <= 0)
                 return Json(new { success = false, message = "Invalid Barge ID" });
@@ -101,7 +101,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveBargeViewModel model)
+        public async Task<IActionResult> SaveBarge([FromBody] SaveBargeViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -142,7 +142,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short bargeId, string companyId)
+        public async Task<IActionResult> DeleteBarge(short bargeId, string companyId)
         {
             if (bargeId <= 0)
                 return Json(new { success = false, message = "Invalid Barge ID" });

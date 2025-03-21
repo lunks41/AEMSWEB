@@ -2,77 +2,86 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Categories</h3>
+                <h3>Category</h3>
+
+                <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadCategoryGrid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
+
+                    <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal">
-                            <i class="mdi mdi-plus me-1"></i> Add Category
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadCategoryGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addCategoryModal" id="addCategoryrecord">
+                            <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
                 </div>
-                <div id="categoryGrid"></div>
+                <div id="gridCategory"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Category Modal -->
-<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="categoryModalLabel">Category Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCategoryForm()"></button>
+                <h5 class="modal-title" id="addCategoryModalLabel">Add/Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCategoryForm();"></button>
             </div>
             <div class="modal-body p-4">
                 <form id="categoryForm">
-                    <input type="hidden" id="CategoryId" />
+                    <input type="hidden" id="categoryId" />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="CategoryCode" class="form-label">Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="CategoryCode" maxlength="10" required>
+                                <label for="categoryCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="categoryCode" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="CategoryName" class="form-label">Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="CategoryName" maxlength="100" required>
+                                <label for="categoryName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="categoryName" required>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="CategoryRemarks" class="form-label">Remarks</label>
-                                <textarea class="form-control" id="CategoryRemarks" rows="2" maxlength="500"></textarea>
+                                <label for="remarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="remarks" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="CategoryIsActive">
-                                <label class="form-check-label" for="CategoryIsActive">Is Active</label>
+                                <input type="checkbox" class="form-check-input" id="isActive">
+                                <label class="form-check-label" for="isActive">Is Active</label>
                             </div>
                         </div>
                     </div>
-                    <!-- Audit Section -->
-                    <div class="accordion mt-3" id="categoryAudit">
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryAuditBody">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
-                            <div id="categoryAuditBody" class="accordion-collapse collapse">
+                            <div id="auditCollapse" class="accordion-collapse collapse">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -99,11 +108,188 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCategoryClose" onclick="clearCategoryForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCategoryEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnCategoryClear" onclick="clearCategoryForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCategorySave" onclick="saveCategory()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+        function initializeCategoryForm() {
+            clearCategoryForm();
+            $('#isActive').prop('checked', true);
+        }
+
+        function clearCategoryForm() {
+            $('#categoryForm')[0].reset();
+
+            $('#categoryId').val(0);
+            $('#createBy').text('');
+            $('#createDate').text('');
+            $('#editBy').text('');
+            $('#editDate').text('');
+
+            // Reset readonly and disabled states
+            $('#categoryCode, #categoryName, #seqNo, #remarks').prop('readonly', false);
+            $('#isActive').prop('disabled', false);
+
+            $('#isActive').prop('checked', true);
+            $('#btnCategorySave').prop('disabled', false);
+            $('#btnCategorySave').show();
+            $('#btnCategoryClear').show();
+            $('#btnCategoryEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadCategoryGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadCategoryGrid();
+        }
+
+        function checkCategoryMandatoryFields() {
+            let isValid = $('#categoryCode').val().trim() && $('#categoryName').val().trim();
+            $('#btnCategorySave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#categoryCode, #categoryName').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadCategoryGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("CategoryList", "Category", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openCategoryModal('${dataItem.categoryId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCategoryModal('${dataItem.categoryId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCategory('${dataItem.categoryId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "categoryCode", title: "Code" },
+                { field: "categoryName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridCategory").data("kendoGrid");
+            if (grid) {
+                // Update the data source with the new bankId
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridCategory", url, { searchString, companyId }, columns);
+            }
+        }
+
+        function openCategoryModal(id, mode) {
+            const $modal = $('#addCategoryModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetCategoryById", "Category", new { area = "Master" })', { categoryId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateCategoryModalFields(response.data);
+                        setCategoryMode(mode);
+                        $('#addCategoryModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
+
+        function populateCategoryModalFields(data) {
+            $('#categoryId').val(data.categoryId);
+            $('#categoryCode').val(data.categoryCode);
+            $('#categoryName').val(data.categoryName);
+            $('#remarks').val(data.remarks);
+            $('#isActive').prop('checked', data.isActive);
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkCategoryMandatoryFields();
+        }
+
+        function setCategoryMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#categoryCode, #categoryName,  #remarks').prop('readonly', !canEdit);
+            $('#isActive').prop('disabled', !canEdit);
+            $('#btnCategorySave').toggle(canEdit);
+            $('#btnCategoryEdit').toggle(isView && permissions.canEdit);
+            $('#btnCategoryClose').show();
+            $('#btnCategoryClear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteCategory(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteCategory", "Category", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { categoryId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadCategoryGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveCategory() {
+            let categoryData = {
+                CategoryId: parseInt($('#categoryId').val()) || 0,
+                CategoryCode: $('#categoryCode').val().trim(),
+                CategoryName: $('#categoryName').val().trim(),
+                Remarks: $('#remarks').val(),
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            console.log("category Data : " + categoryData);
+
+            if (!categoryData.CategoryCode || !categoryData.CategoryName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveCategory", "Category", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ category: categoryData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        debugger;
+                        loadCategoryGrid();
+                        clearCategoryForm();
+                        $('#addCategoryModal').modal('hide');
+                    } else {
+                        alert(response.message || "Failed to save account group.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+                }
+            });
+        }
+</script>
