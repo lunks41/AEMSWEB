@@ -198,10 +198,10 @@
         $('#isSalesCont').prop('disabled', !canEdit);
         $('#isActiveCont').prop('disabled', !canEdit);
 
-        $('#btnSave').toggle(canEdit);
-        $('#btnEdit').toggle(isView && permissions.canEdit);
-        $('#btnClose').show();
-        $('#btnClear').hide();
+        $('#btnCustomerContactSave').toggle(canEdit);
+        $('#btnCustomerContactEdit').toggle(isView && permissions.canEdit);
+        $('#btnCustomerContactClose').show();
+        $('#btnCustomerContactClear').hide();
     }
 
     function deleteCustomerContact(id, contactId) {

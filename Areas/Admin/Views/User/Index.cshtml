@@ -26,6 +26,7 @@
         line-height: 1;
         flex-shrink: 0;
     }
+
     .hidden-column {
         display: none;
     }
@@ -114,7 +115,6 @@
         $(document).ready(function () {
             companyId = getUrlParameter('companyId');
 
-            
             permissions = {
                 canCreate: @Json.Serialize(canCreate),
                 canEdit: @Json.Serialize(canEdit),
@@ -157,7 +157,7 @@
 
         function OnSelectDropdown(dataItem, DrpdwnName) {
             if (DrpdwnName == 'cmb_user') {
-                
+
                 loadUserRights();
             }
         }

@@ -128,7 +128,7 @@
         ];
 
         if (grid) {
-            
+
             grid.dataSource.read({ bankId: bankId, companyId: companyId });
         } else {
             // Initialize grid if it doesn’t exist
@@ -139,10 +139,10 @@
     }
 
     function openBankAddressModal(id, addressId, mode) {
-        
+
         $.get('@Url.Action("GetAddressById", "Bank", new { area = "Master" })', { bankId: id, addressId, companyId })
             .done(function (response) {
-                
+
                 console.log("address :" + response);
                 if (response.success) {
                     populateAddressFields(response.data);
@@ -153,7 +153,7 @@
     }
 
     function populateAddressFields(data) {
-        
+
         $('#bankId').val(data.bankId);
         $('#addressId').val(data.addressId);
         $('#address1').val(data.address1);

@@ -223,7 +223,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.ChargeId == chargeId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog

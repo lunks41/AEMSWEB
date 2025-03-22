@@ -22,6 +22,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             _logger = logger;
             _uomService = uomService;
         }
+
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {

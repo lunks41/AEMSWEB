@@ -256,7 +256,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.GLId == glIdId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog

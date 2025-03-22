@@ -97,7 +97,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         public async Task<SqlResponse> SaveCountryAsync(short CompanyId, short UserId, M_Country m_Country)
         {
-
             bool IsEdit = m_Country.CountryId != 0;
             try
             {
@@ -252,7 +251,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_Country
                             .Where(x => x.CountryId == countryId)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {

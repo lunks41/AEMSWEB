@@ -111,6 +111,10 @@
         $('#isFinAdd').prop('checked', false);
         $('#isSalesAdd').prop('checked', false);
         $('#isActiveAdd').prop('checked', false);
+        $('#btnCustomerAddressSave').prop('disabled', false);
+        $('#btnCustomerAddressSave').show();
+        $('#btnCustomerAddressClear').show();
+        $('#btnCustomerAddressEdit').hide();
     }
 
     function loadcustomerAddressGrid(customerId) {
@@ -161,12 +165,11 @@
     }
 
     function openCustomerAddressModal(id, addressId, mode) {
-
         $.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId, companyId })
             .done(function (response) {
-
                 console.log("address :" + response);
                 if (response.success) {
+                    debugger;
                     populateAddressFields(response.data);
                     setAddressMode(mode);
                     $('#addAddressModal').modal('show');
@@ -175,7 +178,7 @@
     }
 
     function populateAddressFields(data) {
-
+        debugger;
         $('#customerId').val(data.customerId);
         $('#addressId').val(data.addressId);
         $('#address1').val(data.address1);
@@ -210,10 +213,10 @@
             .prop('readonly', !canEdit);
         $('#isDefaultAdd, #isDeliveryAdd, #isFinAdd, #isSalesAdd, #isActiveAdd').prop('disabled', !canEdit);
 
-        $('#btnSave').toggle(canEdit);
-        $('#btnEdit').toggle(isView && permissions.canEdit);
-        $('#btnClose').show();
-        $('#btnClear').hide();
+        $('#btnCustomerAddressSave').toggle(canEdit);
+        $('#btnCustomerAddressEdit').toggle(isView && permissions.canEdit);
+        $('#btnCustomerAddressClose').show();
+        $('#btnCustomerAddressClear').hide();
     }
 
     function deleteCustomerAddress(id, addressId) {

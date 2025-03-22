@@ -28,7 +28,7 @@
 
 <script>
     function loadUserRights() {
-        
+
         var companyId = $('#companyIdHidden').val();
         var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
 
@@ -45,7 +45,7 @@
             success: function (result) {
                 var tbody = $('#userRightsTable tbody');
                 tbody.empty();
-                
+
                 if (result.data) {
                     result.data.forEach(function (company) {
                         var row = `<tr>
@@ -66,7 +66,7 @@
     }
 
     function saveUserRights() {
-        
+
         var userRightsData = [];
         $('#userRightsTable tbody tr').each(function () {
             var companyId = $(this).find('input[type="checkbox"]').data('company-id');

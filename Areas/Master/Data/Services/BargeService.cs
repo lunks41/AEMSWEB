@@ -251,7 +251,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.BargeId == bargeId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog

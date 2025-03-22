@@ -372,7 +372,6 @@
         </div>
     </div>
 
-    
 }
 
 @section Scripts {
@@ -382,7 +381,6 @@
         $(document).ready(function () {
             companyId = getUrlParameter('companyId');
 
-            
             permissions = {
                 canCreate: @Json.Serialize(canCreate),
                 canEdit: @Json.Serialize(canEdit),
@@ -428,7 +426,7 @@
 
         function OnSelectDropdown(dataItem, DrpdwnName) {
             if (DrpdwnName == 'cmb_user') {
-                
+
                 loadUserRights();
             }
         }
@@ -436,7 +434,7 @@
         //############# USER ###################//
 
         function loadUserGrid() {
-            
+
             let searchString = $('#txtsearch').val();
             let url = '@Url.Action("UserList", "User", new { area = "Admin" })';
             let columns = [
@@ -604,7 +602,7 @@
         //############# USER Group###################//
 
         function loadUserGroupGrid() {
-            
+
             let searchString = $('#txtsearch').val();
             let url = '@Url.Action("UserGroupList", "User", new { area = "Admin" })';
             let columns = [
@@ -698,7 +696,7 @@
         }
 
         function clearUserGroupForm() {
-            
+
             $('#userGroupForm')[0].reset();
             $('#userGroupId').val(0);
             $('#btnUserGroupSave').prop('disabled', true);
@@ -762,7 +760,7 @@
         //############# USER rIGHTS ###################//
 
         function loadUserRights() {
-            
+
             var companyId = $('#companyIdHidden').val();
             var selecteduserId = $("#cmb_user").data("kendoComboBox").value();
 
@@ -779,7 +777,7 @@
                 success: function (result) {
                     var tbody = $('#userRightsTable tbody');
                     tbody.empty();
-                    
+
                     if (result.data) {
                         result.data.forEach(function (company) {
                             var row = `<tr>
@@ -800,7 +798,7 @@
         }
 
         function saveUserRights() {
-            
+
             var userRightsData = [];
             $('#userRightsTable tbody tr').each(function () {
                 var companyId = $(this).find('input[type="checkbox"]').data('company-id');
@@ -839,7 +837,7 @@
 
         // Function to load group rights based on the selected user and module (if applicable)
         function loadGroupRights() {
-            
+
             var groupUserId = $("#cmb_user_group").data("kendoComboBox").value(); // Use new ID
             var moduleId = $("#cmb_usergroup").data("kendoComboBox").value();
 
@@ -859,7 +857,7 @@
                     success: function (result) {
                         var tbody = $('#rightsTableBody');
                         tbody.empty();
-                        
+
                         if (result.data) {
                             result.data.forEach(function (item) {
                                 var row = `<tr data-right-id="${item.rightId}">

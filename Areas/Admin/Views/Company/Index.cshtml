@@ -145,7 +145,7 @@
         let permissions = {};
     $(document).ready(function () {
         companyId = getUrlParameter('companyId') || 0;
-        
+
         permissions = {
             canCreate: @Json.Serialize(canCreate),
             canEdit: @Json.Serialize(canEdit),

@@ -223,7 +223,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.OrderTypeId == orderTypeId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
@@ -507,7 +506,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_OrderTypeCategory
                             .Where(x => x.OrderTypeCategoryId == orderTypeCategoryId)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {

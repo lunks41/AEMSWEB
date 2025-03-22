@@ -160,7 +160,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
         }
 
-        #endregion COACategory CRUD
+        #endregion COACategory1 CRUD
 
         #region COACategory2 CRUD
 
@@ -272,7 +272,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
         }
 
-        #endregion COACategory CRUD
+        #endregion COACategory2 CRUD
 
         #region COACategory3 CRUD
 
@@ -384,6 +384,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
         }
 
-        #endregion COACategory CRUD
+        #endregion COACategory3 CRUD
     }
 }

@@ -251,7 +251,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.COACategoryId == coaCategoryId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
@@ -564,7 +563,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.COACategoryId == coaCategoryId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
@@ -876,7 +874,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_COACategory3
                             .Where(x => x.COACategoryId == coaCategoryId)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {

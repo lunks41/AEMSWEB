@@ -128,7 +128,6 @@
                             </div>
                         </div>
 
-
                         <!-- Audit Fields -->
                         <div class="accordion mt-3" id="auditAccordion">
                             <div class="accordion-item">
@@ -279,7 +278,7 @@
 
             let grid = $("#gridVessel").data("kendoGrid");
             if (grid) {
-                
+
                 grid.dataSource.read({ searchString: searchString, companyId: companyId });
             } else {
                 // Initialize grid if it doesn’t exist
@@ -327,7 +326,7 @@
             const canEdit = permissions.canEdit && !isView;
 
             $('#vesselCode, #vesselName, #callSign,#imoCode,#grt,#licenseNo,#flag,#vesselType ,#remarks').prop('readonly', !canEdit);
-           
+
             $('#isActive').prop('disabled', !canEdit);
             $('#btnVesselSave').toggle(canEdit);
             $('#btnVesselEdit').toggle(isView && permissions.canEdit);

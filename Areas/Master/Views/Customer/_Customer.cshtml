@@ -130,7 +130,7 @@
                         <!-- Addresses Tab -->
                         <div class="tab-pane fade show active" id="addresses">
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
                                     <i class="mdi mdi-plus"></i> Add Address
                                 </button>
                             </div>
@@ -140,7 +140,7 @@
                         <!-- Contacts Tab -->
                         <div class="tab-pane fade" id="contacts">
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addContactModal">
                                     <i class="mdi mdi-plus"></i> Add Contact
                                 </button>
                             </div>
@@ -221,9 +221,21 @@
         $('#createDate').text('');
         $('#editBy').text('');
         $('#editDate').text('');
-        // Clear grids
-        $("#gridaddress").data("kendoGrid").dataSource.data([]);
-        $("#gridcontact").data("kendoGrid").dataSource.data([]);
+        $('#btnCustomerSave').prop('disabled', false);
+        $('#btnCustomerSave').show();
+        $('#btnCustomerClear').show();
+        $('#btnCustomerEdit').hide();
+
+        // Check if grids exist before clearing
+        const addressGrid = $("#gridaddress").data("kendoGrid");
+        if (addressGrid) {
+            addressGrid.dataSource.data([]);
+        }
+
+        const contactGrid = $("#gridcontact").data("kendoGrid");
+        if (contactGrid) {
+            contactGrid.dataSource.data([]);
+        }
     }
 
     function loadCustomerGrid() {
@@ -316,10 +328,10 @@
 
         $('#customerCode, #customerName, #remarks').prop('readonly', !canEdit);
         $('#isActive').prop('disabled', !canEdit);
-        $('#btnSave').toggle(canEdit);
-        $('#btnEdit').toggle(isView && permissions.canEdit);
-        $('#btnClose').show();
-        $('#btnClear').hide();
+        $('#btnCustomerSave').toggle(canEdit);
+        $('#btnCustomerEdit').toggle(isView && permissions.canEdit);
+        $('#btnCustomerClose').show();
+        $('#btnCustomerClear').hide();
     }
 
     function deleteCustomer(id) {

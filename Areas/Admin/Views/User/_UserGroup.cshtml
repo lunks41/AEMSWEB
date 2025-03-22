@@ -94,7 +94,7 @@
 
 <script>
     function loadUserGroupGrid() {
-        
+
         let searchString = $('#txtsearch').val();
         let url = '@Url.Action("UserGroupList", "User", new { area = "Admin" })';
         let columns = [
@@ -170,7 +170,7 @@
     }
 
     function clearUserGroupForm() {
-        
+
         $('#userGroupForm')[0].reset();
         $('#userGroupId').val(0);
         $('#btnUserGroupSave').prop('disabled', true);

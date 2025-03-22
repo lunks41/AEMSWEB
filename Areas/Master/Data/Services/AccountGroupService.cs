@@ -254,7 +254,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.IsSystemGenerated == false && x.AccGroupId == accGroupId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog

@@ -220,7 +220,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.UomId == uomId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
@@ -474,7 +473,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
 
         public async Task<SqlResponse> DeleteUomDtAsync(short CompanyId, short UserId, short UomId, short PackUomId)
         {
-
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

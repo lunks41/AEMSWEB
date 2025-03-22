@@ -55,8 +55,6 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region Charges CRUD
 
-
-
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
         {

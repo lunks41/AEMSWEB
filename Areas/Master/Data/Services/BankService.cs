@@ -362,6 +362,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 }
             }
         }
+
         public async Task<IEnumerable<BankAddressViewModel>> GetBankAddressByBankIdAsync(short CompanyId, short UserId, int BankId)
         {
             try
@@ -493,6 +494,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
+
         public async Task<IEnumerable<BankContactViewModel>> GetBankContactByBankIdAsync(short CompanyId, short UserId, int BankId)
         {
             try

@@ -59,7 +59,7 @@
                                 <input type="text" class="form-control" id="uomName" required>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="remarks" class="form-label">Remarks</label>
@@ -192,7 +192,7 @@
 
             let grid = $("#gridUom").data("kendoGrid");
             if (grid) {
-                
+
                 grid.dataSource.read({ searchString: searchString, companyId: companyId });
             } else {
                 // Initialize grid if it doesn’t exist
