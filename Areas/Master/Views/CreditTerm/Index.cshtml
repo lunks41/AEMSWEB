@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = $"Order Type ";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
+}
+
+<!-- Nav Pills -->
+<ul class="nav nav-pills mb-3" id="CreditTermTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="CreditTerm-tab" data-bs-toggle="pill"
+                data-bs-target="#CreditTerm" type="button" role="tab" aria-controls="CreditTerm" aria-selected="true">
+            <i class="mdi mdi-view-list me-1"></i> CreditTerm
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="CreditTermDt-tab" data-bs-toggle="pill"
+                data-bs-target="#CreditTermDt" type="button" role="tab" aria-controls="CreditTermDt" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> CreditTerm Details
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="CreditTermTabsContent">
+    <div class="tab-pane fade show active" id="CreditTerm" role="tabpanel" aria-labelledby="CreditTerm-tab">
+        @await Html.PartialAsync("_CreditTerm")
+    </div>
+    <div class="tab-pane fade" id="CreditTermDt" role="tabpanel" aria-labelledby="CreditTermDt-tab">
+        @await Html.PartialAsync("_CreditTermDt")
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let companyId = 0;
+        let permissions = {};;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            Refresh();
+
+            loadCreditTermGrid();
+            initializeCreditTermForm();
+            clearCreditTermForm();
+            $('#btnCreditTermEdit').on('click', function () { setCreditTermMode("edit"); });
+            $('#btnCreditTermClose').on('click', function () { $('#addCreditTermModal').modal('hide'); });
+            $('#addCreditTermrecord').on('click', function () {
+                initializeCreditTermForm();
+                $('#addCreditTermModal').modal('show');
+            });
+
+            loadCreditTermDtGrid();
+            initializeCreditTermDtForm();
+            clearCreditTermDtForm();
+            $('#btnCreditTermDtEdit').on('click', function () { setCreditTermDtMode("edit"); });
+            $('#btnCreditTermDtClose').on('click', function () { $('#addCreditTermDtModal').modal('hide'); });
+            $('#addCreditTermDtrecord').on('click', function () {
+                initializeCreditTermDtForm();
+                $('#addCreditTermDtModal').modal('show');
+            });
+        });
+
+        function Refresh() {
+            const CreditTermDtUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(CreditTermDtUrl, "cmd_creditTermDt", "creditTermName", "creditTermId");
+        }
+
+        function SelectedDropdown(DrpdwnName) { }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
+    </script>
+}

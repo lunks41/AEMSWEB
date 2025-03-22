@@ -112,7 +112,7 @@
         const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
 
-        const creditTermsUrl = '@Url.Action("GetCreditTermsLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
 
         const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;

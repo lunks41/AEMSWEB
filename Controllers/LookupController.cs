@@ -77,12 +77,12 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCreditTermsLookup(string companyId)
+        public async Task<JsonResult> GetCreditTermLookup(string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCreditTermsLookupAsync(companyIdShort, parsedUserId.Value);
+            var data = await _masterLookupService.GetCreditTermLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 

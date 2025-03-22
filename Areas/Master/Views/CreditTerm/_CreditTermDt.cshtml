@@ -1,0 +1,317 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>CreditTerm Details</h3>
+
+                <!-- Action Row -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadCreditTermDtGrid();">
+                            <span class="material-symbols-outlined">search</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadCreditTermDtGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addCreditTermDtModal" id="addCreditTermDtrecord">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="gridCreditTermDt"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addCreditTermDtModal" tabindex="-1" aria-labelledby="addCreditTermDtModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCreditTermDtModalLabel">Add/Edit CreditTerm Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCreditTermDtForm();"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="creditTermDtForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="cmd_creditTermDt" class="form-label">CreditTerm <span class="text-danger">*</span></label>
+                                <select id="cmd_creditTermDt" style="width: 100%"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="creditTermDtFromDay" class="form-label">From Day Percentage <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="creditTermDtFromDay" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="creditTermDtToDay" class="form-label">To Day Percentage <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="creditTermDtToDay" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="creditTermisEndOfMonth">
+                                <label class="form-check-label" for="creditTermisEndOfMonth">Is EndOfMonth</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="creditTermDtDueDay" class="form-label">Due Day Percentage <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="creditTermDtDueDay" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="creditTermDtNoMonth" class="form-label">No Month Percentage <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="creditTermDtNoMonth" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="creditTermDtcreateBy" class="form-label">Created By</label>
+                                            <p id="creditTermDtcreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="CreditTermDtcreateDate" class="form-label">Created Date</label>
+                                            <p id="creditTermDtcreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="creditTermDteditBy" class="form-label">Modified By</label>
+                                            <p id="creditTermDteditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="creditTermDteditDate" class="form-label">Modified Date</label>
+                                            <p id="creditTermDteditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCreditTermDtClose" onclick="clearCreditTermDtForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCreditTermDtEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnCreditTermDtClear" onclick="clearCreditTermDtForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCreditTermDtSave" onclick="saveCreditTermDt()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        function initializeCreditTermDtForm() {
+            clearCreditTermDtForm();
+            $('#creditTermisEndOfMonth').prop('checked', true);
+        }
+
+        function clearCreditTermDtForm() {
+            $('#creditTermDtForm')[0].reset();
+
+            $('#creditTermId').val(0);
+            $('#cmd_creditTermDt').data("kendoComboBox").value('');
+            $('#creditTermDtcreateBy').text('');
+            $('#CreditTermDtcreateDate').text('');
+            $('#creditTermDteditBy').text('');
+            $('#creditTermDteditDate').text('');
+
+            // Reset readonly and disabled states
+            $('#creditTermDtFromDay, #creditTermDtToDay,#creditTermDtDueDay, #creditTermDtNoMonth').prop('readonly', false);
+            $('#creditTermisEndOfMonth').prop('disabled', false);
+
+            $('#creditTermisEndOfMonth').prop('checked', true);
+            $('#btnCreditTermDtSave').prop('disabled', false);
+            $('#btnCreditTermDtSave').show();
+            $('#btnCreditTermDtClear').show();
+            $('#btnCreditTermDtEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadCreditTermDtGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadCreditTermDtGrid();
+        }
+
+        function checkCreditTermDtMandatoryFields() {
+            let isValid = $('#creditTermDtFromDay').val().trim() && $('#creditTermDtToDay').val().trim() && $('#creditTermDtDueDay').val().trim() && $('#creditTermDtNoMonth').val().trim();
+            $('#btnCreditTermDtSave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#creditTermDtFromDay, #creditTermDtToDay,#creditTermDtDueDay, #creditTermDtNoMonth').toggleClass('is-invalid', !isValid);
+        }
+
+    function loadCreditTermDtGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("CreditTermDtList", "CreditTerm", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "100px",
+                template: function (dataItem) {
+                    let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openCreditTermDtModal('${dataItem.creditTermId}','${dataItem.fromDay}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCreditTermDtModal('${dataItem.creditTermId}','${dataItem.fromDay}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCreditTermDt('${dataItem.creditTermId}','${dataItem.fromDay}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "creditTermName", title: "Name" },
+            { field: "fromDay", title: "fromDay" },
+            { field: "toDay", title: "toDay" },
+            { field: "dueDay", title: "dueDay" },
+            { field: "noMonth", title: "noMonth" },
+            { field: "isEndOfMonth", title: "EndOfMonth", template: '<input type="checkbox" #= isEndOfMonth ? "checked" : "" # disabled />' }
+        ];
+
+        let grid = $("#gridCreditTermDt").data("kendoGrid");
+        if (grid) {
+
+            grid.dataSource.read({ searchString: searchString, companyId: companyId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("gridCreditTermDt", url, { searchString, companyId }, columns);
+        }
+    }
+
+    function openCreditTermDtModal(id, fromDay, mode) {
+        const $modal = $('#addCreditTermDtModal');
+        $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+        $.get('@Url.Action("GetCreditTermDtById", "CreditTerm", new { area = "Master" })', { creditTermId: id, fromDay, companyId })
+            .done(function (response) {
+                if (response.success) {
+                    populateCreditTermDtModalFields(response.data);
+                    setCreditTermDtMode(mode);
+                    $('#addCreditTermDtModal').modal('show');
+                }
+            })
+            .always(() => $modal.find('.modal-overlay').remove());
+    }
+
+    function populateCreditTermDtModalFields(data) {
+        debugger;
+
+        $('#cmd_creditTermDt').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
+        $('#creditTermDtFromDay').val(data.fromDay);
+        $('#creditTermDtToDay').val(data.toDay);
+        $('#creditTermDtDueDay').val(data.dueDay);
+        $('#creditTermDtNoMonth').val(data.noMonth);
+        $('#creditTermisEndOfMonth').prop('checked', data.isEndOfMonth);
+
+        $('#creditTermDtcreateBy').text(data.createBy || "N/A");
+        $('#CreditTermDtcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#creditTermDteditBy').text(data.editBy || "N/A");
+        $('#creditTermDteditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+        checkCreditTermDtMandatoryFields();
+    }
+
+    function setCreditTermDtMode(mode) {
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#cmd_creditTermDt').data("kendoComboBox").enable(!canEdit);
+        $('#creditTermDtFromDay, #creditTermDtToDay,#creditTermDtDueDay, #creditTermDtNoMonth').prop('readonly', !canEdit);
+        $('#creditTermisEndOfMonth').prop('disabled', !canEdit);
+
+        $('#btnCreditTermDtSave').toggle(canEdit);
+        $('#btnCreditTermDtEdit').toggle(isView && permissions.canEdit);
+        $('#btnCreditTermDtClose').show();
+        $('#btnCreditTermDtClear').hide();
+        $('#btnClear').hide();
+    }
+
+    function deleteCreditTermDt(id, fromDay) {
+        showDeleteModal("Are you sure you want to delete this records?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteCreditTermDt", "CreditTerm", new { area = "Master" })',
+                type: "DELETE",
+                data: { creditTermId: id, fromDay: fromDay, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadCreditTermDtGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveCreditTermDt() {
+
+        let CreditTermDtData = {
+            CreditTermId: parseInt($('#cmd_creditTermDt').data("kendoComboBox").value()) || 0,
+            FromDay: parseInt($('#creditTermDtFromDay').val()) || 0,
+            ToDay: parseInt($('#creditTermDtToDay').val()) || 0,
+            DueDay: parseInt($('#creditTermDtDueDay').val()) || 0,
+            NoMonth: parseInt($('#creditTermDtNoMonth').val()) || 0,
+            IsEndOfMonth: $('#creditTermisEndOfMonth').prop('checked')
+
+        };
+        console.log("CreditTermDt Data : " + CreditTermDtData);
+
+        if (!CreditTermDtData.CreditTermId || !CreditTermDtData.FromDay || !CreditTermDtData.ToDay) {
+            alert('Code and Name are required!');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveCreditTermDt", "CreditTerm", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ creditTermDt: CreditTermDtData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    debugger;
+                    loadCreditTermDtGrid();
+                    clearCreditTermDtForm();
+                    $('#addCreditTermDtModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save account group.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
+    }
+</script>

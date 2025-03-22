@@ -11,12 +11,12 @@ namespace AEMSWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]
-    public class CreditTermsController : BaseController
+    public class CreditTermController : BaseController
     {
-        private readonly ILogger<CreditTermsController> _logger;
-        private readonly ICreditTermsService _creditTermsService;
+        private readonly ILogger<CreditTermController> _logger;
+        private readonly ICreditTermService _creditTermsService;
 
-        public CreditTermsController(ILogger<CreditTermsController> logger, IBaseService baseService, ICreditTermsService creditTermsService)
+        public CreditTermController(ILogger<CreditTermController> logger, IBaseService baseService, ICreditTermService creditTermsService)
             : base(logger, baseService)
         {
             _logger = logger;
@@ -40,7 +40,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
 
             var permissions = await HasPermission((short)companyId, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.CreditTerms);
+                (short)E_Modules.Master, (short)E_Master.CreditTerm);
 
             ViewBag.IsRead = permissions?.IsRead ?? false;
             ViewBag.IsCreate = permissions?.IsCreate ?? false;
@@ -51,7 +51,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             return View();
         }
 
-        #region CreditTerms CRUD
+        #region CreditTerm CRUD
 
         [HttpGet]
         public async Task<JsonResult> CreditTermList(int pageNumber, int pageSize, string searchString, string companyId)
@@ -144,7 +144,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
-                (short)E_Modules.Master, (short)E_Master.CreditTerms);
+                (short)E_Modules.Master, (short)E_Master.CreditTerm);
 
             if (permissions == null || !permissions.IsDelete)
                 return Json(new { success = false, message = "No delete permission" });
@@ -161,9 +161,9 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
         }
 
-        #endregion CreditTerms CRUD
+        #endregion CreditTerm CRUD
 
-        #region CreditTermsDt CRUD
+        #region CreditTermDt CRUD
 
         [HttpGet]
         public async Task<JsonResult> CreditTermDtList(int pageNumber, int pageSize, string searchString, string companyId)
@@ -188,9 +188,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCreditTermDtById(short creditTermDtId, short fromDay, string companyId)
+        public async Task<JsonResult> GetCreditTermDtById(short creditTermId, short fromDay, string companyId)
         {
-            if (creditTermDtId <= 0)
+            if (creditTermId <= 0)
                 return Json(new { success = false, message = "Invalid Credit Term Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -198,7 +198,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _creditTermsService.GetCreditTermDtByIdAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
+                var data = await _creditTermsService.GetCreditTermDtByIdAsync(companyIdShort, parsedUserId.Value, creditTermId, fromDay);
                 return data == null
                     ? Json(new { success = false, message = "Credit Term Detail not found" })
                     : Json(new { success = true, data });
@@ -247,9 +247,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCreditTermDt(short creditTermDtId, short fromDay, string companyId)
+        public async Task<IActionResult> DeleteCreditTermDt(short creditTermId, short fromDay, string companyId)
         {
-            if (creditTermDtId <= 0)
+            if (creditTermId <= 0)
                 return Json(new { success = false, message = "Invalid Credit Term Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -263,7 +263,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                await _creditTermsService.DeleteCreditTermDtAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
+                await _creditTermsService.DeleteCreditTermDtAsync(companyIdShort, parsedUserId.Value, creditTermId, fromDay);
                 return Json(new { success = true, message = "Credit Term Detail deleted successfully" });
             }
             catch (Exception ex)
@@ -273,6 +273,6 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
         }
 
-        #endregion CreditTermsDt CRUD
+        #endregion CreditTermDt CRUD
     }
 }

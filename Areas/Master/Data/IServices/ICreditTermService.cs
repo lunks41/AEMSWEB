@@ -4,7 +4,7 @@ using AEMSWEB.Models.Masters;
 
 namespace AEMSWEB.Areas.Master.Data.IServices
 {
-    public interface ICreditTermsService
+    public interface ICreditTermService
     {
         public Task<CreditTermViewModelCount> GetCreditTermListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 

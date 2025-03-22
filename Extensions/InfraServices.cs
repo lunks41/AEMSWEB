@@ -38,6 +38,7 @@ public static class InfraServices
         services.AddScoped<IBargeService, BargeService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IChartOfAccountService, ChartOfAccountService>();
+        services.AddScoped<ICreditTermService, CreditTermService>();
         services.AddScoped<ICOACategoryService, COACategoryService>();
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<ICurrencyService, CurrencyService>();

@@ -1,0 +1,304 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Credit Term</h3>
+
+                <!-- Action Row -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
+                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
+                        <div style="width: 150px;">
+                            <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadCreditTermGrid();">
+                            <span class="material-symbols-outlined">search</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadCreditTermGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addCreditTermModal" id="addCreditTermrecord">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="gridCreditTerm"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addCreditTermModal" tabindex="-1" aria-labelledby="addCreditTermModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCreditTermModalLabel">Add/Edit Credit Term</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCreditTermForm();"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="CreditTermForm">
+                    <input type="hidden" id="creditTermId" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="creditTermCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="creditTermCode" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="creditTermName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="creditTermName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="creditTermNoDays" class="form-label">No Days <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="creditTermNoDays" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="creditTermremarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="creditTermremarks" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="creditTermisActive">
+                                <label class="form-check-label" for="creditTermisActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="CreditTermcreateBy" class="form-label">Created By</label>
+                                            <p id="CreditTermcreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="CreditTermcreateDate" class="form-label">Created Date</label>
+                                            <p id="CreditTermcreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="CreditTermeditBy" class="form-label">Modified By</label>
+                                            <p id="CreditTermeditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="CreditTermeditDate" class="form-label">Modified Date</label>
+                                            <p id="CreditTermeditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCreditTermClose" onclick="clearCreditTermForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCreditTermEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnCreditTermClear" onclick="clearCreditTermForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCreditTermSave" onclick="saveCreditTerm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        function initializeCreditTermForm() {
+            clearCreditTermForm();
+            $('#creditTermisActive').prop('checked', true);
+        }
+
+        function clearCreditTermForm() {
+            $('#CreditTermForm')[0].reset();
+
+            $('#CreditTermId').val(0);
+            $('#CreditTermcreateBy').text('');
+            $('#CreditTermcreateDate').text('');
+            $('#CreditTermeditBy').text('');
+            $('#CreditTermeditDate').text('');
+
+            // Reset readonly and disabled states
+            $('#creditTermCode, #creditTermName, #noDays, #remarks').prop('readonly', false);
+            $('#creditTermisActive').prop('disabled', false);
+
+            $('#creditTermisActive').prop('checked', true);
+            $('#btnCreditTermSave').prop('disabled', false);
+            $('#btnCreditTermSave').show();
+            $('#btnCreditTermClear').show();
+            $('#btnCreditTermEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadCreditTermGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadCreditTermGrid();
+        }
+
+        function checkCreditTermMandatoryFields() {
+            let isValid = $('#creditTermCode').val().trim() && $('#creditTermName').val().trim();
+            $('#btnCreditTermSave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#creditTermCode, #creditTermName').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadCreditTermGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("CreditTermList", "CreditTerm", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openCreditTermModal('${dataItem.creditTermId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCreditTermModal('${dataItem.creditTermId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCreditTerm('${dataItem.creditTermId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "creditTermCode", title: "Code" },
+                { field: "creditTermName", title: "Name" },
+                { field: "noDays", title: "No. Days" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridCreditTerm").data("kendoGrid");
+            if (grid) {
+
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridCreditTerm", url, { searchString, companyId }, columns);
+            }
+        }
+
+        function openCreditTermModal(id, mode) {
+            const $modal = $('#addCreditTermModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetCreditTermById", "CreditTerm", new { area = "Master" })', { creditTermId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateCreditTermModalFields(response.data);
+                        setCreditTermMode(mode);
+                        $('#addCreditTermModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
+
+        function populateCreditTermModalFields(data) {
+            $('#creditTermId').val(data.creditTermId);
+            $('#creditTermCode').val(data.creditTermCode);
+            $('#creditTermName').val(data.creditTermName);
+            $('#creditTermNoDays').val(data.noDays);
+            $('#creditTermremarks').val(data.remarks);
+            $('#creditTermisActive').prop('checked', data.isActive);
+            $('#CreditTermcreateBy').text(data.createBy || "N/A");
+            $('#CreditTermcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#CreditTermeditBy').text(data.editBy || "N/A");
+            $('#CreditTermeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkCreditTermMandatoryFields();
+        }
+
+        function setCreditTermMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#creditTermCode, #creditTermName,  #creditTermNoDays,  #creditTermremarks').prop('readonly', !canEdit);
+            $('#creditTermisActive').prop('disabled', !canEdit);
+            $('#btnCreditTermSave').toggle(canEdit);
+            $('#btnCreditTermEdit').toggle(isView && permissions.canEdit);
+            $('#btnCreditTermClose').show();
+            $('#btnCreditTermClear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteCreditTerm(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteCreditTerm", "CreditTerm", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { creditTermId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadCreditTermGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveCreditTerm() {
+            let CreditTermData = {
+                CreditTermId: parseInt($('#creditTermId').val()) || 0,
+                CreditTermCode: $('#creditTermCode').val().trim(),
+                CreditTermName: $('#creditTermName').val().trim(),
+                NoDays: parseInt($('#creditTermNoDays').val()) || 0,
+                Remarks: $('#creditTermremarks').val(),
+                IsActive: $('#creditTermisActive').prop('checked')
+            };
+
+            console.log("CreditTerm Data : " + CreditTermData);
+
+            if (!CreditTermData.CreditTermCode || !CreditTermData.CreditTermName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveCreditTerm", "CreditTerm", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ creditTerm: CreditTermData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        debugger;
+                        loadCreditTermGrid();
+                        clearCreditTermForm();
+                        $('#addCreditTermModal').modal('hide');
+                    } else {
+                        alert(response.message || "Failed to save account group.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+                }
+            });
+        }
+</script>

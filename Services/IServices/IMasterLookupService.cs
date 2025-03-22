@@ -91,7 +91,7 @@ namespace AEMSWEB.IServices
 
         public Task<IEnumerable<BargeLookupModel>> GetBargeLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount);
 
-        public Task<IEnumerable<CreditTermsLookupModel>> GetCreditTermsLookupAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<CreditTermLookupModel>> GetCreditTermLookupAsync(Int16 CompanyId, Int16 UserId);
 
         public Task<IEnumerable<TaxLookupModel>> GetTaxLookupAsync(Int16 CompanyId, Int16 UserId);
 

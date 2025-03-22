@@ -15,12 +15,12 @@ using System.Transactions;
 
 namespace AEMSWEB.Areas.Master.Data.Services
 {
-    public sealed class CreditTermsService : ICreditTermsService
+    public sealed class CreditTermService : ICreditTermService
     {
         private readonly IRepository<M_CreditTerm> _repository;
         private ApplicationDbContext _context; private readonly ILogService _logService;
 
-        public CreditTermsService(IRepository<M_CreditTerm> repository, ApplicationDbContext context, ILogService logService)
+        public CreditTermService(IRepository<M_CreditTerm> repository, ApplicationDbContext context, ILogService logService)
         {
             _repository = repository;
             _context = context; _logService = logService;
@@ -33,9 +33,9 @@ namespace AEMSWEB.Areas.Master.Data.Services
             CreditTermViewModelCount countViewModel = new CreditTermViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_CreditTerm M_Crd WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.Remarks LIKE '%{searchString}%') AND M_Crd.CreditTermId<>0 AND M_Crd.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerms}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_CreditTerm M_Crd WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.Remarks LIKE '%{searchString}%') AND M_Crd.CreditTermId<>0 AND M_Crd.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm}))");
 
-                var result = await _repository.GetQueryAsync<CreditTermViewModel>($"SELECT M_Crd.CreditTermId,M_Crd.CreditTermCode,M_Crd.CompanyId,M_Crd.CreditTermName,M_Crd.NoDays,M_Crd.Remarks,M_Crd.IsActive,M_Crd.CreateById,M_Crd.CreateDate,M_Crd.EditById,M_Crd.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CreditTerm M_Crd LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.Remarks LIKE '%{searchString}%') AND M_Crd.CreditTermId<>0 AND M_Crd.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerms})) ORDER BY M_Crd.CreditTermName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<CreditTermViewModel>($"SELECT M_Crd.CreditTermId,M_Crd.CreditTermCode,M_Crd.CompanyId,M_Crd.CreditTermName,M_Crd.NoDays,M_Crd.Remarks,M_Crd.IsActive,M_Crd.CreateById,M_Crd.CreateDate,M_Crd.EditById,M_Crd.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CreditTerm M_Crd LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.Remarks LIKE '%{searchString}%') AND M_Crd.CreditTermId<>0 AND M_Crd.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm})) ORDER BY M_Crd.CreditTermName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -50,7 +50,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 {
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.CreditTerms,
+                    TransactionId = (short)E_Master.CreditTerm,
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_CreditTerm",
@@ -70,7 +70,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<CreditTermViewModel>($"SELECT CreditTermId,CreditTermCode,CreditTermName,CompanyId,NoDays,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_CreditTerm WHERE CreditTermId={CreditTermId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerms}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<CreditTermViewModel>($"SELECT CreditTermId,CreditTermCode,CreditTermName,CompanyId,NoDays,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_CreditTerm WHERE CreditTermId={CreditTermId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm}))");
 
                 return result;
             }
@@ -80,7 +80,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 {
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.CreditTerms,
+                    TransactionId = (short)E_Master.CreditTerm,
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_CreditTerm",
@@ -105,13 +105,13 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 {
                     var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_CreditTerm WHERE CreditTermId<>@CreditTermId AND CreditTermCode=@CreditTermCode AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
-                        new { m_CreditTerm.CreditTermId, m_CreditTerm.CreditTermCode, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.CreditTerms });
+                        new { m_CreditTerm.CreditTermId, m_CreditTerm.CreditTermCode, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.CreditTerm });
                     if ((codeExist?.IsExist ?? 0) > 0)
                         return new SqlResponse { Result = -1, Message = "CreditTerm Code already exists." };
 
                     var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_CreditTerm WHERE CreditTermId<>@CreditTermId AND CreditTermName=@CreditTermName AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
-                        new { m_CreditTerm.CreditTermId, m_CreditTerm.CreditTermName, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.CreditTerms });
+                        new { m_CreditTerm.CreditTermId, m_CreditTerm.CreditTermName, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.CreditTerm });
                     if ((nameExist?.IsExist ?? 0) > 0)
                         return new SqlResponse { Result = -2, Message = "CreditTerm Name already exists." };
 
@@ -143,7 +143,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         {
                             CompanyId = CompanyId,
                             ModuleId = (short)E_Modules.Master,
-                            TransactionId = (short)E_Master.CreditTerms,
+                            TransactionId = (short)E_Master.CreditTerm,
                             DocumentId = m_CreditTerm.CreditTermId,
                             DocumentNo = m_CreditTerm.CreditTermCode,
                             TblName = "M_CreditTerm",
@@ -179,7 +179,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     {
                         CompanyId = CompanyId,
                         ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.CreditTerms,
+                        TransactionId = (short)E_Master.CreditTerm,
                         DocumentId = m_CreditTerm.CreditTermId,
                         DocumentNo = m_CreditTerm.CreditTermCode,
                         TblName = "M_CreditTerm",
@@ -210,14 +210,13 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.CreditTermId == creditTermId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Master,
-                                TransactionId = (short)E_Master.CreditTerms,
+                                TransactionId = (short)E_Master.CreditTerm,
                                 DocumentId = creditTermId,
                                 DocumentNo = creditTermNo,
                                 TblName = "M_CreditTerm",
@@ -254,7 +253,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 {
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.CreditTerms,
+                    TransactionId = (short)E_Master.CreditTerm,
                     DocumentId = creditTermId,
                     DocumentNo = "",
                     TblName = "AdmUser",
@@ -282,7 +281,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 {
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.CreditTerms,
+                    TransactionId = (short)E_Master.CreditTerm,
                     DocumentId = creditTermId,
                     DocumentNo = "",
                     TblName = "M_CreditTerm",
@@ -344,7 +343,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<CreditTermDtViewModel>($"SELECT M_CrdDt.CreditTermId,M_Crd.CreditTermCode,M_Crd.CreditTermName,M_CrdDt.CompanyId,M_CrdDt.FromDay,M_CrdDt.ToDay,M_CrdDt.IsEndOfMonth,M_CrdDt.DueDay,M_CrdDt.NoMonth,M_CrdDt.CreateById,M_CrdDt.CreateDate,M_CrdDt.EditById,M_CrdDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CreditTermDt M_CrdDt INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_CrdDt.CreditTermId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE CreditTermId={CreditTermId} AND CompanyId={CompanyId} AND FromDay={FromDay}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<CreditTermDtViewModel>($"SELECT M_CrdDt.CreditTermId,M_Crd.CreditTermCode,M_Crd.CreditTermName,M_CrdDt.CompanyId,M_CrdDt.FromDay,M_CrdDt.ToDay,M_CrdDt.IsEndOfMonth,M_CrdDt.DueDay,M_CrdDt.NoMonth,M_CrdDt.CreateById,M_CrdDt.CreateDate,M_CrdDt.EditById,M_CrdDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CreditTermDt M_CrdDt INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_CrdDt.CreditTermId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE M_CrdDt.CreditTermId={CreditTermId} AND M_CrdDt.CompanyId={CompanyId} AND FromDay={FromDay}");
 
                 return result;
             }

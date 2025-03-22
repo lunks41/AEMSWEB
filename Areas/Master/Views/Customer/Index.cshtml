@@ -28,7 +28,6 @@
     .modal.modal-child {
         z-index: 1060;
     }
-
 </style>
 
 <div class="row">
@@ -54,10 +53,13 @@
 
                     <!-- Add Button -->
                     <div class="ms-auto">
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadCustomerGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
                         @if (canCreate)
                         {
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#customerModal" id="addCustomer">
-                                <i class="mdi mdi-plus me-1"></i> Add Customer
+                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addCustomerModal" id="addCustomerrecord">
+                                <span class="material-symbols-outlined">add</span>
                             </button>
                         }
                     </div>
@@ -74,36 +76,45 @@
     @await Html.PartialAsync("_Address")
     @await Html.PartialAsync("_Contact")
 }
-@section Scripts {
-    @await Html.PartialAsync("_Scripts")
 
+@section Scripts {
     <script>
 
     let companyId = 0;
     let permissions = {};
     $(document).ready(function () {
         companyId = getUrlParameter('companyId') || 0;
-        
+
         permissions = {
             canCreate: @Json.Serialize(canCreate),
             canEdit: @Json.Serialize(canEdit),
             canDelete: @Json.Serialize(canDelete),
             canRead: @Json.Serialize(canRead),
         };
-
-        //$('#accGroupCode, #accGroupName').on('input', checkMandatoryFields);
         Refresh();
-        loadGrid();
-        //setDefaultValues();
-        //clearForm();
 
-        //$('#btnEdit').on('click', function () { setMode("edit"); });
-        //$('#btnClose').on('click', function () { $('#addAccountGroupModal').modal('hide'); });
-        //$('#addrecord').on('click', function () {
-        //    clearForm();
-        //    setDefaultValues();
-        //    $('#addAccountGroupModal').modal('show');
-        //});
+        loadCustomerGrid();
+        initializeCustomerForm();
+        $('#btnCustomerEdit').on('click', function () { setCustomerMode("edit"); });
+        $('#btnCustomerClose').on('click', function () { $('#addCustomerModal').modal('hide'); });
+        $('#addCustomerrecord').on('click', function () {
+            initializeCustomerForm();
+            $('#addCustomerModal').modal('show');
+        });
+
+        $('#btnCustomerContactEdit').on('click', function () { setCustomerContactMode("edit"); });
+        $('#btnCustomerContactClose').on('click', function () { $('#addCustomerContactModal').modal('hide'); });
+        $('#addCustomerContactrecord').on('click', function () {
+            initializeCustomerContactForm();
+            $('#addCustomerContactModal').modal('show');
+        });
+
+        $('#btnCustomerAddressEdit').on('click', function () { setCustomerAddressMode("edit"); });
+        $('#btnCustomerAddressClose').on('click', function () { $('#addCustomerAddressModal').modal('hide'); });
+        $('#addCustomerAddressrecord').on('click', function () {
+            initializeCustomerAddressForm();
+            $('#addCustomerAddressModal').modal('show');
+        });
     });
 
     function Refresh() {
@@ -113,7 +124,7 @@
         const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
 
-        const creditTermsUrl = '@Url.Action("GetCreditTermsLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
 
         const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
@@ -127,20 +138,5 @@
     function SelectedDropdown(DrpdwnName) { }
 
     function OnSelectDropdown(dataItem, DrpdwnName) { }
-
-    // Customer modal close event
-    $('#customerModal').on('hidden.bs.modal', function () {
-        clearCustomerForm();
-    });
-
-    // Address modal close event
-    $('#addressModal').on('hidden.bs.modal', function () {
-        clearAddressForm();
-    });
-
-    // Contact modal close event
-    $('#contactModal').on('hidden.bs.modal', function () {
-        clearContactForm();
-    });
     </script>
 }

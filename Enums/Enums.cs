@@ -34,7 +34,7 @@ namespace AEMSWEB.Enums
         COACategory2 = 6,
         COACategory3 = 7,
         ChartOfAccount = 8,
-        CreditTerms = 9,
+        CreditTerm = 9,
         Uom = 10,
         Employee = 11,
         Bank = 12,

@@ -1037,11 +1037,11 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CreditTermsLookupModel>> GetCreditTermsLookupAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<CreditTermLookupModel>> GetCreditTermLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<CreditTermsLookupModel>($"SELECT CreditTermId,CreditTermCode,CreditTermName FROM dbo.M_CreditTerm WHERE CreditTermId<>0 And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerms})) order by CreditTermName");
+                var result = await _repository.GetQueryAsync<CreditTermLookupModel>($"SELECT CreditTermId,CreditTermCode,CreditTermName FROM dbo.M_CreditTerm WHERE CreditTermId<>0 And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm})) order by CreditTermName");
 
                 return result;
             }
@@ -1051,7 +1051,7 @@ namespace AEMSWEB.Services.Masters
                 {
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.CreditTerms,
+                    TransactionId = (short)E_Master.CreditTerm,
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_CreditTerm",
