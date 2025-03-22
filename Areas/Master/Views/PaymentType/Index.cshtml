@@ -237,7 +237,7 @@
 
             let grid = $("#gridPaymentType").data("kendoGrid");
             if (grid) {
-                // Update the data source with the new bankId
+                
                 grid.dataSource.read({ searchString: searchString, companyId: companyId });
             } else {
                 // Initialize grid if it doesn’t exist

@@ -164,7 +164,7 @@
                 canRead: @Json.Serialize(canRead),
             };
 
-            $('#accTypeCode, #accTypeName').on('input', checkAccountTypeMandatoryFields);
+            $('#accTypeCode, #accTypeName,#seqNo,#accGroupName,#remarks').on('input', checkAccountTypeMandatoryFields);
             loadAccountTypeGrid();
             initializeAccountTypeForm();
             clearAccountTypeForm();
@@ -192,7 +192,7 @@
             $('#editDate').text('');
 
             // Reset readonly and disabled states
-            $('#accTypeCode, #accTypeName, #seqNo, #remarks').prop('readonly', false);
+            $('#accTypeCode, #accTypeName, #seqNo,#accGroupName, #remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
 
             $('#isActive').prop('checked', true);
@@ -252,7 +252,7 @@
 
             let grid = $("#gridAccountType").data("kendoGrid");
             if (grid) {
-                // Update the data source with the new bankId
+                
                 grid.dataSource.read({ searchString: searchString, companyId: companyId });
             } else {
                 // Initialize grid if it doesn’t exist

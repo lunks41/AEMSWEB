@@ -121,9 +121,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.charges.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.charges.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _ChargesService.SaveChargesAsync(companyIdShort, parsedUserId.Value, ChargesToSave);

@@ -10,7 +10,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<GstViewModel> GetGstByIdAsync(short CompanyId, short UserId, short GstId);
 
-        public Task<SqlResponse> SaveGstAsync(short CompanyId, short UserId, M_Gst m_GstDt);
+        public Task<SqlResponse> SaveGstAsync(short CompanyId, short UserId, M_Gst Gst);
 
         public Task<SqlResponse> DeleteGstAsync(short CompanyId, short UserId, short GstId);
 
@@ -20,7 +20,7 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<SqlResponse> SaveGstDtAsync(short CompanyId, short UserId, M_GstDt m_GstDt);
 
-        public Task<SqlResponse> DeleteGstDtAsync(short CompanyId, short UserId, short GstId, DateTime validate);
+        public Task<SqlResponse> DeleteGstDtAsync(short CompanyId, short UserId, short GstId, DateTime ValidFrom);
 
         public Task<GstCategoryViewModelCount> GetGstCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 

@@ -126,9 +126,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.barge.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.barge.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _bargeService.SaveBargeAsync(companyIdShort, parsedUserId.Value, bargeToSave);

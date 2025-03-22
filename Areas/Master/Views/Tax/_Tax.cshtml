@@ -2,7 +2,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Taxes</h3>
+                <h3>Tax</h3>
 
                 <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -11,113 +11,295 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadTaxGrid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
 
                     <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTaxModal" id="addrecord">
-                            <i class="mdi mdi-plus me-1"></i> Add Tax
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadTaxGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTaxModal" id="addTaxrecord">
+                            <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
                 </div>
-                <div id="grid"></div>
+                <div id="gridTax"></div>
             </div>
         </div>
     </div>
 </div>
 
-@section externalhtml {
-    <!-- Add/Edit Modal -->
-    <div class="modal fade" id="addTaxModal" tabindex="-1" aria-labelledby="addTaxModalLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addTaxModalLabel">Tax Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form id="taxForm">
-                        <input type="hidden" id="taxId" />
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="taxCode" class="form-label">Tax Code <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="taxCode" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="taxName" class="form-label">Tax Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="taxName" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="cmbTaxCategory" class="form-label">Tax Category <span class="text-danger">*</span></label>
-                                    <select id="cmbTaxCategory" style="width: 100%"></select>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="remarks" class="form-label">Remarks</label>
-                                    <textarea class="form-control" id="remarks" rows="2"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="isActive">
-                                    <label class="form-check-label" for="isActive">Is Active</label>
-                                </div>
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addTaxModal" tabindex="-1" aria-labelledby="addTaxModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTaxModalLabel">Add/Edit Tax</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearTaxForm();"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="taxForm">
+                    <input type="hidden" id="taxId" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="taxCode" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="taxCode" required>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="taxName" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="taxName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="cmd_taxCategory" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="cmd_taxCategory" style="width: 100%"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="taxremarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="taxremarks" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="taxisActive">
+                                <label class="form-check-label" for="taxisActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- Audit Fields -->
-                        <div class="accordion mt-3" id="auditAccordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
-                                        Audit Details
-                                    </button>
-                                </h2>
-                                <div id="auditCollapse" class="accordion-collapse collapse">
-                                    <div class="accordion-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Created By</label>
-                                                <p id="createBy" class="form-control-plaintext"></p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Created Date</label>
-                                                <p id="createDate" class="form-control-plaintext"></p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Modified By</label>
-                                                <p id="editBy" class="form-control-plaintext"></p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Modified Date</label>
-                                                <p id="editDate" class="form-control-plaintext"></p>
-                                            </div>
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="taxcreateBy" class="form-label">Created By</label>
+                                            <p id="taxcreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="taxcreateDate" class="form-label">Created Date</label>
+                                            <p id="taxcreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="taxeditBy" class="form-label">Modified By</label>
+                                            <p id="taxeditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="taxeditDate" class="form-label">Modified Date</label>
+                                            <p id="taxeditDate" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                    <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                    <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
-                </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnTaxClose" onclick="clearTaxForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnTaxEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnTaxClear" onclick="clearTaxForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnTaxSave" onclick="saveTax()">Save</button>
             </div>
         </div>
     </div>
-}
+</div>
+
+<script>
+        function initializeTaxForm() {
+            clearTaxForm();
+            $('#taxisActive').prop('checked', true);
+        }
+
+        function clearTaxForm() {
+            $('#taxForm')[0].reset();
+
+            $('#taxId').val(0);
+            $('#cmd_taxCategory').data("kendoComboBox").value('');
+            $('#taxcreateBy').text('');
+            $('#taxcreateDate').text('');
+            $('#taxeditBy').text('');
+            $('#taxeditDate').text('');
+
+            // Reset readonly and disabled states
+            $('#taxCode, #taxName, #seqNo, #remarks').prop('readonly', false);
+            $('#taxisActive').prop('disabled', false);
+
+            $('#taxisActive').prop('checked', true);
+            $('#btnTaxSave').prop('disabled', false);
+            $('#btnTaxSave').show();
+            $('#btnTaxClear').show();
+            $('#btnTaxEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadTaxGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadTaxGrid();
+        }
+
+        function checkTaxMandatoryFields() {
+            let isValid = $('#taxCode').val().trim() && $('#taxName').val().trim();
+            $('#btnTaxSave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#taxCode, #taxName').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadTaxGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("TaxList", "Tax", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTaxModal('${dataItem.taxId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTaxModal('${dataItem.taxId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTax('${dataItem.taxId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "taxCategoryName", title: "Category" },
+                { field: "taxCode", title: "Code" },
+                { field: "taxName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridTax").data("kendoGrid");
+            if (grid) {
+
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridTax", url, { searchString, companyId }, columns);
+            }
+        }
+
+        function openTaxModal(id, mode) {
+            const $modal = $('#addTaxModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetTaxById", "Tax", new { area = "Master" })', { taxId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateTaxModalFields(response.data);
+                        setTaxMode(mode);
+                        $('#addTaxModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
+
+        function populateTaxModalFields(data) {
+            $('#taxId').val(data.taxId);
+            $('#taxCode').val(data.taxCode);
+            $('#taxName').val(data.taxName);
+            $('#taxremarks').val(data.remarks);
+            $('#taxisActive').prop('checked', data.isActive);
+            $('#cmd_taxCategory').data("kendoComboBox").value(data.taxCategoryId > 0 ? data.taxCategoryId : '');
+            $('#taxcreateBy').text(data.createBy || "N/A");
+            $('#taxcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#taxeditBy').text(data.editBy || "N/A");
+            $('#taxeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkTaxMandatoryFields();
+        }
+
+        function setTaxMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#taxCode, #taxName,  #taxremarks').prop('readonly', !canEdit);
+            $('#taxisActive').prop('disabled', !canEdit);
+            $('#btnTaxSave').toggle(canEdit);
+            $('#btnTaxEdit').toggle(isView && permissions.canEdit);
+            $('#btnTaxClose').show();
+            $('#btnTaxClear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteTax(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteTax", "Tax", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { taxId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadTaxGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveTax() {
+            let taxData = {
+                TaxId: parseInt($('#taxId').val()) || 0,
+                TaxCode: $('#taxCode').val().trim(),
+                TaxName: $('#taxName').val().trim(),
+                TaxCategoryId: parseInt($('#cmd_taxCategory').data("kendoComboBox").value()) || 0,
+                Remarks: $('#taxremarks').val(),
+                IsActive: $('#taxisActive').prop('checked')
+            };
+
+            console.log("tax Data : " + taxData);
+
+            if (!taxData.TaxCode || !taxData.TaxName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveTax", "Tax", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ tax: taxData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        debugger;
+                        loadTaxGrid();
+                        clearTaxForm();
+                        $('#addTaxModal').modal('hide');
+                    } else {
+                        alert(response.message || "Failed to save account group.");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+                }
+            });
+        }
+</script>

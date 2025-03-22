@@ -56,7 +56,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region AccountSetup CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListAccountSetup(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> AccountSetupList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -121,9 +121,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.accountSetup.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.accountSetup.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _accountSetupService.SaveAccountSetupAsync(companyIdShort, parsedUserId.Value, setupToSave);
@@ -168,7 +168,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region AccountSetupDt CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListAccountSetupDt(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> AccountSetupDtList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -232,9 +232,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     GLId = model.accountSetupDt.GLId,
                     ApplyAllCurr = model.accountSetupDt.ApplyAllCurr,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _accountSetupService.SaveAccountSetupDtAsync(companyIdShort, parsedUserId.Value, detailToSave);
@@ -279,7 +279,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         #region AccountSetupCategory CRUD
 
         [HttpGet]
-        public async Task<JsonResult> ListAccountSetupCategory(int pageNumber, int pageSize, string searchString, string companyId)
+        public async Task<JsonResult> AccountSetupCategoryList(int pageNumber, int pageSize, string searchString, string companyId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -342,9 +342,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.accountSetupCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.accountSetupCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _accountSetupService.SaveAccountSetupCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);

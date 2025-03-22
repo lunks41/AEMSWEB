@@ -120,9 +120,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.department.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.department.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _departmentService.SaveDepartmentAsync(companyIdShort, parsedUserId.Value, departmentToSave);

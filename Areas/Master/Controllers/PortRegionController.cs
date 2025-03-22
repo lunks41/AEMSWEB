@@ -120,9 +120,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.portRegion.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.portRegion.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _portRegionService.SavePortRegionAsync(companyIdShort, parsedUserId.Value, portRegionToSave);

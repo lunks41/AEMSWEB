@@ -117,9 +117,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.Uom.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.Uom.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _uomService.SaveUomAsync(companyIdShort, parsedUserId.Value, uomToSave);
@@ -226,9 +226,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     PackUomId = model.uomDt.PackUomId,
                     UomFactor = model.uomDt.UomFactor,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _uomService.SaveUomDtAsync(companyIdShort, parsedUserId.Value, uomDtToSave);

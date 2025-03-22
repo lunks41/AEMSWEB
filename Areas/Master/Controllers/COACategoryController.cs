@@ -118,9 +118,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.coaCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.coaCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _coaCategoryService.SaveCOACategory1Async(companyIdShort, parsedUserId.Value, coaCategoryToSave);
@@ -230,9 +230,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.coaCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.coaCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _coaCategoryService.SaveCOACategory2Async(companyIdShort, parsedUserId.Value, coaCategoryToSave);
@@ -342,9 +342,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.coaCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.coaCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _coaCategoryService.SaveCOACategory3Async(companyIdShort, parsedUserId.Value, coaCategoryToSave);

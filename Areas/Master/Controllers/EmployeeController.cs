@@ -131,9 +131,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.employee.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.employee.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _employeeService.SaveEmployeeAsync(companyIdShort, parsedUserId.Value, employeeToSave);

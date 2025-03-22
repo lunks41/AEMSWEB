@@ -119,9 +119,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.voyage.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.voyage.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _voyageService.SaveVoyageAsync(companyIdShort, parsedUserId.Value, voyageToSave);

@@ -121,9 +121,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.orderType.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.orderType.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _orderTypeService.SaveOrderTypeAsync(companyIdShort, parsedUserId.Value, orderTypeToSave);
@@ -232,9 +232,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.orderTypeCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.orderTypeCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _orderTypeService.SaveOrderTypeCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);

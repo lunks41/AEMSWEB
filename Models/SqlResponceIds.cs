@@ -8,4 +8,11 @@
         public Int64 DocumentId { get; set; }
         public string? DocumentNo { get; set; }
     }
+
+    // Supporting class
+    public class ExistenceResult
+    {
+        public int CodeExists { get; set; }
+        public int NameExists { get; set; }
+    }
 }

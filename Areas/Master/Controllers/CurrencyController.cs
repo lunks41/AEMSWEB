@@ -121,9 +121,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.currency.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.currency.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _currencyService.SaveCurrencyAsync(companyIdShort, parsedUserId.Value, currencyToSave);
@@ -230,9 +230,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ExhRate = model.currencyDt.ExhRate,
                     ValidFrom = DateTime.Parse(model.currencyDt.ValidFrom), // Assuming ValidFrom is string in ViewModel
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _currencyService.SaveCurrencyDtAsync(companyIdShort, parsedUserId.Value, detailToSave);
@@ -343,9 +343,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ExhRate = model.currencyLocalDt.ExhRate,
                     ValidFrom = DateTime.Parse(model.currencyLocalDt.ValidFrom), // String to DateTime conversion
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _currencyService.SaveCurrencyLocalDtAsync(companyIdShort, parsedUserId.Value, localDetailToSave);

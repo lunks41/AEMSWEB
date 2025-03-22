@@ -121,9 +121,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.country.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.country.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = model.country.EditById ?? 0,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _countryService.SaveCountryAsync(companyIdShort, parsedUserId.Value, countryToSave);

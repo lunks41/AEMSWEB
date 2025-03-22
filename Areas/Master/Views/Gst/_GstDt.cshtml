@@ -55,7 +55,10 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="gstDtValidFrom" class="form-label">Valid From <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="gstDtValidFrom" required>
+                                <div class="k-datepicker k-input">
+                                    <input type="text" id="gstDtValidFrom" required>
+                                </div>
+                                <div class="invalid-feedback">Please select Valid From</div>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -150,69 +153,76 @@
             $('#gstDtValidFrom, #gstDtPercentage').toggleClass('is-invalid', !isValid);
         }
 
-        function loadGstDtGrid() {
-            let searchString = $('#txtsearch').val();
-            let url = '@Url.Action("GstDtList", "Gst", new { area = "Master" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "100px",
-                    template: function (dataItem) {
-                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openGstDtModal('${dataItem.gstId}','${dataItem.validFrom}', 'view')">
+    function loadGstDtGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("GstDtList", "Gst", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "100px",
+                template: function (dataItem) {
+                    let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openGstDtModal('${dataItem.gstId}','${dataItem.validFrom}', 'view')">
                         <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openGstDtModal('${dataItem.gstId}','${dataItem.validFrom}', 'edit')">
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openGstDtModal('${dataItem.gstId}','${dataItem.validFrom}', 'edit')">
                         <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
-
-                        if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteGstDt('${dataItem.gstId}','${dataItem.validFrom}')">
-                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                        }
-                        return buttons;
                     }
-                },
-                { field: "gstName", title: "Name" },
-                { field: "validFrom", title: "valid From" },
-                { field: "gstPercentage", title: "Percentage" }
-            ];
 
-            let grid = $("#gridGstDt").data("kendoGrid");
-            if (grid) {
-                // Update the data source with the new bankId
-                grid.dataSource.read({ searchString: searchString, companyId: companyId });
-            } else {
-                // Initialize grid if it doesn’t exist
-                initializeKendoGrid("gridGstDt", url, { searchString, companyId }, columns);
-            }
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteGstDt('${dataItem.gstId}','${dataItem.validFrom}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "gstName", title: "Name" },
+            {
+                field: "validFrom",
+                title: "Valid From",
+                template: "#= kendo.toString(kendo.parseDate(validFrom, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+            },
+            { field: "gstPercentage", title: "Percentage" }
+        ];
+
+        let grid = $("#gridGstDt").data("kendoGrid");
+        if (grid) {
+
+            grid.dataSource.read({ searchString: searchString, companyId: companyId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("gridGstDt", url, { searchString, companyId }, columns);
         }
+    }
 
     function openGstDtModal(id, validFrom, mode) {
-            const $modal = $('#addGstDtModal');
-            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+        const $modal = $('#addGstDtModal');
+        $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
         $.get('@Url.Action("GetGstDtById", "Gst", new { area = "Master" })', { gstId: id, validFrom, companyId })
-                .done(function (response) {
-                    if (response.success) {
-                        populateGstDtModalFields(response.data);
-                        setGstDtMode(mode);
-                        $('#addGstDtModal').modal('show');
-                    }
-                })
-                .always(() => $modal.find('.modal-overlay').remove());
-        }
+            .done(function (response) {
+                if (response.success) {
+                    populateGstDtModalFields(response.data);
+                    setGstDtMode(mode);
+                    $('#addGstDtModal').modal('show');
+                }
+            })
+            .always(() => $modal.find('.modal-overlay').remove());
+    }
 
-        function populateGstDtModalFields(data) {
-            $('#gstDtValidFrom').val(data.vlidFrom);
-            $('#gstDtPercentage').val(data.gstPercentage);
-            $('#cmd_gst').data("kendoComboBox").value(data.gstId > 0 ? data.gstId : '');
-            $('#gstDtcreateBy').text(data.createBy || "N/A");
-            $('#gstDtcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-            $('#gstDteditBy').text(data.editBy || "N/A");
-            $('#gstDteditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+    function populateGstDtModalFields(data) {
+        const datePicker = $("#gstDtValidFrom").data("kendoDatePicker");
+        const validFrom = data.validFrom ? kendo.parseDate(data.validFrom, "yyyy-MM-dd") : null;
+        datePicker.value(validFrom);
+        $('#gstDtValidFrom').val(validFrom ? kendo.toString(validFrom, 'yyyy-MM-dd') : '');
+        $('#gstDtPercentage').val(data.gstPercentage);
+        $('#cmd_gst').data("kendoComboBox").value(data.gstId > 0 ? data.gstId : '');
+        $('#gstDtcreateBy').text(data.createBy || "N/A");
+        $('#gstDtcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#gstDteditBy').text(data.editBy || "N/A");
+        $('#gstDteditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-            checkGstDtMandatoryFields();
-        }
+        checkGstDtMandatoryFields();
+    }
 
         function setGstDtMode(mode) {
             const isView = mode === 'view';
@@ -242,10 +252,11 @@
             });
         }
 
-        function saveGstDt() {
+    function saveGstDt() {
+        const datePicker = $("#gstDtValidFrom").data("kendoDatePicker");
             let gstDtData = {
                 GstId: parseInt($('#cmd_gst').data("kendoComboBox").value()) || 0,
-                ValidFrom: $('#gstDtValidFrom').val().trim(),
+                ValidFrom: kendo.toString(datePicker.value(), "yyyy-MM-dd"),
                 GstPercentage: $('#gstDtPercentage').val().trim(),
             };
 

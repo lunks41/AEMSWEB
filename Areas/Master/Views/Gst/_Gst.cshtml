@@ -190,6 +190,7 @@
                         return buttons;
                     }
                 },
+                { field: "gstCategoryName", title: "Category" },
                 { field: "gstCode", title: "Code" },
                 { field: "gstName", title: "Name" },
                 { field: "remarks", title: "Remarks" },
@@ -198,7 +199,7 @@
 
             let grid = $("#gridGst").data("kendoGrid");
             if (grid) {
-                // Update the data source with the new bankId
+                
                 grid.dataSource.read({ searchString: searchString, companyId: companyId });
             } else {
                 // Initialize grid if it doesn’t exist

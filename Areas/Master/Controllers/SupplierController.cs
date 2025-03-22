@@ -132,9 +132,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.customer.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.customer.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _customerService.SaveSupplierAsync(companyIdShort, parsedUserId.Value, customerToSave);
@@ -245,9 +245,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsSales = model.customerContact.IsSales,
                     IsActive = model.customerContact.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _customerService.SaveSupplierContactAsync(companyIdShort, parsedUserId.Value, contactToSave);
@@ -364,9 +364,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsSalesAdd = model.customerAddress.IsSalesAdd,
                     IsActive = model.customerAddress.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _customerService.SaveSupplierAddressAsync(companyIdShort, parsedUserId.Value, addressToSave);

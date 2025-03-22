@@ -127,9 +127,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.chartOfAccount.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.chartOfAccount.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _chartOfAccountService.SaveChartOfAccountAsync(companyIdShort, parsedUserId.Value, chartToSave);

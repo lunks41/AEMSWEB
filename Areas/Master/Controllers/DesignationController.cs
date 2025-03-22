@@ -120,9 +120,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.designation.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.designation.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _designationService.SaveDesignationAsync(companyIdShort, parsedUserId.Value, designationToSave);

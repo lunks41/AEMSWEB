@@ -16,7 +16,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         private readonly ILogger<TaxController> _logger;
         private readonly ITaxService _taxService;
 
-        public TaxController(ILogger<TaxController> logger, IBaseService baseService, ITaxService taxService)
+        public TaxController(ILogger<TaxController> logger,
+            IBaseService baseService,
+            ITaxService taxService)
             : base(logger, baseService)
         {
             _logger = logger;
@@ -53,8 +55,6 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region Tax CRUD
 
-
-
         [HttpGet]
         public async Task<JsonResult> TaxList(int pageNumber, int pageSize, string searchString, string companyId)
         {
@@ -72,7 +72,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching tax list");
+                _logger.LogError(ex, "Error fetching GST list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -81,7 +81,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         public async Task<JsonResult> GetTaxById(short taxId, string companyId)
         {
             if (taxId <= 0)
-                return Json(new { success = false, message = "Invalid Tax ID" });
+                return Json(new { success = false, message = "Invalid GST ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -90,12 +90,12 @@ namespace AEMSWEB.Areas.Master.Controllers
             {
                 var data = await _taxService.GetTaxByIdAsync(companyIdShort, parsedUserId.Value, taxId);
                 return data == null
-                    ? Json(new { success = false, message = "Tax not found" })
+                    ? Json(new { success = false, message = "GST not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching tax by ID");
+                _logger.LogError(ex, "Error fetching GST by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -121,17 +121,17 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.tax.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.tax.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _taxService.SaveTaxAsync(companyIdShort, parsedUserId.Value, taxToSave);
-                return Json(new { success = true, message = "Tax saved successfully", data = result });
+                return Json(new { success = true, message = "GST saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving tax");
+                _logger.LogError(ex, "Error saving GST");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -140,7 +140,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         public async Task<IActionResult> DeleteTax(short taxId, string companyId)
         {
             if (taxId <= 0)
-                return Json(new { success = false, message = "Invalid Tax ID" });
+                return Json(new { success = false, message = "Invalid GST ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -154,11 +154,11 @@ namespace AEMSWEB.Areas.Master.Controllers
             try
             {
                 await _taxService.DeleteTaxAsync(companyIdShort, parsedUserId.Value, taxId);
-                return Json(new { success = true, message = "Tax deleted successfully" });
+                return Json(new { success = true, message = "GST deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting tax");
+                _logger.LogError(ex, "Error deleting GST");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -184,30 +184,30 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching tax details list");
+                _logger.LogError(ex, "Error fetching GST details list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTaxDtById(short taxDtId, DateTime validFrom, string companyId)
+        public async Task<JsonResult> GetTaxDtById(short taxId, DateTime validFrom, string companyId)
         {
-            if (taxDtId <= 0)
-                return Json(new { success = false, message = "Invalid Tax Detail ID" });
+            if (taxId <= 0)
+                return Json(new { success = false, message = "Invalid GST Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _taxService.GetTaxDtByIdAsync(companyIdShort, parsedUserId.Value, taxDtId, validFrom);
+                var data = await _taxService.GetTaxDtByIdAsync(companyIdShort, parsedUserId.Value, taxId, validFrom);
                 return data == null
-                    ? Json(new { success = false, message = "Tax Detail not found" })
+                    ? Json(new { success = false, message = "GST Detail not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching tax detail by ID");
+                _logger.LogError(ex, "Error fetching GST detail by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -230,26 +230,26 @@ namespace AEMSWEB.Areas.Master.Controllers
                     TaxPercentage = model.taxDt.TaxPercentage,
                     ValidFrom = model.taxDt.ValidFrom,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _taxService.SaveTaxDtAsync(companyIdShort, parsedUserId.Value, taxDtToSave);
-                return Json(new { success = true, message = "Tax Detail saved successfully", data = result });
+                return Json(new { success = true, message = "GST Detail saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving tax detail");
+                _logger.LogError(ex, "Error saving GST detail");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteTaxDt(short taxDtId, DateTime validFrom, string companyId)
+        public async Task<IActionResult> DeleteTaxDt(short taxId, DateTime validFrom, string companyId)
         {
-            if (taxDtId <= 0)
-                return Json(new { success = false, message = "Invalid Tax Detail ID" });
+            if (taxId <= 0)
+                return Json(new { success = false, message = "Invalid GST Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -262,12 +262,12 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                await _taxService.DeleteTaxDtAsync(companyIdShort, parsedUserId.Value, taxDtId, validFrom);
-                return Json(new { success = true, message = "Tax Detail deleted successfully" });
+                await _taxService.DeleteTaxDtAsync(companyIdShort, parsedUserId.Value, taxId, validFrom);
+                return Json(new { success = true, message = "GST Detail deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting tax detail");
+                _logger.LogError(ex, "Error deleting GST detail");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -293,7 +293,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching tax category list");
+                _logger.LogError(ex, "Error fetching GST category list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -302,7 +302,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         public async Task<JsonResult> GetTaxCategoryById(short taxCategoryId, string companyId)
         {
             if (taxCategoryId <= 0)
-                return Json(new { success = false, message = "Invalid Tax Category ID" });
+                return Json(new { success = false, message = "Invalid GST Category ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -311,12 +311,12 @@ namespace AEMSWEB.Areas.Master.Controllers
             {
                 var data = await _taxService.GetTaxCategoryByIdAsync(companyIdShort, parsedUserId.Value, taxCategoryId);
                 return data == null
-                    ? Json(new { success = false, message = "Tax Category not found" })
+                    ? Json(new { success = false, message = "GST Category not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching tax category by ID");
+                _logger.LogError(ex, "Error fetching GST category by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -341,17 +341,17 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.taxCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.taxCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _taxService.SaveTaxCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);
-                return Json(new { success = true, message = "Tax Category saved successfully", data = result });
+                return Json(new { success = true, message = "GST Category saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving tax category");
+                _logger.LogError(ex, "Error saving GST category");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -360,7 +360,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         public async Task<IActionResult> DeleteTaxCategory(short taxCategoryId, string companyId)
         {
             if (taxCategoryId <= 0)
-                return Json(new { success = false, message = "Invalid Tax Category ID" });
+                return Json(new { success = false, message = "Invalid GST Category ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -374,11 +374,11 @@ namespace AEMSWEB.Areas.Master.Controllers
             try
             {
                 await _taxService.DeleteTaxCategoryAsync(companyIdShort, parsedUserId.Value, taxCategoryId);
-                return Json(new { success = true, message = "Tax Category deleted successfully" });
+                return Json(new { success = true, message = "GST Category deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting tax category");
+                _logger.LogError(ex, "Error deleting GST category");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }

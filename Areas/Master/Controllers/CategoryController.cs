@@ -120,9 +120,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.category.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.category.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _categoryService.SaveCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);
@@ -231,9 +231,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.subCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.subCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _categoryService.SaveSubCategoryAsync(companyIdShort, parsedUserId.Value, subCategoryToSave);

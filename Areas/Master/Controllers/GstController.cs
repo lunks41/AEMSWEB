@@ -55,8 +55,6 @@ namespace AEMSWEB.Areas.Master.Controllers
 
         #region Gst CRUD
 
-
-
         [HttpGet]
         public async Task<JsonResult> GstList(int pageNumber, int pageSize, string searchString, string companyId)
         {
@@ -123,9 +121,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.gst.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.gst.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _gstService.SaveGstAsync(companyIdShort, parsedUserId.Value, gstToSave);
@@ -192,9 +190,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetGstDtById(short gstDtId, DateTime validFrom, string companyId)
+        public async Task<JsonResult> GetGstDtById(short gstId, DateTime validFrom, string companyId)
         {
-            if (gstDtId <= 0)
+            if (gstId <= 0)
                 return Json(new { success = false, message = "Invalid GST Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -202,7 +200,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _gstService.GetGstDtByIdAsync(companyIdShort, parsedUserId.Value, gstDtId, validFrom);
+                var data = await _gstService.GetGstDtByIdAsync(companyIdShort, parsedUserId.Value, gstId, validFrom);
                 return data == null
                     ? Json(new { success = false, message = "GST Detail not found" })
                     : Json(new { success = true, data });
@@ -232,9 +230,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     GstPercentage = model.gstDt.GstPercentage,
                     ValidFrom = model.gstDt.ValidFrom,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _gstService.SaveGstDtAsync(companyIdShort, parsedUserId.Value, gstDtToSave);
@@ -248,9 +246,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteGstDt(short gstDtId, DateTime validFrom, string companyId)
+        public async Task<IActionResult> DeleteGstDt(short gstId, DateTime validFrom, string companyId)
         {
-            if (gstDtId <= 0)
+            if (gstId <= 0)
                 return Json(new { success = false, message = "Invalid GST Detail ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
@@ -264,7 +262,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                await _gstService.DeleteGstDtAsync(companyIdShort, parsedUserId.Value, gstDtId, validFrom);
+                await _gstService.DeleteGstDtAsync(companyIdShort, parsedUserId.Value, gstId, validFrom);
                 return Json(new { success = true, message = "GST Detail deleted successfully" });
             }
             catch (Exception ex)
@@ -277,8 +275,6 @@ namespace AEMSWEB.Areas.Master.Controllers
         #endregion GstDt CRUD
 
         #region GstCategory CRUD
-
-
 
         [HttpGet]
         public async Task<JsonResult> GstCategoryList(int pageNumber, int pageSize, string searchString, string companyId)
@@ -345,9 +341,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.gstCategory.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.gstCategory.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _gstService.SaveGstCategoryAsync(companyIdShort, parsedUserId.Value, categoryToSave);

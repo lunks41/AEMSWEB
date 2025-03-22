@@ -34,7 +34,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             {
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.GstCategoryName LIKE '%{searchString}%' OR M_gtc.GstCategoryCode LIKE '%{searchString}%') AND M_Gt.GstId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory}))");
 
-                var result = await _repository.GetQueryAsync<GstViewModel>($"SELECT M_Gt.GstId,M_Gt.GstCode,M_Gt.GstName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_gtc.GstCategoryCode,M_gtc.GstCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.GstCategoryName LIKE '%{searchString}%' OR M_gtc.GstCategoryCode LIKE '%{searchString}%') AND M_Gt.GstId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Gst})) ORDER BY M_Gt.GstName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<GstViewModel>($"SELECT M_Gt.GstId,M_Gt.GstCode,M_Gt.GstName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_Gt.GstCategoryId,M_gtc.GstCategoryCode,M_gtc.GstCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.GstCategoryName LIKE '%{searchString}%' OR M_gtc.GstCategoryCode LIKE '%{searchString}%') AND M_Gt.GstId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Gst})) ORDER BY M_Gt.GstName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -69,7 +69,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<GstViewModel>($"SELECT M_Gt.GstId,M_Gt.GstCode,M_Gt.GstName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_gtc.GstCategoryCode,M_gtc.GstCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById  WHERE GstId={GstId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Gst}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<GstViewModel>($"SELECT M_Gt.GstId,M_Gt.GstCode,M_Gt.GstName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_Gt.GstCategoryId,M_gtc.GstCategoryCode,M_gtc.GstCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById  WHERE M_Gt.GstId={GstId} AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Gst}))");
 
                 return result;
             }
@@ -95,102 +95,131 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveGstAsync(short CompanyId, short UserId, M_Gst Gst)
+        public async Task<SqlResponse> SaveGstAsync(short companyId, short userId, M_Gst gst)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            bool isEdit = gst.GstId != 0;
+            try
             {
-                bool IsEdit = Gst.GstId != 0;
-                try
+                using (var tScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        $"SELECT 1 AS IsExist FROM dbo.M_Gst WHERE GstId<>@GstId AND GstCode=@GstCode AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
-                        new { Gst.GstId, Gst.GstCode, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.Gst });
-                    if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Gst Code already exists." };
+                    // Combined existence check for both code and name
+                    var existenceCheck = await _repository.GetQuerySingleOrDefaultAsync<ExistenceResult>(
+                        @"SELECT
+                    CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM dbo.M_Gst
+                        WHERE GstId <> @GstId AND GstCode = @GstCode
+                        AND CompanyId IN (SELECT CompanyId FROM dbo.Fn_Adm_GetShareCompany(@CompanyId, @ModuleId, @MasterId))
+                    ) THEN 1 ELSE 0 END AS CodeExists,
+                    CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM dbo.M_Gst
+                        WHERE GstId <> @GstId AND GstName = @GstName
+                        AND CompanyId IN (SELECT CompanyId FROM dbo.Fn_Adm_GetShareCompany(@CompanyId, @ModuleId, @MasterId))
+                    ) THEN 1 ELSE 0 END AS NameExists",
+                        new
+                        {
+                            gst.GstId,
+                            gst.GstCode,
+                            gst.GstName,
+                            companyId,
+                            ModuleId = (short)E_Modules.Master,
+                            MasterId = (short)E_Master.Gst
+                        });
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        $"SELECT 1 AS IsExist FROM dbo.M_Gst WHERE GstId<>@GstId AND GstName=@GstName AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
-                        new { Gst.GstId, Gst.GstName, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.Gst });
-                    if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -2, Message = "Gst Name already exists." };
+                    if (existenceCheck?.CodeExists == 1)
+                        return new SqlResponse { Result = -1, Message = "GST Code already exists." };
 
-                    if (!IsEdit)
+                    if (existenceCheck?.NameExists == 1)
+                        return new SqlResponse { Result = -2, Message = "GST Name already exists." };
+
+                    // Generate GstId for new records
+                    if (!isEdit)
                     {
                         var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                            "SELECT ISNULL((SELECT TOP 1 (GstId + 1) FROM dbo.M_Gst WHERE (GstId + 1) NOT IN (SELECT GstId FROM dbo.M_Gst)),1) AS NextId");
+                            @"SELECT ISNULL((SELECT TOP 1 (GstId + 1)
+                            FROM dbo.M_Gst WITH (UPDLOCK, SERIALIZABLE)
+                            WHERE (GstId + 1) NOT IN (SELECT GstId FROM dbo.M_Gst)
+                            ORDER BY GstId), 1) AS NextId");
 
-                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
-                        {
-                            Gst.GstId = Convert.ToInt16(sqlMissingResponse.NextId);
-                        }
-                        else
-                        {
-                            return new SqlResponse { Result = -1, Message = "GstId Should not be zero" };
-                        }
-                    }
+                        if (sqlMissingResponse == null || sqlMissingResponse.NextId <= 0)
+                            return new SqlResponse { Result = -1, Message = "Failed to generate GST ID." };
 
-                    var entity = IsEdit ? _context.Update(Gst) : _context.Add(Gst);
-                    entity.Property(b => b.EditDate).IsModified = false;
+                        if (sqlMissingResponse.NextId > short.MaxValue)
+                            return new SqlResponse { Result = -1, Message = "GST ID exceeds maximum allowed value." };
 
-                    var GstToSave = _context.SaveChanges();
+                        gst.GstId = Convert.ToInt16(sqlMissingResponse.NextId);
 
-                    #region Save AuditLog
-
-                    if (GstToSave > 0)
-                    {
-                        var auditLog = new AdmAuditLog
-                        {
-                            CompanyId = CompanyId,
-                            ModuleId = (short)E_Modules.Master,
-                            TransactionId = (short)E_Master.Gst,
-                            DocumentId = Gst.GstId,
-                            DocumentNo = Gst.GstCode,
-                            TblName = "M_Gst",
-                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                            Remarks = "Gst Save Successfully",
-                            CreateById = UserId,
-                            CreateDate = DateTime.Now
-                        };
-
-                        _context.Add(auditLog);
-                        var auditLogSave = _context.SaveChanges();
-
-                        if (auditLogSave > 0)
-                        {
-                            TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
-                        }
+                        // Ensure Edit fields are null for new records
+                        gst.EditById = null;
+                        gst.EditDate = null;
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        // Prevent modification of created fields
+                        _context.Entry(gst).Property(x => x.CreateById).IsModified = false;
                     }
 
-                    #endregion Save AuditLog
+                    // Save main entity
+                    var entity = isEdit ? _context.Update(gst) : _context.Add(gst);
 
-                    return new SqlResponse();
-                }
-                catch (Exception ex)
-                {
-                    _context.ChangeTracker.Clear();
+                    var gstSaveResult = await _context.SaveChangesAsync();
 
-                    var errorLog = new AdmErrorLog
+                    if (gstSaveResult <= 0)
+                        return new SqlResponse { Result = -1, Message = "Save operation failed." };
+
+                    // Audit logging
+                    var auditLog = new AdmAuditLog
                     {
-                        CompanyId = CompanyId,
+                        CompanyId = companyId,
                         ModuleId = (short)E_Modules.Master,
                         TransactionId = (short)E_Master.Gst,
-                        DocumentId = Gst.GstId,
-                        DocumentNo = Gst.GstCode,
+                        DocumentId = gst.GstId,
+                        DocumentNo = gst.GstCode,
                         TblName = "M_Gst",
-                        ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId
+                        ModeId = isEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                        Remarks = "GST saved successfully",
+                        CreateById = userId,
+                        CreateDate = DateTime.Now
                     };
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
 
-                    throw;
+                    _context.Add(auditLog);
+                    var auditSaveResult = await _context.SaveChangesAsync();
+
+                    if (auditSaveResult <= 0)
+                        return new SqlResponse { Result = -1, Message = "Audit log save failed." };
+
+                    tScope.Complete();
+                    return new SqlResponse { Result = 1, Message = "Saved successfully" };
                 }
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = companyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Gst,
+                    DocumentId = gst.GstId,
+                    DocumentNo = gst.GstCode,
+                    TblName = "M_Gst",
+                    ModeId = isEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = $"{ex.Message} {ex.InnerException?.Message}",
+                    CreateById = userId,
+                    CreateDate = DateTime.Now
+                };
+
+                _context.Add(errorLog);
+                await _context.SaveChangesAsync();
+
+                return new SqlResponse
+                {
+                    Result = -99,
+                    Message = "System error occurred. Check error logs.",
+                    ErrorDetails = ex.Message
+                };
             }
         }
 
@@ -208,7 +237,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_Gst
                             .Where(x => x.GstId == gstId)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {
@@ -296,6 +324,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
+
         #endregion GST_HD
 
         #region GST_DT
@@ -307,7 +336,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             {
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%') AND M_GsDt.GstId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt}))");
 
-                var result = await _repository.GetQueryAsync<GstDtViewModel>($"SELECT M_GsDt.GstId,M_Gt.GstCode,M_Gt.GstName,M_GsDt.GstPercentahge,M_GsDt.CompanyId,M_GsDt.ValidFrom,M_GsDt.CreateById,M_GsDt.CreateDate,M_GsDt.EditById,M_GsDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditB FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_GsDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_GsDt.EditById WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%') AND M_GsDt.GstId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt})) ORDER BY M_Gt.GstName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<GstDtViewModel>($"SELECT M_GsDt.GstId,M_Gt.GstCode,M_Gt.GstName,M_GsDt.GstPercentage,M_GsDt.CompanyId,M_GsDt.ValidFrom,M_GsDt.CreateById,M_GsDt.CreateDate,M_GsDt.EditById,M_GsDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditB FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_GsDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_GsDt.EditById WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%') AND M_GsDt.GstId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt})) ORDER BY M_Gt.GstName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 GstDtViewModelCount.responseCode = 200;
                 GstDtViewModelCount.responseMessage = "success";
@@ -343,7 +372,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             string validFrom = ValidFrom.ToString("yyyy-MM-dd");
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<GstDtViewModel>($"SELECT M_GsDt.GstId,M_Gt.GstCode,M_Gt.GstName,M_GsDt.GstPercentahge,M_GsDt.CompanyId,M_GsDt.ValidFrom,M_GsDt.CreateById,M_GsDt.CreateDate,M_GsDt.EditById,M_GsDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditB FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_GsDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_GsDt.EditById WHERE M_GsDt.GstId={GstId} AND M_GsDt.ValidFrom = '{validFrom}' AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<GstDtViewModel>($"SELECT M_GsDt.GstId,M_Gt.GstCode,M_Gt.GstName,M_GsDt.GstPercentage,M_GsDt.CompanyId,M_GsDt.ValidFrom,M_GsDt.CreateById,M_GsDt.CreateDate,M_GsDt.EditById,M_GsDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditB FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_GsDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_GsDt.EditById WHERE M_GsDt.GstId={GstId} AND M_GsDt.ValidFrom = '{validFrom}' AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt}))");
 
                 return result;
             }
@@ -477,7 +506,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_GstDt
                             .Where(x => x.GstId == gstId && x.ValidFrom == validFrom)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {
@@ -764,7 +792,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_GstCategory
                             .Where(x => x.GstCategoryId == gstCategoryId)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {

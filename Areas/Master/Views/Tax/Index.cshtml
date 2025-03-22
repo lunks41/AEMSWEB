@@ -1,6 +1,14 @@
 ﻿@{
-    ViewData["Title"] = $"Tax ";
+    ViewData["Title"] = $"Order Type ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
 }
 
 <!-- Nav Pills -->
@@ -8,208 +16,105 @@
     <li class="nav-item" role="presentation">
         <button class="nav-link active" id="tax-tab" data-bs-toggle="pill"
                 data-bs-target="#tax" type="button" role="tab" aria-controls="tax" aria-selected="true">
-            <i class="mdi mdi-currency-usd me-1"></i> Tax
+            <i class="mdi mdi-view-list me-1"></i> Tax
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="taxdt-tab" data-bs-toggle="pill"
-                data-bs-target="#taxdt" type="button" role="tab" aria-controls="taxdt" aria-selected="false">
-            <i class="mdi mdi-table-large me-1"></i> Tax Details
+        <button class="nav-link" id="taxDt-tab" data-bs-toggle="pill"
+                data-bs-target="#taxDt" type="button" role="tab" aria-controls="taxDt" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> Tax Dt
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="taxcategory-tab" data-bs-toggle="pill"
                 data-bs-target="#taxcategory" type="button" role="tab" aria-controls="taxcategory" aria-selected="false">
-            <i class="mdi mdi-shape-outline me-1"></i> Tax Category
+            <i class="mdi mdi-shape-outline me-1"></i> Tax Categories
         </button>
     </li>
 </ul>
 
 <!-- Tab Content -->
 <div class="tab-content" id="taxTabsContent">
-    <!-- Tax Tab -->
     <div class="tab-pane fade show active" id="tax" role="tabpanel" aria-labelledby="tax-tab">
         @await Html.PartialAsync("_Tax")
     </div>
-
-    <!-- Tax Details Tab -->
-    <div class="tab-pane fade" id="taxdt" role="tabpanel" aria-labelledby="taxdt-tab">
+    <div class="tab-pane fade" id="taxDt" role="tabpanel" aria-labelledby="taxDt-tab">
         @await Html.PartialAsync("_TaxDt")
     </div>
-
-    <!-- Tax Category Tab -->
     <div class="tab-pane fade" id="taxcategory" role="tabpanel" aria-labelledby="taxcategory-tab">
         @await Html.PartialAsync("_TaxCategory")
     </div>
 </div>
 
-
 @section Scripts {
     <script>
         let companyId = 0;
+        let permissions = {};;
         $(document).ready(function () {
-            companyId = getUrlParameter('companyId');
-            $('#taxCode, #taxName').on('input', checkMandatoryFields);
-            loadGrid();
-            loadTaxCategories();
-            clearForm();
-        });
+            companyId = getUrlParameter('companyId') || 0;
 
-        function loadGrid() {
-            const search = $('#txtsearch').val();
-            $('#grid').kendoGrid({
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: `/Master/Tax/List?companyId=${companyId}&searchString=${search}`,
-                            dataType: "json"
-                        }
-                    },
-                    schema: {
-                        data: "data",
-                        total: "total"
-                    },
-                    pageSize: 20
-                },
-                height: 550,
-                pageable: true,
-                columns: [
-                    {
-                        title: "Actions",
-                        template: function (dataItem) {
-                            return `
-                                                    <button class="btn btn-sm btn-primary" onclick="openModal('${dataItem.taxId}', 'view')">
-                                                        <i class="mdi mdi-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-warning" onclick="openModal('${dataItem.taxId}', 'edit')">
-                                                        <i class="mdi mdi-pencil"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger" onclick="deleteTax('${dataItem.taxId}')">
-                                                        <i class="mdi mdi-delete"></i>
-                                                    </button>
-                                                `;
-                        },
-                        width: "150px"
-                    },
-                    { field: "taxCode", title: "Code" },
-                    { field: "taxName", title: "Name" },
-                    { field: "taxCategoryName", title: "Category" },
-                    { field: "remarks", title: "Remarks" },
-                    {
-                        field: "isActive",
-                        title: "Active",
-                        template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
-                    }
-                ]
-            });
-        }
-
-        function loadTaxCategories() {
-            $("#cmbTaxCategory").kendoComboBox({
-                dataTextField: "taxCategoryName",
-                dataValueField: "taxCategoryId",
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: `/Lookup/GetTaxCategoryLookup?companyId=${companyId}`,
-                            dataType: "json"
-                        }
-                    }
-                }
-            });
-        }
-
-        function openModal(id, mode) {
-            $.get(`/Master/Tax/GetById?taxId=${id}&companyId=${companyId}`)
-                .done(function (response) {
-                    if (response.success) {
-                        const data = response.data;
-                        $('#taxId').val(data.taxId);
-                        $('#taxCode').val(data.taxCode);
-                        $('#taxName').val(data.taxName);
-                        $('#remarks').val(data.remarks);
-                        $('#isActive').prop('checked', data.isActive);
-
-                        // Set tax category
-                        const taxCategory = $("#cmbTaxCategory").data("kendoComboBox");
-                        taxCategory.value(data.taxCategoryId);
-                        taxCategory.text(data.taxCategoryName);
-
-                        // Audit fields
-                        $('#createBy').text(data.createBy || 'N/A');
-                        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : 'N/A');
-                        $('#editBy').text(data.editBy || 'N/A');
-                        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : 'N/A');
-
-                        setMode(mode);
-                        $('#addTaxModal').modal('show');
-                    }
-                });
-        }
-
-        function setMode(mode) {
-            const isView = mode === 'view';
-            $('#taxCode').prop('readonly', isView);
-            $('#taxName').prop('readonly', isView);
-            $('#remarks').prop('readonly', isView);
-            $('#isActive').prop('disabled', isView);
-            $("#cmbTaxCategory").data("kendoComboBox").enable(!isView);
-            $('#btnSave').toggle(!isView);
-            $('#btnEdit').toggle(isView);
-        }
-
-        function deleteTax(id) {
-            $('#confirmationModal').modal('show');
-            $('#confirmDelete').off('click').click(function () {
-                $.ajax({
-                    url: `/Master/Tax/Delete?taxId=${id}&companyId=${companyId}`,
-                    type: "DELETE",
-                    success: function (response) {
-                        if (response.success) {
-                            loadGrid();
-                            $('#confirmationModal').modal('hide');
-                        }
-                    }
-                });
-            });
-        }
-
-        function saveTax() {
-            const data = {
-                TaxId: $('#taxId').val() || 0,
-                TaxCode: $('#taxCode').val(),
-                TaxName: $('#taxName').val(),
-                TaxCategoryId: $("#cmbTaxCategory").data("kendoComboBox").value(),
-                Remarks: $('#remarks').val(),
-                IsActive: $('#isActive').prop('checked'),
-                CompanyId: companyId
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
             };
 
-            if (!data.TaxCode || !data.TaxName || !data.TaxCategoryId) {
-                alert('Tax Code, Name, and Category are required!');
-                return;
-            }
+            $("#taxDtValidFrom").kendoDatePicker({
+                format: "dd/MM/yyyy",
+                parseFormats: ["yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy"],
+                value: new Date(), // Default to today
+                popup: {
+                    appendTo: $("#addTaxDtModal")
+                }
+            });
 
-            $.post("/Master/Tax/Save", data)
-                .done(function (response) {
-                    if (response.success) {
-                        $('#addTaxModal').modal('hide');
-                        loadGrid();
-                        clearForm();
-                    }
-                });
+            Refresh();
+
+            loadTaxGrid();
+            initializeTaxForm();
+            clearTaxForm();
+            $('#btnTaxEdit').on('click', function () { setTaxMode("edit"); });
+            $('#btnTaxClose').on('click', function () { $('#addTaxModal').modal('hide'); });
+            $('#addTaxrecord').on('click', function () {
+                initializeTaxForm();
+                $('#addTaxModal').modal('show');
+            });
+
+            loadTaxDtGrid();
+            initializeTaxDtForm();
+            clearTaxDtForm();
+            $('#btnTaxDtEdit').on('click', function () { setTaxDtMode("edit"); });
+            $('#btnTaxDtClose').on('click', function () { $('#addTaxDtModal').modal('hide'); });
+            $('#addTaxDtrecord').on('click', function () {
+                initializeTaxDtForm();
+                $('#addTaxDtModal').modal('show');
+            });
+
+
+            loadTaxCategoryGrid();
+            initializeTaxCategoryForm();
+            clearTaxCategoryForm();
+            $('#btnTaxCategoryEdit').on('click', function () { setTaxCategoryMode("edit"); });
+            $('#btnTaxCategoryClose').on('click', function () { $('#addTaxCategoryModal').modal('hide'); });
+            $('#addTaxCategoryrecord').on('click', function () {
+                initializeTaxCategoryForm();
+                $('#addTaxCategoryModal').modal('show');
+            });
+
+            $('#taxCode, #taxName').on('input', checkTaxMandatoryFields);
+        });
+
+        function Refresh() {
+             const taxUrl = '@Url.Action("GetTaxLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(taxUrl, "cmd_tax", "taxName", "taxId");
+
+            const taxCategoryUrl = '@Url.Action("GetTaxCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(taxCategoryUrl, "cmd_taxCategory", "taxCategoryName", "taxCategoryId");
         }
 
-        function clearForm() {
-            $('#taxForm')[0].reset();
-            $('#taxId').val(0);
-            $("#cmbTaxCategory").data("kendoComboBox").value('');
-            $('#btnSave').prop('disabled', true);
-        }
+        function SelectedDropdown(DrpdwnName) { }
 
-        function checkMandatoryFields() {
-            const isValid = $('#taxCode').val().trim() && $('#taxName').val().trim();
-            $('#btnSave').prop('disabled', !isValid);
-        }
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
     </script>
 }

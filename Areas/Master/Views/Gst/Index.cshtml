@@ -60,6 +60,15 @@
                 canRead: @Json.Serialize(canRead),
             };
 
+            $("#gstDtValidFrom").kendoDatePicker({
+                format: "dd/MM/yyyy",
+                parseFormats: ["yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy"],
+                value: new Date(), // Default to today
+                popup: {
+                    appendTo: $("#addGstDtModal")
+                }
+            });
+
             Refresh();
 
             loadGstGrid();

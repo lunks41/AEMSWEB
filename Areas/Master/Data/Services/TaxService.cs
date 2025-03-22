@@ -25,16 +25,16 @@ namespace AEMSWEB.Areas.Master.Data.Services
             _context = context;
         }
 
-        #region HEaders
+        #region GST_HD
 
         public async Task<TaxViewModelCount> GetTaxListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             TaxViewModelCount countViewModel = new TaxViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Tax M_Tx INNER JOIN dbo.M_TaxCategory M_Txc ON M_Txc.TaxCategoryId = M_Tx.TaxCategoryId  WHERE (M_Tx.TaxName LIKE '%{searchString}%' OR M_Tx.TaxName LIKE '%{searchString}%' OR M_Tx.Remarks LIKE '%{searchString}%' OR M_Txc.TaxCategoryCode LIKE '%{searchString}%' OR M_Txc.TaxCategoryName LIKE '%{searchString}%' ) AND M_Tx.TaxId<>0 AND M_Tx.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Tax}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Tax M_Gt INNER JOIN dbo.M_TaxCategory M_gtc ON M_gtc.TaxCategoryId = M_Gt.TaxCategoryId WHERE (M_Gt.TaxName LIKE '%{searchString}%' OR M_Gt.TaxCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.TaxCategoryName LIKE '%{searchString}%' OR M_gtc.TaxCategoryCode LIKE '%{searchString}%') AND M_Gt.TaxId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxCategory}))");
 
-                var result = await _repository.GetQueryAsync<TaxViewModel>($"SELECT M_Tx.TaxId,M_Tx.TaxName,M_Tx.TaxCode,M_Tx.CompanyId,M_Tx.Remarks,M_Tx.IsActive,M_Tx.TaxCategoryId,M_Txc.TaxCategoryCode,M_Txc.TaxCategoryName,M_Tx.CreateById,M_Tx.CreateDate,M_Tx.EditById,M_Tx.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Tax M_Tx INNER JOIN dbo.M_TaxCategory M_Txc ON M_Txc.TaxCategoryId = M_Tx.TaxCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Tx.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Tx.EditById WHERE (M_Tx.TaxName LIKE '%{searchString}%' OR M_Tx.TaxName LIKE '%{searchString}%' OR M_Tx.Remarks LIKE '%{searchString}%' OR M_Txc.TaxCategoryCode LIKE '%{searchString}%' OR M_Txc.TaxCategoryName LIKE '%{searchString}%' ) AND M_Tx.TaxId<>0 AND M_Tx.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Tax})) ORDER BY M_Tx.TaxName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<TaxViewModel>($"SELECT M_Gt.TaxId,M_Gt.TaxCode,M_Gt.TaxName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_Gt.TaxCategoryId,M_gtc.TaxCategoryCode,M_gtc.TaxCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Tax M_Gt INNER JOIN dbo.M_TaxCategory M_gtc ON M_gtc.TaxCategoryId = M_Gt.TaxCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById WHERE (M_Gt.TaxName LIKE '%{searchString}%' OR M_Gt.TaxCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.TaxCategoryName LIKE '%{searchString}%' OR M_gtc.TaxCategoryCode LIKE '%{searchString}%') AND M_Gt.TaxId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Tax})) ORDER BY M_Gt.TaxName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -69,7 +69,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxViewModel>($"SELECT TaxId,TaxCode,TaxName,TaxCategoryId,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Tax WHERE TaxId={TaxId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxViewModel>($"SELECT M_Gt.TaxId,M_Gt.TaxCode,M_Gt.TaxName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_Gt.TaxCategoryId,M_gtc.TaxCategoryCode,M_gtc.TaxCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Tax M_Gt INNER JOIN dbo.M_TaxCategory M_gtc ON M_gtc.TaxCategoryId = M_Gt.TaxCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById  WHERE M_Gt.TaxId={TaxId} AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Tax}))");
 
                 return result;
             }
@@ -95,113 +95,131 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveTaxAsync(short CompanyId, short UserId, M_Tax m_Tax)
+        public async Task<SqlResponse> SaveTaxAsync(short companyId, short userId, M_Tax tax)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            bool isEdit = tax.TaxId != 0;
+            try
             {
-                bool IsEdit = m_Tax.TaxId != 0;
-                try
+                using (var tScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        $"SELECT 1 AS IsExist FROM dbo.M_Tax WHERE TaxId<>@TaxId AND TaxCode=@TaxCode",
-                        new { m_Tax.TaxId, m_Tax.TaxCode });
-                    if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Tax Code already exists." };
-
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        $"SELECT 1 AS IsExist FROM dbo.M_Tax WHERE TaxId<>@TaxId AND TaxName=@TaxName",
-                        new { m_Tax.TaxId, m_Tax.TaxName });
-                    if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Tax Name already exists." };
-
-                    if (IsEdit)
-                    {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                            $"SELECT 1 AS IsExist FROM dbo.M_Tax WHERE TaxId=@TaxId",
-                            new { m_Tax.TaxId });
-
-                        if ((dataExist?.IsExist ?? 0) > 0)
+                    // Combined existence check for both code and name
+                    var existenceCheck = await _repository.GetQuerySingleOrDefaultAsync<ExistenceResult>(
+                        @"SELECT
+                    CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM dbo.M_Tax
+                        WHERE TaxId <> @TaxId AND TaxCode = @TaxCode
+                        AND CompanyId IN (SELECT CompanyId FROM dbo.Fn_Adm_GetShareCompany(@CompanyId, @ModuleId, @MasterId))
+                    ) THEN 1 ELSE 0 END AS CodeExists,
+                    CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM dbo.M_Tax
+                        WHERE TaxId <> @TaxId AND TaxName = @TaxName
+                        AND CompanyId IN (SELECT CompanyId FROM dbo.Fn_Adm_GetShareCompany(@CompanyId, @ModuleId, @MasterId))
+                    ) THEN 1 ELSE 0 END AS NameExists",
+                        new
                         {
-                            var entityHead = _context.Update(m_Tax);
-                            entityHead.Property(b => b.CreateById).IsModified = false;
-                            entityHead.Property(b => b.CompanyId).IsModified = false;
-                        }
-                        else
-                            return new SqlResponse { Result = -1, Message = "Tax Not Found" };
-                    }
-                    else
+                            tax.TaxId,
+                            tax.TaxCode,
+                            tax.TaxName,
+                            companyId,
+                            ModuleId = (short)E_Modules.Master,
+                            MasterId = (short)E_Master.Tax
+                        });
+
+                    if (existenceCheck?.CodeExists == 1)
+                        return new SqlResponse { Result = -1, Message = "GST Code already exists." };
+
+                    if (existenceCheck?.NameExists == 1)
+                        return new SqlResponse { Result = -2, Message = "GST Name already exists." };
+
+                    // Generate TaxId for new records
+                    if (!isEdit)
                     {
                         var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                            "SELECT ISNULL((SELECT TOP 1 (TaxId + 1) FROM dbo.M_Tax WHERE (TaxId + 1) NOT IN (SELECT TaxId FROM dbo.M_Tax)),1) AS NextId");
+                            @"SELECT ISNULL((SELECT TOP 1 (TaxId + 1)
+                            FROM dbo.M_Tax WITH (UPDLOCK, SERIALIZABLE)
+                            WHERE (TaxId + 1) NOT IN (SELECT TaxId FROM dbo.M_Tax)
+                            ORDER BY TaxId), 1) AS NextId");
 
-                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
-                        {
-                            m_Tax.TaxId = Convert.ToInt16(sqlMissingResponse.NextId);
-                            _context.Add(m_Tax);
-                        }
-                        else
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
-                    }
+                        if (sqlMissingResponse == null || sqlMissingResponse.NextId <= 0)
+                            return new SqlResponse { Result = -1, Message = "Failed to generate GST ID." };
 
-                    var saveChangeRecord = _context.SaveChanges();
+                        if (sqlMissingResponse.NextId > short.MaxValue)
+                            return new SqlResponse { Result = -1, Message = "GST ID exceeds maximum allowed value." };
 
-                    #region Save AuditLog
+                        tax.TaxId = Convert.ToInt16(sqlMissingResponse.NextId);
 
-                    if (saveChangeRecord > 0)
-                    {
-                        var auditLog = new AdmAuditLog
-                        {
-                            CompanyId = CompanyId,
-                            ModuleId = (short)E_Modules.Master,
-                            TransactionId = (short)E_Master.Tax,
-                            DocumentId = m_Tax.TaxId,
-                            DocumentNo = m_Tax.TaxCode,
-                            TblName = "M_Tax",
-                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                            Remarks = "Tax Save Successfully",
-                            CreateById = UserId,
-                            CreateDate = DateTime.Now
-                        };
-
-                        _context.Add(auditLog);
-                        var auditLogSave = _context.SaveChanges();
-
-                        if (auditLogSave > 0)
-                        {
-                            TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
-                        }
+                        // Ensure Edit fields are null for new records
+                        tax.EditById = null;
+                        tax.EditDate = null;
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        // Prevent modification of created fields
+                        _context.Entry(tax).Property(x => x.CreateById).IsModified = false;
                     }
 
-                    #endregion Save AuditLog
+                    // Save main entity
+                    var entity = isEdit ? _context.Update(tax) : _context.Add(tax);
 
-                    return new SqlResponse();
-                }
-                catch (Exception ex)
-                {
-                    _context.ChangeTracker.Clear();
+                    var taxSaveResult = await _context.SaveChangesAsync();
 
-                    var errorLog = new AdmErrorLog
+                    if (taxSaveResult <= 0)
+                        return new SqlResponse { Result = -1, Message = "Save operation failed." };
+
+                    // Audit logging
+                    var auditLog = new AdmAuditLog
                     {
-                        CompanyId = CompanyId,
+                        CompanyId = companyId,
                         ModuleId = (short)E_Modules.Master,
                         TransactionId = (short)E_Master.Tax,
-                        DocumentId = m_Tax.TaxId,
-                        DocumentNo = m_Tax.TaxCode,
-                        TblName = "M_Taz",
-                        ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId
+                        DocumentId = tax.TaxId,
+                        DocumentNo = tax.TaxCode,
+                        TblName = "M_Tax",
+                        ModeId = isEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                        Remarks = "GST saved successfully",
+                        CreateById = userId,
+                        CreateDate = DateTime.Now
                     };
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
 
-                    throw;
+                    _context.Add(auditLog);
+                    var auditSaveResult = await _context.SaveChangesAsync();
+
+                    if (auditSaveResult <= 0)
+                        return new SqlResponse { Result = -1, Message = "Audit log save failed." };
+
+                    tScope.Complete();
+                    return new SqlResponse { Result = 1, Message = "Saved successfully" };
                 }
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = companyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Tax,
+                    DocumentId = tax.TaxId,
+                    DocumentNo = tax.TaxCode,
+                    TblName = "M_Tax",
+                    ModeId = isEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = $"{ex.Message} {ex.InnerException?.Message}",
+                    CreateById = userId,
+                    CreateDate = DateTime.Now
+                };
+
+                _context.Add(errorLog);
+                await _context.SaveChangesAsync();
+
+                return new SqlResponse
+                {
+                    Result = -99,
+                    Message = "System error occurred. Check error logs.",
+                    ErrorDetails = ex.Message
+                };
             }
         }
 
@@ -219,7 +237,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_Tax
                             .Where(x => x.TaxId == taxId)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {
@@ -308,25 +325,25 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        #endregion HEaders
+        #endregion GST_HD
 
-        #region Details
+        #region GST_DT
 
         public async Task<TaxDtViewModelCount> GetTaxDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
-            TaxDtViewModelCount countViewModel = new TaxDtViewModelCount();
+            TaxDtViewModelCount TaxDtViewModelCount = new TaxDtViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_TaxDt M_TxDt INNER JOIN dbo.M_Tax M_Tx ON M_Tx.TaxId = M_TxDt.TaxId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_TxDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_TxDt.EditById WHERE (M_Tx.TaxName LIKE '%{searchString}%' OR M_Tx.TaxCode LIKE '%{searchString}%') AND M_TxDt.TaxId<>0 AND M_TxDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxDt}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_TaxDt M_GsDt INNER JOIN dbo.M_Tax M_Gt ON M_Gt.TaxId = M_GsDt.TaxId WHERE (M_Gt.TaxName LIKE '%{searchString}%' OR M_Gt.TaxCode LIKE '%{searchString}%') AND M_GsDt.TaxId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxDt}))");
 
-                var result = await _repository.GetQueryAsync<TaxDtViewModel>($"SELECT M_TxDt.TaxId,M_Tx.TaxCode,M_Tx.TaxName,M_TxDt.CompanyId,M_TxDt.TaxPercentage,M_TxDt.ValidFrom,M_TxDt.CreateById,M_TxDt.CreateDate,M_TxDt.EditById,M_TxDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_TaxDt M_TxDt INNER JOIN dbo.M_Tax M_Tx ON M_Tx.TaxId = M_TxDt.TaxId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_TxDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_TxDt.EditById WHERE (M_Tx.TaxName LIKE '%{searchString}%' OR M_Tx.TaxCode LIKE '%{searchString}%') AND M_TxDt.TaxId<>0 AND M_TxDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxDt})) ORDER BY M_Tx.TaxName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<TaxDtViewModel>($"SELECT M_GsDt.TaxId,M_Gt.TaxCode,M_Gt.TaxName,M_GsDt.TaxPercentage,M_GsDt.CompanyId,M_GsDt.ValidFrom,M_GsDt.CreateById,M_GsDt.CreateDate,M_GsDt.EditById,M_GsDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditB FROM dbo.M_TaxDt M_GsDt INNER JOIN dbo.M_Tax M_Gt ON M_Gt.TaxId = M_GsDt.TaxId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_GsDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_GsDt.EditById WHERE (M_Gt.TaxName LIKE '%{searchString}%' OR M_Gt.TaxCode LIKE '%{searchString}%') AND M_GsDt.TaxId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxDt})) ORDER BY M_Gt.TaxName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
-                countViewModel.responseCode = 200;
-                countViewModel.responseMessage = "success";
-                countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
-                countViewModel.data = result?.ToList() ?? new List<TaxDtViewModel>();
+                TaxDtViewModelCount.responseCode = 200;
+                TaxDtViewModelCount.responseMessage = "success";
+                TaxDtViewModelCount.totalRecords = totalcount == null ? 0 : totalcount.CountId;
+                TaxDtViewModelCount.data = result == null ? null : result.ToList();
 
-                return countViewModel;
+                return TaxDtViewModelCount;
             }
             catch (Exception ex)
             {
@@ -355,7 +372,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             string validFrom = ValidFrom.ToString("yyyy-MM-dd");
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxDtViewModel>($"SELECT M_TxDt.TaxId,M_Tx.TaxCode,M_Tx.TaxName,M_TxDt.CompanyId,M_TxDt.TaxPercentage,M_TxDt.ValidFrom,M_TxDt.CreateById,M_TxDt.CreateDate,M_TxDt.EditById,M_TxDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_TaxDt M_TxDt INNER JOIN dbo.M_Tax M_Tx ON M_Tx.TaxId = M_TxDt.TaxId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_TxDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_TxDt.EditById WHERE M_TxDt.TaxId={TaxId} AND M_TxDt.ValidFrom='{validFrom}'");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxDtViewModel>($"SELECT M_GsDt.TaxId,M_Gt.TaxCode,M_Gt.TaxName,M_GsDt.TaxPercentage,M_GsDt.CompanyId,M_GsDt.ValidFrom,M_GsDt.CreateById,M_GsDt.CreateDate,M_GsDt.EditById,M_GsDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditB FROM dbo.M_TaxDt M_GsDt INNER JOIN dbo.M_Tax M_Gt ON M_Gt.TaxId = M_GsDt.TaxId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_GsDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_GsDt.EditById WHERE M_GsDt.TaxId={TaxId} AND M_GsDt.ValidFrom = '{validFrom}' AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxDt}))");
 
                 return result;
             }
@@ -384,6 +401,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
         public async Task<SqlResponse> SaveTaxDtAsync(short CompanyId, short UserId, M_TaxDt m_TaxDt)
         {
             string validFrom = m_TaxDt.ValidFrom.ToString("yyyy-MM-dd");
+
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = false;
@@ -410,6 +428,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             entityHead.Property(b => b.EditById).IsModified = false;
                         }
                     }
+
                     var CurrencyDtToSave = _context.SaveChanges();
 
                     #region Save AuditLog
@@ -473,7 +492,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteTaxDtAsync(short CompanyId, short UserId, short taxId, DateTime Validfrom)
+        public async Task<SqlResponse> DeleteTaxDtAsync(short CompanyId, short UserId, short taxId, DateTime validFrom)
         {
             string taxNo = string.Empty;
             try
@@ -485,9 +504,8 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     if (taxId > 0)
                     {
                         var accountGroupToRemove = _context.M_TaxDt
-                            .Where(x => x.TaxId == taxId && x.ValidFrom == Validfrom)
+                            .Where(x => x.TaxId == taxId && x.ValidFrom == validFrom)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {
@@ -535,7 +553,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     TransactionId = (short)E_Master.TaxDt,
                     DocumentId = taxId,
                     DocumentNo = "",
-                    TblName = "TaxDt",
+                    TblName = "M_TaxDt",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
                     CreateById = UserId,
@@ -563,7 +581,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     TransactionId = (short)E_Master.TaxDt,
                     DocumentId = taxId,
                     DocumentNo = "",
-                    TblName = "TaxDt",
+                    TblName = "M_TaxDt",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId,
@@ -576,16 +594,16 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        #endregion Details
+        #endregion GST_DT
 
         public async Task<TaxCategoryViewModelCount> GetTaxCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             TaxCategoryViewModelCount countViewModel = new TaxCategoryViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_TaxCategory M_Txc WHERE (M_Txc.TaxCategoryName LIKE '%{searchString}%' OR M_Txc.TaxCategoryCode LIKE '%{searchString}%' OR M_Txc.Remarks LIKE '%{searchString}%' ) AND M_Txc.TaxCategoryId<>0 AND M_Txc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxCategory}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_TaxCategory M_Taxc WHERE (M_Taxc.TaxCategoryName LIKE '%{searchString}%' OR M_Taxc.TaxCategoryCode LIKE '%{searchString}%' OR M_Taxc.Remarks LIKE '%{searchString}%') AND M_Taxc.TaxCategoryId<>0 AND M_Taxc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxCategory}))");
 
-                var result = await _repository.GetQueryAsync<TaxCategoryViewModel>($"SELECT M_Txc.TaxCategoryId,M_Txc.TaxCategoryCode,M_Txc.TaxCategoryName,M_Txc.CompanyId,M_Txc.Remarks,M_Txc.IsActive,M_Txc.CreateById,M_Txc.CreateDate,M_Txc.EditById,M_Txc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_TaxCategory M_Txc LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Txc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Txc.EditById WHERE (M_Txc.TaxCategoryName LIKE '%{searchString}%' OR M_Txc.TaxCategoryCode LIKE '%{searchString}%' OR M_Txc.Remarks LIKE '%{searchString}%' ) AND M_Txc.TaxCategoryId<>0 AND M_Txc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxCategory})) ORDER BY M_Txc.TaxCategoryName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<TaxCategoryViewModel>($"SELECT M_Taxc.TaxCategoryId,M_Taxc.TaxCategoryCode,M_Taxc.TaxCategoryName,M_Taxc.CompanyId,M_Taxc.Remarks,M_Taxc.IsActive,M_Taxc.CreateById,M_Taxc.CreateDate,M_Taxc.EditById,M_Taxc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_TaxCategory M_Taxc LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Taxc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Taxc.EditById WHERE (M_Taxc.TaxCategoryName LIKE '%{searchString}%' OR M_Taxc.TaxCategoryCode LIKE '%{searchString}%' OR M_Taxc.Remarks LIKE '%{searchString}%') AND M_Taxc.TaxCategoryId<>0 AND M_Taxc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxCategory})) ORDER BY M_Taxc.TaxCategoryName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -616,11 +634,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<TaxCategoryViewModel> GetTaxCategoryByIdAsync(short CompanyId, short UserId, short TaxCategoryId)
+        public async Task<TaxCategoryViewModel> GetTaxCategoryByIdAsync(short CompanyId, short UserId, int TaxCategoryId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxCategoryViewModel>($"SELECT TaxCategoryId,TaxCategoryCode,TaxCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_TaxCategory WHERE TaxCategoryId={TaxCategoryId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TaxCategoryViewModel>($"SELECT TaxCategoryId,TaxCategoryCode,TaxCategoryName,CompanyId,Remarks,IsActive,CreateById,CreateDate,EditById,EditDate FROM dbo.M_TaxCategory WHERE TaxCategoryId={TaxCategoryId} AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxCategory}))");
 
                 return result;
             }
@@ -684,7 +702,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     else
                     {
-                        // Take the Next Id From SQL
                         var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
                             "SELECT ISNULL((SELECT TOP 1 (TaxCategoryId + 1) FROM dbo.M_TaxCategory WHERE (TaxCategoryId + 1) NOT IN (SELECT TaxCategoryId FROM dbo.M_TaxCategory)),1) AS NextId");
 
@@ -748,7 +765,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         TransactionId = (short)E_Master.TaxCategory,
                         DocumentId = m_TaxCategory.TaxCategoryId,
                         DocumentNo = m_TaxCategory.TaxCategoryCode,
-                        TblName = "M_TaxCategory",
+                        TblName = "AdmUser",
                         ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
                         Remarks = ex.Message + ex.InnerException?.Message,
                         CreateById = UserId
@@ -775,7 +792,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                         var accountGroupToRemove = _context.M_TaxCategory
                             .Where(x => x.TaxCategoryId == taxCategoryId)
                             .ExecuteDelete();
-
 
                         if (accountGroupToRemove > 0)
                         {
@@ -807,7 +823,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "TaxCategoryId Should be zero" };
+                        return new SqlResponse { Result = -1, Message = "TaxId Should be zero" };
                     }
                     return new SqlResponse();
                 }
@@ -823,7 +839,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     TransactionId = (short)E_Master.TaxCategory,
                     DocumentId = taxCategoryId,
                     DocumentNo = "",
-                    TblName = "AdmUser",
+                    TblName = "M_TaxCategory",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
                     CreateById = UserId,

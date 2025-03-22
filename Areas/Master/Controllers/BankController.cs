@@ -126,9 +126,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     IsActive = model.bank.IsActive,
                     IsOwnBank = model.bank.IsOwnBank,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _bankService.SaveBankAsync(companyIdShort, parsedUserId.Value, bankToSave);
@@ -239,9 +239,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         //            IsSales = model.bankContact.IsSales,
         //            IsActive = model.bankContact.IsActive,
         //            CreateById = parsedUserId.Value,
-        //            CreateDate = DateTime.UtcNow,
+        //            CreateDate = DateTime.Now,
         //            EditById = model.bankContact.EditById ?? 0,
-        //            EditDate = DateTime.UtcNow
+        //            EditDate = DateTime.Now
         //        };
 
         //        var result = await _bankService.SaveBankContactAsync(companyIdShort, parsedUserId.Value, contactToSave);
@@ -358,9 +358,9 @@ namespace AEMSWEB.Areas.Master.Controllers
         //            IsSalesAdd = model.bankAddress.IsSalesAdd,
         //            IsActive = model.bankAddress.IsActive,
         //            CreateById = parsedUserId.Value,
-        //            CreateDate = DateTime.UtcNow,
+        //            CreateDate = DateTime.Now,
         //            EditById = model.bankAddress.EditById ?? 0,
-        //            EditDate = DateTime.UtcNow
+        //            EditDate = DateTime.Now
         //        };
 
         //        var result = await _bankService.SaveBankAddressAsync(companyIdShort, parsedUserId.Value, addressToSave);

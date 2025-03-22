@@ -121,9 +121,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     Remarks = model.creditTerm.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.creditTerm.IsActive,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _creditTermService.SaveCreditTermAsync(companyIdShort, parsedUserId.Value, creditTermToSave);
@@ -233,9 +233,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     DueDay = model.creditTermDt.DueDay,
                     NoMonth = model.creditTermDt.NoMonth,
                     CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.UtcNow,
+                    CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
-                    EditDate = DateTime.UtcNow
+                    EditDate = DateTime.Now
                 };
 
                 var result = await _creditTermService.SaveCreditTermDtAsync(companyIdShort, parsedUserId.Value, detailToSave);
