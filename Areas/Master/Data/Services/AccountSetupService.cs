@@ -377,11 +377,11 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId)
+        public async Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short glId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountSetupDtViewModel>($"SELECT M_ACCdt.CompanyId,M_ACCdt.AccSetupId,M_ACC.AccSetupCode,M_ACC.AccSetupName,M_ACCdt.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_ACCdt.GLId,M_Chacc.GLCode,M_Chacc.GLName,M_ACCdt.CreateById,M_ACCdt.CreateDate,M_ACCdt.EditById,M_ACCdt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountSetupDt M_ACCdt INNER JOIN dbo.M_AccountSetup M_Acc ON M_Acc.AccSetupId = M_ACCdt.AccSetupId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_ACCdt.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chacc ON M_Chacc.GLId = M_ACCdt.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACCdt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACCdt.EditById WHERE M_ACCdt.AccSetupId={accSetupId} AND M_ACCdt.CurrencyId={currencyId} AND M_ACCdt.GLId={gLId} AND M_ACCdt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupDt}))");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<AccountSetupDtViewModel>($"SELECT M_ACCdt.CompanyId,M_ACCdt.AccSetupId,M_ACC.AccSetupCode,M_ACC.AccSetupName,M_ACCdt.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_ACCdt.GLId,M_Chacc.GLCode,M_Chacc.GLName,M_ACCdt.CreateById,M_ACCdt.CreateDate,M_ACCdt.EditById,M_ACCdt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountSetupDt M_ACCdt INNER JOIN dbo.M_AccountSetup M_Acc ON M_Acc.AccSetupId = M_ACCdt.AccSetupId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_ACCdt.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chacc ON M_Chacc.GLId = M_ACCdt.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACCdt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACCdt.EditById WHERE M_ACCdt.AccSetupId={accSetupId} AND M_ACCdt.CurrencyId={currencyId} AND M_ACCdt.GLId={glId} AND M_ACCdt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupDt}))");
 
                 return result;
             }
@@ -420,7 +420,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                     }
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupDt WHERE CompanyId={CompanyId} AND AccSetupId=={m_AccountSetupDt.AccSetupId} AND CurrencyId={m_AccountSetupDt.CurrencyId} AND GLId=={m_AccountSetupDt.GLId}");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupDt WHERE CompanyId={CompanyId} AND AccSetupId={m_AccountSetupDt.AccSetupId} AND CurrencyId={m_AccountSetupDt.CurrencyId} AND GLId={m_AccountSetupDt.GLId}");
 
                         if (DataExist.Count() > 0 && DataExist.ToList()[0].IsExist == 1)
                         {
@@ -527,7 +527,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId)
+        public async Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short glId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -535,7 +535,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 {
                     if (accSetupId > 0)
                     {
-                        var AccountSetupDtToRemove = _context.M_AccountSetupDt.Where(x => x.AccSetupId == accSetupId && x.CurrencyId == currencyId && x.GLId == gLId).ExecuteDelete();
+                        var AccountSetupDtToRemove = _context.M_AccountSetupDt.Where(x => x.AccSetupId == accSetupId && x.CurrencyId == currencyId && x.GLId == glId).ExecuteDelete();
 
                         if (AccountSetupDtToRemove > 0)
                         {
@@ -846,7 +846,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                             .Where(x => x.AccSetupCategoryId == accSetupCategoryId)
                             .ExecuteDelete();
 
-
                         if (accountGroupToRemove > 0)
                         {
                             var auditLog = new AdmAuditLog
@@ -933,8 +932,6 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
-
-
 
         #endregion
     }

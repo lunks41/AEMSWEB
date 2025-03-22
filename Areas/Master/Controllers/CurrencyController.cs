@@ -228,7 +228,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     CurrencyId = model.currencyDt.CurrencyId,
                     CompanyId = companyIdShort,
                     ExhRate = model.currencyDt.ExhRate,
-                    ValidFrom = DateTime.Parse(model.currencyDt.ValidFrom), // Assuming ValidFrom is string in ViewModel
+                    ValidFrom = model.currencyDt.ValidFrom, // Assuming ValidFrom is string in ViewModel
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
@@ -341,7 +341,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     CurrencyId = model.currencyLocalDt.CurrencyId,
                     CompanyId = companyIdShort,
                     ExhRate = model.currencyLocalDt.ExhRate,
-                    ValidFrom = DateTime.Parse(model.currencyLocalDt.ValidFrom), // String to DateTime conversion
+                    ValidFrom = model.currencyLocalDt.ValidFrom, // String to DateTime conversion
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,

@@ -190,7 +190,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetAccountSetupDtById(short accSetupId, short currencyId, short gLId, string companyId)
+        public async Task<JsonResult> GetAccountSetupDtById(short accSetupId, short currencyId, short glId, string companyId)
         {
             if (accSetupId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Detail ID" });
@@ -200,7 +200,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _accountSetupService.GetAccountSetupDtByIdAsync(companyIdShort, parsedUserId.Value, accSetupId, currencyId, gLId);
+                var data = await _accountSetupService.GetAccountSetupDtByIdAsync(companyIdShort, parsedUserId.Value, accSetupId, currencyId, glId);
                 return data == null
                     ? Json(new { success = false, message = "Account Setup Detail not found" })
                     : Json(new { success = true, data });
@@ -248,7 +248,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAccountSetupDt(short accSetupId, short currencyId, short gLId, string companyId)
+        public async Task<IActionResult> DeleteAccountSetupDt(short accSetupId, short currencyId, short glId, string companyId)
         {
             if (accSetupId <= 0)
                 return Json(new { success = false, message = "Invalid Account Setup Detail ID" });
@@ -264,7 +264,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                await _accountSetupService.DeleteAccountSetupDtAsync(companyIdShort, parsedUserId.Value, accSetupId, currencyId, gLId);
+                await _accountSetupService.DeleteAccountSetupDtAsync(companyIdShort, parsedUserId.Value, accSetupId, currencyId, glId);
                 return Json(new { success = true, message = "Account Setup Detail deleted successfully" });
             }
             catch (Exception ex)

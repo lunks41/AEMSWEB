@@ -257,7 +257,7 @@
             let gstDtData = {
                 GstId: parseInt($('#cmd_gst').data("kendoComboBox").value()) || 0,
                 ValidFrom: kendo.toString(datePicker.value(), "yyyy-MM-dd"),
-                GstPercentage: $('#gstDtPercentage').val().trim(),
+                GstPercentage: parseFloat($('#gstDtPercentage').val())||0,
             };
 
             console.log("gstDt Data : " + gstDtData);

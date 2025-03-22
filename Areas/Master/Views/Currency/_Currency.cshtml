@@ -2,100 +2,109 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h3>Currencies</h3>
+                <h3>Currency</h3>
+
+                <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <!-- Search Section -->
                     <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadCurrencyGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
+                        <button type="button" class="btn btn-primary btn-sm" onclick="loadCurrencyGrid();">
+                            <span class="material-symbols-outlined">search</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearCurrencySearch();">
-                            <i class="mdi mdi-close"></i> Clear
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
+
+                    <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#currencyModal">
-                            <i class="mdi mdi-plus me-1"></i> Add Currency
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadCurrencyGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addCurrencyModal" id="addCurrencyrecord">
+                            <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
                 </div>
-                <div id="currencyGrid"></div>
+                <div id="gridCurrency"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Currency Modal -->
-<div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
+<!-- Add/Edit Modal -->
+<div class="modal fade" id="addCurrencyModal" tabindex="-1" aria-labelledby="addCurrencyModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="currencyModalLabel">Currency Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCurrencyForm()"></button>
+                <h5 class="modal-title" id="addCurrencyModalLabel">Add/Edit Currency</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearCurrencyForm();"></button>
             </div>
             <div class="modal-body p-4">
-                <form id="currencyForm">
+                <form id="CurrencyForm">
                     <input type="hidden" id="currencyId" />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="currencyCode" class="form-label">Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="currencyCode" maxlength="5" required>
+                                <input type="text" class="form-control" id="currencyCode" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="currencyName" class="form-label">Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="currencyName" maxlength="50" required>
+                                <input type="text" class="form-control" id="currencyName" required>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="remarks" class="form-label">Remarks</label>
-                                <textarea class="form-control" id="remarks" rows="2" maxlength="500"></textarea>
+                                <label for="currencyremarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="currencyremarks" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="IsMultiply">
-                                <label class="form-check-label" for="isMultiply">Is Multiply</label>
+                                <input type="checkbox" class="form-check-input" id="currencyisMultiply">
+                                <label class="form-check-label" for="currencyisMultiply">Is Multiply</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="IsActive">
-                                <label class="form-check-label" for="isActive">Is Active</label>
+                                <input type="checkbox" class="form-check-input" id="currencyisActive">
+                                <label class="form-check-label" for="currencyisActive">Is Active</label>
                             </div>
                         </div>
                     </div>
-                    <!-- Audit Section -->
-                    <div class="accordion mt-3" id="currencyAudit">
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#currencyAuditBody">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
-                            <div id="currencyAuditBody" class="accordion-collapse collapse">
+                            <div id="auditCollapse" class="accordion-collapse collapse">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <label for="CurrencycreateBy" class="form-label">Created By</label>
+                                            <p id="CurrencycreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <label for="CurrencycreateDate" class="form-label">Created Date</label>
+                                            <p id="CurrencycreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <label for="CurrencyeditBy" class="form-label">Modified By</label>
+                                            <p id="CurrencyeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <label for="CurrencyeditDate" class="form-label">Modified Date</label>
+                                            <p id="CurrencyeditDate" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -105,176 +114,192 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCurrencyClose" onclick="clearCurrencyForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencyEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnCurrencyClear" onclick="clearCurrencyForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCurrencySave" onclick="saveCurrency()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-
-    function setCurrencyDefaultValues() {
-        clearCurrencyForm();
-        $('#isActive').prop('checked', true);
-        $('#btnSave').prop('disabled', false);
-    }
-
-    function handleCurrencyEnterKey(event) {
-        if (event.key === 'Enter') loadCurrencyGrid();
-    }
-
-    function clearCurrencySearch() {
-        $('#txtsearch').val('');
-        loadCurrencyGrid();
-    }
-
-    function loadCurrencyGrid() {
-        let searchString = $('#txtsearch').val();
-        let url = '@Url.Action("ListCurrency", "Currency", new { area = "Master" })';
-        let columns = [
-            {
-                title: "Actions",
-                width: "150px",
-                template: function (dataItem) {
-                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCurrencyModal('${dataItem.currencyId}', 'view')">
-                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
-
-                    if (permissions.canEdit) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCurrencyModal('${dataItem.currencyId}', 'edit')">
-                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                    }
-
-                    if (permissions.canDelete) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCurrency('${dataItem.currencyId}')">
-                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                    }
-                    return buttons;
-                }
-            },
-            { field: "currencyCode", title: "Code" },
-            { field: "currencyName", title: "Name" },
-            { field: "remarks", title: "Remarks" },
-            { field: "isMultiply", title: "Multiply", template: '<input type="checkbox" #= isMultiply ? "checked" : "" # disabled />' },
-            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-        ];
-
-        initializeKendoGrid("currencyGrid", url, { searchString, companyId }, columns);
-    }
-
-    function openCurrencyModal(id, mode) {
-        $.get('@Url.Action("GetCurrencyById", "Currency", new { area = "Master" })', { currencyId: id, companyId })
-            .done(function (response) {
-                if (response.success) {
-                    populateCurrencyModalFields(response.data);
-                    setCurrencyMode(mode);
-                    $('#addCurrencyModal').modal('show');
-                }
-            });
-    }
-
-    function populateCurrencyModalFields(data) {
-        $('#currencyId').val(data.currencyId);
-        $('#currencyCode').val(data.currencyCode);
-        $('#currencyName').val(data.currencyName);
-        $('#remarks').val(data.remarks);
-        $('#isMultiply').prop('checked', data.isMultiply);
-        $('#isActive').prop('checked', data.isActive);
-
-        $('#createById').text(data.createById || "N/A");
-        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-        $('#editById').text(data.editById || "N/A");
-        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
-
-        //checkMandatoryCurrencyFields();
-    }
-
-    function setCurrencyMode(mode) {
-        const isView = mode === 'view';
-        const canEdit = permissions.canEdit && !isView;
-
-        $('#currencyCode, #currencyName, #remarks').prop('readonly', !canEdit);
-        $('#isMultiply').prop('disabled', !canEdit);
-        $('#isActive').prop('disabled', !canEdit);
-        $('#btnSave').toggle(canEdit);
-        $('#btnEdit').toggle(isView && permissions.canEdit);
-        $('#btnClose').show();
-        $('#btnClear').hide();
-    }
-
-    function deleteCurrency(id) {
-        if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
-            return;
+        function initializeCurrencyForm() {
+            clearCurrencyForm();
+            $('#currencyisActive').prop('checked', true);
         }
 
-        $('#confirmationModal').modal('show');
-        $('#confirmDelete').off('click').click(function () {
+        function clearCurrencyForm() {
+            $('#CurrencyForm')[0].reset();
+
+            $('#CurrencyId').val(0);
+            $('#CurrencycreateBy').text('');
+            $('#CurrencycreateDate').text('');
+            $('#CurrencyeditBy').text('');
+            $('#CurrencyeditDate').text('');
+
+            // Reset readonly and disabled states
+            $('#currencyCode, #currencyName, #seqNo, #remarks').prop('readonly', false);
+            $('#currencyisActive').prop('disabled', false);
+
+            $('#currencyisActive').prop('checked', true);
+            $('#btnCurrencySave').prop('disabled', false);
+            $('#btnCurrencySave').show();
+            $('#btnCurrencyClear').show();
+            $('#btnCurrencyEdit').hide();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadCurrencyGrid();
+        }
+
+        function clearSearch() {
+            $('#txtsearch').val('');
+            loadCurrencyGrid();
+        }
+
+        function checkCurrencyMandatoryFields() {
+            let isValid = $('#currencyCode').val().trim() && $('#currencyName').val().trim();
+            $('#btnCurrencySave').prop('disabled', !isValid);
+
+            // Add visual feedback
+            $('#currencyCode, #currencyName').toggleClass('is-invalid', !isValid);
+        }
+
+        function loadCurrencyGrid() {
+            let searchString = $('#txtsearch').val();
+            let url = '@Url.Action("CurrencyList", "Currency", new { area = "Master" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openCurrencyModal('${dataItem.currencyId}', 'view')">
+                        <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCurrencyModal('${dataItem.currencyId}', 'edit')">
+                        <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCurrency('${dataItem.currencyId}')">
+                        <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "currencyCode", title: "Code" },
+                { field: "currencyName", title: "Name" },
+                { field: "remarks", title: "Remarks" },
+                { field: "isMultiply", title: "Multiply", template: '<input type="checkbox" #= isMultiply ? "checked" : "" # disabled />' },
+                { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
+
+            let grid = $("#gridCurrency").data("kendoGrid");
+            if (grid) {
+
+                grid.dataSource.read({ searchString: searchString, companyId: companyId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("gridCurrency", url, { searchString, companyId }, columns);
+            }
+        }
+
+        function openCurrencyModal(id, mode) {
+            const $modal = $('#addCurrencyModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetCurrencyById", "Currency", new { area = "Master" })', { currencyId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateCurrencyModalFields(response.data);
+                        setCurrencyMode(mode);
+                        $('#addCurrencyModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
+
+        function populateCurrencyModalFields(data) {
+            $('#currencyId').val(data.currencyId);
+            $('#currencyCode').val(data.currencyCode);
+            $('#currencyName').val(data.currencyName);
+            $('#currencyremarks').val(data.remarks);
+            $('#currencyisMultiply').prop('checked', data.isMultiply);
+            $('#currencyisActive').prop('checked', data.isActive);
+            $('#CurrencycreateBy').text(data.createBy || "N/A");
+            $('#CurrencycreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#CurrencyeditBy').text(data.editBy || "N/A");
+            $('#CurrencyeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            checkCurrencyMandatoryFields();
+        }
+
+        function setCurrencyMode(mode) {
+            const isView = mode === 'view';
+            const canEdit = permissions.canEdit && !isView;
+
+            $('#currencyCode, #currencyName,  #currencyremarks').prop('readonly', !canEdit);
+            $('#currencyisMultiply').prop('disabled', !canEdit);
+            $('#currencyisActive').prop('disabled', !canEdit);
+            $('#btnCurrencySave').toggle(canEdit);
+            $('#btnCurrencyEdit').toggle(isView && permissions.canEdit);
+            $('#btnCurrencyClose').show();
+            $('#btnCurrencyClear').hide();
+            $('#btnClear').hide();
+        }
+
+        function deleteCurrency(id) {
+            showDeleteModal("Are you sure you want to delete this records?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteCurrency", "Currency", new { area = "Master" })',
+                    type: "DELETE",
+                    data: { currencyId: id, companyId: companyId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadCurrencyGrid();
+                            $('#confirmationModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+
+        function saveCurrency() {
+            let CurrencyData = {
+                CurrencyId: parseInt($('#currencyId').val()) || 0,
+                CurrencyCode: $('#currencyCode').val().trim(),
+                CurrencyName: $('#currencyName').val().trim(),
+                Remarks: $('#currencyremarks').val(),
+                IsMultiply: $('#currencyisMultiply').prop('checked'),
+                IsActive: $('#currencyisActive').prop('checked')
+            };
+
+            console.log("Currency Data : " + CurrencyData);
+
+            if (!CurrencyData.CurrencyCode || !CurrencyData.CurrencyName) {
+                alert('Code and Name are required!');
+                return;
+            }
+
             $.ajax({
-                url: `/Master/Currency/DeleteCurrency?currencyId=${id}&companyId=${companyId}`,
-                type: "DELETE",
+                url: '@Url.Action("SaveCurrency", "Currency", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ currency: CurrencyData, companyId }),
+                contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
+                        debugger;
                         loadCurrencyGrid();
-                        $('#confirmationModal').modal('hide');
+                        clearCurrencyForm();
+                        $('#addCurrencyModal').modal('hide');
+                    } else {
+                        alert(response.message || "Failed to save account group.");
                     }
+                },
+                error: function (xhr) {
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
                 }
             });
-        });
-    }
-
-    function saveCurrency() {
-        let data = {
-            CurrencyId: parseInt($('#currencyId').val()) || 0,
-            CurrencyCode: $('#currencyCode').val().trim(),
-            CurrencyName: $('#currencyName').val().trim(),
-            Remarks: $('#remarks').val(),
-            IsMultiply: $('#isMultiply').prop('checked'),
-            IsActive: $('#isActive').prop('checked'),
-            CreateById: parseInt($('#createById').val()) || 0,
-            CreateDate: new Date($('#createDate').val()) || null,
-            EditById: parseInt($('#editById').val()) || null,
-            EditDate: new Date($('#editDate').val()) || null
-        };
-
-        if (!data.CurrencyCode || !data.CurrencyName) {
-            alert('Code and Name are required!');
-            return;
         }
-
-        $.ajax({
-            url: '@Url.Action("SaveCurrency", "Currency", new { area = "Master" })',
-            type: "POST",
-            data: JSON.stringify({ currency: data }),
-            contentType: "application/json",
-            success: function (response) {
-                if (response.success) {
-                    $('#addCurrencyModal').modal('hide');
-                    loadCurrencyGrid();
-                    clearCurrencyForm();
-                }
-            },
-            error: function (error) {
-                alert("Error: " + error.responseText);
-            }
-        });
-    }
-
-    function clearCurrencyForm() {
-        $('#currencyForm')[0].reset();
-        $('#currencyId').val(0);
-        $('#createById').text('');
-        $('#createDate').text('');
-        $('#editById').text('');
-        $('#editDate').text('');
-        $('#btnSave').prop('disabled', true);
-    }
-
-    function checkMandatoryCurrencyFields() {
-        
-        let isValid = $('#currencyCode').val().trim() && $('#currencyName').val().trim();
-        $('#btnSave').prop('disabled', !isValid);
-    }
 </script>

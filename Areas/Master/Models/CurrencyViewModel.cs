@@ -32,7 +32,7 @@ namespace AEMSWEB.Models.Masters
         public string? CurrencyName { get; set; }
         public Int16 CompanyId { get; set; }
         public decimal ExhRate { get; set; }
-        public string? ValidFrom;
+        public DateTime ValidFrom { get; set; }
         public Int16? CreateById { get; set; }
         public DateTime CreateDate { get; set; }
         public Int16? EditById { get; set; }
@@ -57,7 +57,7 @@ namespace AEMSWEB.Models.Masters
         [Column(TypeName = "decimal(18,10)")]
         public decimal ExhRate { get; set; }
 
-        public string? ValidFrom { get; set; }
+        public DateTime ValidFrom { get; set; }
         public Int16? CreateById { get; set; }
         public DateTime CreateDate { get; set; }
         public Int16? EditById { get; set; }

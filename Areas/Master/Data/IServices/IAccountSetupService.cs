@@ -22,11 +22,11 @@ namespace AEMSWEB.Areas.Master.Data.IServices
 
         public Task<AccountSetupDtViewModelCount> GetAccountSetupDtListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
-        public Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId);
+        public Task<AccountSetupDtViewModel> GetAccountSetupDtByIdAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short glId);
 
         public Task<SqlResponse> SaveAccountSetupDtAsync(short CompanyId, short UserId, M_AccountSetupDt m_AccountSetupDt);
 
-        public Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short gLId);
+        public Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short glId);
 
         #endregion Details
 

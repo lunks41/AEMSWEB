@@ -540,7 +540,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
                 {
                     if (currencyDtViewModel.CurrencyId > 0)
                     {
-                        var CurrencyDtToRemove = await _context.M_CurrencyDt.Where(x => x.CurrencyId == currencyDtViewModel.CurrencyId && x.ValidFrom == DateHelperStatic.ParseClientDate(currencyDtViewModel.ValidFrom) && x.CompanyId == CompanyId).ExecuteDeleteAsync();
+                        var CurrencyDtToRemove = await _context.M_CurrencyDt.Where(x => x.CurrencyId == currencyDtViewModel.CurrencyId && x.ValidFrom == currencyDtViewModel.ValidFrom && x.CompanyId == CompanyId).ExecuteDeleteAsync();
 
                         if (CurrencyDtToRemove > 0)
                         {

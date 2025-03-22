@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Account Setup ";
+    ViewData["Title"] = $"Account Setup";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -8,51 +8,48 @@
     bool canEdit = ViewBag.IsEdit ?? false;
     bool canDelete = ViewBag.IsDelete ?? false;
     bool canRead = ViewBag.IsRead ?? false;
-    bool canExport = ViewBag.IsExport ?? false;
-    bool canPrint = ViewBag.IsPrint ?? false;
     int companyId = ViewBag.CompanyId;
 }
 
 <!-- Nav Pills -->
-<ul class="nav nav-pills mb-3" id="accountSetupTabs" role="tablist">
+<ul class="nav nav-pills mb-3" id="accSetupTabs" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="accountsetup-tab" data-bs-toggle="pill"
-                data-bs-target="#accountsetup" type="button" role="tab" aria-controls="accountsetup" aria-selected="true">
-            <i class="mdi mdi-account-cog me-1"></i> Account Setup
+        <button class="nav-link active" id="accSetup-tab" data-bs-toggle="pill"
+                data-bs-target="#accSetup" type="button" role="tab" aria-controls="accSetup" aria-selected="true">
+            <i class="mdi mdi-view-list me-1"></i> AccSetup
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="accountsetupdt-tab" data-bs-toggle="pill"
-                data-bs-target="#accountsetupdt" type="button" role="tab" aria-controls="accountsetupdt" aria-selected="false">
-            <i class="mdi mdi-table-large me-1"></i> Setup Details
+        <button class="nav-link" id="accSetupDt-tab" data-bs-toggle="pill"
+                data-bs-target="#accSetupDt" type="button" role="tab" aria-controls="accSetupDt" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> AccSetup Dt
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="accountsetupcategory-tab" data-bs-toggle="pill"
-                data-bs-target="#accountsetupcategory" type="button" role="tab" aria-controls="accountsetupcategory" aria-selected="false">
-            <i class="mdi mdi-shape-outline me-1"></i> Categories
+        <button class="nav-link" id="accSetupcategory-tab" data-bs-toggle="pill"
+                data-bs-target="#accSetupcategory" type="button" role="tab" aria-controls="accSetupcategory" aria-selected="false">
+            <i class="mdi mdi-shape-outline me-1"></i> AccSetup Categories
         </button>
     </li>
 </ul>
 
 <!-- Tab Content -->
-<div class="tab-content" id="accountSetupTabsContent">
-    <div class="tab-pane fade show active" id="accountsetup" role="tabpanel" aria-labelledby="accountsetup-tab">
+<div class="tab-content" id="accSetupTabsContent">
+    <div class="tab-pane fade show active" id="accSetup" role="tabpanel" aria-labelledby="accSetup-tab">
         @await Html.PartialAsync("_AccountSetup")
     </div>
-    <div class="tab-pane fade" id="accountsetupdt" role="tabpanel" aria-labelledby="accountsetupdt-tab">
+    <div class="tab-pane fade" id="accSetupDt" role="tabpanel" aria-labelledby="accSetupDt-tab">
         @await Html.PartialAsync("_AccountSetupDt")
     </div>
-    <div class="tab-pane fade" id="accountsetupcategory" role="tabpanel" aria-labelledby="accountsetupcategory-tab">
+    <div class="tab-pane fade" id="accSetupcategory" role="tabpanel" aria-labelledby="accSetupcategory-tab">
         @await Html.PartialAsync("_AccountSetupCategory")
     </div>
 </div>
 
 @section Scripts {
     <script>
-
         let companyId = 0;
-        let permissions = {};
+        let permissions = {};;
         $(document).ready(function () {
             companyId = getUrlParameter('companyId') || 0;
 
@@ -63,17 +60,40 @@
                 canRead: @Json.Serialize(canRead),
             };
 
-            $('#accGroupCode, #accGroupName').on('input', checkAccountGroupMandatoryFields);
             Refresh();
-            loadAccountSetupCategoryGrid();
-            loadAccountSetupGrid();
-            loadAccountSetupDtGrid();
 
-           
-            $('#addAccountGrouprecord').on('click', function () {
-                initializeAccountGroupForm();
-                $('#addAccountGroupModal').modal('show');
+            loadAccSetupGrid();
+            initializeAccSetupForm();
+            clearAccSetupForm();
+            $('#btnAccSetupEdit').on('click', function () { setAccSetupMode("edit"); });
+            $('#btnAccSetupClose').on('click', function () { $('#addAccSetupModal').modal('hide'); });
+            $('#addAccSetuprecord').on('click', function () {
+                initializeAccSetupForm();
+                $('#addAccSetupModal').modal('show');
             });
+
+            loadAccSetupDtGrid();
+            initializeAccSetupDtForm();
+            clearAccSetupDtForm();
+            $('#btnAccSetupDtEdit').on('click', function () { setAccSetupDtMode("edit"); });
+            $('#btnAccSetupDtClose').on('click', function () { $('#addAccSetupDtModal').modal('hide'); });
+            $('#addAccSetupDtrecord').on('click', function () {
+                initializeAccSetupDtForm();
+                $('#addAccSetupDtModal').modal('show');
+            });
+
+
+            loadAccSetupCategoryGrid();
+            initializeAccSetupCategoryForm();
+            clearAccSetupCategoryForm();
+            $('#btnAccSetupCategoryEdit').on('click', function () { setAccSetupCategoryMode("edit"); });
+            $('#btnAccSetupCategoryClose').on('click', function () { $('#addAccSetupCategoryModal').modal('hide'); });
+            $('#addAccSetupCategoryrecord').on('click', function () {
+                initializeAccSetupCategoryForm();
+                $('#addAccSetupCategoryModal').modal('show');
+            });
+
+            $('#accSetupCode, #accSetupName').on('input', checkAccSetupMandatoryFields);
         });
 
         function Refresh() {
@@ -88,48 +108,16 @@
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
 
-            const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
+            const accSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(accSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
 
-            const accountSetupCategoryUrl = '@Url.Action("GetAccountSetupCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(accountSetupCategoryUrl, "cmd_accSetupCategory", "accSetupCategoryName", "accSetupCategoryId");
+            const accSetupCategoryUrl = '@Url.Action("GetAccountSetupCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(accSetupCategoryUrl, "cmd_accSetupCategory", "accSetupCategoryName", "accSetupCategoryId");
 
         }
 
         function SelectedDropdown(DrpdwnName) { }
 
         function OnSelectDropdown(dataItem, DrpdwnName) { }
-
-
-        $('#btnAccountSetupEdit').on('click', function () { setMode("edit"); });
-        $('#btnAccountSetupDtEdit').on('click', function () { setMode("edit"); });
-        $('#btnAccountSetupCategoryEdit').on('click', function () { setMode("edit"); });
-
-        $('#btnAccountSetupClose').on('click', function () { $('#accountSetupModal').modal('hide'); });
-        $('#btnAccountSetupDtClose').on('click', function () { $('#accountSetupDtModal').modal('hide'); });
-        $('#btnAccountSetupCategoryClose').on('click', function () { $('#accountSetupCategoryModal').modal('hide'); });
-
-
-        // For Account Setup tab
-        $('#addaccountSetuprecord').on('click', function () {
-            clearAccountSetupForm();        // Updated function name
-            setAccountSetupForm(); // Updated function name
-            $('#accountSetupModal').modal('show');
-        });
-
-        // For Setup Details tab
-        $('#addaccountSetupDtrecord').on('click', function () {
-            clearAccountSetupDtForm();      // Ensure this function exists in _AccountSetupDt.cshtml
-            setAccountSetupDtForm();
-            $('#accountSetupDtModal').modal('show');
-        });
-
-        // For Category tab
-        $('#addaccountSetupCategoryrecord').on('click', function () {
-            clearAccountSetupCategoryForm(); // Updated function name
-            setAccountSetupCategoryForm();
-            $('#accountSetupCategoryModal').modal('show');
-        });
-
     </script>
 }

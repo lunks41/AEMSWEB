@@ -257,7 +257,7 @@
             let taxDtData = {
                 TaxId: parseInt($('#cmd_tax').data("kendoComboBox").value()) || 0,
                 ValidFrom: kendo.toString(datePicker.value(), "yyyy-MM-dd"),
-                TaxPercentage: $('#taxDtPercentage').val().trim(),
+                TaxPercentage: parseFloat($('#taxDtPercentage').val())||0,
             };
 
             console.log("taxDt Data : " + taxDtData);

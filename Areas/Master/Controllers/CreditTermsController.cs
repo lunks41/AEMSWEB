@@ -14,15 +14,13 @@ namespace AEMSWEB.Areas.Master.Controllers
     public class CreditTermsController : BaseController
     {
         private readonly ILogger<CreditTermsController> _logger;
-        private readonly ICreditTermsService _creditTermService;
+        private readonly ICreditTermsService _creditTermsService;
 
-        public CreditTermsController(ILogger<CreditTermsController> logger,
-            IBaseService baseService,
-            ICreditTermsService creditTermService)
+        public CreditTermsController(ILogger<CreditTermsController> logger, IBaseService baseService, ICreditTermsService creditTermsService)
             : base(logger, baseService)
         {
             _logger = logger;
-            _creditTermService = creditTermService;
+            _creditTermsService = creditTermsService;
         }
 
         [Authorize]
@@ -66,7 +64,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _creditTermService.GetCreditTermListAsync(companyIdShort, parsedUserId.Value,
+                var data = await _creditTermsService.GetCreditTermListAsync(companyIdShort, parsedUserId.Value,
                     pageSize, pageNumber, searchString ?? string.Empty);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
@@ -88,7 +86,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _creditTermService.GetCreditTermByIdAsync(companyIdShort, parsedUserId.Value, creditTermId);
+                var data = await _creditTermsService.GetCreditTermByIdAsync(companyIdShort, parsedUserId.Value, creditTermId);
                 return data == null
                     ? Json(new { success = false, message = "Credit Term not found" })
                     : Json(new { success = true, data });
@@ -126,7 +124,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     EditDate = DateTime.Now
                 };
 
-                var result = await _creditTermService.SaveCreditTermAsync(companyIdShort, parsedUserId.Value, creditTermToSave);
+                var result = await _creditTermsService.SaveCreditTermAsync(companyIdShort, parsedUserId.Value, creditTermToSave);
                 return Json(new { success = true, message = "Credit Term saved successfully", data = result });
             }
             catch (Exception ex)
@@ -153,7 +151,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                await _creditTermService.DeleteCreditTermAsync(companyIdShort, parsedUserId.Value, creditTermId);
+                await _creditTermsService.DeleteCreditTermAsync(companyIdShort, parsedUserId.Value, creditTermId);
                 return Json(new { success = true, message = "Credit Term deleted successfully" });
             }
             catch (Exception ex)
@@ -178,7 +176,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _creditTermService.GetCreditTermDtListAsync(companyIdShort, parsedUserId.Value,
+                var data = await _creditTermsService.GetCreditTermDtListAsync(companyIdShort, parsedUserId.Value,
                     pageSize, pageNumber, searchString ?? string.Empty);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
@@ -200,7 +198,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _creditTermService.GetCreditTermDtByIdAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
+                var data = await _creditTermsService.GetCreditTermDtByIdAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
                 return data == null
                     ? Json(new { success = false, message = "Credit Term Detail not found" })
                     : Json(new { success = true, data });
@@ -238,7 +236,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                     EditDate = DateTime.Now
                 };
 
-                var result = await _creditTermService.SaveCreditTermDtAsync(companyIdShort, parsedUserId.Value, detailToSave);
+                var result = await _creditTermsService.SaveCreditTermDtAsync(companyIdShort, parsedUserId.Value, detailToSave);
                 return Json(new { success = true, message = "Credit Term Detail saved successfully", data = result });
             }
             catch (Exception ex)
@@ -265,7 +263,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                await _creditTermService.DeleteCreditTermDtAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
+                await _creditTermsService.DeleteCreditTermDtAsync(companyIdShort, parsedUserId.Value, creditTermDtId, fromDay);
                 return Json(new { success = true, message = "Credit Term Detail deleted successfully" });
             }
             catch (Exception ex)
