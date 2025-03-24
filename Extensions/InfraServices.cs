@@ -11,6 +11,8 @@ using AEMSWEB.Areas.Account.Data.Services.GL;
 using AEMSWEB.Areas.Admin.Data;
 using AEMSWEB.Areas.Master.Data.IServices;
 using AEMSWEB.Areas.Master.Data.Services;
+using AEMSWEB.Areas.Project.Data.IServices;
+using AEMSWEB.Areas.Project.Data.Services;
 using AEMSWEB.Areas.Setting.Data;
 using AEMSWEB.IServices;
 using AEMSWEB.Repository;
@@ -119,10 +121,11 @@ public static class InfraServices
 
         services.AddScoped<ISettingService, SettingServices>();
 
+
         #endregion Setting
 
-        #region System
-
+        #region Project
+        services.AddScoped<IJobOrderService, JoborderService>();
         #endregion System
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

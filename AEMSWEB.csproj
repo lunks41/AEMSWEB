@@ -33,8 +33,6 @@
     <Folder Include="Areas\HRM\Data\" />
     <Folder Include="Areas\HRM\Models\" />
     <Folder Include="Areas\HRM\Views\" />
-    <Folder Include="Areas\Project\Data\" />
-    <Folder Include="Areas\Project\Models\" />
     <Folder Include="Logs\" />
     <Folder Include="Reports\" />
   </ItemGroup>

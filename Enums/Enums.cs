@@ -23,6 +23,14 @@ namespace AEMSWEB.Enums
         GL = 28,
         Setting = 99,
         Admin = 100,
+        Project = 5
+    }
+    public enum E_Project
+    {
+        Job = 1,
+        Report = 2,
+        Department = 3,
+        Tariff = 4
     }
 
     public enum E_Master
