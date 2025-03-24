@@ -126,11 +126,11 @@
                         </li>
                     </ul>
 
-                    <div class="tab-content mt-3">
+                    <div class="tab-content mt-3" id="customerSubTabs">
                         <!-- Addresses Tab -->
                         <div class="tab-pane fade show active" id="addresses">
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                <button type="button" class="btn btn-primary" id="openChildAddressModal">
                                     <i class="mdi mdi-plus"></i> Add Address
                                 </button>
                             </div>
@@ -140,7 +140,7 @@
                         <!-- Contacts Tab -->
                         <div class="tab-pane fade" id="contacts">
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addContactModal">
+                                <button type="button" class="btn btn-primary" id="openChildContactModal">
                                     <i class="mdi mdi-plus"></i> Add Contact
                                 </button>
                             </div>
@@ -225,7 +225,8 @@
         $('#btnCustomerSave').show();
         $('#btnCustomerClear').show();
         $('#btnCustomerEdit').hide();
-
+        $('#customerTabs').hide();
+        $('#customerSubTabs').hide();
         // Check if grids exist before clearing
         const addressGrid = $("#gridaddress").data("kendoGrid");
         if (addressGrid) {
@@ -276,9 +277,12 @@
         $.get('@Url.Action("GetById", "Customer", new { area = "Master" })', { customerId: id, companyId })
             .done(function (response) {
                 if (response.success) {
+
                     populateCustomerFields(response.data);
                     setCustomerMode(mode);
+                   
                     $('#addCustomerModal').modal('show');
+                    
                 }
             });
     }
@@ -323,6 +327,7 @@
     }
 
     function setCustomerMode(mode) {
+
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
@@ -332,6 +337,8 @@
         $('#btnCustomerEdit').toggle(isView && permissions.canEdit);
         $('#btnCustomerClose').show();
         $('#btnCustomerClear').hide();
+        $('#customerTabs').show();
+        $('#customerSubTabs').show();
     }
 
     function deleteCustomer(id) {

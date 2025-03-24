@@ -89,11 +89,11 @@
 <script>
 
     function initializeCustomerAddressForm() {
-        clearAddressForm();
+        clearCustomerAddressForm();
         $('#isActiveAdd').prop('checked', true);
     }
 
-    function clearAddressForm() {
+    function clearCustomerAddressForm() {
         $('#addressId').val('');
         $('#customerId').val(''); // Hidden field in address modal
         $('#address1').val('');
@@ -164,17 +164,44 @@
         }
     }
 
-    function openCustomerAddressModal(id, addressId, mode) {
-        $.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId, companyId })
+   function openCustomerAddressModal(id, addressId, mode) {
+       $.ajax({
+           url: '@Url.Action("GetAddressById", "Customer", new { area = "Master" })',
+           type: "GET",
+           data: {
+               customerId: id,
+               addressId: addressId,
+               companyId: companyId
+           }, // No contentType needed
+           success: function (response) {
+               if (response.success) {
+                   populateAddressFields(response.data);
+                   setAddressMode(mode);
+                   // Keep parent modal open
+                   $('#addCustomerModal').css('overflow', 'visible');
+                   $('#addAddressModal').modal('show');
+               }
+           }
+       });
+
+
+        @*$.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId: addressId, companyId: companyId })
             .done(function (response) {
-                console.log("address :" + response);
+                debugger;
+                console.log("address:", response);
                 if (response.success) {
-                    debugger;
                     populateAddressFields(response.data);
                     setAddressMode(mode);
+                    // Show the child modal
                     $('#addAddressModal').modal('show');
+
+                    // Keep the parent modal open
+                    var parentModal = document.getElementById('addCustomerModal');
+                    parentModal.classList.add('show');
+                    parentModal.style.display = 'block';
+                    parentModal.setAttribute('aria-hidden', 'false');
                 }
-            });
+            });*@
     }
 
     function populateAddressFields(data) {
@@ -219,12 +246,16 @@
         $('#btnCustomerAddressClear').hide();
     }
 
-    function deleteCustomerAddress(id, addressId) {
+    function deleteCustomerAddress(customerId, addressId) {
         showDeleteModal("Are you sure you want to delete this records?", function () {
             $.ajax({
                 url: '@Url.Action("DeleteAddress", "Customer", new { area = "Master" })',
                 type: "DELETE",
-                data: { countryId: id, addressId: addressId, companyId: companyId },
+                data: {
+                    customerId: customerId,
+                    addressId: addressId,
+                    companyId: companyId
+                },
                 success: function (response) {
                     if (response.success) {
                         loadCountryGrid();
@@ -235,8 +266,8 @@
         });
     }
 
-    function saveCustomer() {
-        const customerData = {
+    function saveCustomerAddress() {
+        const addressData = {
             CustomerId: parseInt($('#customerId').val()) || 0,
             AddressId: parseInt($('#addressId').val()),
             Address1: $('#address1').val(),
@@ -244,7 +275,7 @@
             Address3: $('#address3').val(),
             Address4: $('#address4').val(),
             PinCode: $('#pinCode').val(),
-            CountryId: $('#cmd_country').data("kendoComboBox").val(),
+            CountryId: $('#cmd_country').data("kendoComboBox").value(),
             PhoneNo: $('#phoneNo').val(),
             FaxNo: $('#faxNoAdd').val(),
             EmailAdd: $('#emailAddadd').val(),
@@ -258,7 +289,7 @@
         $.ajax({
             url: '@Url.Action("SaveAddress", "Customer", new { area = "Master" })',
             type: "POST",
-            data: JSON.stringify({ customer: customerData, companyId }),
+            data: JSON.stringify({ customerAddress: addressData, companyId }),
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {

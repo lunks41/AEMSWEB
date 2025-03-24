@@ -77,11 +77,11 @@
 <script>
 
     function initializeCustomerContactForm() {
-        clearContactForm();
+        clearCustomerContactForm();
         $('#isActiveCont').prop('checked', true);
     }
 
-    function clearContactForm() {
+    function clearCustomerContactForm() {
         $('#contactId').val('');
         $('#customerId').val('');
         $('#contactName').val('');
@@ -148,9 +148,13 @@
                 if (response.success) {
                     populateContactFields(response.data);
                     setContactMode(mode);
+                    // Show the child modal
                     $('#addContactModal').modal('show');
-                    // Ensure customer modal stays open
-                    $('#customerModal').modal('show');
+                    // Keep the parent modal open
+                    var parentModal = document.getElementById('addCustomerModal');
+                    parentModal.classList.add('show');
+                    parentModal.style.display = 'block';
+                    parentModal.setAttribute('aria-hidden', 'false');
                 }
             });
     }
@@ -221,7 +225,7 @@
     }
 
     function saveCustomerContact() {
-        const customerData = {
+        const customerContactData = {
             CustomerId: parseInt( $('#customerId').val()) || 0,
             ContactId: parseInt($('#contactId').val()),
             ContactName: $('#contactName').val(),
@@ -241,7 +245,7 @@
         $.ajax({
             url: '@Url.Action("SaveContact", "Customer", new { area = "Master" })',
             type: "POST",
-            data: JSON.stringify({ customer: customerData, companyId }),
+            data: JSON.stringify({ customerContact: customerContactData, companyId }),
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
