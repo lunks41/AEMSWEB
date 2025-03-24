@@ -11,25 +11,6 @@
     int companyId = ViewBag.CompanyId;
 }
 
-<style>
-    .modal-backdrop.show:not(:first-child) {
-        opacity: 0;
-    }
-    /* Ensure the parent modal stays behind the child modal */
-    .modal-backdrop.custom-backdrop {
-        z-index: 1040;
-    }
-
-    .modal.custom-modal {
-        z-index: 1050;
-    }
-
-    /* Optionally, for additional stacking if more modals are used */
-    .modal.modal-child {
-        z-index: 1060;
-    }
-</style>
-
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -53,10 +34,13 @@
 
                     <!-- Add Button -->
                     <div class="ms-auto">
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadSupplierGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
                         @if (canCreate)
                         {
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#supplierModal" id="addSupplier">
-                                <i class="mdi mdi-plus me-1"></i> Add Supplier
+                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addSupplierModal" id="addSupplierrecord">
+                                <span class="material-symbols-outlined">add</span>
                             </button>
                         }
                     </div>
@@ -73,73 +57,81 @@
     @await Html.PartialAsync("_Address")
     @await Html.PartialAsync("_Contact")
 }
-@section Scripts {
-    @await Html.PartialAsync("_Scripts")
 
+@section Scripts {
     <script>
 
     let companyId = 0;
     let permissions = {};
-    $(document).ready(function () {
-        companyId = getUrlParameter('companyId') || 0;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
 
-        permissions = {
-            canCreate: @Json.Serialize(canCreate),
-            canEdit: @Json.Serialize(canEdit),
-            canDelete: @Json.Serialize(canDelete),
-            canRead: @Json.Serialize(canRead),
-        };
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+            Refresh();
 
-        //$('#accGroupCode, #accGroupName').on('input', checkMandatoryFields);
-        Refresh();
-        loadGrid();
-        //setDefaultValues();
-        //clearForm();
+            loadSupplierGrid();
+            initializeSupplierForm();
+            $('#btnSupplierEdit').on('click', function () { setSupplierMode("edit"); });
+            $('#btnSupplierClose').on('click', function () { $('#addSupplierModal').modal('hide'); });
+            $('#addSupplierrecord').on('click', function () {
+                initializeSupplierForm();
+                $('#addSupplierModal').modal('show');
+            });
 
-        //$('#btnEdit').on('click', function () { setMode("edit"); });
-        //$('#btnClose').on('click', function () { $('#addAccountGroupModal').modal('hide'); });
-        //$('#addrecord').on('click', function () {
-        //    clearForm();
-        //    setDefaultValues();
-        //    $('#addAccountGroupModal').modal('show');
-        //});
-    });
+            $('#btnSupplierContactEdit').on('click', function () { setSupplierContactMode("edit"); });
+            $('#btnSupplierContactClose').on('click', function () { $('#addSupplierContactModal').modal('hide'); });
+            $('#addSupplierContactrecord').on('click', function () {
+                initializeSupplierContactForm();
+                $('#addSupplierContactModal').modal('show');
+            });
 
-    function Refresh() {
-        const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(supplierUrl, "cmd_supplier", "supplierName", "supplierId");
+            $('#btnSupplierAddressEdit').on('click', function () { setSupplierAddressMode("edit"); });
+            $('#btnSupplierAddressClose').on('click', function () { $('#addSupplierAddressModal').modal('hide'); });
+            $('#addSupplierAddressrecord').on('click', function () {
+                initializeSupplierAddressForm();
+                $('#addSupplierAddressModal').modal('show');
+            });
+        });
 
-        const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
+        function Refresh() {
+            const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
 
-        const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
+            const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
 
-        const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
+            const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
 
-         const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
+            const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
 
-    }
+            const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
 
-    function SelectedDropdown(DrpdwnName) { }
+        }
 
-    function OnSelectDropdown(dataItem, DrpdwnName) { }
+        function SelectedDropdown(DrpdwnName) { }
 
-    // Supplier modal close event
-    $('#supplierModal').on('hidden.bs.modal', function () {
-        clearSupplierForm();
-    });
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
 
-    // Address modal close event
-    $('#addressModal').on('hidden.bs.modal', function () {
-        clearAddressForm();
-    });
+        document.getElementById('openChildAddressModal').addEventListener('click', function () {
+            var supplierId = document.getElementById('supplierId').value;
+            document.getElementById('address_supplierId').value = supplierId;
+            var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
+            addressModal.show();
+        });
 
-    // Contact modal close event
-    $('#contactModal').on('hidden.bs.modal', function () {
-        clearContactForm();
-    });
+        document.getElementById('openChildContactModal').addEventListener('click', function () {
+            var supplierId = document.getElementById('supplierId').value;
+            document.getElementById('contact_supplierId').value = supplierId;
+            var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
+            contactModal.show();
+        });
     </script>
 }

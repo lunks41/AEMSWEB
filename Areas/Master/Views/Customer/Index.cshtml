@@ -120,30 +120,18 @@
 
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
-        // Event listener for the "Open Address Modal" button
         document.getElementById('openChildAddressModal').addEventListener('click', function () {
-            // Show the child modal
+            var customerId = document.getElementById('customerId').value;
+            document.getElementById('address_customerId').value = customerId;
             var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
             addressModal.show();
-
-            // Keep the parent modal open
-            var parentModal = document.getElementById('addCustomerModal');
-            parentModal.classList.add('show');
-            parentModal.style.display = 'block';
-            parentModal.setAttribute('aria-hidden', 'false');
         });
 
-        // Event listener for the "Open Contact Modal" button
         document.getElementById('openChildContactModal').addEventListener('click', function () {
-            // Show the child modal
+            var customerId = document.getElementById('customerId').value;
+            document.getElementById('contact_customerId').value = customerId;
             var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
             contactModal.show();
-
-            // Keep the parent modal open
-            var parentModal = document.getElementById('addCustomerModal');
-            parentModal.classList.add('show');
-            parentModal.style.display = 'block';
-            parentModal.setAttribute('aria-hidden', 'false');
         });
     </script>
 }

@@ -1,14 +1,14 @@
 ﻿  <!-- Address Modal -->
-<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addressModalLabel">Supplier Address</h5>
+                <h5 class="modal-title" id="addAddressModalLabel">Supplier Address</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addressForm">
-                    <input type="hidden" id="supplierId" />
+                    <input type="hidden" id="address_supplierId" />
                     <input type="hidden" id="addressId" />
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -37,15 +37,15 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="phoneNo">
+                            <input type="tel" class="form-control" id="phoneNoAdd">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Fax Number</label>
-                            <input type="tel" class="form-control" id="faxNo">
+                            <input type="tel" class="form-control" id="faxNoAdd">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" id="emailAdd">
+                            <input type="email" class="form-control" id="emailAddadd">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Website</label>
@@ -69,7 +69,7 @@
                                 <label class="form-check-label">Is Sales Add.</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="isActive">
+                                <input class="form-check-input" type="checkbox" id="isActiveAdd">
                                 <label class="form-check-label">Is Active</label>
                             </div>
                         </div>
@@ -77,17 +77,47 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnSupplierAddressClose" onclick="clearSupplierAddressForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSupplierAddressEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnSupplierAddressClear" onclick="clearSupplierAddressForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnSupplierAddressSave" onclick="saveSupplierAddress()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function loadsupplierAddressGrid(supplierId) {
+
+    function initializeSupplierAddressForm() {
+        clearSupplierAddressForm();
+        $('#isActiveAdd').prop('checked', true);
+    }
+
+    function clearSupplierAddressForm() {
+        $('#addressId').val('');
+        $('#address_supplierId').val(''); // Hidden field in address modal
+        $('#address1').val('');
+        $('#address2').val('');
+        $('#address3').val('');
+        $('#address4').val('');
+        $('#pinCode').val('');
+        $('#cmd_country').data("kendoComboBox").value('');
+        $('#phoneNoAdd').val('');
+        $('#faxNoAdd').val('');
+        $('#emailAddadd').val('');
+        $('#webUrl').val('');
+        $('#isDefaultAdd').prop('checked', false);
+        $('#isDeliveryAdd').prop('checked', false);
+        $('#isFinAdd').prop('checked', false);
+        $('#isSalesAdd').prop('checked', false);
+        $('#isActiveAdd').prop('checked', false);
+        $('#btnSupplierAddressSave').prop('disabled', false);
+        $('#btnSupplierAddressSave').show();
+        $('#btnSupplierAddressClear').show();
+        $('#btnSupplierAddressEdit').hide();
+    }
+
+    function loadsupplierAddressGrid(address_supplierId) {
         let grid = $("#gridaddress").data("kendoGrid");
         let url = '@Url.Action("ListAddresses", "Supplier", new { area = "Master" })';
         let columns = [
@@ -116,6 +146,7 @@
             { field: "address3", title: "Address 3", width: "200px" },
             { field: "address4", title: "Address 4", width: "200px" },
             { field: "pinCode", title: "Postal Code", width: "100px" },
+            { field: "countryName", title: "Country", width: "100px" },
             { field: "remarks", title: "Remarks", width: "150px" },
             { field: "phoneNo", title: "Phone No", width: "120px" },
             { field: "faxNo", title: "Fax No", width: "120px" },
@@ -128,33 +159,41 @@
         ];
 
         if (grid) {
-            // Update the data source with the new supplierId
-            grid.dataSource.read({ supplierId: supplierId, companyId: companyId });
+            grid.dataSource.read({ supplierId: address_supplierId, companyId: companyId });
         } else {
-            // Initialize grid if it doesn’t exist
-            initializeKendoGrid("gridaddress", url, { supplierId, companyId }, columns);
+            initializeKendoGrid("gridaddress", url, { supplierId: address_supplierId, companyId }, columns);
         }
-
-        //initializeKendoGrid("gridaddress", url, { supplierId, companyId }, columns);
     }
 
     function openSupplierAddressModal(id, addressId, mode) {
-
+        debugger;
+        event.preventDefault();
         $.get('@Url.Action("GetAddressById", "Supplier", new { area = "Master" })', { supplierId: id, addressId, companyId })
             .done(function (response) {
-
-                console.log("address :" + response);
+                console.log("Response:", response); // Debug response structure
                 if (response.success) {
-                    populateAddressFields(response.data);
-                    setAddressMode(mode);
-                    $('#addressModal').modal('show');
+                    populateSupplierAddressFields(response.data); // Populate modal fields
+                    setSupplierAddressMode(mode); // Set the mode (Edit/Add)
+                    $('#addAddressModal').modal('show'); // Show the child modal
+
+                    // Ensure the parent modal stays visible
+                    var parentModal = document.getElementById('addSupplierModal');
+                    parentModal.classList.add('show');
+                    parentModal.style.display = 'block';
+                    parentModal.setAttribute('aria-hidden', 'false');
+                } else {
+                    alert(response.message || "Failed to fetch address.");
                 }
+            })
+            .fail(function (xhr, status, error) {
+                console.error("Error: ", error);
+                alert("An error occurred while fetching supplier address.");
             });
     }
 
-    function populateAddressFields(data) {
+    function populateSupplierAddressFields(data) {
 
-        $('#supplierId').val(data.supplierId);
+        $('#address_supplierId').val(data.supplierId);
         $('#addressId').val(data.addressId);
         $('#address1').val(data.address1);
         $('#address2').val(data.address2);
@@ -162,53 +201,51 @@
         $('#address4').val(data.address4);
         $('#pinCode').val(data.pinCode);
         $('#cmd_country').data("kendoComboBox").value(data.countryId > 0 ? data.countryId : '');
-        $('#phoneNo').val(data.phoneNo);
-        $('#faxNo').val(data.faxNo);
-        $('#emailAdd').val(data.emailAdd);
+        $('#phoneNoAdd').val(data.phoneNo);
+        $('#faxNoAdd').val(data.faxNo);
+        $('#emailAddadd').val(data.emailAdd);
         $('#webUrl').val(data.webUrl);
         $('#isDefaultAdd').prop('checked', data.isDefaultAdd);
         $('#isDeliveryAdd').prop('checked', data.isDeliveryAdd);
         $('#isFinAdd').prop('checked', data.isFinAdd);
         $('#isSalesAdd').prop('checked', data.isSalesAdd);
-        $('#isActive').prop('checked', data.isActive);
+        $('#isActiveAdd').prop('checked', data.isActive);
 
         $('#createBy').text(data.createBy || "N/A");
         $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
         $('#editBy').text(data.editBy || "N/A");
         $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-       // checkMandatoryFields();
     }
 
-    function setAddressMode(mode) {
+    function setSupplierAddressMode(mode) {
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
         // Enable/disable fields in address modal
-        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNo, #faxNo, #emailAdd, #webUrl')
+        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNoAdd, #faxNoAdd, #emailAddadd, #webUrl')
             .prop('readonly', !canEdit);
-        $('#isDefaultAdd, #isDeliveryAdd, #isFinAdd, #isSalesAdd, #isActive').prop('disabled', !canEdit);
+        $('#isDefaultAdd, #isDeliveryAdd, #isFinAdd, #isSalesAdd, #isActiveAdd').prop('disabled', !canEdit);
 
-        $('#btnSave').toggle(canEdit);
-        $('#btnEdit').toggle(isView && permissions.canEdit);
-        $('#btnClose').show();
-        $('#btnClear').hide();
+        $('#btnSupplierAddressSave').toggle(canEdit);
+        $('#btnSupplierAddressEdit').toggle(isView && permissions.canEdit);
+        $('#btnSupplierAddressClose').show();
+        $('#btnSupplierAddressClear').hide();
     }
 
-    function deleteSupplierAddress(id,addressId) {
-        if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
-            return;
-        }
-
-        $('#confirmationModal').modal('show');
-        $('#confirmDelete').off('click').click(function () {
+    function deleteSupplierAddress(address_supplierId, addressId) {
+        showDeleteModal("Are you sure you want to delete this records?", function () {
             $.ajax({
-                url: `/Master/Supplier/DeleteAddress?supplierId=${id}&addressId=${addressId}&companyId=${companyId}`,
+                url: '@Url.Action("DeleteAddress", "Supplier", new { area = "Master" })',
                 type: "DELETE",
+                data: {
+                    supplierId: address_supplierId,
+                    addressId: addressId,
+                    companyId: companyId
+                },
                 success: function (response) {
                     if (response.success) {
-                        loadGrid();
+                        loadsupplierAddressGrid(address_supplierId);
                         $('#confirmationModal').modal('hide');
                     }
                 }
@@ -216,45 +253,42 @@
         });
     }
 
-    function saveSupplier() {
-        const supplierData = {
-            SupplierId: $('#supplierId').val() || 0,
-            SupplierCode: $('#supplierCode').val().trim(),
-            SupplierName: $('#supplierName').val().trim(),
-            // Add other fields
+    function saveSupplierAddress() {
+
+        debugger;
+        let successSupplierId = parseInt($('#address_supplierId').val()) || 0;
+        const supplieraddressData = {
+            SupplierId: parseInt($('#address_supplierId').val()) || 0,
+            AddressId: parseInt($('#addressId').val()) || 0,
+            Address1: $('#address1').val(),
+            Address2: $('#address2').val(),
+            Address3: $('#address3').val(),
+            Address4: $('#address4').val(),
+            PinCode: $('#pinCode').val(),
+            CountryId: $('#cmd_country').data("kendoComboBox").value(),
+            PhoneNo: $('#phoneNoAdd').val(),
+            FaxNo: $('#faxNoAdd').val(),
+            EmailAdd: $('#emailAddadd').val(),
+            webUrl: $('#webUrl').val(),
+            IsDeliveryAdd: $('#isDeliveryAdd').prop('checked'),
+            IsDefaultAdd: $('#isDefaultAdd').prop('checked'),
+            IsFinAdd: $('#isFinAdd').prop('checked'),
+            IsSalesAdd: $('#isSalesAdd').prop('checked'),
+            IsActive: $('#isActiveAdd').prop('checked'),
         };
+        console.log("Supplier Address : " + supplieraddressData);
         $.ajax({
             url: '@Url.Action("SaveAddress", "Supplier", new { area = "Master" })',
             type: "POST",
-            data: JSON.stringify({ supplier: supplierData, companyId }),
+            data: JSON.stringify({ supplierAddress: supplieraddressData, companyId }),
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    $('#addressModal').modal('hide');
-                    loadGrid();
-                    clearForm();
+                    $('#addAddressModal').modal('hide');
+                    loadsupplierAddressGrid(successSupplierId);
+                    clearSupplierAddressForm();
                 }
             }
         });
-    }
-
-    function clearAddressForm() {
-        $('#addressId').val('');
-        $('#supplierId').val(''); // Hidden field in address modal
-        $('#address1').val('');
-        $('#address2').val('');
-        $('#address3').val('');
-        $('#address4').val('');
-        $('#pinCode').val('');
-        $('#cmd_country').data("kendoComboBox").value('');
-        $('#phoneNo').val('');
-        $('#faxNo').val('');
-        $('#emailAdd').val('');
-        $('#webUrl').val('');
-        $('#isDefaultAdd').prop('checked', false);
-        $('#isDeliveryAdd').prop('checked', false);
-        $('#isFinAdd').prop('checked', false);
-        $('#isSalesAdd').prop('checked', false);
-        $('#isActive').prop('checked', false);
     }
 </script>

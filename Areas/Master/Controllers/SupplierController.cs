@@ -125,10 +125,9 @@ namespace AEMSWEB.Areas.Master.Controllers
                     ParentSupplierId = model.customer.ParentSupplierId,
                     AccSetupId = model.customer.AccSetupId,
                     CustomerId = model.customer.CustomerId,
-                    IsCustomer = model.customer.IsCustomer,
+                    IsSupplier = model.customer.IsSupplier,
                     IsVendor = model.customer.IsVendor,
                     IsTrader = model.customer.IsTrader,
-                    IsSupplier = model.customer.IsSupplier,
                     Remarks = model.customer.Remarks?.Trim() ?? string.Empty,
                     IsActive = model.customer.IsActive,
                     CreateById = parsedUserId.Value,
@@ -195,7 +194,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetContactById(int SupplierId, short contactId, string companyId)
+        public async Task<JsonResult> GetContactById(int customerId, short contactId, string companyId)
         {
             if (contactId <= 0)
                 return Json(new { success = false, message = "Invalid Contact ID" });
@@ -205,7 +204,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetSupplierContactByIdAsync(companyIdShort, parsedUserId.Value, SupplierId, contactId);
+                var data = await _customerService.GetSupplierContactByIdAsync(companyIdShort, parsedUserId.Value, customerId, contactId);
                 return data == null
                     ? Json(new { success = false, message = "Supplier Contact not found" })
                     : Json(new { success = true, data });
@@ -311,17 +310,17 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetAddressById(int SupplierId, short addressId, string companyId)
+        public async Task<IActionResult> GetAddressById(int customerId, short addressId, short companyId)
         {
             if (addressId <= 0)
                 return Json(new { success = false, message = "Invalid Address ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId.ToString(), out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _customerService.GetSupplierAddressByIdAsync(companyIdShort, parsedUserId.Value, SupplierId, addressId);
+                var data = await _customerService.GetSupplierAddressByIdAsync(companyIdShort, parsedUserId.Value, customerId, addressId);
                 return data == null
                     ? Json(new { success = false, message = "Supplier Address not found" })
                     : Json(new { success = true, data });

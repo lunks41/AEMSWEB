@@ -11,25 +11,6 @@
     int companyId = ViewBag.CompanyId;
 }
 
-<style>
-    .modal-backdrop.show:not(:first-child) {
-        opacity: 0;
-    }
-    /* Ensure the parent modal stays behind the child modal */
-    .modal-backdrop.custom-backdrop {
-        z-index: 1040;
-    }
-
-    .modal.custom-modal {
-        z-index: 1050;
-    }
-
-    /* Optionally, for additional stacking if more modals are used */
-    .modal.modal-child {
-        z-index: 1060;
-    }
-</style>
-
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -53,10 +34,13 @@
 
                     <!-- Add Button -->
                     <div class="ms-auto">
+                        <button type="button" class="btn btn-success btn-sm" id="refreshGrid" onclick="loadBankGrid();">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
                         @if (canCreate)
                         {
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#bankModal" id="addBank">
-                                <i class="mdi mdi-plus me-1"></i> Add Bank
+                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addBankModal" id="addBankrecord">
+                                <span class="material-symbols-outlined">add</span>
                             </button>
                         }
                     </div>
@@ -73,73 +57,81 @@
     @await Html.PartialAsync("_Address")
     @await Html.PartialAsync("_Contact")
 }
-@section Scripts {
-    @await Html.PartialAsync("_Scripts")
 
+@section Scripts {
     <script>
 
     let companyId = 0;
     let permissions = {};
-    $(document).ready(function () {
-        companyId = getUrlParameter('companyId') || 0;
+        $(document).ready(function () {
+            companyId = getUrlParameter('companyId') || 0;
 
-        permissions = {
-            canCreate: @Json.Serialize(canCreate),
-            canEdit: @Json.Serialize(canEdit),
-            canDelete: @Json.Serialize(canDelete),
-            canRead: @Json.Serialize(canRead),
-        };
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+            Refresh();
 
-        //$('#accGroupCode, #accGroupName').on('input', checkMandatoryFields);
-        Refresh();
-        loadGrid();
-        //setDefaultValues();
-        //clearForm();
+            loadBankGrid();
+            initializeBankForm();
+            $('#btnBankEdit').on('click', function () { setBankMode("edit"); });
+            $('#btnBankClose').on('click', function () { $('#addBankModal').modal('hide'); });
+            $('#addBankrecord').on('click', function () {
+                initializeBankForm();
+                $('#addBankModal').modal('show');
+            });
 
-        //$('#btnEdit').on('click', function () { setMode("edit"); });
-        //$('#btnClose').on('click', function () { $('#addAccountGroupModal').modal('hide'); });
-        //$('#addrecord').on('click', function () {
-        //    clearForm();
-        //    setDefaultValues();
-        //    $('#addAccountGroupModal').modal('show');
-        //});
-    });
+            $('#btnBankContactEdit').on('click', function () { setBankContactMode("edit"); });
+            $('#btnBankContactClose').on('click', function () { $('#addBankContactModal').modal('hide'); });
+            $('#addBankContactrecord').on('click', function () {
+                initializeBankContactForm();
+                $('#addBankContactModal').modal('show');
+            });
 
-    function Refresh() {
-        const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
+            $('#btnBankAddressEdit').on('click', function () { setBankAddressMode("edit"); });
+            $('#btnBankAddressClose').on('click', function () { $('#addBankAddressModal').modal('hide'); });
+            $('#addBankAddressrecord').on('click', function () {
+                initializeBankAddressForm();
+                $('#addBankAddressModal').modal('show');
+            });
+        });
 
-        const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
+        function Refresh() {
+            const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
 
-        const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
+            const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
 
-        const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
+            const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
 
-         const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
+            const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
 
-    }
+            const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
 
-    function SelectedDropdown(DrpdwnName) { }
+        }
 
-    function OnSelectDropdown(dataItem, DrpdwnName) { }
+        function SelectedDropdown(DrpdwnName) { }
 
-    // Bank modal close event
-    $('#bankModal').on('hidden.bs.modal', function () {
-        clearBankForm();
-    });
+        function OnSelectDropdown(dataItem, DrpdwnName) { }
 
-    // Address modal close event
-    $('#addressModal').on('hidden.bs.modal', function () {
-        clearAddressForm();
-    });
+        document.getElementById('openChildAddressModal').addEventListener('click', function () {
+            var bankId = document.getElementById('bankId').value;
+            document.getElementById('address_bankId').value = bankId;
+            var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
+            addressModal.show();
+        });
 
-    // Contact modal close event
-    $('#contactModal').on('hidden.bs.modal', function () {
-        clearContactForm();
-    });
+        document.getElementById('openChildContactModal').addEventListener('click', function () {
+            var bankId = document.getElementById('bankId').value;
+            document.getElementById('contact_bankId').value = bankId;
+            var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
+            contactModal.show();
+        });
     </script>
 }

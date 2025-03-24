@@ -65,37 +65,7 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<BankViewModel> GetBankByIdAsync(short CompanyId, short UserId, short BankId)
-        {
-            try
-            {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<BankViewModel>($"SELECT BankId,CompanyId,BankCode,BankName,CurrencyId,AccountNo,SwiftCode,Remarks1,Remarks2,GLId,IsActive,IsOwnBank,CreateById,CreateDate,EditById,EditDate FROM dbo.M_Bank WHERE BankId={BankId} AND CompanyId ={CompanyId}");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.Bank,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "M_Bank",
-                    ModeId = (short)E_Mode.View,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId,
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
-
-        public async Task<BankViewModel> GetBankAsync(short CompanyId, short UserId, int BankId, string BankCode, string BankName)
+        public async Task<BankViewModel> GetBankByIdAsync(short CompanyId, short UserId, int BankId, string BankCode, string BankName)
         {
             try
             {

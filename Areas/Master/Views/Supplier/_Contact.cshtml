@@ -1,63 +1,63 @@
 ﻿  <!-- Contact Modal -->
-<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="addContactModal" tabindex="-1" aria-labelledby="addContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="contactModalLabel">Supplier Contact</h5>
+                <h5 class="modal-title" id="addContactModalLabel">Supplier Contact</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="contactForm">
-                    <input type="hidden" id="supplierId" />
+                    <input type="hidden" id="contact_supplierId" />
                     <input type="hidden" id="contactId" />
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Contact Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="contactName" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Other Name</label>
                             <input type="text" class="form-control" id="otherName">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
                             <input type="tel" class="form-control" id="mobileNo" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Office Number</label>
-                            <input type="tel" class="form-control" id="offNo">
+                            <input type="tel" class="form-control" id="offNocont">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Fax Number</label>
-                            <input type="tel" class="form-control" id="faxNo">
+                            <input type="tel" class="form-control" id="faxNocont">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="emailAdd" required>
+                            <input type="email" class="form-control" id="emailAddcont" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Messaging ID</label>
                             <input type="text" class="form-control" id="messId">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Messaging Type</label>
                             <input type="text" class="form-control" id="contactMessType">
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="isDefault">
+                                <input class="form-check-input" type="checkbox" id="isDefaultCont">
                                 <label class="form-check-label">Is Default Contact</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="isFinance">
+                                <input class="form-check-input" type="checkbox" id="isFinanceCont">
                                 <label class="form-check-label">Is Finance Contact</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="isSales">
+                                <input class="form-check-input" type="checkbox" id="isSalesCont">
                                 <label class="form-check-label">Is Sales Contact</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="isActive">
+                                <input class="form-check-input" type="checkbox" id="isActiveCont">
                                 <label class="form-check-label">Is Active</label>
                             </div>
                         </div>
@@ -65,17 +65,40 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnSupplierContactClose" onclick="clearSupplierContactForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSupplierContactEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnSupplierContactClear" onclick="clearSupplierContactForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnSupplierContactSave" onclick="saveSupplierContact()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function loadsupplierContactGrid(supplierId) {
+
+    function initializeSupplierContactForm() {
+        clearSupplierContactForm();
+        $('#isActiveCont').prop('checked', true);
+    }
+
+    function clearSupplierContactForm() {
+        $('#contactId').val('');
+        $('#contact_supplierId').val('');
+        $('#contactName').val('');
+        $('#otherName').val('');
+        $('#mobileNo').val('');
+        $('#offNocont').val('');
+        $('#faxNocont').val('');
+        $('#emailAddcont').val('');
+        $('#messId').val('');
+        $('#contactMessType').val('');
+        $('#isDefaultCont').prop('checked', false);
+        $('#isFinanceCont').prop('checked', false);
+        $('#isSalesCont').prop('checked', false);
+        $('#isActiveCont').prop('checked', false);
+    }
+
+    function loadsupplierContactGrid(contact_supplierId) {
         let grid = $("#gridcontact").data("kendoGrid");
         let url = '@Url.Action("ListContacts", "Supplier", new { area = "Master" })';
         let columns = [
@@ -98,7 +121,7 @@
                     return buttons;
                 }
             },
-            { field: "isDefault", title: "Is Default", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "isDefault", title: "Is Default", width: "200px", template: '<input type="checkbox" #= isDefault ? "checked" : "" # disabled />' },
             { field: "contactName", title: "Name", width: "200px" },
             { field: "otherName", title: "Othre Name", width: "200px" },
             { field: "mobileNo", title: "MobileNo", width: "200px" },
@@ -107,83 +130,103 @@
             { field: "emailAdd", title: "emailAdd", width: "200px" },
             { field: "messId", title: "messId", width: "200px" },
             { field: "contactMessType", title: "contactMessType", width: "200px" },
-            { field: "isFinance", title: "Is Financial", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
-            { field: "isSales", title: "Is Sales", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "isFinance", title: "Is Financial", width: "200px", template: '<input type="checkbox" #= isFinance ? "checked" : "" # disabled />' },
+            { field: "isSales", title: "Is Sales", width: "200px", template: '<input type="checkbox" #= isSales ? "checked" : "" # disabled />' },
             { field: "isActive", title: "Is Active", width: "200px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
         ];
 
         if (grid) {
-            // Update the data source with the new supplierId
-            grid.dataSource.read({ supplierId: supplierId, companyId: companyId });
+            grid.dataSource.read({ supplierId: contact_supplierId, companyId: companyId });
         } else {
-            // Initialize grid if it doesn’t exist
-            initializeKendoGrid("gridcontact", url, { supplierId, companyId }, columns);
+            initializeKendoGrid("gridcontact", url, { supplierId:contact_supplierId, companyId }, columns);
         }
-        //initializeKendoGrid("gridcontact", url, { supplierId, companyId }, columns);
     }
 
-    function openSupplierContactModal(id, mode) {
-        $.get('@Url.Action("GetContactById", "Supplier", new { area = "Master" })', { supplierId: id, contactId, companyId })
+    function openSupplierContactModal(contact_supplierId, contactId, mode) {
+        debugger;
+        event.preventDefault();
+        $.get('@Url.Action("GetContactById", "Supplier", new { area = "Master" })', { supplierId: contact_supplierId, contactId, companyId })
             .done(function (response) {
+                console.log("Response:", response); // Debug response structure
                 if (response.success) {
-                    populateContactFields(response.data);
-                    setContactMode(mode);
-                    $('#contactModal').modal('show');
-                    // Ensure supplier modal stays open
-                    $('#supplierModal').modal('show');
+                    populateSupplierContactFields(response.data); // Populate modal fields
+                    setSupplierContactMode(mode); // Set the mode (Edit/Add)
+                    $('#addContactModal').modal('show'); // Show the child modal
+
+                    // Ensure the parent modal stays visible
+                    var parentModal = document.getElementById('addSupplierModal');
+                    parentModal.classList.add('show');
+                    parentModal.style.display = 'block';
+                    parentModal.setAttribute('aria-hidden', 'false');
+                } else {
+                    alert(response.message || "Failed to fetch address.");
                 }
+            })
+            .fail(function (xhr, status, error) {
+                console.error("Error: ", error);
+                alert("An error occurred while fetching supplier address.");
             });
     }
 
-    function populateContactFields(data) {
-        $('#supplierId').val(data.supplierId);
+    function populateSupplierContactFields(data) {
+        debugger;
+        $('#contact_supplierId').val(data.supplierId);
         $('#contactId').val(data.contactId);
+
         $('#contactName').val(data.contactName);
         $('#otherName').val(data.otherName);
         $('#mobileNo').val(data.mobileNo);
-        $('#offNo').val(data.offNo);
-        $('#faxNo').val(data.faxNo);
-        $('#emailAdd').val(data.emailAdd);
+        $('#offNocont').val(data.offNo);
+        $('#faxNocont').val(data.faxNo);
+        $('#emailAddcont').val(data.emailAdd);
         $('#messId').val(data.messId);
         $('#contactMessType').val(data.contactMessType);
-        $('#isDefault').prop('checked', data.isDefault);
-        $('#isFinance').prop('checked', data.isFinance);
-        $('#isSales').prop('checked', data.isSales);
-        $('#isActive').prop('checked', data.isActive);
+
+        $('#isDefaultCont').prop('checked', data.isDefault);
+        $('#isFinanceCont').prop('checked', data.isFinance);
+        $('#isSalesCont').prop('checked', data.isSales);
+        $('#isActiveCont').prop('checked', data.isActive);
 
         $('#createBy').text(data.createBy || "N/A");
         $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
         $('#editBy').text(data.editBy || "N/A");
         $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-       // checkMandatoryFields();
+       //checksuppliercontactFields();
     }
 
-    function setContactMode(mode) {
+    function checksuppliercontactFields() {
+        let isValid = $('#contactName').val().trim() && $('#otherName').val().trim() && $('#mobileNo').val().trim() && $('#offNocont').val().trim() && $('#faxNocont').val().trim() && $('#emailAddcont').val().trim();
+
+        $('#contactName, #otherName').toggleClass('is-invalid', !isValid);
+        $('#btnSupplierContactSave').prop('disabled', !isValid);
+    }
+
+    function setSupplierContactMode(mode) {
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
-        $('#isActive').prop('disabled', !canEdit);
-        $('#btnSave').toggle(canEdit);
-        $('#btnEdit').toggle(isView && permissions.canEdit);
-        $('#btnClose').show();
-        $('#btnClear').hide();
+        $('#contactName, #otherName,  #mobileNo,#offNocont, #faxNocont,  #emailAddcont, #messId,  #contactMessType').prop('readonly', !canEdit);
+        $('#isDefaultCont').prop('disabled', !canEdit);
+        $('#isFinanceCont').prop('disabled', !canEdit);
+        $('#isSalesCont').prop('disabled', !canEdit);
+        $('#isActiveCont').prop('disabled', !canEdit);
+
+        $('#btnSupplierContactSave').toggle(canEdit);
+        $('#btnSupplierContactEdit').toggle(isView && permissions.canEdit);
+        $('#btnSupplierContactClose').show();
+        $('#btnSupplierContactClear').hide();
     }
 
-    function deleteSupplierContact(id, contactId) {
-        if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
-            return;
-        }
-
-        $('#confirmationModal').modal('show');
-        $('#confirmDelete').off('click').click(function () {
+    function deleteSupplierContact(contact_supplierId, contactId) {
+        showDeleteModal("Are you sure you want to delete this records?", function () {
             $.ajax({
-                url: `/Master/Supplier/DeleteContact?supplierId=${id}&contactId=${contactId}&companyId=${companyId}`,
+                url: '@Url.Action("DeleteContact", "Supplier", new { area = "Master" })',
                 type: "DELETE",
+                data: { supplierId: id, contactId: contactId, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
-                        loadGrid();
+                        loadsupplierContactGrid(contact_supplierId);
                         $('#confirmationModal').modal('hide');
                     }
                 }
@@ -191,42 +234,38 @@
         });
     }
 
-    function saveSupplier() {
-        const supplierData = {
-            SupplierId: $('#supplierId').val() || 0,
-            SupplierCode: $('#supplierCode').val().trim(),
-            SupplierName: $('#supplierName').val().trim(),
-            // Add other fields
+    function saveSupplierContact() {
+        let successSupplierId = parseInt($('#contact_supplierId').val()) || 0;
+        const supplierContactData = {
+            SupplierId: parseInt( $('#contact_supplierId').val()) || 0,
+            ContactId: parseInt($('#contactId').val()) || 0,
+            ContactName: $('#contactName').val(),
+            OtherName: $('#otherName').val(),
+            MobileNo: $('#mobileNo').val(),
+            OffNo: $('#offNocont').val(),
+            FaxNo: $('#faxNocont').val(),
+            EmailAdd: $('#emailAddcont').val(),
+            MessId: $('#messId').val(),
+            ContactMessType: $('#contactMessType').val(),
+            IsDefaultCont: $('#isDefaultCont').prop('checked'),
+            IsFinanceCont: $('#isFinanceCont').prop('checked'),
+            IsSalesCont: $('#isSalesCont').prop('checked'),
+            IsActiveCont: $('#isActiveCont').prop('checked'),
+
         };
+        console.log("Supplier contact : " + supplierContactData);
         $.ajax({
             url: '@Url.Action("SaveContact", "Supplier", new { area = "Master" })',
             type: "POST",
-            data: JSON.stringify({ supplier: supplierData, companyId }),
+            data: JSON.stringify({ supplierContact: supplierContactData, companyId }),
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    $('#contactModal').modal('hide');
-                    loadGrid();
-                    clearForm();
+                    $('#addContactModal').modal('hide');
+                    loadsupplierContactGrid(successSupplierId);
+                    clearSupplierContactForm();
                 }
             }
         });
-    }
-
-    function clearContactForm() {
-        $('#contactId').val('');
-        $('#supplierId').val(''); // Hidden field in contact modal
-        $('#contactName').val('');
-        $('#otherName').val('');
-        $('#mobileNo').val('');
-        $('#offNo').val('');
-        $('#faxNo').val('');
-        $('#emailAdd').val('');
-        $('#messId').val('');
-        $('#contactMessType').val('');
-        $('#isDefault').prop('checked', false);
-        $('#isFinance').prop('checked', false);
-        $('#isSales').prop('checked', false);
-        $('#isActive').prop('checked', false);
     }
 </script>

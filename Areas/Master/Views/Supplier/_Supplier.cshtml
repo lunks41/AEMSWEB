@@ -1,8 +1,8 @@
-﻿<div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+﻿<div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="supplierModalLabel">Supplier Details</h5>
+                <h5 class="modal-title" id="addSupplierModalLabel">Supplier Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearSupplierForm();"></button>
             </div>
             <div class="modal-body p-4">
@@ -67,8 +67,8 @@
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label for="cmd_supplier" class="form-label">Supplier <span class="text-danger">*</span></label>
-                                <select id="cmd_supplier" style="width: 100%"></select>
+                                <label for="cmd_bank" class="form-label">Bank <span class="text-danger">*</span></label>
+                                <select id="cmd_bank" style="width: 100%"></select>
                             </div>
                         </div>
                     </div>
@@ -126,11 +126,11 @@
                         </li>
                     </ul>
 
-                    <div class="tab-content mt-3">
+                    <div class="tab-content mt-3" id="supplierSubTabs">
                         <!-- Addresses Tab -->
                         <div class="tab-pane fade show active" id="addresses">
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
+                                <button type="button" class="btn btn-primary" id="openChildAddressModal">
                                     <i class="mdi mdi-plus"></i> Add Address
                                 </button>
                             </div>
@@ -140,7 +140,7 @@
                         <!-- Contacts Tab -->
                         <div class="tab-pane fade" id="contacts">
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                <button type="button" class="btn btn-primary" id="openChildContactModal">
                                     <i class="mdi mdi-plus"></i> Add Contact
                                 </button>
                             </div>
@@ -184,11 +184,203 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnDesignationClose" onclick="clearDesignationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnDesignationClear" onclick="clearDesignationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnDesignationSave" onclick="saveDesignation()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnSupplierClose" onclick="clearSupplierForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSupplierEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnSupplierClear" onclick="clearSupplierForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnSupplierSave" onclick="saveSupplier()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+
+    function initializeSupplierForm() {
+        clearSupplierForm();
+        $('#isActive').prop('checked', true);
+    }
+
+    function clearSupplierForm() {
+        $('#supplierId').val('');
+        $('#supplierCode').val('');
+        $('#supplierName').val('');
+        $('#supplierOtherName').val('');
+        $('#supplierShortName').val('');
+        $('#supplierRegNo').val('');
+        $('#cmd_currency').data("kendoComboBox").value('');
+        $('#cmd_creditTerm').data("kendoComboBox").value('');
+        $('#cmd_accSetup').data("kendoComboBox").value('');
+        $('#cmd_bank').data("kendoComboBox").value('');
+        $('#remarks').val('');
+        $('#isSupplier').prop('checked', false);
+        $('#isVendor').prop('checked', false);
+        $('#isTrader').prop('checked', false);
+        $('#isSupplier').prop('checked', false);
+        $('#isActive').prop('checked', false);
+        $('#createBy').text('');
+        $('#createDate').text('');
+        $('#editBy').text('');
+        $('#editDate').text('');
+        $('#btnSupplierSave').prop('disabled', false);
+        $('#btnSupplierSave').show();
+        $('#btnSupplierClear').show();
+        $('#btnSupplierEdit').hide();
+        $('#supplierTabs').hide();
+        $('#supplierSubTabs').hide();
+        // Check if grids exist before clearing
+        const addressGrid = $("#gridaddress").data("kendoGrid");
+        if (addressGrid) {
+            addressGrid.dataSource.data([]);
+        }
+
+        const contactGrid = $("#gridcontact").data("kendoGrid");
+        if (contactGrid) {
+            contactGrid.dataSource.data([]);
+        }
+    }
+
+    function loadSupplierGrid() {
+        let searchString = $('#txtsearch').val();
+        let url = '@Url.Action("List", "Supplier", new { area = "Master" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "150px",
+                template: function (dataItem) {
+                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openSupplierModal('${dataItem.supplierId}', 'view')">
+                    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openSupplierModal('${dataItem.supplierId}', 'edit')">
+                    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                    }
+
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteSupplier('${dataItem.supplierId}')">
+                    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
+                }
+            },
+            { field: "supplierCode", title: "Code" },
+            { field: "supplierName", title: "Name" },
+            { field: "creditTermCode", title: "Credit Term" },
+            { field: "currencyName", title: "Currency Name" },
+            { field: "remarks", title: "Remarks" },
+            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+        ];
+
+        initializeKendoGrid("gridsupplier", url, { searchString, companyId }, columns);
+    }
+
+    function openSupplierModal(id, mode) {
+        $.get('@Url.Action("GetById", "Supplier", new { area = "Master" })', { supplierId: id, companyId })
+            .done(function (response) {
+                if (response.success) {
+
+                    populateSupplierFields(response.data);
+                    setSupplierMode(mode);
+
+                    $('#addSupplierModal').modal('show');
+
+                }
+            });
+    }
+
+    function populateSupplierFields(data) {
+        $('#supplierId').val(data.supplierId);
+        $('#supplierCode').val(data.supplierCode);
+        $('#supplierName').val(data.supplierName);
+        $('#supplierOtherName').val(data.supplierOtherName);
+        $('#supplierShortName').val(data.supplierShortName);
+        $('#supplierRegNo').val(data.supplierRegNo);
+        $('#cmd_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+        $('#cmd_creditTerm').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
+        $('#cmd_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
+        $('#cmd_bank').data("kendoComboBox").value(data.bankId > 0 ? data.bankId : '');
+        $('#remarks').val(data.remarks);
+        $('#isSupplier').prop('checked', data.isSupplier);
+        $('#isVendor').prop('checked', data.isVendor);
+        $('#isTrader').prop('checked', data.isTrader);
+        $('#isSupplier').prop('checked', data.isSupplier);
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#createBy').text(data.createBy || "N/A");
+        $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#editBy').text(data.editBy || "N/A");
+        $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+        // Destroy existing grids if they exist
+        if ($("#gridaddress").data("kendoGrid")) {
+            $("#gridaddress").data("kendoGrid").destroy();
+            $("#gridaddress").empty();
+        }
+        if ($("#gridcontact").data("kendoGrid")) {
+            $("#gridcontact").data("kendoGrid").destroy();
+            $("#gridcontact").empty();
+        }
+
+        // Reinitialize grids with new supplierId
+        loadsupplierAddressGrid(data.supplierId);
+        loadsupplierContactGrid(data.supplierId);
+       // checkMandatoryFields();
+    }
+
+    function setSupplierMode(mode) {
+
+        const isView = mode === 'view';
+        const canEdit = permissions.canEdit && !isView;
+
+        $('#supplierCode, #supplierName, #remarks').prop('readonly', !canEdit);
+        $('#isActive').prop('disabled', !canEdit);
+        $('#btnSupplierSave').toggle(canEdit);
+        $('#btnSupplierEdit').toggle(isView && permissions.canEdit);
+        $('#btnSupplierClose').show();
+        $('#btnSupplierClear').hide();
+        $('#supplierTabs').show();
+        $('#supplierSubTabs').show();
+    }
+
+    function deleteSupplier(id) {
+        if (!permissions.canDelete) {
+            alert('You do not have permission to delete records.');
+            return;
+        }
+
+        $('#confirmationModal').modal('show');
+        $('#confirmDelete').off('click').click(function () {
+            $.ajax({
+                url: `/Master/Supplier/Delete?supplierId=${id}&companyId=${companyId}`,
+                type: "DELETE",
+                success: function (response) {
+                    if (response.success) {
+                        loadSupplierGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveSupplier() {
+        const supplierData = {
+            SupplierId: $('#supplierId').val() || 0,
+            SupplierCode: $('#supplierCode').val().trim(),
+            SupplierName: $('#supplierName').val().trim(),
+            // Add other fields
+        };
+        $.ajax({
+            url: '@Url.Action("Save", "Supplier", new { area = "Master" })',
+            type: "POST",
+            data: JSON.stringify({ supplier: supplierData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    $('#addSupplierModal').modal('hide');
+                    loadSupplierGrid();
+                    clearForm();
+                }
+            }
+        });
+    }
+</script>

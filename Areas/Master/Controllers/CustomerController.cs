@@ -196,7 +196,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetContactById(int CustomerId, short contactId, string companyId)
+        public async Task<JsonResult> GetContactById(int customerId, short contactId, string companyId)
         {
             if (contactId <= 0)
                 return Json(new { success = false, message = "Invalid Contact ID" });
@@ -206,7 +206,7 @@ namespace AEMSWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetCustomerContactByIdAsync(companyIdShort, parsedUserId.Value, CustomerId, contactId);
+                var data = await _customerService.GetCustomerContactByIdAsync(companyIdShort, parsedUserId.Value, customerId, contactId);
                 return data == null
                     ? Json(new { success = false, message = "Customer Contact not found" })
                     : Json(new { success = true, data });
@@ -312,17 +312,17 @@ namespace AEMSWEB.Areas.Master.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetAddressById(int CustomerId, short addressId, string companyId)
+        public async Task<IActionResult> GetAddressById(int customerId, short addressId, short companyId)
         {
             if (addressId <= 0)
                 return Json(new { success = false, message = "Invalid Address ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId.ToString(), out short companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _customerService.GetCustomerAddressByIdAsync(companyIdShort, parsedUserId.Value, CustomerId, addressId);
+                var data = await _customerService.GetCustomerAddressByIdAsync(companyIdShort, parsedUserId.Value, customerId, addressId);
                 return data == null
                     ? Json(new { success = false, message = "Customer Address not found" })
                     : Json(new { success = true, data });

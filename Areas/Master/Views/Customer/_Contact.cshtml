@@ -1,5 +1,5 @@
 ﻿  <!-- Contact Modal -->
-<div class="modal fade" id="addContactModal" tabindex="-1" aria-labelledby="addContactModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade" id="addContactModal" tabindex="-1" aria-labelledby="addContactModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,38 +8,38 @@
             </div>
             <div class="modal-body">
                 <form id="contactForm">
-                    <input type="hidden" id="customerId" />
+                    <input type="hidden" id="contact_customerId" />
                     <input type="hidden" id="contactId" />
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Contact Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="contactName" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Other Name</label>
                             <input type="text" class="form-control" id="otherName">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
                             <input type="tel" class="form-control" id="mobileNo" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Office Number</label>
-                            <input type="tel" class="form-control" id="offNo">
+                            <input type="tel" class="form-control" id="offNocont">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Fax Number</label>
-                            <input type="tel" class="form-control" id="faxNo">
+                            <input type="tel" class="form-control" id="faxNocont">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="emailAdd" required>
+                            <input type="email" class="form-control" id="emailAddcont" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Messaging ID</label>
                             <input type="text" class="form-control" id="messId">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label">Messaging Type</label>
                             <input type="text" class="form-control" id="contactMessType">
                         </div>
@@ -83,13 +83,13 @@
 
     function clearCustomerContactForm() {
         $('#contactId').val('');
-        $('#customerId').val('');
+        $('#contact_customerId').val('');
         $('#contactName').val('');
         $('#otherName').val('');
         $('#mobileNo').val('');
-        $('#offNo').val('');
-        $('#faxNo').val('');
-        $('#emailAdd').val('');
+        $('#offNocont').val('');
+        $('#faxNocont').val('');
+        $('#emailAddcont').val('');
         $('#messId').val('');
         $('#contactMessType').val('');
         $('#isDefaultCont').prop('checked', false);
@@ -98,7 +98,7 @@
         $('#isActiveCont').prop('checked', false);
     }
 
-    function loadcustomerContactGrid(customerId) {
+    function loadcustomerContactGrid(contact_customerId) {
         let grid = $("#gridcontact").data("kendoGrid");
         let url = '@Url.Action("ListContacts", "Customer", new { area = "Master" })';
         let columns = [
@@ -136,39 +136,49 @@
         ];
 
         if (grid) {
-            grid.dataSource.read({ customerId: customerId, companyId: companyId });
+            grid.dataSource.read({ customerId: contact_customerId, companyId: companyId });
         } else {
-            initializeKendoGrid("gridcontact", url, { customerId, companyId }, columns);
+            initializeKendoGrid("gridcontact", url, { customerId:contact_customerId, companyId }, columns);
         }
     }
 
-    function openCustomerContactModal(id, mode) {
-        $.get('@Url.Action("GetContactById", "Customer", new { area = "Master" })', { customerId: id, contactId, companyId })
+    function openCustomerContactModal(contact_customerId, contactId, mode) {
+        debugger;
+        event.preventDefault();
+        $.get('@Url.Action("GetContactById", "Customer", new { area = "Master" })', { customerId: contact_customerId, contactId, companyId })
             .done(function (response) {
+                console.log("Response:", response); // Debug response structure
                 if (response.success) {
-                    populateContactFields(response.data);
-                    setContactMode(mode);
-                    // Show the child modal
-                    $('#addContactModal').modal('show');
-                    // Keep the parent modal open
+                    populateCustomerContactFields(response.data); // Populate modal fields
+                    setCustomerContactMode(mode); // Set the mode (Edit/Add)
+                    $('#addContactModal').modal('show'); // Show the child modal
+
+                    // Ensure the parent modal stays visible
                     var parentModal = document.getElementById('addCustomerModal');
                     parentModal.classList.add('show');
                     parentModal.style.display = 'block';
                     parentModal.setAttribute('aria-hidden', 'false');
+                } else {
+                    alert(response.message || "Failed to fetch address.");
                 }
+            })
+            .fail(function (xhr, status, error) {
+                console.error("Error: ", error);
+                alert("An error occurred while fetching customer address.");
             });
     }
 
-    function populateContactFields(data) {
-        $('#customerId').val(data.customerId);
+    function populateCustomerContactFields(data) {
+        debugger;
+        $('#contact_customerId').val(data.customerId);
         $('#contactId').val(data.contactId);
 
         $('#contactName').val(data.contactName);
         $('#otherName').val(data.otherName);
         $('#mobileNo').val(data.mobileNo);
-        $('#offNo').val(data.offNo);
-        $('#faxNo').val(data.faxNo);
-        $('#emailAdd').val(data.emailAdd);
+        $('#offNocont').val(data.offNo);
+        $('#faxNocont').val(data.faxNo);
+        $('#emailAddcont').val(data.emailAdd);
         $('#messId').val(data.messId);
         $('#contactMessType').val(data.contactMessType);
 
@@ -186,17 +196,17 @@
     }
 
     function checkcustomercontactFields() {
-        let isValid = $('#contactName').val().trim() && $('#otherName').val().trim() && $('#mobileNo').val().trim() && $('#offNo').val().trim() && $('#faxNo').val().trim() && $('#emailAdd').val().trim();
+        let isValid = $('#contactName').val().trim() && $('#otherName').val().trim() && $('#mobileNo').val().trim() && $('#offNocont').val().trim() && $('#faxNocont').val().trim() && $('#emailAddcont').val().trim();
 
         $('#contactName, #otherName').toggleClass('is-invalid', !isValid);
         $('#btnCustomerContactSave').prop('disabled', !isValid);
     }
 
-    function setContactMode(mode) {
+    function setCustomerContactMode(mode) {
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
-        $('#contactName, #otherName,  #mobileNo,#offNo, #faxNo,  #emailAdd, #messId,  #contactMessType').prop('readonly', !canEdit);
+        $('#contactName, #otherName,  #mobileNo,#offNocont, #faxNocont,  #emailAddcont, #messId,  #contactMessType').prop('readonly', !canEdit);
         $('#isDefaultCont').prop('disabled', !canEdit);
         $('#isFinanceCont').prop('disabled', !canEdit);
         $('#isSalesCont').prop('disabled', !canEdit);
@@ -208,15 +218,15 @@
         $('#btnCustomerContactClear').hide();
     }
 
-    function deleteCustomerContact(id, contactId) {
+    function deleteCustomerContact(contact_customerId, contactId) {
         showDeleteModal("Are you sure you want to delete this records?", function () {
             $.ajax({
                 url: '@Url.Action("DeleteContact", "Customer", new { area = "Master" })',
                 type: "DELETE",
-                data: { countryId: id, contactId: contactId, companyId: companyId },
+                data: { customerId: id, contactId: contactId, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
-                        loadCountryGrid();
+                        loadcustomerContactGrid(contact_customerId);
                         $('#confirmationModal').modal('hide');
                     }
                 }
@@ -225,15 +235,16 @@
     }
 
     function saveCustomerContact() {
+        let successCustomerId = parseInt($('#contact_customerId').val()) || 0;
         const customerContactData = {
-            CustomerId: parseInt( $('#customerId').val()) || 0,
-            ContactId: parseInt($('#contactId').val()),
+            CustomerId: parseInt( $('#contact_customerId').val()) || 0,
+            ContactId: parseInt($('#contactId').val()) || 0,
             ContactName: $('#contactName').val(),
             OtherName: $('#otherName').val(),
             MobileNo: $('#mobileNo').val(),
-            OffNo: $('#offNo').val(),
-            FaxNo: $('#faxNo').val(),
-            EmailAdd: $('#emailAdd').val(),
+            OffNo: $('#offNocont').val(),
+            FaxNo: $('#faxNocont').val(),
+            EmailAdd: $('#emailAddcont').val(),
             MessId: $('#messId').val(),
             ContactMessType: $('#contactMessType').val(),
             IsDefaultCont: $('#isDefaultCont').prop('checked'),
@@ -242,6 +253,7 @@
             IsActiveCont: $('#isActiveCont').prop('checked'),
 
         };
+        console.log("Customer contact : " + customerContactData);
         $.ajax({
             url: '@Url.Action("SaveContact", "Customer", new { area = "Master" })',
             type: "POST",
@@ -250,8 +262,8 @@
             success: function (response) {
                 if (response.success) {
                     $('#addContactModal').modal('hide');
-                    loadGrid();
-                    clearForm();
+                    loadcustomerContactGrid(successCustomerId);
+                    clearCustomerContactForm();
                 }
             }
         });

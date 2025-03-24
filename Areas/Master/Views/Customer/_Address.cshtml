@@ -1,5 +1,5 @@
 ﻿  <!-- Address Modal -->
-<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <form id="addressForm">
-                    <input type="hidden" id="customerId" />
+                    <input type="hidden" id="address_customerId" />
                     <input type="hidden" id="addressId" />
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -95,14 +95,14 @@
 
     function clearCustomerAddressForm() {
         $('#addressId').val('');
-        $('#customerId').val(''); // Hidden field in address modal
+        $('#address_customerId').val(''); // Hidden field in address modal
         $('#address1').val('');
         $('#address2').val('');
         $('#address3').val('');
         $('#address4').val('');
         $('#pinCode').val('');
         $('#cmd_country').data("kendoComboBox").value('');
-        $('#phoneNo').val('');
+        $('#phoneNoAdd').val('');
         $('#faxNoAdd').val('');
         $('#emailAddadd').val('');
         $('#webUrl').val('');
@@ -117,7 +117,7 @@
         $('#btnCustomerAddressEdit').hide();
     }
 
-    function loadcustomerAddressGrid(customerId) {
+    function loadcustomerAddressGrid(address_customerId) {
         let grid = $("#gridaddress").data("kendoGrid");
         let url = '@Url.Action("ListAddresses", "Customer", new { area = "Master" })';
         let columns = [
@@ -146,6 +146,7 @@
             { field: "address3", title: "Address 3", width: "200px" },
             { field: "address4", title: "Address 4", width: "200px" },
             { field: "pinCode", title: "Postal Code", width: "100px" },
+            { field: "countryName", title: "Country", width: "100px" },
             { field: "remarks", title: "Remarks", width: "150px" },
             { field: "phoneNo", title: "Phone No", width: "120px" },
             { field: "faxNo", title: "Fax No", width: "120px" },
@@ -158,55 +159,41 @@
         ];
 
         if (grid) {
-            grid.dataSource.read({ customerId: customerId, companyId: companyId });
+            grid.dataSource.read({ customerId: address_customerId, companyId: companyId });
         } else {
-            initializeKendoGrid("gridaddress", url, { customerId, companyId }, columns);
+            initializeKendoGrid("gridaddress", url, { customerId: address_customerId, companyId }, columns);
         }
     }
 
-   function openCustomerAddressModal(id, addressId, mode) {
-       $.ajax({
-           url: '@Url.Action("GetAddressById", "Customer", new { area = "Master" })',
-           type: "GET",
-           data: {
-               customerId: id,
-               addressId: addressId,
-               companyId: companyId
-           }, // No contentType needed
-           success: function (response) {
-               if (response.success) {
-                   populateAddressFields(response.data);
-                   setAddressMode(mode);
-                   // Keep parent modal open
-                   $('#addCustomerModal').css('overflow', 'visible');
-                   $('#addAddressModal').modal('show');
-               }
-           }
-       });
-
-
-        @*$.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId: addressId, companyId: companyId })
+    function openCustomerAddressModal(id, addressId, mode) {
+        debugger;
+        event.preventDefault();
+        $.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId, companyId })
             .done(function (response) {
-                debugger;
-                console.log("address:", response);
+                console.log("Response:", response); // Debug response structure
                 if (response.success) {
-                    populateAddressFields(response.data);
-                    setAddressMode(mode);
-                    // Show the child modal
-                    $('#addAddressModal').modal('show');
+                    populateCustomerAddressFields(response.data); // Populate modal fields
+                    setCustomerAddressMode(mode); // Set the mode (Edit/Add)
+                    $('#addAddressModal').modal('show'); // Show the child modal
 
-                    // Keep the parent modal open
+                    // Ensure the parent modal stays visible
                     var parentModal = document.getElementById('addCustomerModal');
                     parentModal.classList.add('show');
                     parentModal.style.display = 'block';
                     parentModal.setAttribute('aria-hidden', 'false');
+                } else {
+                    alert(response.message || "Failed to fetch address.");
                 }
-            });*@
+            })
+            .fail(function (xhr, status, error) {
+                console.error("Error: ", error);
+                alert("An error occurred while fetching customer address.");
+            });
     }
 
-    function populateAddressFields(data) {
-        debugger;
-        $('#customerId').val(data.customerId);
+    function populateCustomerAddressFields(data) {
+
+        $('#address_customerId').val(data.customerId);
         $('#addressId').val(data.addressId);
         $('#address1').val(data.address1);
         $('#address2').val(data.address2);
@@ -214,7 +201,7 @@
         $('#address4').val(data.address4);
         $('#pinCode').val(data.pinCode);
         $('#cmd_country').data("kendoComboBox").value(data.countryId > 0 ? data.countryId : '');
-        $('#phoneNo').val(data.phoneNo);
+        $('#phoneNoAdd').val(data.phoneNo);
         $('#faxNoAdd').val(data.faxNo);
         $('#emailAddadd').val(data.emailAdd);
         $('#webUrl').val(data.webUrl);
@@ -231,12 +218,12 @@
 
     }
 
-    function setAddressMode(mode) {
+    function setCustomerAddressMode(mode) {
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
         // Enable/disable fields in address modal
-        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNo, #faxNoAdd, #emailAddadd, #webUrl')
+        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNoAdd, #faxNoAdd, #emailAddadd, #webUrl')
             .prop('readonly', !canEdit);
         $('#isDefaultAdd, #isDeliveryAdd, #isFinAdd, #isSalesAdd, #isActiveAdd').prop('disabled', !canEdit);
 
@@ -246,19 +233,19 @@
         $('#btnCustomerAddressClear').hide();
     }
 
-    function deleteCustomerAddress(customerId, addressId) {
+    function deleteCustomerAddress(address_customerId, addressId) {
         showDeleteModal("Are you sure you want to delete this records?", function () {
             $.ajax({
                 url: '@Url.Action("DeleteAddress", "Customer", new { area = "Master" })',
                 type: "DELETE",
                 data: {
-                    customerId: customerId,
+                    customerId: address_customerId,
                     addressId: addressId,
                     companyId: companyId
                 },
                 success: function (response) {
                     if (response.success) {
-                        loadCountryGrid();
+                        loadcustomerAddressGrid(address_customerId);
                         $('#confirmationModal').modal('hide');
                     }
                 }
@@ -267,16 +254,19 @@
     }
 
     function saveCustomerAddress() {
-        const addressData = {
-            CustomerId: parseInt($('#customerId').val()) || 0,
-            AddressId: parseInt($('#addressId').val()),
+
+        debugger;
+        let successCustomerId = parseInt($('#address_customerId').val()) || 0;
+        const customeraddressData = {
+            CustomerId: parseInt($('#address_customerId').val()) || 0,
+            AddressId: parseInt($('#addressId').val()) || 0,
             Address1: $('#address1').val(),
             Address2: $('#address2').val(),
             Address3: $('#address3').val(),
             Address4: $('#address4').val(),
             PinCode: $('#pinCode').val(),
             CountryId: $('#cmd_country').data("kendoComboBox").value(),
-            PhoneNo: $('#phoneNo').val(),
+            PhoneNo: $('#phoneNoAdd').val(),
             FaxNo: $('#faxNoAdd').val(),
             EmailAdd: $('#emailAddadd').val(),
             webUrl: $('#webUrl').val(),
@@ -286,16 +276,17 @@
             IsSalesAdd: $('#isSalesAdd').prop('checked'),
             IsActive: $('#isActiveAdd').prop('checked'),
         };
+        console.log("Customer Address : " + customeraddressData);
         $.ajax({
             url: '@Url.Action("SaveAddress", "Customer", new { area = "Master" })',
             type: "POST",
-            data: JSON.stringify({ customerAddress: addressData, companyId }),
+            data: JSON.stringify({ customerAddress: customeraddressData, companyId }),
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
                     $('#addAddressModal').modal('hide');
-                    loadGrid();
-                    clearForm();
+                    loadcustomerAddressGrid(successCustomerId);
+                    clearCustomerAddressForm();
                 }
             }
         });
