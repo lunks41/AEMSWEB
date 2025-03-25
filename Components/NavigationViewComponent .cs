@@ -49,12 +49,13 @@ namespace AEMSWEB.Components
             if (rights != null && rights.Any())
             {
                 var modules = rights
-                    .GroupBy(t => new { t.ModuleId, t.ModuleCode, t.ModuleName })
+                    .GroupBy(t => new { t.ModuleId, t.ModuleCode, t.ModuleName, t.ModuleSeqNo })
                     .Select(g => new ModuleView
                     {
                         ModuleId = g.Key.ModuleId,
                         ModuleCode = g.Key.ModuleCode,
                         ModuleName = g.Key.ModuleName,
+                        ModuleSeqNo = g.Key.ModuleSeqNo,
                         TransCategorys = g.GroupBy(tc => new { tc.TransCategoryId, tc.TransCategoryCode, tc.TransCategoryName })
                             .Select(tcg => new TransCategoryView
                             {

@@ -8,14 +8,15 @@ namespace AEMSWEB.Areas.Project.Models
         public JobOrderHdViewModel jobOrderHd { get; set; }
         public string? companyId { get; set; }
     }
+
     public class SaveJobOrderDtViewModel
     {
         public JobOrderDtViewModel jobOrderDt { get; set; }
         public string? companyId { get; set; }
     }
+
     public class JobOrderHdViewModel
     {
-
         public long JobOrderId { get; set; }
         public byte? CompanyId { get; set; }
         public string? JobOrderNo { get; set; }
@@ -70,7 +71,6 @@ namespace AEMSWEB.Areas.Project.Models
 
     public class JobOrderDtViewModel
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long JobOrderId { get; set; }
@@ -168,5 +168,21 @@ namespace AEMSWEB.Areas.Project.Models
         public string? responseMessage { get; set; }
         public Int64 totalRecords { get; set; }
         public List<JobOrderHdViewModel> data { get; set; }
+    }
+
+    public class StatusCountViewModel
+    {
+        public int? StatusId { get; set; }
+        public int CountId { get; set; }
+    }
+
+    public class StatusCountsViewModel
+    {
+        public int All { get; set; }
+        public int Pending { get; set; }
+        public int Confirm { get; set; }
+        public int Completed { get; set; }
+        public int Cancel { get; set; }
+        public int Post { get; set; }
     }
 }

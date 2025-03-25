@@ -3,53 +3,48 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
+}
+
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <!-- Header Section -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="card-title mb-0">Job Management</h3>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-light btn-sm" id="refreshGrid" onclick="loadJobOrderGrid()" data-bs-toggle="tooltip" title="Refresh">
-                            <span class="material-symbols-outlined">refresh</span>
-                        </button>
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal" id="addJobOrderrecord">
-                            <span class="material-symbols-outlined me-1">add</span> New Job
-                        </button>
+                <!-- Simple Header Section -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Job Management</h4>
+                    <div>
+                        <button class="btn btn-light btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Refresh</button>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal">Add</button>
                     </div>
                 </div>
 
-                <!-- Filter Section -->
+                <!-- Simple Filter Section -->
                 <div class="filter-section bg-light p-3 rounded mb-4">
-                    <div class="row g-3 align-items-center">
+                    <div class="row align-items-center">
                         <div class="col-md-3">
-                            <input type="text" id="txtsearch" class="form-control form-control-sm shadow-sm"
-                                   placeholder="Search jobs..." onkeydown="handleEnterKey(event)">
+                            <input type="text" id="txtsearch" class="form-control form-control-sm" placeholder="Search jobs...">
                         </div>
                         <div class="col-md-3">
-                            <select id="customerDropdown" class="form-select form-select-sm shadow-sm">
+                            <select id="customerDropdown" class="form-select form-select-sm">
                                 <option value="">All Customers</option>
-                                @* Populate dynamically via JS *@
+                                <!-- Dynamically populated options -->
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <div class="input-group input-group-sm shadow-sm">
-                                <span class="input-group-text bg-white border-end-0"><small>From</small></span>
-                                <input type="date" id="fromDate" class="form-control">
-                                <span class="input-group-text bg-white border-start-0 border-end-0"><small>To</small></span>
-                                <input type="date" id="toDate" class="form-control">
+                            <div class="d-flex">
+                                <input type="date" id="fromDate" class="form-control form-control-sm me-2" placeholder="From">
+                                <input type="date" id="toDate" class="form-control form-control-sm" placeholder="To">
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-primary btn-sm w-100" onclick="loadJobOrderGrid()">
-                                    <span class="material-symbols-outlined align-middle">search</span>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearSearch()">
-                                    <span class="material-symbols-outlined align-middle">close</span>
-                                </button>
-                            </div>
+                        <div class="col-md-2 d-flex">
+                            <button type="button" class="btn btn-primary btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Search</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">Clear</button>
                         </div>
                     </div>
                 </div>
@@ -58,32 +53,32 @@
                 <ul class="nav nav-pills mb-3 status-tabs" id="jobOrderTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" data-status="all" data-bs-toggle="tab">
-                            <span class="badge bg-secondary me-1">150</span> All Jobs
+                            <span class="badge bg-secondary me-1">0</span> All Jobs
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" data-status="pending" data-bs-toggle="tab">
-                            <span class="badge bg-warning me-1">15</span> Pending
+                            <span class="badge bg-warning me-1">0</span> Pending
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" data-status="confirm" data-bs-toggle="tab">
-                            <span class="badge bg-primary me-1">30</span> Confirmed
+                            <span class="badge bg-primary me-1">0</span> Confirmed
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" data-status="completed" data-bs-toggle="tab">
-                            <span class="badge bg-success me-1">90</span> Completed
+                            <span class="badge bg-success me-1">0</span> Completed
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" data-status="cancel" data-bs-toggle="tab">
-                            <span class="badge bg-danger me-1">10</span> Canceled
+                            <span class="badge bg-danger me-1">0</span> Canceled
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" data-status="post" data-bs-toggle="tab">
-                            <span class="badge bg-info me-1">5</span> Posted
+                            <span class="badge bg-info me-1">0</span> Posted
                         </button>
                     </li>
                 </ul>
@@ -141,49 +136,368 @@
         z-index: 1000;
     }
 </style>
+
 @section Scripts {
     <script>
-     let companyId = 0;
-    let permissions = {};
-    $(document).ready(function () {
-        companyId = getUrlParameter('companyId') || 0;
-        loadJobOrderGrid();
-    });
+        let companyId = 0;
+        let currentStatus = 'all';
+        let permissions = {}; // Initialize based on your auth system
 
-    function loadJobOrderGrid() {
-        let searchString = $('#txtsearch').val();
-        let url = '@Url.Action("JobOrderList", "Job", new { area = "Project" })';
-        let columns = [
-            {
-                title: "Actions",
-                width: "150px",
-                template: function (dataItem) {
-                    let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerModal('${dataItem.jobOrderId}', 'view')">
-                 <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+        $(document).ready(function () {
+            debugger;
+            companyId = getUrlParameter('companyId') || 1;
 
-                    if (permissions.canEdit) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerModal('${dataItem.jobOrderId}', 'edit')">
-                 <i class="material-symbols-outlined text-warning">edit</i></button>`;
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
+            // Set default date range: from three months ago to today
+            const today = new Date();
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            $('#fromDate').val(formatDate(threeMonthsAgo));
+            $('#toDate').val(formatDate(today));
+
+            loadStatusCounts();
+            // Initialize the grid only once
+            if (!$("#gridJobOrder").data("kendoGrid")) {
+                loadJobOrderGrid();
+            }
+            // Tab click handler for status filter
+            $(document).on('click', '[data-status]', function() {
+                currentStatus = $(this).data('status');
+                loadJobOrderGrid();
+            });
+        });
+
+        function loadJobOrderGrid() {
+            let searchString = $('#txtsearch').val();
+            let customerId= 0;
+            let fromDate= $('#fromDate').val();
+            let toDate= $('#toDate').val();
+            let status = currentStatus;
+
+            let url = '@Url.Action("JobOrderList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerModal('${dataItem.jobOrderId}', 'view')">
+             <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerModal('${dataItem.jobOrderId}', 'edit')">
+             <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCustomer('${dataItem.jobOrderId}')">
+             <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
                     }
+                },
+                { field: "jobOrderNo", title: "Job Order No", type: "string" }, // String type
+                { field: "jobOrderDate", title: "Job Order Date", type: "date", format: "{0:yyyy-MM-dd}" }, // Date type with formatting
+                { field: "customerName", title: "Customer Name", type: "string" }, // String type
+                { field: "currencyName", title: "Currency Name", type: "string" }, // String type
+                { field: "iMONo", title: "IMO No", type: "string" }, // String type
+                { field: "totalAmt", title: "Total Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
+                { field: "totalLocalAmt", title: "Total Local Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
+                { field: "remarks", title: "Remarks", type: "string" } // String type
+            ];
 
-                    if (permissions.canDelete) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCustomer('${dataItem.jobOrderId}')">
-                 <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                    }
-                    return buttons;
+            let grid = $("#gridJobOrder").data("kendoGrid");
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId, fromDate, toDate, status });
+            } else {
+                initializeKendoGrid("gridJobOrder", url, { searchString, companyId, customerId, fromDate, toDate, status }, columns);
+            }
+
+        }
+
+        // Load status counts for tabs via an AJAX call.
+        function loadStatusCounts() {
+            $.ajax({
+                url: '@Url.Action("GetJobStatusCounts", "Job", new { area = "Project" })',
+                type: 'POST', // Use POST method
+                data: {
+                    searchString: $('#txtsearch').val(),
+                    companyId: $('#companyId').val(),
+                    customerId: $('#customerId').val(),
+                    fromDate: $('#fromDate').val(),
+                    toDate: $('#toDate').val()
+                },
+                success: function (counts) {
+                    debugger;
+                    $('#jobOrderTabs [data-status="all"] .badge').text(counts.all);
+                    $('#jobOrderTabs [data-status="pending"] .badge').text(counts.pending);
+                    $('#jobOrderTabs [data-status="confirm"] .badge').text(counts.confirm);
+                    $('#jobOrderTabs [data-status="completed"] .badge').text(counts.completed);
+                    $('#jobOrderTabs [data-status="cancel"] .badge').text(counts.cancel);
+                    $('#jobOrderTabs [data-status="post"] .badge').text(counts.post);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading status counts:', error);
                 }
-            },
-            { field: "jobOrderNo", title: "jobOrderNo" },
-            { field: "jobOrderDate", title: "jobOrderDate" },
-            { field: "customerName", title: "customerName" },
-            { field: "currencyName", title: "currencyName" },
-            { field: "iMONo", title: "iMONo" },
-            { field: "totalAmt", title: "totalAmt" },
-            { field: "totalLocalAmt", title: "totalLocalAmt" },
-            { field: "remarks", title: "remarks" }
-        ];
+            });
+        }
 
-        initializeKendoGrid("gridJobOrder", url, { searchString, companyId }, columns);
-    }
+        // Clear search filters and reset the grid.
+        function clearSearch() {
+            $('#txtsearch').val('');
+            $('#customerDropdown').val('');
+            // Reset date filters to default three-month range.
+            const today = new Date();
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            $('#fromDate').val(formatDate(threeMonthsAgo));
+            $('#toDate').val(formatDate(today));
+            currentStatus = 'all';
+            $('.nav-link').removeClass('active');
+            $('[data-status="all"]').addClass('active');
+            loadJobOrderGrid();
+            loadStatusCounts();
+        }
+
+        // Helper function to format a date as yyyy-MM-dd.
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
     </script>
 }
+
+@*<script>
+         let companyId = 0;
+         let currentStatus = 'all';
+         let permissions = {}; // Initialize based on your auth system
+
+         $(document).ready(function () {
+             debugger;
+             companyId = getUrlParameter('companyId') || 1;
+
+             permissions = {
+                 canCreate: @Json.Serialize(canCreate),
+                 canEdit: @Json.Serialize(canEdit),
+                 canDelete: @Json.Serialize(canDelete),
+                 canRead: @Json.Serialize(canRead),
+             };
+
+             // Set default date range: from three months ago to today
+             const today = new Date();
+             const threeMonthsAgo = new Date();
+             threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+             $('#fromDate').val(formatDate(threeMonthsAgo));
+             $('#toDate').val(formatDate(today));
+
+             // Initialize the grid only once
+             if (!$("#gridJobOrder").data("kendoGrid")) {
+                 createGrid();
+             }
+             loadStatusCounts();
+
+             // Tab click handler for status filter
+             $(document).on('click', '[data-status]', function() {
+                 currentStatus = $(this).data('status');
+                 refreshGrid();
+             });
+         });
+
+         // Create the grid with paging, sorting, filtering and our custom parameterMap.
+         function createGrid() {
+             $("#gridJobOrder").kendoGrid({
+                 dataSource: {
+                     transport: {
+                         read: {
+                             url: '@Url.Action("JobOrderList", "Job", new { area = "Project" })',
+                             type: "POST",
+                             dataType: "json",
+                             data: function () {
+                                 return getFilterParams();
+                             }
+                         },
+                         // Map the Kendo paging parameters (skip and take) to pageNumber and pageSize.
+                         parameterMap: function (data, type) {
+                             let pageNumber = (data.skip / data.take) + 1;
+                             return $.extend({}, getFilterParams(), {
+                                 pageNumber: pageNumber,
+                                 pageSize: data.take
+                             });
+                         }
+                     },
+                     schema: {
+                         data: "data",
+                         total: "total",
+                         model: {
+                             id: "jobOrderId",
+                             fields: {
+                                 jobOrderNo: { type: "string" },
+                                 jobOrderDate: { type: "date" },
+                                 customerName: { type: "string" },
+                                 currencyName: { type: "string" },
+                                 iMONo: { type: "string" },
+                                 totalAmt: { type: "number" },
+                                 totalLocalAmt: { type: "number" },
+                                 status: { type: "string" }
+                             }
+                         }
+                     },
+                     pageSize: 20,
+                     serverPaging: true,
+                     serverFiltering: true,
+                     serverSorting: true,
+                     requestStart: function () {
+                         $("#loadingOverlay").show();
+                     },
+                     requestEnd: function () {
+                         $("#loadingOverlay").hide();
+                     }
+                 },
+                 columns: [
+                     {
+                         title: "Actions",
+                         width: "120px",
+                         template: function (dataItem) {
+                             let buttons = `
+                                 <button class="btn btn-icon btn-sm btn-outline-primary" onclick="viewJobDetail('${dataItem.jobOrderId}')">
+                                     <span class="material-symbols-outlined">visibility</span>
+                                 </button>`;
+
+                             if (permissions.canEdit) {
+                                 buttons += `
+                                 <button class="btn btn-icon btn-sm btn-outline-warning" onclick="editJob('${dataItem.jobOrderId}')">
+                                     <span class="material-symbols-outlined">edit</span>
+                                 </button>`;
+                             }
+
+                             if (permissions.canDelete) {
+                                 buttons += `
+                                 <button class="btn btn-icon btn-sm btn-outline-danger" onclick="deleteJob('${dataItem.jobOrderId}')">
+                                     <span class="material-symbols-outlined">delete</span>
+                                 </button>`;
+                             }
+                             return buttons;
+                         }
+                     },
+                     { field: "jobOrderNo", title: "Job #" },
+                     {
+                         field: "jobOrderDate",
+                         title: "Date",
+                         template: "#= kendo.toString(kendo.parseDate(jobOrderDate), 'dd MMM yyyy') #"
+                     },
+                     { field: "customerName", title: "Customer" },
+                     { field: "currencyName", title: "Currency" },
+                     { field: "iMONo", title: "IMO Number" },
+                     {
+                         field: "totalAmt",
+                         title: "Amount",
+                         template: "#= kendo.toString(totalAmt, 'c2') #",
+                         attributes: { class: "text-end" }
+                     },
+                     {
+                         field: "status",
+                         title: "Status",
+                         template: "#= getStatusBadge(status) #"
+                     }
+                 ],
+                 pageable: true,
+                 sortable: true,
+                 filterable: true,
+                 resizable: true,
+                 height: 550,
+                 dataBound: function (e) {
+                     loadStatusCounts();
+                 }
+             });
+         }
+
+         // Refresh the grid's data.
+         function refreshGrid() {
+             const grid = $("#gridJobOrder").data("kendoGrid");
+             if (grid) {
+                 grid.dataSource.read();
+             }
+         }
+
+         // Returns filter parameters to send to the server.
+         function getFilterParams() {
+             debugger;
+             return {
+                 searchString: $('#txtsearch').val(),
+                 companyId: companyId,
+                 customerId: $('#customerDropdown').val(),
+                 fromDate: $('#fromDate').val(),
+                 toDate: $('#toDate').val(),
+                 status: currentStatus
+             };
+         }
+
+         // Load status counts for tabs via an AJAX call.
+         function loadStatusCounts() {
+             $.ajax({
+                 url: '@Url.Action("GetJobStatusCounts", "Job")',
+                 data: getFilterParams(),
+                 success: function (counts) {
+                     $('#jobOrderTabs [data-status="all"] .badge').text(counts.all);
+                     $('#jobOrderTabs [data-status="pending"] .badge').text(counts.pending);
+                     $('#jobOrderTabs [data-status="confirm"] .badge').text(counts.confirm);
+                     $('#jobOrderTabs [data-status="completed"] .badge').text(counts.completed);
+                     $('#jobOrderTabs [data-status="cancel"] .badge').text(counts.cancel);
+                     $('#jobOrderTabs [data-status="post"] .badge').text(counts.post);
+                 }
+             });
+         }
+
+         // Return a badge element based on status.
+         function getStatusBadge(status) {
+             const statusConfig = {
+                 pending: { class: 'warning', text: 'Pending' },
+                 confirm: { class: 'primary', text: 'Confirmed' },
+                 completed: { class: 'success', text: 'Completed' },
+                 cancel: { class: 'danger', text: 'Canceled' },
+                 post: { class: 'info', text: 'Posted' }
+             };
+             return `<span class="badge bg-${statusConfig[status].class}">${statusConfig[status].text}</span>`;
+         }
+
+         // Clear search filters and reset the grid.
+         function clearSearch() {
+             $('#txtsearch').val('');
+             $('#customerDropdown').val('');
+             // Reset date filters to default three-month range.
+             const today = new Date();
+             const threeMonthsAgo = new Date();
+             threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+             $('#fromDate').val(formatDate(threeMonthsAgo));
+             $('#toDate').val(formatDate(today));
+             currentStatus = 'all';
+             $('.nav-link').removeClass('active');
+             $('[data-status="all"]').addClass('active');
+             refreshGrid();
+         }
+
+         // Helper function to format a date as yyyy-MM-dd.
+         function formatDate(date) {
+             return date.toISOString().split('T')[0];
+         }
+
+         // Example function to retrieve URL parameter (implement as needed)
+         function getUrlParameter(param) {
+             var pageUrl = window.location.search.substring(1),
+                 urlVariables = pageUrl.split('&'),
+                 parameterName,
+                 i;
+
+             for (i = 0; i < urlVariables.length; i++) {
+                 parameterName = urlVariables[i].split('=');
+                 if (parameterName[0] === param) {
+                     return parameterName[1] === undefined ? true : decodeURIComponent(parameterName[1]);
+                 }
+             }
+             return null;
+         }
+    </script>*@

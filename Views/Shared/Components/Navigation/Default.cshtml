@@ -84,7 +84,7 @@
             <!-- Modules Section -->
             @if (modules != null)
             {
-                foreach (var module in modules.OrderBy(m => m.ModuleId))
+                foreach (var module in modules.OrderBy(m => m.ModuleSeqNo))
                 {
                     <li class="menu-title small text-uppercase">
                         <span class="menu-title-text">@module.ModuleName</span>

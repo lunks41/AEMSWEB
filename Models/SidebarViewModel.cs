@@ -5,6 +5,7 @@
         public int ModuleId { get; set; }
         public string? ModuleCode { get; set; }
         public string? ModuleName { get; set; }
+        public Int16 ModuleSeqNo { get; set; }
         public List<TransCategoryView> TransCategorys { get; set; }
     }
 
@@ -39,6 +40,7 @@
         public Int32 TransCategoryId { get; set; }
         public string? TransCategoryCode { get; set; }
         public string? TransCategoryName { get; set; }
+        public Int16 ModuleSeqNo { get; set; }
         public Int16 SeqNo { get; set; }
         public Int32 TransCatSeqNo { get; set; }
         public bool IsRead { get; set; }
