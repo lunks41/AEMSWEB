@@ -549,6 +549,10 @@
 </div>
 
 <script>
+    function scrollTabs(offset) {
+        const tabs = document.getElementById('serviceTabs');
+        tabs.scrollBy({ left: offset, behavior: 'smooth' });
+    }
 
     function openChildModal(serviceType) {
         const modalId = `#add${serviceType}Modal`;

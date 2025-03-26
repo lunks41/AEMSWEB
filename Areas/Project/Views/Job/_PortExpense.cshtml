@@ -11,16 +11,15 @@
                     <input type="hidden" id="portExpense_jobOrderId" />
                     <input type="hidden" id="portExpenseId" />
                     <div class="row">
-
-                        <div class="col-md-3">
-                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
-                        </div>
                         <div class="col-md-3">
                             <label class="form-label">Supplier <span class="text-danger">*</span></label>
                             <select class="form-select" id="supplierId" required>
                                 <option value="">Select Supplier</option>
                             </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Charge <span class="text-danger">*</span></label>
@@ -29,12 +28,11 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select" id="statusId" required>
-                                <option value="">Select Status</option>
+                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select class="form-select" id="glId" required>
+                                <option value="">Select GL</option>
                             </select>
                         </div>
-
                         <div class="col-md-3">
                             <label class="form-label">UOM <span class="text-danger">*</span></label>
                             <select class="form-select" id="uomId" required>
@@ -45,10 +43,23 @@
                             <label class="form-label">Delivery Date</label>
                             <input type="date" class="form-control" id="deliverDate">
                         </div>
+
                         <div class="col-md-6">
                             <label class="form-label">Description</label>
                             <input type="text" class="form-control" id="description">
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Remark</label>
+                            <input type="text" class="form-control" id="remark">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select" id="statusId" required>
+                                <option value="">Select Status</option>
+                            </select>
+                        </div>
+
+
                     </div>
                     <!-- Audit Fields -->
                     <div class="accordion mt-3" id="auditAccordion">
