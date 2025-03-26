@@ -1,0 +1,573 @@
+﻿<div class="modal fade" id="addJobOrderModal" tabindex="-1" aria-labelledby="addJobOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addJobOrderModalLabel">Job Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container my-5">
+                    <!-- Section 1: Customer Job Details -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">Customer Details</div>
+                        <div class="card-body">
+                            <!-- Row 1 -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Customer Name</label>
+                                        <div id="customerName"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Contact Number</label>
+                                        <div id="contactNumber"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Email Address</label>
+                                        <div id="emailAddress"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Vessel Name</label>
+                                        <div id="vesselName"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">IMO No</label>
+                                        <div id="imoNo"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 2 -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Call Sign</label>
+                                        <div id="callSign"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Gross Tonnage</label>
+                                        <div id="grossTonnage"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Net Tonnage</label>
+                                        <div id="netTonnage"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Dead Weight</label>
+                                        <div id="deadWeight"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">LOA</label>
+                                        <div id="loa"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Master's Name</label>
+                                        <div id="mastersName"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Port of Call</label>
+                                        <div id="portOfCall"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Calling Location</label>
+                                        <div id="callingLocation"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">ETA</label>
+                                        <div id="eta"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">ETD</label>
+                                        <div id="etd"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 4 -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Next Destination</label>
+                                        <div id="nextDestination"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Last Port</label>
+                                        <div id="lastPort"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Nature of Call</label>
+                                        <div id="natureOfCall"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">ISPS</label>
+                                        <div id="isps"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Owners/Managers</label>
+                                        <div id="ownersManagers"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 5 -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Owners Agents</label>
+                                        <div id="ownersAgents"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Charters</label>
+                                        <div id="charters"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Charters/P&I Agents</label>
+                                        <div id="chartersPniAgents"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Latitude</label>
+                                        <div id="latitude"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Longitude</label>
+                                        <div id="longitude"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 6 -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Vessel Current Loc</label>
+                                        <div id="vesselCurrentLoc"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Status</label>
+                                        <div id="status"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Arrival Draft</label>
+                                        <div id="arrivalDraft"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Departure Draft</label>
+                                        <div id="departureDraft"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">FIN'D</label>
+                                        <div id="find"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 7 -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">LO</label>
+                                        <div id="lo"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">PNI</label>
+                                        <div id="pni"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">AFT</label>
+                                        <div id="aft"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Arrival R.O.B</label>
+                                        <div id="arrivalRob"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Departure R.O.B</label>
+                                        <div id="departureRob"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Task Tab with Grids -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-secondary text-white">Service Categories</div>
+                        <div class="card-body">
+                            <!-- Scrollable Tabs -->
+                            <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
+                                <!-- Main Service Tabs -->
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button">
+                                        <span class="badge bg-secondary me-1">0</span> Port Expenses
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button">
+                                        <span class="badge bg-secondary me-1">0</span> Launch Services
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button">
+                                        <span class="badge bg-primary me-1">0</span> Equipments Used
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button">
+                                        <span class="badge bg-success me-1">0</span> Crew Sign On
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button">
+                                        <span class="badge bg-danger me-1">0</span> Crew Sign Off
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button">
+                                        <span class="badge bg-info me-1">0</span> Crew Miscellaneous
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button">
+                                        <span class="badge bg-warning me-1">0</span> Medical Assistance
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button">
+                                        <span class="badge bg-primary me-1">0</span> Consignment Import
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button">
+                                        <span class="badge bg-success me-1">0</span> Consignment Export
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button">
+                                        <span class="badge bg-danger me-1">0</span> Third Party Supply
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button">
+                                        <span class="badge bg-info me-1">0</span> Fresh Water
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button">
+                                        <span class="badge bg-warning me-1">0</span> Technicians Surveyors
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button">
+                                        <span class="badge bg-primary me-1">0</span> Landing Items
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button">
+                                        <span class="badge bg-success me-1">0</span> Other Service
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button">
+                                        <span class="badge bg-danger me-1">0</span> Agency Remuneration
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="serviceTabContent">
+                                <!-- Port Expenses Tab -->
+                                <div class="tab-pane fade show active" id="port-expenses">
+                                    <!-- Button Group for Port Expenses -->
+                                    <div class="mb-3">
+                                        <button id="btnAddPortExpense" class="btn btn-primary me-2">Add Port Expense</button>
+                                        <button id="btnCreateDebitNotePortExpense" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardPortExpense" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdatePortExpense" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Port Expenses -->
+                                    <div id="grid-port-expenses" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Launch Services Tab -->
+                                <div class="tab-pane fade" id="launch-services">
+                                    <!-- Button Group for Launch Services (adjust as needed) -->
+                                    <div class="mb-3">
+                                        <button id="btnAddLaunchService" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteLaunch" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardLaunch" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateLaunch" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Launch Services -->
+                                    <div id="grid-launch-services" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Equipments Used Tab -->
+                                <div class="tab-pane fade" id="equipments-used">
+                                    <!-- Button Group for Equipments Used -->
+                                    <div class="mb-3">
+                                        <button id="btnAddEquipmentUsed" class="btn btn-primary me-2">Add Equipment</button>
+                                        <button id="btnCreateDebitNoteEquipment" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardEquipment" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateEquipment" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Equipments Used -->
+                                    <div id="grid-equipments-used" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Crew Sign On Tab -->
+                                <div class="tab-pane fade" id="crew-sign-on">
+                                    <!-- Button Group for Crew Sign On -->
+                                    <div class="mb-3">
+                                        <button id="btnAddCrewSignOn" class="btn btn-primary me-2">Add Crew Sign On</button>
+                                        <button id="btnCreateDebitNoteCrewOn" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardCrewOn" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateCrewOn" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Crew Sign On -->
+                                    <div id="grid-crew-sign-on" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Crew Sign Off Tab -->
+                                <div class="tab-pane fade" id="crew-sign-off">
+                                    <!-- Button Group for Crew Sign Off -->
+                                    <div class="mb-3">
+                                        <button id="btnAddCrewSignOff" class="btn btn-primary me-2">Add Crew Sign Off</button>
+                                        <button id="btnCreateDebitNoteCrewOff" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardCrewOff" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateCrewOff" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Crew Sign Off -->
+                                    <div id="grid-crew-sign-off" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Crew Miscellaneous Tab -->
+                                <div class="tab-pane fade" id="crew-miscellaneous">
+                                    <!-- Button Group for Crew Miscellaneous -->
+                                    <div class="mb-3">
+                                        <button id="btnAddCrewMisc" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
+                                        <button id="btnCreateDebitNoteCrewMisc" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardCrewMisc" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateCrewMisc" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Crew Miscellaneous -->
+                                    <div id="grid-crew-miscellaneous" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Medical Assistance Tab -->
+                                <div class="tab-pane fade" id="medical-assistance">
+                                    <!-- Button Group for Medical Assistance -->
+                                    <div class="mb-3">
+                                        <button id="btnAddMedicalAssistance" class="btn btn-primary me-2">Add Medical Assistance</button>
+                                        <button id="btnCreateDebitNoteMedical" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardMedical" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateMedical" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Medical Assistance -->
+                                    <div id="grid-medical-assistance" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Consignment Import Tab -->
+                                <div class="tab-pane fade" id="consignment-import">
+                                    <!-- Button Group for Consignment Import -->
+                                    <div class="mb-3">
+                                        <button id="btnAddConsignmentImport" class="btn btn-primary me-2">Add Consignment Import</button>
+                                        <button id="btnCreateDebitNoteConsignmentImport" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardConsignmentImport" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateConsignmentImport" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Consignment Import -->
+                                    <div id="grid-consignment-import" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Consignment Export Tab -->
+                                <div class="tab-pane fade" id="consignment-export">
+                                    <!-- Button Group for Consignment Export -->
+                                    <div class="mb-3">
+                                        <button id="btnAddConsignmentExport" class="btn btn-primary me-2">Add Consignment Export</button>
+                                        <button id="btnCreateDebitNoteConsignmentExport" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardConsignmentExport" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateConsignmentExport" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Consignment Export -->
+                                    <div id="grid-consignment-export" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Third Party Supply Tab -->
+                                <div class="tab-pane fade" id="third-party-supply">
+                                    <!-- Button Group for Third Party Supply -->
+                                    <div class="mb-3">
+                                        <button id="btnAddThirdPartySupply" class="btn btn-primary me-2">Add Third Party Supply</button>
+                                        <button id="btnCreateDebitNoteThirdParty" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardThirdParty" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateThirdParty" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Third Party Supply -->
+                                    <div id="grid-third-party-supply" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Fresh Water Tab -->
+                                <div class="tab-pane fade" id="fresh-water">
+                                    <!-- Button Group for Fresh Water -->
+                                    <div class="mb-3">
+                                        <button id="btnAddFreshWater" class="btn btn-primary me-2">Add Fresh Water</button>
+                                        <button id="btnCreateDebitNoteFreshWater" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardFreshWater" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateFreshWater" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Fresh Water -->
+                                    <div id="grid-fresh-water" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Technicians Surveyors Tab -->
+                                <div class="tab-pane fade" id="technicians-surveyors">
+                                    <!-- Button Group for Technicians Surveyors -->
+                                    <div class="mb-3">
+                                        <button id="btnAddTechnicianSurveyor" class="btn btn-primary me-2">Add Technician Surveyor</button>
+                                        <button id="btnCreateDebitNoteTechnicians" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardTechnicians" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateTechnicians" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Technicians Surveyors -->
+                                    <div id="grid-technicians-surveyors" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Landing Items Tab -->
+                                <div class="tab-pane fade" id="landing-items">
+                                    <!-- Button Group for Landing Items -->
+                                    <div class="mb-3">
+                                        <button id="btnAddLandingItem" class="btn btn-primary me-2">Add Landing Item</button>
+                                        <button id="btnCreateDebitNoteLanding" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardLanding" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateLanding" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Landing Items -->
+                                    <div id="grid-landing-items" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Other Service Tab -->
+                                <div class="tab-pane fade" id="other-service">
+                                    <!-- Button Group for Other Service -->
+                                    <div class="mb-3">
+                                        <button id="btnAddOtherService" class="btn btn-primary me-2">Add Other Service</button>
+                                        <button id="btnCreateDebitNoteOther" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardOther" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateOther" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Other Service -->
+                                    <div id="grid-other-service" class="kendo-grid"></div>
+                                </div>
+
+                                <!-- Agency Remuneration Tab -->
+                                <div class="tab-pane fade" id="agency-remuneration">
+                                    <!-- Button Group for Agency Remuneration -->
+                                    <div class="mb-3">
+                                        <button id="btnAddAgencyRemuneration" class="btn btn-primary me-2">Add Agency Remuneration</button>
+                                        <button id="btnCreateDebitNoteAgency" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardAgency" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdateAgency" class="btn btn-warning">Bulk Update</button>
+                                    </div>
+                                    <!-- Grid for Agency Remuneration -->
+                                    <div id="grid-agency-remuneration" class="kendo-grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Ensure tabs scroll horizontally if needed */
+    .nav-pills.flex-nowrap {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+        /* Optionally hide the scrollbar for a cleaner look */
+        .nav-pills.flex-nowrap::-webkit-scrollbar {
+            display: none;
+        }
+
+    .kendo-grid {
+        height: 500px;
+        margin-top: 20px;
+    }
+
+    .nav-link {
+        transition: all 0.3s ease;
+    }
+
+        .nav-link.active {
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+    .card-header {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+</style>

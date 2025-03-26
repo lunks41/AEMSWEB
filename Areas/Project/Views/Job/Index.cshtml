@@ -99,46 +99,51 @@
     </div>
 </div>
 
-<style>
-    .filter-section {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-    }
 
-    .status-tabs .nav-link {
-        border-radius: 20px;
-        padding: 8px 20px;
-        margin-right: 8px;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-    }
+@section externalhtml {
+   @await Html.PartialAsync("_JobOrder")
+}
 
-        .status-tabs .nav-link.active {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    <style>
+        .filter-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
         }
 
-    .grid-wrapper {
-        overflow: hidden;
-        position: relative;
-    }
+        .status-tabs .nav-link {
+            border-radius: 20px;
+            padding: 8px 20px;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
 
-    .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255,255,255,0.8);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-</style>
+            .status-tabs .nav-link.active {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
 
-@section Scripts {
-    <script>
+        .grid-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+    </style>
+
+    @section Scripts {
+        <script>
         let companyId = 0;
         let currentStatus = 'all';
         let permissions = {}; // Initialize based on your auth system
@@ -268,236 +273,33 @@
         function formatDate(date) {
             return date.toISOString().split('T')[0];
         }
-    </script>
-}
 
-@*<script>
-         let companyId = 0;
-         let currentStatus = 'all';
-         let permissions = {}; // Initialize based on your auth system
+        @*// Add this modal handling code
+        $('#addJobOrderModal').on('show.bs.modal', function (e) {
+            const modalBody = $(this).find('.modal-body');
+            modalBody.html('<div class="text-center p-3">Loading...</div>');
 
-         $(document).ready(function () {
-             debugger;
-             companyId = getUrlParameter('companyId') || 1;
+            // Load partial view via AJAX
+            $.get('@Url.Action("_JobOrder", "Job")') // Update controller/action as needed
+                .done(function (data) {
+                    modalBody.html(data);
+                    executeScripts(modalBody);
+                })
+                .fail(function () {
+                    modalBody.html('<div class="text-danger">Error loading form</div>');
+                });
+        });
 
-             permissions = {
-                 canCreate: @Json.Serialize(canCreate),
-                 canEdit: @Json.Serialize(canEdit),
-                 canDelete: @Json.Serialize(canDelete),
-                 canRead: @Json.Serialize(canRead),
-             };
+        function executeScripts(container) {
+            container.find('script').each(function () {
+                try {
+                    eval($(this).text());
+                } catch (error) {
+                    console.error('Error executing script:', error);
+                }
+            });
+        }*@
+        </script>
+    }
 
-             // Set default date range: from three months ago to today
-             const today = new Date();
-             const threeMonthsAgo = new Date();
-             threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-             $('#fromDate').val(formatDate(threeMonthsAgo));
-             $('#toDate').val(formatDate(today));
-
-             // Initialize the grid only once
-             if (!$("#gridJobOrder").data("kendoGrid")) {
-                 createGrid();
-             }
-             loadStatusCounts();
-
-             // Tab click handler for status filter
-             $(document).on('click', '[data-status]', function() {
-                 currentStatus = $(this).data('status');
-                 refreshGrid();
-             });
-         });
-
-         // Create the grid with paging, sorting, filtering and our custom parameterMap.
-         function createGrid() {
-             $("#gridJobOrder").kendoGrid({
-                 dataSource: {
-                     transport: {
-                         read: {
-                             url: '@Url.Action("JobOrderList", "Job", new { area = "Project" })',
-                             type: "POST",
-                             dataType: "json",
-                             data: function () {
-                                 return getFilterParams();
-                             }
-                         },
-                         // Map the Kendo paging parameters (skip and take) to pageNumber and pageSize.
-                         parameterMap: function (data, type) {
-                             let pageNumber = (data.skip / data.take) + 1;
-                             return $.extend({}, getFilterParams(), {
-                                 pageNumber: pageNumber,
-                                 pageSize: data.take
-                             });
-                         }
-                     },
-                     schema: {
-                         data: "data",
-                         total: "total",
-                         model: {
-                             id: "jobOrderId",
-                             fields: {
-                                 jobOrderNo: { type: "string" },
-                                 jobOrderDate: { type: "date" },
-                                 customerName: { type: "string" },
-                                 currencyName: { type: "string" },
-                                 iMONo: { type: "string" },
-                                 totalAmt: { type: "number" },
-                                 totalLocalAmt: { type: "number" },
-                                 status: { type: "string" }
-                             }
-                         }
-                     },
-                     pageSize: 20,
-                     serverPaging: true,
-                     serverFiltering: true,
-                     serverSorting: true,
-                     requestStart: function () {
-                         $("#loadingOverlay").show();
-                     },
-                     requestEnd: function () {
-                         $("#loadingOverlay").hide();
-                     }
-                 },
-                 columns: [
-                     {
-                         title: "Actions",
-                         width: "120px",
-                         template: function (dataItem) {
-                             let buttons = `
-                                 <button class="btn btn-icon btn-sm btn-outline-primary" onclick="viewJobDetail('${dataItem.jobOrderId}')">
-                                     <span class="material-symbols-outlined">visibility</span>
-                                 </button>`;
-
-                             if (permissions.canEdit) {
-                                 buttons += `
-                                 <button class="btn btn-icon btn-sm btn-outline-warning" onclick="editJob('${dataItem.jobOrderId}')">
-                                     <span class="material-symbols-outlined">edit</span>
-                                 </button>`;
-                             }
-
-                             if (permissions.canDelete) {
-                                 buttons += `
-                                 <button class="btn btn-icon btn-sm btn-outline-danger" onclick="deleteJob('${dataItem.jobOrderId}')">
-                                     <span class="material-symbols-outlined">delete</span>
-                                 </button>`;
-                             }
-                             return buttons;
-                         }
-                     },
-                     { field: "jobOrderNo", title: "Job #" },
-                     {
-                         field: "jobOrderDate",
-                         title: "Date",
-                         template: "#= kendo.toString(kendo.parseDate(jobOrderDate), 'dd MMM yyyy') #"
-                     },
-                     { field: "customerName", title: "Customer" },
-                     { field: "currencyName", title: "Currency" },
-                     { field: "iMONo", title: "IMO Number" },
-                     {
-                         field: "totalAmt",
-                         title: "Amount",
-                         template: "#= kendo.toString(totalAmt, 'c2') #",
-                         attributes: { class: "text-end" }
-                     },
-                     {
-                         field: "status",
-                         title: "Status",
-                         template: "#= getStatusBadge(status) #"
-                     }
-                 ],
-                 pageable: true,
-                 sortable: true,
-                 filterable: true,
-                 resizable: true,
-                 height: 550,
-                 dataBound: function (e) {
-                     loadStatusCounts();
-                 }
-             });
-         }
-
-         // Refresh the grid's data.
-         function refreshGrid() {
-             const grid = $("#gridJobOrder").data("kendoGrid");
-             if (grid) {
-                 grid.dataSource.read();
-             }
-         }
-
-         // Returns filter parameters to send to the server.
-         function getFilterParams() {
-             debugger;
-             return {
-                 searchString: $('#txtsearch').val(),
-                 companyId: companyId,
-                 customerId: $('#customerDropdown').val(),
-                 fromDate: $('#fromDate').val(),
-                 toDate: $('#toDate').val(),
-                 status: currentStatus
-             };
-         }
-
-         // Load status counts for tabs via an AJAX call.
-         function loadStatusCounts() {
-             $.ajax({
-                 url: '@Url.Action("GetJobStatusCounts", "Job")',
-                 data: getFilterParams(),
-                 success: function (counts) {
-                     $('#jobOrderTabs [data-status="all"] .badge').text(counts.all);
-                     $('#jobOrderTabs [data-status="pending"] .badge').text(counts.pending);
-                     $('#jobOrderTabs [data-status="confirm"] .badge').text(counts.confirm);
-                     $('#jobOrderTabs [data-status="completed"] .badge').text(counts.completed);
-                     $('#jobOrderTabs [data-status="cancel"] .badge').text(counts.cancel);
-                     $('#jobOrderTabs [data-status="post"] .badge').text(counts.post);
-                 }
-             });
-         }
-
-         // Return a badge element based on status.
-         function getStatusBadge(status) {
-             const statusConfig = {
-                 pending: { class: 'warning', text: 'Pending' },
-                 confirm: { class: 'primary', text: 'Confirmed' },
-                 completed: { class: 'success', text: 'Completed' },
-                 cancel: { class: 'danger', text: 'Canceled' },
-                 post: { class: 'info', text: 'Posted' }
-             };
-             return `<span class="badge bg-${statusConfig[status].class}">${statusConfig[status].text}</span>`;
-         }
-
-         // Clear search filters and reset the grid.
-         function clearSearch() {
-             $('#txtsearch').val('');
-             $('#customerDropdown').val('');
-             // Reset date filters to default three-month range.
-             const today = new Date();
-             const threeMonthsAgo = new Date();
-             threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-             $('#fromDate').val(formatDate(threeMonthsAgo));
-             $('#toDate').val(formatDate(today));
-             currentStatus = 'all';
-             $('.nav-link').removeClass('active');
-             $('[data-status="all"]').addClass('active');
-             refreshGrid();
-         }
-
-         // Helper function to format a date as yyyy-MM-dd.
-         function formatDate(date) {
-             return date.toISOString().split('T')[0];
-         }
-
-         // Example function to retrieve URL parameter (implement as needed)
-         function getUrlParameter(param) {
-             var pageUrl = window.location.search.substring(1),
-                 urlVariables = pageUrl.split('&'),
-                 parameterName,
-                 i;
-
-             for (i = 0; i < urlVariables.length; i++) {
-                 parameterName = urlVariables[i].split('=');
-                 if (parameterName[0] === param) {
-                     return parameterName[1] === undefined ? true : decodeURIComponent(parameterName[1]);
-                 }
-             }
-             return null;
-         }
-    </script>*@
+   
