@@ -1,0 +1,87 @@
+﻿  <!-- AgencyRemuneration Modal -->
+<div class="modal fade" id="addAgencyRemunerationModal" tabindex="-1" aria-labelledby="addAgencyRemunerationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAgencyRemunerationModalLabel">Agency Remuneration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="agencyRemunerationForm">
+                    <input type="hidden" id="agencyRemuneration_jobOrderId" />
+                    <input type="hidden" id="agencyRemunerationId" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">AgencyRemuneration Line 1 <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="agencyRemuneration1" rows="2" required></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">AgencyRemuneration Line 2</label>
+                            <textarea class="form-control" id="agencyRemuneration2" rows="2" required></textarea>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">AgencyRemuneration Line 3</label>
+                            <input type="text" class="form-control" id="agencyRemuneration3">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">AgencyRemuneration Line 4</label>
+                            <input type="text" class="form-control" id="agencyRemuneration4">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" id="pinCode">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="cmd_country" class="form-label">Country <span class="text-danger">*</span></label>
+                            <select id="cmd_country" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phoneNoAdd">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fax Number</label>
+                            <input type="tel" class="form-control" id="faxNoAdd">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailAddadd">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" id="webUrl">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isDefaultAdd">
+                                <label class="form-check-label">Is Default Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isDeliveryAdd">
+                                <label class="form-check-label">Is Delivery Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isFinAdd">
+                                <label class="form-check-label">Is Financial Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isSalesAdd">
+                                <label class="form-check-label">Is Sales Add.</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="isActiveAdd">
+                                <label class="form-check-label">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankAgencyRemunerationClose" onclick="clearBankAgencyRemunerationForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnBankAgencyRemunerationEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnBankAgencyRemunerationClear" onclick="clearBankAgencyRemunerationForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnBankAgencyRemunerationSave" onclick="saveBankAgencyRemuneration()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

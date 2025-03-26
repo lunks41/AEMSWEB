@@ -1,12 +1,12 @@
 ﻿<div class="modal fade" id="addJobOrderModal" tabindex="-1" aria-labelledby="addJobOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xxl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addJobOrderModalLabel">Job Order</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="container my-5">
+                <div class="container mt-3">
                     <!-- Section 1: Customer Job Details -->
                     <div class="card mb-3">
                         <div class="card-header bg-primary text-white">Customer Details</div>
@@ -256,84 +256,92 @@
                         <div class="card-header bg-secondary text-white">Service Categories</div>
                         <div class="card-body">
                             <!-- Scrollable Tabs -->
-                            <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
-                                <!-- Main Service Tabs -->
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button">
-                                        <span class="badge bg-secondary me-1">0</span> Port Expenses
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button">
-                                        <span class="badge bg-secondary me-1">0</span> Launch Services
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button">
-                                        <span class="badge bg-primary me-1">0</span> Equipments Used
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button">
-                                        <span class="badge bg-success me-1">0</span> Crew Sign On
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button">
-                                        <span class="badge bg-danger me-1">0</span> Crew Sign Off
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button">
-                                        <span class="badge bg-info me-1">0</span> Crew Miscellaneous
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button">
-                                        <span class="badge bg-warning me-1">0</span> Medical Assistance
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button">
-                                        <span class="badge bg-primary me-1">0</span> Consignment Import
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button">
-                                        <span class="badge bg-success me-1">0</span> Consignment Export
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button">
-                                        <span class="badge bg-danger me-1">0</span> Third Party Supply
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button">
-                                        <span class="badge bg-info me-1">0</span> Fresh Water
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button">
-                                        <span class="badge bg-warning me-1">0</span> Technicians Surveyors
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button">
-                                        <span class="badge bg-primary me-1">0</span> Landing Items
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button">
-                                        <span class="badge bg-success me-1">0</span> Other Service
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button">
-                                        <span class="badge bg-danger me-1">0</span> Agency Remuneration
-                                    </button>
-                                </li>
-                            </ul>
+                            <div class="position-relative">
+                                <button class="btn btn-sm btn-secondary scroll-left" onclick="scrollTabs(-100)">
+                                    &lt;
+                                </button>
+                                <button class="btn btn-sm btn-secondary scroll-right" onclick="scrollTabs(100)">
+                                    &gt;
+                                </button>
+                                <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
+                                    <!-- Main Service Tabs -->
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button">
+                                            <span class="badge bg-secondary me-1">0</span> Port Expenses
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button">
+                                            <span class="badge bg-secondary me-1">0</span> Launch Services
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button">
+                                            <span class="badge bg-primary me-1">0</span> Equipments Used
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button">
+                                            <span class="badge bg-success me-1">0</span> Crew Sign On
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button">
+                                            <span class="badge bg-danger me-1">0</span> Crew Sign Off
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button">
+                                            <span class="badge bg-info me-1">0</span> Crew Miscellaneous
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button">
+                                            <span class="badge bg-warning me-1">0</span> Medical Assistance
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button">
+                                            <span class="badge bg-primary me-1">0</span> Consignment Import
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button">
+                                            <span class="badge bg-success me-1">0</span> Consignment Export
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button">
+                                            <span class="badge bg-danger me-1">0</span> Third Party Supply
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button">
+                                            <span class="badge bg-info me-1">0</span> Fresh Water
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button">
+                                            <span class="badge bg-warning me-1">0</span> Technicians Surveyors
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button">
+                                            <span class="badge bg-primary me-1">0</span> Landing Items
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button">
+                                            <span class="badge bg-success me-1">0</span> Other Service
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button">
+                                            <span class="badge bg-danger me-1">0</span> Agency Remuneration
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
 
                             <!-- Tab Content -->
                             <div class="tab-content" id="serviceTabContent">
@@ -341,7 +349,7 @@
                                 <div class="tab-pane fade show active" id="port-expenses">
                                     <!-- Button Group for Port Expenses -->
                                     <div class="mb-3">
-                                        <button id="btnAddPortExpense" class="btn btn-primary me-2">Add Port Expense</button>
+                                        <button id="btnAddPortExpense" onclick="openChildModal('PortExpense')" class="btn btn-primary me-2">Add Port Expense</button>
                                         <button id="btnCreateDebitNotePortExpense" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardPortExpense" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdatePortExpense" class="btn btn-warning">Bulk Update</button>
@@ -354,7 +362,7 @@
                                 <div class="tab-pane fade" id="launch-services">
                                     <!-- Button Group for Launch Services (adjust as needed) -->
                                     <div class="mb-3">
-                                        <button id="btnAddLaunchService" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add Launch Service</button>
                                         <button id="btnCreateDebitNoteLaunch" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardLaunch" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateLaunch" class="btn btn-warning">Bulk Update</button>
@@ -367,7 +375,7 @@
                                 <div class="tab-pane fade" id="equipments-used">
                                     <!-- Button Group for Equipments Used -->
                                     <div class="mb-3">
-                                        <button id="btnAddEquipmentUsed" class="btn btn-primary me-2">Add Equipment</button>
+                                        <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentUsed')" class="btn btn-primary me-2">Add Equipment</button>
                                         <button id="btnCreateDebitNoteEquipment" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardEquipment" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateEquipment" class="btn btn-warning">Bulk Update</button>
@@ -380,7 +388,7 @@
                                 <div class="tab-pane fade" id="crew-sign-on">
                                     <!-- Button Group for Crew Sign On -->
                                     <div class="mb-3">
-                                        <button id="btnAddCrewSignOn" class="btn btn-primary me-2">Add Crew Sign On</button>
+                                        <button id="btnAddCrewSignOn" onclick="openChildModal('CrewSignOn')" class="btn btn-primary me-2">Add Crew Sign On</button>
                                         <button id="btnCreateDebitNoteCrewOn" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardCrewOn" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateCrewOn" class="btn btn-warning">Bulk Update</button>
@@ -393,7 +401,7 @@
                                 <div class="tab-pane fade" id="crew-sign-off">
                                     <!-- Button Group for Crew Sign Off -->
                                     <div class="mb-3">
-                                        <button id="btnAddCrewSignOff" class="btn btn-primary me-2">Add Crew Sign Off</button>
+                                        <button id="btnAddCrewSignOff" onclick="openChildModal('CrewSignOff')" class="btn btn-primary me-2">Add Crew Sign Off</button>
                                         <button id="btnCreateDebitNoteCrewOff" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardCrewOff" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateCrewOff" class="btn btn-warning">Bulk Update</button>
@@ -406,7 +414,7 @@
                                 <div class="tab-pane fade" id="crew-miscellaneous">
                                     <!-- Button Group for Crew Miscellaneous -->
                                     <div class="mb-3">
-                                        <button id="btnAddCrewMisc" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
+                                        <button id="btnAddCrewMisc" onclick="openChildModal('CrewMisc')" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
                                         <button id="btnCreateDebitNoteCrewMisc" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardCrewMisc" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateCrewMisc" class="btn btn-warning">Bulk Update</button>
@@ -419,7 +427,7 @@
                                 <div class="tab-pane fade" id="medical-assistance">
                                     <!-- Button Group for Medical Assistance -->
                                     <div class="mb-3">
-                                        <button id="btnAddMedicalAssistance" class="btn btn-primary me-2">Add Medical Assistance</button>
+                                        <button id="btnAddMedicalAssistance" onclick="openChildModal('MedicalAssistance')" class="btn btn-primary me-2">Add Medical Assistance</button>
                                         <button id="btnCreateDebitNoteMedical" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardMedical" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateMedical" class="btn btn-warning">Bulk Update</button>
@@ -432,7 +440,7 @@
                                 <div class="tab-pane fade" id="consignment-import">
                                     <!-- Button Group for Consignment Import -->
                                     <div class="mb-3">
-                                        <button id="btnAddConsignmentImport" class="btn btn-primary me-2">Add Consignment Import</button>
+                                        <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport')" class="btn btn-primary me-2">Add Consignment Import</button>
                                         <button id="btnCreateDebitNoteConsignmentImport" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardConsignmentImport" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateConsignmentImport" class="btn btn-warning">Bulk Update</button>
@@ -445,7 +453,7 @@
                                 <div class="tab-pane fade" id="consignment-export">
                                     <!-- Button Group for Consignment Export -->
                                     <div class="mb-3">
-                                        <button id="btnAddConsignmentExport" class="btn btn-primary me-2">Add Consignment Export</button>
+                                        <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport')" class="btn btn-primary me-2">Add Consignment Export</button>
                                         <button id="btnCreateDebitNoteConsignmentExport" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardConsignmentExport" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateConsignmentExport" class="btn btn-warning">Bulk Update</button>
@@ -458,7 +466,7 @@
                                 <div class="tab-pane fade" id="third-party-supply">
                                     <!-- Button Group for Third Party Supply -->
                                     <div class="mb-3">
-                                        <button id="btnAddThirdPartySupply" class="btn btn-primary me-2">Add Third Party Supply</button>
+                                        <button id="btnAddThirdPartySupply" onclick="openChildModal('ThirdPartySupply')" class="btn btn-primary me-2">Add Third Party Supply</button>
                                         <button id="btnCreateDebitNoteThirdParty" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardThirdParty" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateThirdParty" class="btn btn-warning">Bulk Update</button>
@@ -471,7 +479,7 @@
                                 <div class="tab-pane fade" id="fresh-water">
                                     <!-- Button Group for Fresh Water -->
                                     <div class="mb-3">
-                                        <button id="btnAddFreshWater" class="btn btn-primary me-2">Add Fresh Water</button>
+                                        <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add Fresh Water</button>
                                         <button id="btnCreateDebitNoteFreshWater" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardFreshWater" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateFreshWater" class="btn btn-warning">Bulk Update</button>
@@ -484,7 +492,7 @@
                                 <div class="tab-pane fade" id="technicians-surveyors">
                                     <!-- Button Group for Technicians Surveyors -->
                                     <div class="mb-3">
-                                        <button id="btnAddTechnicianSurveyor" class="btn btn-primary me-2">Add Technician Surveyor</button>
+                                        <button id="btnAddTechnicianSurveyor" onclick="openChildModal('TechnicianSurveyor')" class="btn btn-primary me-2">Add Technician Surveyor</button>
                                         <button id="btnCreateDebitNoteTechnicians" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardTechnicians" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateTechnicians" class="btn btn-warning">Bulk Update</button>
@@ -497,7 +505,7 @@
                                 <div class="tab-pane fade" id="landing-items">
                                     <!-- Button Group for Landing Items -->
                                     <div class="mb-3">
-                                        <button id="btnAddLandingItem" class="btn btn-primary me-2">Add Landing Item</button>
+                                        <button id="btnAddLandingItem" onclick="openChildModal('LandingItem')" class="btn btn-primary me-2">Add Landing Item</button>
                                         <button id="btnCreateDebitNoteLanding" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardLanding" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateLanding" class="btn btn-warning">Bulk Update</button>
@@ -510,7 +518,7 @@
                                 <div class="tab-pane fade" id="other-service">
                                     <!-- Button Group for Other Service -->
                                     <div class="mb-3">
-                                        <button id="btnAddOtherService" class="btn btn-primary me-2">Add Other Service</button>
+                                        <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add Other Service</button>
                                         <button id="btnCreateDebitNoteOther" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardOther" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateOther" class="btn btn-warning">Bulk Update</button>
@@ -523,7 +531,7 @@
                                 <div class="tab-pane fade" id="agency-remuneration">
                                     <!-- Button Group for Agency Remuneration -->
                                     <div class="mb-3">
-                                        <button id="btnAddAgencyRemuneration" class="btn btn-primary me-2">Add Agency Remuneration</button>
+                                        <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add Agency Remuneration</button>
                                         <button id="btnCreateDebitNoteAgency" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardAgency" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateAgency" class="btn btn-warning">Bulk Update</button>
@@ -536,12 +544,62 @@
                     </div>
                 </div>
             </div>
-           
         </div>
     </div>
 </div>
 
+<script>
+
+    function openChildModal(serviceType) {
+        const modalId = `#add${serviceType}Modal`;
+        $(modalId).modal('show');
+    }
+
+    function initializeGrid(gridId, columns) {
+        $(`#${gridId}`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: columns.concat([{
+                title: "Actions",
+                template: `<button class="btn btn-sm btn-info">View</button>
+                      <button class="btn btn-sm btn-warning">Edit</button>
+                      <button class="btn btn-sm btn-danger">Delete</button>
+                      <button class="btn btn-sm btn-success">Invoice</button>`
+            }]),
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // Initialize for each tab
+    initializeGrid('grid-port-expenses', [
+        { field: "expenseName", title: "Expense Name" },
+        { field: "amount", title: "Amount", format: "{0:c}" }
+    ]);
+</script>
+
 <style>
+    .modal-xxl {
+        max-width: 95%;
+    }
+
+    .scroll-left, .scroll-right {
+        position: absolute;
+        top: 50%;
+        z-index: 100;
+        transform: translateY(-50%);
+    }
+
+    .scroll-left {
+        left: -40px;
+    }
+
+    .scroll-right {
+        right: -40px;
+    }
+
     /* Ensure tabs scroll horizontally if needed */
     .nav-pills.flex-nowrap {
         overflow-x: auto;

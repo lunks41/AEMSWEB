@@ -1,0 +1,96 @@
+﻿  <!-- PortExpense Modal -->
+<div class="modal fade" id="addPortExpenseModal" tabindex="-1" aria-labelledby="addPortExpenseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPortExpenseModalLabel">Port Expense</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="portExpenseForm">
+                    <input type="hidden" id="portExpense_jobOrderId" />
+                    <input type="hidden" id="portExpenseId" />
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Supplier <span class="text-danger">*</span></label>
+                            <select class="form-select" id="supplierId" required>
+                                <option value="">Select Supplier</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select class="form-select" id="chargeId" required>
+                                <option value="">Select Charge</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select" id="statusId" required>
+                                <option value="">Select Status</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">UOM <span class="text-danger">*</span></label>
+                            <select class="form-select" id="uomId" required>
+                                <option value="">Select UOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Delivery Date</label>
+                            <input type="date" class="form-control" id="deliverDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description">
+                        </div>
+                    </div>
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="createBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="createDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="editBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="editDate" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankPortExpenseClose" onclick="clearBankPortExpenseForm()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnBankPortExpenseEdit">Edit</button>
+                <button type="button" class="btn btn-secondary" id="btnBankPortExpenseClear" onclick="clearBankPortExpenseForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnBankPortExpenseSave" onclick="saveBankPortExpense()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
