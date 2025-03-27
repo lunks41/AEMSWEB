@@ -1,0 +1,349 @@
+﻿<div class="modal fade" id="addJobOrderModal" tabindex="-1" aria-labelledby="addJobOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addJobOrderModalLabel">Define Check List</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="jobOrderForm">
+
+                    <!-- Section 1: Operation -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">Operation Details</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Date</label>
+                                        <input type="date" class="form-control" value="2025-03-27" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Part Of Call</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Customer</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Question</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Vessel Distance</label>
+                                        <input type="number" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Vessel</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Vessel (IMO Number)</label>
+                                        <input type="text" class="form-control" placeholder="IMO Number">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Voyage</label>
+                                        <input type="text" class="form-control" placeholder="Last Port">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Last Port</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Next Port/Final Destination</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Nature Of Call</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">ETA Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">ETD Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">ISPS</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Vessel Current Location</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Calling Location </label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">(Anchorage Co-Ordinate)</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="Latitude">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="Longitude">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Terminal</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Boarding location</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Charters/Reg Agents</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Owners Agent</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Master Name</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Operational Status</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">ROB Arrival</label>
+                                        <input type="number" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">ROB Departure</label>
+                                        <input type="number" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="isActive">
+                                            <label class="form-check-label" for="isActive">Is Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="mb-1">
+                                        <label class="control-label">Remarks</label>
+                                        <textarea class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Accounts -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">Account Details</div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="taxApplicable">
+                                            <label class="form-check-label" for="taxApplicable">Is Tax Applicable</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Customer Ret. No.</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Address</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Contact</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Proposed Invoice Date</label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Invoice Series Date</label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Account Status</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="mb-1">
+                                        <label class="control-label">Remarks</label>
+                                        <textarea class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Action Buttons -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Clear</button>
+                <button type="button" class="btn btn-primary">Save & New</button>
+                <button type="submit" class="btn btn-success">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-xl {
+        max-width: 1200px;
+    }
+
+    .form-control:read-only {
+        background-color: #f8f9fa;
+    }
+
+    .form-check {
+        margin-bottom: 1rem;
+    }
+</style>

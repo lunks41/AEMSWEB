@@ -114,27 +114,5 @@
 </div>
 
 <script>
-    function initializePortExpenseGrid(gridId, columns) {
-        $(`#${gridId}`).kendoGrid({
-            dataSource: {
-                data: [],
-                pageSize: 10
-            },
-            columns: columns.concat([{
-                title: "Actions",
-                template: `<button class="btn btn-sm btn-info">View</button>
-                      <button class="btn btn-sm btn-warning">Edit</button>
-                      <button class="btn btn-sm btn-danger">Delete</button>
-                      <button class="btn btn-sm btn-success">Invoice</button>`
-            }]),
-            scrollable: true,
-            pageable: true
-        });
-    }
-
-    // Initialize for each tab
-    initializePortExpenseGrid('grid-PortExpense', [
-        { field: "expenseName", title: "Expense Name" },
-        { field: "amount", title: "Amount", format: "{0:c}" }
-    ]);
+    
 </script>

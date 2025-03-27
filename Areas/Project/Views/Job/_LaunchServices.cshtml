@@ -234,3 +234,125 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Validation function
+    function validateLaunchServiceForm() {
+        let isValid = true;
+
+        // Check required fields
+        const requiredFields = [
+            'launchServiceDate', 'chargeId', 'launchId', 'uomId', 'glId',
+            'statusId', 'lunchportId'
+        ];
+
+        requiredFields.forEach(field => {
+            const input = document.getElementById(field);
+            if (!input.value.trim()) {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+
+        // Validate datetime sequence
+        const times = [
+            'loadingTime', 'leftJetty', 'alongsideVessel',
+            'departedFromVessel', 'arrivedAtJetty'
+        ].map(id => document.getElementById(id).value);
+
+        for (let i = 0; i < times.length - 1; i++) {
+            if (times[i] && times[i + 1] && new Date(times[i]) > new Date(times[i + 1])) {
+                alert(`Time sequence error between ${times[i]} and ${times[i + 1]}`);
+                isValid = false;
+                break;
+            }
+        }
+
+        return isValid;
+    }
+
+    // Save function
+    function saveBankLaunchService() {
+        if (!validateLaunchServiceForm()) return;
+
+        const payload = {
+            id: document.getElementById('launchServiceId').value || null,
+            jobOrderId: document.getElementById('launchService_jobOrderId').value,
+            launchDate: document.getElementById('launchServiceDate').value,
+            chargeId: document.getElementById('chargeId').value,
+            launchId: document.getElementById('launchId').value,
+            uomId: document.getElementById('uomId').value,
+            glId: document.getElementById('glId').value,
+            agentTally: document.getElementById('agentTally').value,
+            boatopTally: document.getElementById('boatopTally').value,
+            distanceFromJettyToVessel: document.getElementById('distanceFromJettyToVessel').value,
+            loadingTime: document.getElementById('loadingTime').value,
+            leftJetty: document.getElementById('leftJetty').value,
+            alongsideVessel: document.getElementById('alongsideVessel').value,
+            departedFromVessel: document.getElementById('departedFromVessel').value,
+            arrivedAtJetty: document.getElementById('arrivedAtJetty').value,
+            weightOfCargoDelivered: document.getElementById('weightOfCargoDelivered').value,
+            weightOfCargoLanded: document.getElementById('weightOfCargoLanded').value,
+            boatoperator: document.getElementById('boatoperator').value,
+            creditorsInvNo: document.getElementById('creditorsInvNo').value,
+            annexure: document.getElementById('annexure').value,
+            lunchportId: document.getElementById('lunchportId').value,
+            statusId: document.getElementById('statusId').value,
+            remark: document.getElementById('remark').value
+        };
+
+        const url = payload.id ? `/api/launch-services/${payload.id}` : '/api/launch-services';
+        const method = payload.id ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response error');
+                return response.json();
+            })
+            .then(data => {
+                clearBankLaunchServiceForm();
+                alert('Saved successfully!');
+                bootstrap.Modal.getInstance(document.getElementById('addLaunchServiceModal')).hide();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Save failed. Check console for details.');
+            });
+    }
+
+    // Edit mode setup
+    function editBankLaunchService(serviceData) {
+        // Populate form fields
+        Object.entries(serviceData).forEach(([key, value]) => {
+            const element = document.getElementById(key);
+            if (element) element.value = value;
+        });
+
+        // Set audit fields
+        document.getElementById('freshwatercreateBy').textContent = serviceData.createdBy;
+        document.getElementById('freshwatercreateDate').textContent = serviceData.createDate;
+        document.getElementById('freshwatereditBy').textContent = serviceData.modifiedBy;
+        document.getElementById('freshwatereditDate').textContent = serviceData.modifiedDate;
+        document.getElementById('freshwatereditVersion').textContent = serviceData.version;
+
+        // Show modal and set update mode
+        document.getElementById('btnBankLaunchServiceSave').textContent = 'Update';
+        new bootstrap.Modal(document.getElementById('addLaunchServiceModal')).show();
+    }
+
+    // Form reset function
+    function clearBankLaunchServiceForm() {
+        document.getElementById('launchServiceForm').reset();
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        document.getElementById('launchServiceId').value = '';
+        document.getElementById('launchService_jobOrderId').value = '';
+        document.getElementById('auditCollapse').classList.remove('show');
+        document.getElementById('btnBankLaunchServiceSave').textContent = 'Save';
+    }
+</script>

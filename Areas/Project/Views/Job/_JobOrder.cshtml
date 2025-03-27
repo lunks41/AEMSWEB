@@ -1,8 +1,10 @@
-﻿<div class="modal fade" id="addJobOrderModal" tabindex="-1" aria-labelledby="addJobOrderModalLabel" aria-hidden="true">
+﻿
+
+<div class="modal fade" id="viewJobOrderModal" tabindex="-1" aria-labelledby="viewJobOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xxl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addJobOrderModalLabel">Job Order</h5>
+                <h5 class="modal-title" id="viewJobOrderModalLabel">Job Order</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -556,32 +558,515 @@
 
     function openChildModal(serviceType) {
         const modalId = `#add${serviceType}Modal`;
-        $(modalId).modal('show');
+        const modalElement = $(modalId);
+        modalElement.modal('show');
     }
 
-    function initializeGrid(gridId, columns) {
-        $(`#${gridId}`).kendoGrid({
+    // Initialize for each tab
+    initializePortExpenseGrid();
+    initializeLaunchServiceGrid();
+    initializeEquipmentUsedGrid();
+    initializeCrewSignOnGrid();
+    initializeCrewSignOffGrid();
+    initializeMedicalAssistanceGrid();
+    initializeConsignmentImportGrid();
+    initializeConsignmentExportGrid();
+    initializeThirdPartySupplyGrid();
+    initializeFreshWaterGrid();
+    initializeTechnicianSurveyorGrid();
+    initializeLandingItemGrid();
+    initializeOtherServiceGrid();
+    initializeAgencyRemunerationGrid();
+
+    // ================== PORT EXPENSES GRID ================== //
+    function initializePortExpenseGrid() {
+        debugger;
+        $(`#grid-PortExpense`).kendoGrid({
             dataSource: {
                 data: [],
                 pageSize: 10
             },
-            columns: columns.concat([{
-                title: "Actions",
-                template: `<button class="btn btn-sm btn-info">View</button>
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
                       <button class="btn btn-sm btn-warning">Edit</button>
                       <button class="btn btn-sm btn-danger">Delete</button>
                       <button class="btn btn-sm btn-success">Invoice</button>`
-            }]),
+                },
+                { field: "expenseDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "expenseType", title: "Expense Type", width: "200px" },
+                { field: "description", title: "Description", width: "300px" },
+                { field: "amount", title: "Amount", format: "{0:c}", width: "150px" },
+                { field: "status", title: "Status", width: "120px" }
+            ],
             scrollable: true,
             pageable: true
         });
     }
 
-    // Initialize for each tab
-    initializeGrid('grid-PortExpense', [
-        { field: "expenseName", title: "Expense Name" },
-        { field: "amount", title: "Amount", format: "{0:c}" }
-    ]);
+    // ================== LAUNCH SERVICES GRID ================== //
+    function initializeLaunchServiceGrid() {
+        $(`#grid-LaunchService`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+              <button class="btn btn-sm btn-warning">Edit</button>
+              <button class="btn btn-sm btn-danger">Delete</button>
+              <button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // ================== EQUIPMENT USED GRID ================== //
+    function initializeEquipmentUsedGrid() {
+       
+            $(`#grid-EquipmentUsed`).kendoGrid({
+                dataSource: {
+                    data: [],
+                    pageSize: 10
+                },
+                columns: [
+                    {
+                        title: "Actions",
+                        template: `<button class="btn btn-sm btn-info">View</button>
+       <button class="btn btn-sm btn-warning">Edit</button>
+       <button class="btn btn-sm btn-danger">Delete</button>
+       <button class="btn btn-sm btn-success">Invoice</button>`
+                    },
+                    { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "launchType", title: "Service Type", width: "180px" },
+                    { field: "duration", title: "Duration (hrs)", width: "140px" },
+                    { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                    {
+                        field: "totalCost",
+                        title: "Total Cost",
+                        template: "#= (duration * costPerHour).toFixed(2) #",
+                        width: "140px"
+                    }
+                ],
+                scrollable: true,
+                pageable: true
+            });
+    }
+
+    // ================== CREW SIGN-ON GRID ================== //
+    function initializeCrewSignOnGrid() {
+       
+            $(`#grid-CrewSignOn`).kendoGrid({
+                dataSource: {
+                    data: [],
+                    pageSize: 10
+                },
+                columns: [
+                    {
+                        title: "Actions",
+                        template: `<button class="btn btn-sm btn-info">View</button>
+       <button class="btn btn-sm btn-warning">Edit</button>
+       <button class="btn btn-sm btn-danger">Delete</button>
+       <button class="btn btn-sm btn-success">Invoice</button>`
+                    },
+                    { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "launchType", title: "Service Type", width: "180px" },
+                    { field: "duration", title: "Duration (hrs)", width: "140px" },
+                    { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                    {
+                        field: "totalCost",
+                        title: "Total Cost",
+                        template: "#= (duration * costPerHour).toFixed(2) #",
+                        width: "140px"
+                    }
+                ],
+                scrollable: true,
+                pageable: true
+            });
+    }
+
+    // ================== CREW SIGN-OFF GRID ================== //
+    function initializeCrewSignOffGrid() {
+
+        $(`#grid-CrewSignOff`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+    <button class="btn btn-sm btn-warning">Edit</button>
+    <button class="btn btn-sm btn-danger">Delete</button>
+    <button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // ================== CRE MISCELLANEOUS GRID ================== //
+    function initializeCrewMiscGrid() {
+  
+        $(`#grid-CrewMisc`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+   <button class="btn btn-sm btn-warning">Edit</button>
+   <button class="btn btn-sm btn-danger">Delete</button>
+   <button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+}
+
+    // ================== MEDICAL ASSISTANCE GRID ================== //
+    function initializeMedicalAssistanceGrid() {
+      
+            $(`#grid-MedicalAssistance`).kendoGrid({
+                dataSource: {
+                    data: [],
+                    pageSize: 10
+                },
+                columns: [
+                    {
+                        title: "Actions",
+                        template: `<button class="btn btn-sm btn-info">View</button>
+       <button class="btn btn-sm btn-warning">Edit</button>
+       <button class="btn btn-sm btn-danger">Delete</button>
+       <button class="btn btn-sm btn-success">Invoice</button>`
+                    },
+                    { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "launchType", title: "Service Type", width: "180px" },
+                    { field: "duration", title: "Duration (hrs)", width: "140px" },
+                    { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                    {
+                        field: "totalCost",
+                        title: "Total Cost",
+                        template: "#= (duration * costPerHour).toFixed(2) #",
+                        width: "140px"
+                    }
+                ],
+                scrollable: true,
+                pageable: true
+            });
+    }
+
+    // ================== CONSIGNMENT IMPORT GRID ================== //
+    function initializeConsignmentImportGrid() {
+        
+            $(`#grid-ConsignmentImport`).kendoGrid({
+                dataSource: {
+                    data: [],
+                    pageSize: 10
+                },
+                columns: [
+                    {
+                        title: "Actions",
+                        template: `<button class="btn btn-sm btn-info">View</button>
+       <button class="btn btn-sm btn-warning">Edit</button>
+       <button class="btn btn-sm btn-danger">Delete</button>
+       <button class="btn btn-sm btn-success">Invoice</button>`
+                    },
+                    { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "launchType", title: "Service Type", width: "180px" },
+                    { field: "duration", title: "Duration (hrs)", width: "140px" },
+                    { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                    {
+                        field: "totalCost",
+                        title: "Total Cost",
+                        template: "#= (duration * costPerHour).toFixed(2) #",
+                        width: "140px"
+                    }
+                ],
+                scrollable: true,
+                pageable: true
+            });
+    }
+
+    // ================== CONSIGNMENT EXPORT GRID ================== //
+    function initializeConsignmentExportGrid() {
+
+        $(`#grid-ConsignmentExport`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+    <button class="btn btn-sm btn-warning">Edit</button>
+    <button class="btn btn-sm btn-danger">Delete</button>
+    <button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // ================== THIRD PARTY SUPPLY GRID ================== //
+    function initializeThirdPartySupplyGrid() {
+
+        $(`#grid-ThirdPartySupply`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+    <button class="btn btn-sm btn-warning">Edit</button>
+    <button class="btn btn-sm btn-danger">Delete</button>
+    <button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // ================== FRESH WATER GRID ================== //
+    function initializeFreshWaterGrid() {
+      
+            $(`#grid-FreshWater`).kendoGrid({
+                dataSource: {
+                    data: [],
+                    pageSize: 10
+                },
+                columns: [
+                    {
+                        title: "Actions",
+                        template: `<button class="btn btn-sm btn-info">View</button>
+       <button class="btn btn-sm btn-warning">Edit</button>
+       <button class="btn btn-sm btn-danger">Delete</button>
+       <button class="btn btn-sm btn-success">Invoice</button>`
+                    },
+                    { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "launchType", title: "Service Type", width: "180px" },
+                    { field: "duration", title: "Duration (hrs)", width: "140px" },
+                    { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                    {
+                        field: "totalCost",
+                        title: "Total Cost",
+                        template: "#= (duration * costPerHour).toFixed(2) #",
+                        width: "140px"
+                    }
+                ],
+                scrollable: true,
+                pageable: true
+            });
+    }
+
+    // ================== TECHNICIAN SURVEYOR GRID ================== //
+    function initializeTechnicianSurveyorGrid() {
+
+        $(`#grid-TechnicianSurveyor`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+  <button class="btn btn-sm btn-warning">Edit</button>
+  <button class="btn btn-sm btn-danger">Delete</button>
+  <button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // ================== LANDING ITEM GRID ================== //
+    function initializeLandingItemGrid() {
+
+        $(`#grid-LandingItem`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+<button class="btn btn-sm btn-warning">Edit</button>
+<button class="btn btn-sm btn-danger">Delete</button>
+<button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // ================== OTHER SERVICE GRID ================== //
+    function initializeOtherServiceGrid() {
+
+        $(`#grid-OtherService`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: [
+                {
+                    title: "Actions",
+                    template: `<button class="btn btn-sm btn-info">View</button>
+<button class="btn btn-sm btn-warning">Edit</button>
+<button class="btn btn-sm btn-danger">Delete</button>
+<button class="btn btn-sm btn-success">Invoice</button>`
+                },
+                { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "launchType", title: "Service Type", width: "180px" },
+                { field: "duration", title: "Duration (hrs)", width: "140px" },
+                { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                {
+                    field: "totalCost",
+                    title: "Total Cost",
+                    template: "#= (duration * costPerHour).toFixed(2) #",
+                    width: "140px"
+                }
+            ],
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // ================== AGENCY REMUNERATION GRID ================== //
+    function initializeAgencyRemunerationGrid() {
+        
+            $(`#grid-AgencyRemuneration`).kendoGrid({
+                dataSource: {
+                    data: [],
+                    pageSize: 10
+                },
+                columns: [
+                    {
+                        title: "Actions",
+                        template: `<button class="btn btn-sm btn-info">View</button>
+       <button class="btn btn-sm btn-warning">Edit</button>
+       <button class="btn btn-sm btn-danger">Delete</button>
+       <button class="btn btn-sm btn-success">Invoice</button>`
+                    },
+                    { field: "serviceDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "launchType", title: "Service Type", width: "180px" },
+                    { field: "duration", title: "Duration (hrs)", width: "140px" },
+                    { field: "costPerHour", title: "Rate/Hour", format: "{0:c}", width: "140px" },
+                    {
+                        field: "totalCost",
+                        title: "Total Cost",
+                        template: "#= (duration * costPerHour).toFixed(2) #",
+                        width: "140px"
+                    }
+                ],
+                scrollable: true,
+                pageable: true
+            });
+    }
+
+    //// Add this tab change handler
+    //document.getElementById('serviceTabs').addEventListener('shown.bs.tab', function (e) {
+    //    const targetId = e.target.getAttribute('data-bs-target');
+    //    const tabPane = document.querySelector(targetId);
+    //    const gridElement = tabPane.querySelector('.kendo-grid');
+    //    const gridId = gridElement.id;
+    //    const serviceType = gridId.replace('grid-', '');
+    //    const initializerName = `initialize${serviceType}Grid`;
+
+    //    if (typeof window[initializerName] === 'function') {
+    //        window[initializerName]();
+    //    } else {
+    //        console.error(`Initializer ${initializerName} not found`);
+    //    }
+    //});
 </script>
 
 <style>
