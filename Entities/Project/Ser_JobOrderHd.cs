@@ -9,7 +9,7 @@
         public int? CustomerId { get; set; }
         public short? CurrencyId { get; set; }
         public decimal? ExhRate { get; set; }
-        public long? VesselId { get; set; }
+        public Int32 VesselId { get; set; }
         public string IMONo { get; set; }
         public byte? VesselDistance { get; set; }
         public short? PortId { get; set; }

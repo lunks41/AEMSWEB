@@ -24,10 +24,10 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                        <button type="button" class="btn btn-primary" onclick="loadCustomerGrid();">
                             <i class="mdi mdi-magnify"></i> Search
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                        <button type="button" class="btn btn-secondary" onclick="clearCustomerSearch();">
                             <i class="mdi mdi-close"></i> Clear
                         </button>
                     </div>
@@ -98,6 +98,15 @@
             });
         });
 
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadCustomerGrid();
+        }
+
+        function clearCustomerSearch() {
+            $('#txtsearch').val('');
+            loadCustomerGrid();
+        }
+
         function Refresh() {
             const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             BindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
@@ -133,5 +142,7 @@
             var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
             contactModal.show();
         });
+
+        
     </script>
 }

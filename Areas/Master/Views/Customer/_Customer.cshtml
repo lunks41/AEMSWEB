@@ -270,7 +270,13 @@
             { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
         ];
 
-        initializeKendoGrid("gridcustomer", url, { searchString, companyId }, columns);
+        let grid = $("#gridcustomer").data("kendoGrid");
+        if (grid) {
+
+            grid.dataSource.read({ searchString: searchString, companyId: companyId });
+        } else {
+            initializeKendoGrid("gridcustomer", url, { searchString, companyId }, columns);
+        }
     }
 
     function openCustomerModal(id, mode) {

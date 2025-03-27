@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addJobOrderModalLabel">Define Check List</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="jobOrderForm">
@@ -86,11 +86,15 @@
                                         </select>
                                     </div>
                                 </div>
-
-
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Nature Of Call</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">ISPS</label>
                                         <input type="text" class="form-control">
                                     </div>
                                 </div>
@@ -106,62 +110,16 @@
                                         <input type="datetime-local" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">ISPS</label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
 
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Vessel Current Location</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Calling Location </label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">(Anchorage Co-Ordinate)</label>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" placeholder="Latitude">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" placeholder="Longitude">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Terminal</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Boarding location</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Charters/Reg Agents</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Charters</label>
                                         <input type="text" class="form-control">
                                     </div>
                                 </div>
@@ -173,28 +131,14 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Master Name</label>
+                                        <label class="control-label">Owners Master</label>
                                         <input type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Operational Status</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">ROB Arrival</label>
-                                        <input type="number" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">ROB Departure</label>
-                                        <input type="number" class="form-control">
+                                        <label class="control-label">Master Name</label>
+                                        <input type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -205,11 +149,18 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label class="control-label">Operational Status</label>
+                                        <select class="form-select">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="mb-1">
                                         <label class="control-label">Remarks</label>
-                                        <textarea class="form-control" rows="3"></textarea>
+                                        <textarea class="form-control" rows="2"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +227,7 @@
                                 <div class="col-md-12">
                                     <div class="mb-1">
                                         <label class="control-label">Remarks</label>
-                                        <textarea class="form-control" rows="3"></textarea>
+                                        <textarea class="form-control" rows="2"></textarea>
                                     </div>
                                 </div>
                             </div>

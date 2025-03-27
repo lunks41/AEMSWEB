@@ -53,7 +53,7 @@ namespace AEMSWEB.Areas.Project.Data.Services
                         $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
                         $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
                         $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
-                        $"OR Hd.Remarks LIKE '%{searchString}%') " +
+                        $"OR Hd.Remark1 LIKE '%{searchString}%') " +
                         $"AND Hd.JobOrderId <> 0 " +
                         $"AND Hd.CompanyId = {CompanyId} " +
                         $"AND Hd.JobOrderDate BETWEEN '{fromDate:yyyy-MM-dd}' AND '{toDate:yyyy-MM-dd}' " +
@@ -63,7 +63,7 @@ namespace AEMSWEB.Areas.Project.Data.Services
                 // Query to fetch paginated data with the additional filters
                 var result = await _repository.GetQueryAsync<JobOrderHdViewModel>(
                     $"SELECT Hd.JobOrderId, Hd.CompanyId, Hd.JobOrderNo, Hd.JobOrderDate, Hd.CustomerId, Cur.CurrencyId, Cut.CustomerCode, Cut.CustomerName, Hd.IMONo, " +
-                    $"Cur.CurrencyName, Cur.CurrencyCode, Hd.TotalAmt, Hd.TotalLocalAmt, Hd.Remarks, Hd.IsActive, Hd.IsClose, " +
+                    $"Cur.CurrencyName, Cur.CurrencyCode, Hd.TotalAmt, Hd.TotalLocalAmt, Hd.Remark1, Hd.IsActive, Hd.IsClose, " +
                     $"Usr.UserName AS CreateBy, Usr1.UserName AS EditBy, " +
                     $"Ord.OrderTypeName AS Status " + // Added OrderTypeName as Status
                     $"FROM dbo.Ser_JobOrderHd Hd " +
@@ -75,7 +75,7 @@ namespace AEMSWEB.Areas.Project.Data.Services
                     $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
                     $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
                     $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
-                    $"OR Hd.Remarks LIKE '%{searchString}%') " +
+                    $"OR Hd.Remark1 LIKE '%{searchString}%') " +
                     $"AND Hd.JobOrderId <> 0 " +
                     $"AND Hd.CompanyId = {CompanyId} " +
                     $"AND Hd.JobOrderDate BETWEEN '{fromDate:yyyy-MM-dd}' AND '{toDate:yyyy-MM-dd}' " +
@@ -180,14 +180,14 @@ namespace AEMSWEB.Areas.Project.Data.Services
                     $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
                     $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
                     $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
-                    $"OR Hd.Remarks LIKE '%{searchString}%') " +
+                    $"OR Hd.Remark1 LIKE '%{searchString}%') " +
                     $"AND Hd.JobOrderId <> 0 AND Hd.CompanyId = {CompanyId} " + additionalFilters);
 
                 // Query to fetch paginated data with additional filters
                 var result = await _repository.GetQueryAsync<JobOrderHdViewModel>(
                     $"SELECT Hd.JobOrderId, Hd.CompanyId, Hd.JobOrderNo, Hd.JobOrderDate, Hd.CustomerId, " +
                     $"Cur.CurrencyId, Cut.CustomerCode, Cut.CustomerName, Hd.IMONo, " +
-                    $"Cur.CurrencyName, Cur.CurrencyCode, Hd.TotalAmt, Hd.TotalLocalAmt, Hd.Remarks, Hd.IsActive, Hd.IsClose, " +
+                    $"Cur.CurrencyName, Cur.CurrencyCode, Hd.TotalAmt, Hd.TotalLocalAmt, Hd.Remark1, Hd.IsActive, Hd.IsClose, " +
                     $"Usr.UserName AS CreateBy, Usr1.UserName AS EditBy " +
                     $"FROM dbo.Ser_JobOrderHd Hd " +
                     $"INNER JOIN dbo.M_Customer Cut ON Cut.CustomerId = Hd.CustomerId " +
@@ -197,7 +197,7 @@ namespace AEMSWEB.Areas.Project.Data.Services
                     $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
                     $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
                     $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
-                    $"OR Hd.Remarks LIKE '%{searchString}%') " +
+                    $"OR Hd.Remark1 LIKE '%{searchString}%') " +
                     $"AND Hd.JobOrderId <> 0 AND Hd.CompanyId = {CompanyId} " + additionalFilters + " " +
                     $"ORDER BY Hd.JobOrderNo " +
                     $"OFFSET {pageSize} * ({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
@@ -242,7 +242,7 @@ namespace AEMSWEB.Areas.Project.Data.Services
                     $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
                     $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
                     $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
-                    $"OR Hd.Remarks LIKE '%{searchString}%') " +
+                    $"OR Hd.Remark1 LIKE '%{searchString}%') " +
                     $"AND Hd.JobOrderId <> 0 " +
                     $"AND Hd.CompanyId = {companyId} " +
                     $"AND Hd.JobOrderDate BETWEEN '{fromDate:yyyy-MM-dd}' AND '{toDate:yyyy-MM-dd}' " +
@@ -279,7 +279,7 @@ namespace AEMSWEB.Areas.Project.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<JobOrderHdViewModel>($"SELECT\r\nM_Ban.JobOrderId,M_Ban.CompanyId,M_Ban.JobOrderHdCode,M_Ban.JobOrderHdName,M_Ban.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Ban.AccountNo,M_Ban.SwiftCode,M_Ban.Remarks1,M_Ban.Remarks2,M_Ban.IsActive,M_Ban.IsOwnJobOrderHd,M_Ban.GLId,M_Chr.GLName,M_Chr.GLCode,M_Ban.CreateById,M_Ban.CreateDate,M_Ban.EditById,M_Ban.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_JobOrderHd M_Ban INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Ban.GLId INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Ban.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Ban.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Ban.EditById WHERE (M_Ban.JobOrderId={JobOrderId} OR {JobOrderId}=0) AND (M_Ban.JobOrderHdCode='{JobOrderHdCode}' OR '{JobOrderHdCode}'='{string.Empty}') AND (M_Ban.JobOrderHdName='{JobOrderHdName}' OR '{JobOrderHdName}'='{string.Empty}') AND M_Ban.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<JobOrderHdViewModel>($"SELECT\r\nM_Ban.JobOrderId,M_Ban.CompanyId,M_Ban.JobOrderHdCode,M_Ban.JobOrderHdName,M_Ban.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Ban.AccountNo,M_Ban.SwiftCode,M_Ban.Remark11,M_Ban.Remark12,M_Ban.IsActive,M_Ban.IsOwnJobOrderHd,M_Ban.GLId,M_Chr.GLName,M_Chr.GLCode,M_Ban.CreateById,M_Ban.CreateDate,M_Ban.EditById,M_Ban.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_JobOrderHd M_Ban INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Ban.GLId INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Ban.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Ban.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Ban.EditById WHERE (M_Ban.JobOrderId={JobOrderId} OR {JobOrderId}=0) AND (M_Ban.JobOrderHdCode='{JobOrderHdCode}' OR '{JobOrderHdCode}'='{string.Empty}') AND (M_Ban.JobOrderHdName='{JobOrderHdName}' OR '{JobOrderHdName}'='{string.Empty}') AND M_Ban.CompanyId={CompanyId}");
 
                 return result;
             }

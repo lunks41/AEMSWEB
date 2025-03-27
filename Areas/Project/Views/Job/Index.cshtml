@@ -77,6 +77,11 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-status="cancelwithservice" data-bs-toggle="tab">
+                            <span class="badge bg-danger me-1">0</span> Cancel With Service
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
                         <button class="nav-link" data-status="post" data-bs-toggle="tab">
                             <span class="badge bg-info me-1">0</span> Posted
                         </button>
@@ -206,16 +211,16 @@
                     title: "Actions",
                     width: "150px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerModal('${dataItem.jobOrderId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
              <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
                         if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openCustomerModal('${dataItem.jobOrderId}', 'edit')">
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
              <i class="material-symbols-outlined text-warning">edit</i></button>`;
                         }
 
                         if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteCustomer('${dataItem.jobOrderId}')">
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
              <i class="material-symbols-outlined text-danger">delete</i></button>`;
                         }
                         return buttons;
@@ -240,6 +245,23 @@
 
         }
 
+        function openJobOrderModal(id) {
+            $('#viewJobOrderModal').modal('show');
+
+
+            @*const $modal = $('#viewJobOrderModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetAccountSetupById", "AccountSetup", new { area = "Master" })', { accSetupId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        populateAccSetupModalFields(response.data);
+                        setAccSetupMode(mode);
+                        $('#viewJobOrderModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());*@
+        }
+
         // Load status counts for tabs via an AJAX call.
         function loadStatusCounts() {
             $.ajax({
@@ -259,6 +281,7 @@
                     $('#jobOrderTabs [data-status="confirm"] .badge').text(counts.confirm);
                     $('#jobOrderTabs [data-status="completed"] .badge').text(counts.completed);
                     $('#jobOrderTabs [data-status="cancel"] .badge').text(counts.cancel);
+                    $('#jobOrderTabs [data-status="cancelwithservice"] .badge').text(counts.cancelwithservice);
                     $('#jobOrderTabs [data-status="post"] .badge').text(counts.post);
                 },
                 error: function (xhr, status, error) {

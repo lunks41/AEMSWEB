@@ -28,7 +28,7 @@ namespace AEMSWEB.Areas.Project.Models
         public string? CurrencyCode { get; set; }
         public string? CurrencyName { get; set; }
         public decimal? ExhRate { get; set; }
-        public long? VesselId { get; set; }
+        public Int32 VesselId { get; set; }
         public string? VesselCode { get; set; }
         public string? VesselName { get; set; }
         public string? IMONo { get; set; }
@@ -59,7 +59,7 @@ namespace AEMSWEB.Areas.Project.Models
         public decimal? TotalLocalAmt { get; set; }
         public string? OwnerName { get; set; }
         public string? OwnerAgent { get; set; }
-        public string? Remarks { get; set; }
+        public string? Remark1 { get; set; }
         public string? EditVersion { get; set; }
         public Int16 CreateById { get; set; }
         public DateTime CreateDate { get; set; }
@@ -91,7 +91,7 @@ namespace AEMSWEB.Areas.Project.Models
         [Column(TypeName = "decimal(18, 10)")]
         public decimal? ExhRate { get; set; }
 
-        public long? VesselId { get; set; }
+        public Int32 VesselId { get; set; }
 
         [StringLength(10)]
         public string? IMONo { get; set; }
