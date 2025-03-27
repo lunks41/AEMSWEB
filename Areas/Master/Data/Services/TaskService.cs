@@ -187,12 +187,12 @@ namespace AEMSWEB.Areas.Master.Data.Services
             }
             catch (SqlException sqlEx)
             {
-                await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Task, m_Task.TaskId, m_Task.TaskCode, "M_Task", IsEdit ? E_Mode.Update : E_Mode.Create, "SQL", UserId);
+                await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Task, m_Task.TaskId, m_Task.TaskCode ?? "", "M_Task", IsEdit ? E_Mode.Update : E_Mode.Create, "SQL", UserId);
                 return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
-                await _logService.LogErrorAsync(ex, CompanyId, E_Modules.Master, E_Master.Task, m_Task.TaskId, m_Task.TaskCode, "M_Task", IsEdit ? E_Mode.Update : E_Mode.Create, "General", UserId);
+                await _logService.LogErrorAsync(ex, CompanyId, E_Modules.Master, E_Master.Task, m_Task.TaskId, m_Task.TaskCode ?? "", "M_Task", IsEdit ? E_Mode.Update : E_Mode.Create, "General", UserId);
                 throw new Exception(ex.ToString());
             }
         }

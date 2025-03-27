@@ -10,26 +10,31 @@
                 <form id="agencyRemunerationForm" autocomplete="off">
                     <input type="hidden" id="agencyRemuneration_jobOrderId" />
                     <input type="hidden" id="agencyRemunerationId" />
+
                     <div class="row">
                         <!-- Payment Information -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
+
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Remuneration Date <span class="text-danger">*</span></label>
-                                <input type="datetime-local" class="form-control" id="remunerationDate" required>
+                                <input type="date" class="form-control" id="remunerationDate" required>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Amount <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="amount" step="0.01" value="0.00" required>
                             </div>
                         </div>
 
-                        <!-- Agency Details -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Agency Name</label>
                                 <input type="text" class="form-control" id="agencyName">
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">GL ID <span class="text-danger">*</span></label>
                                 <select class="form-select" id="glId" required>
                                     <option value="">Select GL Account</option>
@@ -37,33 +42,37 @@
                             </div>
                         </div>
 
-                        <!-- Transaction Details -->
-                        <div class="row mb-3">
-                            <div class="col-md-4">
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Charge ID <span class="text-danger">*</span></label>
                                 <select class="form-select" id="chargeId" required>
                                     <option value="">Select Charge</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">UOM</label>
                                 <select class="form-select" id="uomId">
                                     <option value="">Select Unit</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Quantity</label>
                                 <input type="number" class="form-control" id="qty">
                             </div>
                         </div>
 
-                        <!-- Additional Information -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Crew Handling Date (GMT) <span class="text-danger">*</span></label>
-                                <input type="datetime-local" class="form-control" id="crewHandlingDateGmt" required>
+                                <input type="date" class="form-control" id="crewHandlingDateGmt" required>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Status <span class="text-danger">*</span></label>
                                 <select class="form-select" id="statusId" required>
                                     <option value="">Select Status</option>
@@ -71,12 +80,13 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <label class="form-label">Description</label>
+                        <div class="col-12">
+                            <div class="mb-1">
+                                <label class="form-label">Remarks</label>
                                 <textarea class="form-control" id="description" rows="3"></textarea>
                             </div>
                         </div>
+
                     </div>
                     <!-- Audit Fields -->
                     <div class="accordion mt-3" id="auditAccordion">
@@ -92,20 +102,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

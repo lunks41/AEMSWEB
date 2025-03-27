@@ -12,20 +12,19 @@
                     <input type="hidden" id="equipmentUsedId" />
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Equipment Date <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="launchServiceDate" required>
                             </div>
                         </div>
-                        <!-- Section 1: Primary Details -->
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Ref No <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" value="admin" readonly>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Charge Code <span class="text-danger">*</span></label>
                                 <select class="form-select" id="chargeId" required>
@@ -33,7 +32,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">GL Account <span class="text-danger">*</span></label>
                                 <select class="form-select" id="glId" required>
@@ -42,8 +41,23 @@
                             </div>
                         </div>
 
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Mafi</label>
+                                <input type="text" class="form-control" id="mafi">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Other</label>
+                                <input type="text" class="form-control" id="other">
+                            </div>
+                        </div>
+
+
                         <!-- Section 3: Charges & Equipment -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Crane Charge</label>
                                 <select class="form-select" id="craneCharge">
@@ -52,7 +66,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Forklift Charge</label>
                                 <select class="form-select" id="forkliftCharge">
@@ -60,17 +74,65 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- Section 4: Tally Sheets -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Stevedor  Charge</label>
+                                <select class="form-select" id="stevedorCharge">
+                                    <option>Stevedor Charges</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--loading-->
+                        <div class="col-md-3">
                             <div class="mb-1">
                                 <label class="form-label">Loading Tally Sheet No</label>
                                 <input type="text" class="form-control" value="Loading Tally Sheet No">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">Crane Loading (hr)</label>
+                                <input type="text" class="form-control" value="Loading Tally Sheet No">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">ForkLift Loading (hr)</label>
+                                <input type="text" class="form-control" value="OffLoading Tally Sheet No">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">Stev. Loading (Nos)</label>
+                                <input type="text" class="form-control" value="Loading Tally Sheet No">
+                            </div>
+                        </div>
+
+                        <!--Offloading-->
+                        <div class="col-md-3">
                             <div class="mb-1">
                                 <label class="form-label">Offloading Tally Sheet No</label>
                                 <input type="text" class="form-control" value="OffLoading Tally Sheet No">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">Crane OffLoading (hr)</label>
+                                <input type="text" class="form-control" value="OffLoading Tally Sheet No">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">ForkLift OffLoading (hr)</label>
+                                <input type="text" class="form-control" value="Loading Tally Sheet No">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">Stev. OffLoading (Nos)</label>
+                                <input type="text" class="form-control" value="Loading Tally Sheet No">
                             </div>
                         </div>
 
@@ -97,6 +159,14 @@
                         </div>
                         <div class="col-md-3">
                             <div class="mb-1">
+                                <label class="form-label">Total Regular Hourss</label>
+                                <input type="time" class="form-control" value="20:20">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <div class="mb-1">
                                 <label class="form-label">Evening Time In</label>
                                 <input type="time" class="form-control" value="20:20">
                             </div>
@@ -113,6 +183,12 @@
                                 <input type="time" class="form-control" value="20:20">
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">Total OverTime Hours</label>
+                                <input type="time" class="form-control" value="20:20">
+                            </div>
+                        </div>
 
                         <div class="col-md-3">
                             <div class="mb-1">
@@ -126,19 +202,19 @@
                                 <input type="text" class="form-control" id="vehicleName" value="Vehicle Name">
                             </div>
                         </div>
-
-
-
-
-
-
-
-
-                        <!-- Section 5: Status & Footer -->
                         <div class="col-md-3">
                             <div class="mb-1">
                                 <label class="form-label">Order No</label>
                                 <input type="text" class="form-control" value="Order Number">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label class="form-label">Lunch Service Debit Note</label>
+                                <select class="form-select" id="status">
+                                    <option>Select</option>
+                                    <!-- Add other status options -->
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -148,6 +224,12 @@
                                     <option>Confirmed</option>
                                     <!-- Add other status options -->
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-1">
+                                <label class="form-label">Remark</label>
+                                <textarea class="form-control" id="remark" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="col-12">
@@ -175,20 +257,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

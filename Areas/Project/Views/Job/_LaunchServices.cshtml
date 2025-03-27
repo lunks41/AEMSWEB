@@ -11,13 +11,13 @@
                     <input type="hidden" id="launchService_jobOrderId" />
                     <input type="hidden" id="launchServiceId" />
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Launch Date <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="launchServiceDate" required>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Charge Code <span class="text-danger">*</span></label>
                                 <select class="form-select" id="chargeId" required>
@@ -25,14 +25,16 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Launch</label>
-                                <input type="number" class="form-control" id="launchId">
+                                <select class="form-select" id="launchId" required>
+                                    <option value="">Select Launch</option>
+                                </select>
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">UOM <span class="text-danger">*</span></label>
                                 <select class="form-select" id="uomId" required>
@@ -40,7 +42,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">GL Account <span class="text-danger">*</span></label>
                                 <select class="form-select" id="glId" required>
@@ -48,19 +50,19 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Agent Tally</label>
                                 <input type="text" class="form-control" id="agentTally">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Boat Oper Tally</label>
                                 <input type="text" class="form-control" id="boatopTally">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Distance To Vessel</label>
                                 <input type="number" class="form-control" id="distanceFromJettyToVessel" step="0.0001">
@@ -68,25 +70,25 @@
                         </div>
 
 
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Lunch Hire Time (1)</label>
                                 <input type="datetime-local" class="form-control" id="loadingTime">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Left Jetty (2)</label>
                                 <input type="datetime-local" class="form-control" id="leftJetty">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Alongside Vessel (3)</label>
                                 <input type="datetime-local" class="form-control" id="alongsideVessel">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Departed From Vessel (4)</label>
                                 <input type="datetime-local" class="form-control" id="departedFromVessel">
@@ -101,47 +103,59 @@
                             <b>Waitg Time Along Side (4-3) :  01:00 Hrs</b>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Arrived At Jetty (5)</label>
                                 <input type="datetime-local" class="form-control" id="arrivedAtJetty">
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Weight Delivered</label>
-                                <input type="number" class="form-control" id="weightOfCargoDelivered" step="0.0001" value="0.00">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="weightOfCargoDelivered" step="0.0001" value="0.00">
+                                    <span class="input-group-text">Tons/Pallets</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Weight Landed</label>
-                                <input type="number" class="form-control" id="weightOfCargoLanded" step="0.0001" value="0.00">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="weightOfCargoLanded" step="0.0001" value="0.00">
+                                    <span class="input-group-text">Tons/Pallets</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Boat Operator</label>
+                                <input type="text" class="form-control" id="boatoperator">
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Credit Inv No</label>
                                 <input type="text" class="form-control" id="creditorsInvNo">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Annexure</label>
                                 <input type="text" class="form-control" id="annexure">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Launch From (Port)</label>
-                                <input type="number" class="form-control" id="launchFrom">
+                                <select class="form-select" id="lunchportId" required>
+                                    <option value="">Select Port</option>
+                                </select>
                             </div>
                         </div>
-
-
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Status <span class="text-danger">*</span></label>
                                 <select class="form-select" id="statusId" required>
@@ -155,6 +169,7 @@
                                 <textarea class="form-control" id="remark" rows="2"></textarea>
                             </div>
                         </div>
+
                     </div>
 
 
@@ -172,20 +187,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

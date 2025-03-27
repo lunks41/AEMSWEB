@@ -12,29 +12,47 @@
                     <input type="hidden" id="crewMiscId" />
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label">Description <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="miscDescription" maxlength="200" required>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Crew Misc Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="launchServiceDate" required>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Amount <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="miscAmount" step="0.01" value="0.00" required>
+                        <div class="col-md-4">
+                            <label class="form-label">Charge Code</label>
+                            <select class="form-select" id="chargeId">
+                                <option value="">Select Charge</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label">GL Account <span class="text-danger">*</span></label>
                             <select class="form-select" id="glId" required>
                                 <option value="">Select GL</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Charge Code</label>
-                            <select class="form-select" id="chargeId">
-                                <option value="">Select Charge</option>
-                            </select>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" id="statusId" required>
+                                    <option value="">Select Status</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-1">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="miscDescription" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-1">
+                                <label class="form-label">Remark</label>
+                                <textarea class="form-control" id="remark" rows="2"></textarea>
+                            </div>
                         </div>
                     </div>
 
@@ -52,20 +70,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

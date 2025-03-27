@@ -10,44 +10,114 @@
                 <form id="landingItemForm">
                     <input type="hidden" id="landingItem_jobOrderId" />
                     <input type="hidden" id="landingItemId" />
+
                     <div class="row">
-                        <!-- Date & Location -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Landing Date <span class="text-danger">*</span></label>
-                                <input type="datetime-local" class="form-control" id="landingItemDate" required>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Landing Name</label>
+                                <input type="text" class="form-control" id="landingItemName">
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Landing Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="landingItemDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Repair Return Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="landingItemDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">UOM <span class="text-danger">*</span></label>
+                            <select class="form-select" id="glId" required>
+                                <option value="">Select UOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Landing Type</label>
+                            <select class="form-select" id="chargeId">
+                                <option value="">Select Landing Type</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Charge Code</label>
+                            <select class="form-select" id="chargeId">
+                                <option value="">Select Charge</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select class="form-select" id="glId" required>
+                                <option value="">Select GL</option>
+                            </select>
+                        </div>
+
+
+
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Location <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="location" required>
                             </div>
                         </div>
-
-                        <!-- Item Details -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Item Name</label>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Bill Entry No</label>
                                 <input type="text" class="form-control" id="landingItemName">
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" step="0.01" value="0.00">
-                            </div>
-                            <div class="col-md-3">
+                        </div>
+
+
+
+                        <div class="col-md-4">
+                            <div class="mb-1">
                                 <label class="form-label">Weight</label>
                                 <input type="number" class="form-control" id="weight" step="0.01">
                             </div>
                         </div>
-
-                        <!-- Financial Information -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                                <select class="form-select" id="glId" required>
-                                    <option value="">Select GL Account</option>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Amount Deposited</label>
+                                <input type="number" class="form-control" id="weight" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Refund instrument No</label>
+                                <input type="text" class="form-control" id="weight">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" id="statusId" required>
+                                    <option value="">Select Status</option>
                                 </select>
                             </div>
                         </div>
+
+
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="description" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label class="form-label">Remark</label>
+                                <textarea class="form-control" id="remark" rows="2"></textarea>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- Audit Fields -->
@@ -64,20 +134,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

@@ -61,6 +61,8 @@
 
 
                     </div>
+
+
                     <!-- Audit Fields -->
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
@@ -75,20 +77,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -105,3 +112,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    function initializePortExpenseGrid(gridId, columns) {
+        $(`#${gridId}`).kendoGrid({
+            dataSource: {
+                data: [],
+                pageSize: 10
+            },
+            columns: columns.concat([{
+                title: "Actions",
+                template: `<button class="btn btn-sm btn-info">View</button>
+                      <button class="btn btn-sm btn-warning">Edit</button>
+                      <button class="btn btn-sm btn-danger">Delete</button>
+                      <button class="btn btn-sm btn-success">Invoice</button>`
+            }]),
+            scrollable: true,
+            pageable: true
+        });
+    }
+
+    // Initialize for each tab
+    initializePortExpenseGrid('grid-PortExpense', [
+        { field: "expenseName", title: "Expense Name" },
+        { field: "amount", title: "Amount", format: "{0:c}" }
+    ]);
+</script>

@@ -13,44 +13,33 @@
                     <div class="row">
                         <!-- Personal Information -->
                         <div class="col-md-4">
+                            <div class="col-mb-4">
+                                <label class="form-label">Visa Type</label>
+                                <select class="form-select" id="visaTypeId">
+                                    <option value="">Select Visa Type</option>
+                                    <!-- Options to be populated -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">Gender <span class="text-danger">*</span></label>
+                                <select class="form-select" id="chargeId" required>
+                                    <option value="">Select Gender</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="col-mb-6">
                                 <label class="form-label">Crew Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="crewName" required>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Sign On Date <span class="text-danger">*</span></label>
-                                <input type="datetime-local" class="form-control" id="signOnDate" required>
-                            </div>
-
-                            <!-- Job Details -->
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-4">
-                                <label class="form-label">Position</label>
-                                <input type="text" class="form-control" id="position">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-4">
-                                <label class="form-label">GL ID <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="glId" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-4">
+                            <div class="mb-1">
                                 <label class="form-label">Rank <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="rankId" required>
-                            </div>
-                        </div>
-                            <!-- Identity Information -->
-                        <div class="col-md-4">
-                            <div class="col-mb-4">
-                                <label class="form-label">Gender <span class="text-danger">*</span></label>
-                                <select class="form-select" id="genderId" required>
-                                    <option value="">Select Gender</option>
-                                    <!-- Options to be populated -->
+                                <select class="form-select" id="glId" required>
+                                    <option value="">Select Rank</option>
                                 </select>
                             </div>
                         </div>
@@ -61,14 +50,22 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-4">
-                                <label class="form-label">Visa Type</label>
-                                <select class="form-select" id="visaTypeId">
-                                    <option value="">Select Visa Type</option>
-                                    <!-- Options to be populated -->
+                            <div class="mb-1">
+                                <label class="form-label">Charge Code <span class="text-danger">*</span></label>
+                                <select class="form-select" id="chargeId" required>
+                                    <option value="">Select Charge</option>
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label class="form-label">GL Account <span class="text-danger">*</span></label>
+                                <select class="form-select" id="glId" required>
+                                    <option value="">Select GL</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- Travel Information -->
                         <div class="col-md-4">
                             <div class="col-mb-6">
@@ -99,7 +96,7 @@
                         <!-- Administrative -->
                         <div class="col-md-4">
                             <div class="col-mb-6">
-                                <label class="form-label">Clearing</label>
+                                <label class="form-label">Clearing By</label>
                                 <input type="text" class="form-control" id="clearing">
                             </div>
                         </div>
@@ -112,10 +109,10 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-12">
-                                <label class="form-label">Charge ID</label>
-                                <input type="number" class="form-control" id="chargeId">
+                        <div class="col-12">
+                            <div class="mb-1">
+                                <label class="form-label">Remark</label>
+                                <textarea class="form-control" id="remark" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -134,20 +131,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="createBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="createDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="editBy" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="editDate" class="form-control-plaintext"></p>
+                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
