@@ -4,6 +4,7 @@ using AEMSWEB.Entities.Accounts.CB;
 using AEMSWEB.Entities.Accounts.GL;
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Entities.Masters;
+using AEMSWEB.Entities.Project;
 using AEMSWEB.Entities.Setting;
 using AEMSWEB.Models;
 using Microsoft.AspNetCore.Identity;
@@ -216,5 +217,13 @@ namespace AEMSWEB.Data
         #endregion GL
 
         #endregion Account
+
+        #region Project
+
+        //public DbSet<Ser_JobOrderHd> Ser_JobOrderHd { get; set; }
+        //public DbSet<Ser_JobOrderDt> Ser_JobOrderDt { get; set; }
+        //public DbSet<Ser_Tariff> Ser_Tariff { get; set; }
+
+        #endregion Project
     }
 }

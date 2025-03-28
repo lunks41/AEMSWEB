@@ -1,5 +1,280 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@{
+    ViewData["Title"] = "Tariff";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
 @{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    int companyId = ViewBag.CompanyId;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <!-- Simple Header Section -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Tariff Management</h4>
+                    <div>
+                        <button class="btn btn-light btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Refresh</button>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal">Add</button>
+                    </div>
+                </div>
+
+                <!-- Simple Filter Section -->
+                <div class="filter-section bg-light p-3 rounded mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <select id="customerDropdown" class="form-select form-select-sm">
+                                <option value="">All Customers</option>
+                                <!-- Dynamically populated options -->
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="customerDropdown" class="form-select form-select-sm">
+                                <option value="">All Port</option>
+                                <!-- Dynamically populated options -->
+                            </select>
+                        </div>
+
+                        <div class="col-md-2 d-flex">
+                            <button type="button" class="btn btn-primary btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Search</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Tabs -->
+                <ul class="nav nav-pills mb-3 status-tabs" id="jobOrderTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-status="all" data-bs-toggle="tab">
+                            <span class="badge bg-secondary me-1">0</span> Port Expenses
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-status="pending" data-bs-toggle="tab">
+                            <span class="badge bg-warning me-1">0</span> Pending
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-status="confirm" data-bs-toggle="tab">
+                            <span class="badge bg-primary me-1">0</span> Confirmed
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-status="completed" data-bs-toggle="tab">
+                            <span class="badge bg-success me-1">0</span> Completed
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-status="cancel" data-bs-toggle="tab">
+                            <span class="badge bg-danger me-1">0</span> Canceled
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-status="cancelwithservice" data-bs-toggle="tab">
+                            <span class="badge bg-danger me-1">0</span> Cancel With Service
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-status="post" data-bs-toggle="tab">
+                            <span class="badge bg-info me-1">0</span> Posted
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Grid Section -->
+                <div class="grid-wrapper border rounded">
+                    <div id="gridJobOrder" class="ag-theme-alpine" style="height: 500px;"></div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .filter-section {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+
+    .status-tabs .nav-link {
+        border-radius: 20px;
+        padding: 8px 20px;
+        margin-right: 8px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+        .status-tabs .nav-link.active {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+    .grid-wrapper {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        let companyId = 0;
+        let currentStatus = 'all';
+        let permissions = {}; // Initialize based on your auth system
+
+        $(document).ready(function () {
+            debugger;
+            companyId = getUrlParameter('companyId') || 1;
+
+            @*permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };*@
+
+            // Set default date range: from three months ago to today
+            const today = new Date();
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            $('#fromDate').val(formatDate(threeMonthsAgo));
+            $('#toDate').val(formatDate(today));
+
+            loadStatusCounts();
+            // Initialize the grid only once
+            if (!$("#gridJobOrder").data("kendoGrid")) {
+                loadJobOrderGrid();
+            }
+            // Tab click handler for status filter
+            $(document).on('click', '[data-status]', function() {
+                currentStatus = $(this).data('status');
+                loadJobOrderGrid();
+            });
+        });
+
+        function loadJobOrderGrid() {
+            let searchString = $('#txtsearch').val();
+            let customerId= 0;
+            let fromDate= $('#fromDate').val();
+            let toDate= $('#toDate').val();
+            let status = currentStatus;
+
+            let url = '@Url.Action("JobOrderList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
+             <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
+             <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
+             <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "jobOrderNo", title: "Job Order No", type: "string" }, // String type
+                { field: "jobOrderDate", title: "Job Order Date", type: "date", format: "{0:yyyy-MM-dd}" }, // Date type with formatting
+                { field: "customerName", title: "Customer Name", type: "string" }, // String type
+                { field: "currencyName", title: "Currency Name", type: "string" }, // String type
+                { field: "iMONo", title: "IMO No", type: "string" }, // String type
+                { field: "totalAmt", title: "Total Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
+                { field: "totalLocalAmt", title: "Total Local Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
+                { field: "remarks", title: "Remarks", type: "string" } // String type
+            ];
+
+            let grid = $("#gridJobOrder").data("kendoGrid");
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId, fromDate, toDate, status });
+            } else {
+                initializeKendoGrid("gridJobOrder", url, { searchString, companyId, customerId, fromDate, toDate, status }, columns);
+            }
+
+        }
+
+        function openJobOrderModal(id) {
+            $('#viewJobOrderModal').modal('show');
+        }
+
+        // Load status counts for tabs via an AJAX call.
+        function loadStatusCounts() {
+            $.ajax({
+                url: '@Url.Action("GetJobStatusCounts", "Job", new { area = "Project" })',
+                type: 'POST', // Use POST method
+                data: {
+                    searchString: $('#txtsearch').val(),
+                    companyId: $('#companyId').val(),
+                    customerId: $('#customerId').val(),
+                    fromDate: $('#fromDate').val(),
+                    toDate: $('#toDate').val()
+                },
+                success: function (counts) {
+                    debugger;
+                    $('#jobOrderTabs [data-status="all"] .badge').text(counts.all);
+                    $('#jobOrderTabs [data-status="pending"] .badge').text(counts.pending);
+                    $('#jobOrderTabs [data-status="confirm"] .badge').text(counts.confirm);
+                    $('#jobOrderTabs [data-status="completed"] .badge').text(counts.completed);
+                    $('#jobOrderTabs [data-status="cancel"] .badge').text(counts.cancel);
+                    $('#jobOrderTabs [data-status="cancelwithservice"] .badge').text(counts.cancelwithservice);
+                    $('#jobOrderTabs [data-status="post"] .badge').text(counts.post);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading status counts:', error);
+                }
+            });
+        }
+
+        // Clear search filters and reset the grid.
+        function clearSearch() {
+            $('#txtsearch').val('');
+            $('#customerDropdown').val('');
+            // Reset date filters to default three-month range.
+            const today = new Date();
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            $('#fromDate').val(formatDate(threeMonthsAgo));
+            $('#toDate').val(formatDate(today));
+            currentStatus = 'all';
+            $('.nav-link').removeClass('active');
+            $('[data-status="all"]').addClass('active');
+            loadJobOrderGrid();
+            loadStatusCounts();
+        }
+
+        // Helper function to format a date as yyyy-MM-dd.
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+    </script>
 }

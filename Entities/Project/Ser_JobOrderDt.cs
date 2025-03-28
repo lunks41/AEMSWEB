@@ -1,6 +1,7 @@
 ﻿namespace AEMSWEB.Entities.Project
 {
-    public class SerJobOrderDt
+    public class Ser_JobOrderDt
+
     {
         public byte CompanyId { get; set; } = 0;
         public long JobOrderId { get; set; } = 0;

@@ -121,12 +121,14 @@ public static class InfraServices
 
         services.AddScoped<ISettingService, SettingServices>();
 
-
         #endregion Setting
 
         #region Project
+
         services.AddScoped<IJobOrderService, JoborderService>();
-        #endregion System
+        services.AddScoped<ITariffService, TariffService>();
+
+        #endregion Project
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
