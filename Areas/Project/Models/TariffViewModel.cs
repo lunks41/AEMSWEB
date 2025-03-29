@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace AEMSWEB.Areas.Project.Models
+﻿namespace AEMSWEB.Areas.Project.Models
 {
     public class SaveTariffViewModel
     {
@@ -42,17 +39,17 @@ namespace AEMSWEB.Areas.Project.Models
         public string? FromPlaceName { get; set; }
         public short? ToPlace { get; set; }
         public string? ToPlaceName { get; set; }
-        public decimal? DistancePerMile { get; set; }
         public decimal? DisplayRate { get; set; }
         public decimal? BasicRate { get; set; }
-        public decimal? MinRate { get; set; }
-        public decimal? MaxRate { get; set; }
+        public decimal? MinUnit { get; set; }
+        public decimal? MaxUnit { get; set; }
         public bool IsAdditional { get; set; } = false; // Default value
+        public decimal? AdditionalUnit { get; set; }
         public decimal? AdditionalRate { get; set; }
         public decimal? PrepaymentPercentage { get; set; }
         public bool IsPrepayment { get; set; } = false; // Default value
         public int ItemNo { get; set; } = 0; // Default value
-        public string Remarks { get; set; } // Nullable
+        public string? Remarks { get; set; } // Nullable
         public bool IsActive { get; set; } = true; // Default value
         public short CreateById { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now; // Default value

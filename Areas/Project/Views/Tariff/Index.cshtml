@@ -18,10 +18,6 @@
                 <!-- Simple Header Section -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Tariff Management</h4>
-                    <div>
-                        <button class="btn btn-light btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Refresh</button>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal">Add</button>
-                    </div>
                 </div>
 
                 <!-- Simple Filter Section -->
@@ -41,60 +37,261 @@
                         </div>
 
                         <div class="col-md-2 d-flex">
-                            <button type="button" class="btn btn-primary btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Search</button>
+                            <button type="button" class="btn btn-primary btn-sm me-2" onclick="loadTariffGrid();loadStatusCounts();">Search</button>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">Clear</button>
+                            <button class="btn btn-light btn-sm me-2" onclick="loadTariffGrid();loadStatusCounts();">Refresh</button>
                         </div>
                     </div>
                 </div>
+                <!-- Scrollable Tabs Container -->
+                <div class="position-relative py-2">
+                    <!-- Scroll Buttons -->
+                    <button class="btn btn-sm btn-secondary scroll-button scroll-left">
+                        &lt;
+                    </button>
+                    <button class="btn btn-sm btn-secondary scroll-button scroll-right">
+                        &gt;
+                    </button>
 
-                <!-- Status Tabs -->
-                <ul class="nav nav-pills mb-3 status-tabs" id="jobOrderTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" data-status="all" data-bs-toggle="tab">
-                            <span class="badge bg-secondary me-1">0</span> Port Expenses
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-status="pending" data-bs-toggle="tab">
-                            <span class="badge bg-warning me-1">0</span> Pending
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-status="confirm" data-bs-toggle="tab">
-                            <span class="badge bg-primary me-1">0</span> Confirmed
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-status="completed" data-bs-toggle="tab">
-                            <span class="badge bg-success me-1">0</span> Completed
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-status="cancel" data-bs-toggle="tab">
-                            <span class="badge bg-danger me-1">0</span> Canceled
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-status="cancelwithservice" data-bs-toggle="tab">
-                            <span class="badge bg-danger me-1">0</span> Cancel With Service
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-status="post" data-bs-toggle="tab">
-                            <span class="badge bg-info me-1">0</span> Posted
-                        </button>
-                    </li>
-                </ul>
-
-                <!-- Grid Section -->
-                <div class="grid-wrapper border rounded">
-                    <div id="gridJobOrder" class="ag-theme-alpine" style="height: 500px;"></div>
+                    <!-- Tab List -->
+                    <div class="scrollable-tabs">
+                        <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
+                            <!-- Main Service Tabs -->
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button">
+                                    <span class="badge bg-secondary me-1">0</span> Port Expenses
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button">
+                                    <span class="badge bg-secondary me-1">0</span> Launch Services
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button">
+                                    <span class="badge bg-primary me-1">0</span> Equipments Used
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button">
+                                    <span class="badge bg-success me-1">0</span> Crew Sign On
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button">
+                                    <span class="badge bg-danger me-1">0</span> Crew Sign Off
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button">
+                                    <span class="badge bg-info me-1">0</span> Crew Miscellaneous
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button">
+                                    <span class="badge bg-warning me-1">0</span> Medical Assistance
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button">
+                                    <span class="badge bg-primary me-1">0</span> Consignment Import
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button">
+                                    <span class="badge bg-success me-1">0</span> Consignment Export
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button">
+                                    <span class="badge bg-danger me-1">0</span> Third Party Supply
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button">
+                                    <span class="badge bg-info me-1">0</span> Fresh Water
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button">
+                                    <span class="badge bg-warning me-1">0</span> Technicians Surveyors
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button">
+                                    <span class="badge bg-primary me-1">0</span> Landing Items
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button">
+                                    <span class="badge bg-success me-1">0</span> Other Service
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button">
+                                    <span class="badge bg-danger me-1">0</span> Agency Remuneration
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                <!-- Loading State -->
-                <div class="loading-overlay" id="loadingOverlay">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                <!-- Tab Content -->
+                <div class="tab-content" id="serviceTabContent">
+                    <!-- Port Expenses Tab -->
+                    <div class="tab-pane fade show active" id="port-expenses">
+                        <!-- Button Group for Port Expenses -->
+                        <div class="mb-3">
+                            <button id="btnAddPortExpense" onclick="openChildModal('PortExpense')" class="btn btn-primary me-2">Add Port Expense</button>
+                        </div>
+                        <!-- Grid for Port Expenses -->
+                        <div id="grid-PortExpense" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Launch Services Tab -->
+                    <div class="tab-pane fade" id="launch-services">
+                        <!-- Button Group for Launch Services (adjust as needed) -->
+                        <div class="mb-3">
+                            <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add Launch Service</button>
+                        </div>
+                        <!-- Grid for Launch Services -->
+                        <div id="grid-LaunchService" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Equipments Used Tab -->
+                    <div class="tab-pane fade" id="equipments-used">
+                        <!-- Button Group for Equipments Used -->
+                        <div class="mb-3">
+                            <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentUsed')" class="btn btn-primary me-2">Add Equipment</button>
+                        </div>
+                        <!-- Grid for Equipments Used -->
+                        <div id="grid-EquipmentUsed" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Crew Sign On Tab -->
+                    <div class="tab-pane fade" id="crew-sign-on">
+                        <!-- Button Group for Crew Sign On -->
+                        <div class="mb-3">
+                            <button id="btnAddCrewSignOn" onclick="openChildModal('CrewSignOn')" class="btn btn-primary me-2">Add Crew Sign On</button>
+                        </div>
+                        <!-- Grid for Crew Sign On -->
+                        <div id="grid-CrewSignOn" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Crew Sign Off Tab -->
+                    <div class="tab-pane fade" id="crew-sign-off">
+                        <!-- Button Group for Crew Sign Off -->
+                        <div class="mb-3">
+                            <button id="btnAddCrewSignOff" onclick="openChildModal('CrewSignOff')" class="btn btn-primary me-2">Add Crew Sign Off</button>
+                        </div>
+                        <!-- Grid for Crew Sign Off -->
+                        <div id="grid-CrewSignOff" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Crew Miscellaneous Tab -->
+                    <div class="tab-pane fade" id="crew-miscellaneous">
+                        <!-- Button Group for Crew Miscellaneous -->
+                        <div class="mb-3">
+                            <button id="btnAddCrewMisc" onclick="openChildModal('CrewMisc')" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
+                        </div>
+                        <!-- Grid for Crew Miscellaneous -->
+                        <div id="grid-CrewMisc" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Medical Assistance Tab -->
+                    <div class="tab-pane fade" id="medical-assistance">
+                        <!-- Button Group for Medical Assistance -->
+                        <div class="mb-3">
+                            <button id="btnAddMedicalAssistance" onclick="openChildModal('MedicalAssistance')" class="btn btn-primary me-2">Add Medical Assistance</button>
+                        </div>
+                        <!-- Grid for Medical Assistance -->
+                        <div id="grid-MedicalAssistance" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Consignment Import Tab -->
+                    <div class="tab-pane fade" id="consignment-import">
+                        <!-- Button Group for Consignment Import -->
+                        <div class="mb-3">
+                            <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport')" class="btn btn-primary me-2">Add Consignment Import</button>
+                        </div>
+                        <!-- Grid for Consignment Import -->
+                        <div id="grid-ConsignmentImport" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Consignment Export Tab -->
+                    <div class="tab-pane fade" id="consignment-export">
+                        <!-- Button Group for Consignment Export -->
+                        <div class="mb-3">
+                            <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport')" class="btn btn-primary me-2">Add Consignment Export</button>
+                        </div>
+                        <!-- Grid for Consignment Export -->
+                        <div id="grid-ConsignmentExport" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Third Party Supply Tab -->
+                    <div class="tab-pane fade" id="third-party-supply">
+                        <!-- Button Group for Third Party Supply -->
+                        <div class="mb-3">
+                            <button id="btnAddThirdPartySupply" onclick="openChildModal('ThirdPartySupply')" class="btn btn-primary me-2">Add Third Party Supply</button>
+
+                        </div>
+                        <!-- Grid for Third Party Supply -->
+                        <div id="grid-ThirdPartySupply" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Fresh Water Tab -->
+                    <div class="tab-pane fade" id="fresh-water">
+                        <!-- Button Group for Fresh Water -->
+                        <div class="mb-3">
+                            <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add Fresh Water</button>
+
+                        </div>
+                        <!-- Grid for Fresh Water -->
+                        <div id="grid-FreshWater" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Technicians Surveyors Tab -->
+                    <div class="tab-pane fade" id="technicians-surveyors">
+                        <!-- Button Group for Technicians Surveyors -->
+                        <div class="mb-3">
+                            <button id="btnAddTechnicianSurveyor" onclick="openChildModal('TechnicianSurveyor')" class="btn btn-primary me-2">Add Technician Surveyor</button>
+
+                        </div>
+                        <!-- Grid for Technicians Surveyors -->
+                        <div id="grid-TechnicianSurveyor" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Landing Items Tab -->
+                    <div class="tab-pane fade" id="landing-items">
+                        <!-- Button Group for Landing Items -->
+                        <div class="mb-3">
+                            <button id="btnAddLandingItem" onclick="openChildModal('LandingItem')" class="btn btn-primary me-2">Add Landing Item</button>
+
+                        </div>
+                        <!-- Grid for Landing Items -->
+                        <div id="grid-LandingItem" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Other Service Tab -->
+                    <div class="tab-pane fade" id="other-service">
+                        <!-- Button Group for Other Service -->
+                        <div class="mb-3">
+                            <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add Other Service</button>
+
+                        </div>
+                        <!-- Grid for Other Service -->
+                        <div id="grid-OtherService" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Agency Remuneration Tab -->
+                    <div class="tab-pane fade" id="agency-remuneration">
+                        <!-- Button Group for Agency Remuneration -->
+                        <div class="mb-3">
+                            <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add Agency Remuneration</button>
+
+                        </div>
+                        <!-- Grid for Agency Remuneration -->
+                        <div id="grid-AgencyRemuneration" class="kendo-grid"></div>
                     </div>
                 </div>
             </div>
@@ -102,179 +299,182 @@
     </div>
 </div>
 
-<style>
-    .filter-section {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-    }
 
-    .status-tabs .nav-link {
-        border-radius: 20px;
-        padding: 8px 20px;
-        margin-right: 8px;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-    }
-
-        .status-tabs .nav-link.active {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-    .grid-wrapper {
-        overflow: hidden;
-        position: relative;
-    }
-
-    .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255,255,255,0.8);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-</style>
 
 @section Scripts {
     <script>
+        document.querySelectorAll('.scroll-button').forEach(button => {
+            button.addEventListener('click', function (e) {
+                const container = document.querySelector('.scrollable-tabs');
+                const scrollAmount = 200; // Adjust scroll amount
+                container.scrollLeft += this.classList.contains('scroll-left') ? -scrollAmount : scrollAmount;
+            });
+        });
+
+    // Optional: Hide scroll buttons when at edges
+        const container = document.querySelector('.scrollable-tabs');
+        const checkScroll = () => {
+            document.querySelector('.scroll-left').style.display = container.scrollLeft <= 0 ? 'none' : 'block';
+            document.querySelector('.scroll-right').style.display =
+                container.scrollLeft + container.offsetWidth >= container.scrollWidth ? 'none' : 'block';
+        };
+
+        container.addEventListener('scroll', checkScroll);
+        checkScroll();
+
         let companyId = 0;
-        let currentStatus = 'all';
-        let permissions = {}; // Initialize based on your auth system
+        let permissions = {};
 
         $(document).ready(function () {
             debugger;
             companyId = getUrlParameter('companyId') || 1;
 
-            @*permissions = {
+            permissions = {
                 canCreate: @Json.Serialize(canCreate),
                 canEdit: @Json.Serialize(canEdit),
                 canDelete: @Json.Serialize(canDelete),
                 canRead: @Json.Serialize(canRead),
-            };*@
+            };
 
-            // Set default date range: from three months ago to today
-            const today = new Date();
-            const threeMonthsAgo = new Date();
-            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-            $('#fromDate').val(formatDate(threeMonthsAgo));
-            $('#toDate').val(formatDate(today));
-
-            loadStatusCounts();
-            // Initialize the grid only once
-            if (!$("#gridJobOrder").data("kendoGrid")) {
-                loadJobOrderGrid();
-            }
-            // Tab click handler for status filter
-            $(document).on('click', '[data-status]', function() {
-                currentStatus = $(this).data('status');
-                loadJobOrderGrid();
-            });
+            initializePortExpenseGrid();
         });
 
-        function loadJobOrderGrid() {
-            let searchString = $('#txtsearch').val();
-            let customerId= 0;
-            let fromDate= $('#fromDate').val();
-            let toDate= $('#toDate').val();
-            let status = currentStatus;
+    function openChildModal(serviceType) {
+        const modalId = `#add${serviceType}Modal`;
+        const modalElement = $(modalId);
+        modalElement.modal('show');
+    }
 
-            let url = '@Url.Action("JobOrderList", "Job", new { area = "Project" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "150px",
-                    template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
-             <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+    // ================== PORT EXPENSES GRID ================== //
 
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
-             <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
+    function initializePortExpenseGrid() {
+        let searchString = "";
+        let customerId = 1;
+        let portId = 3751;
+        let url = '@Url.Action("GetTariffFreshWaterList", "Tariff", new { area = "Project" })';
+        let columns = [
+            {
+                title: "Actions",
+                width: "100px",
+                template: function (dataItem) {
+                    let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}', 'view')">
+                <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                        if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
-             <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                        }
-                        return buttons;
+                    if (permissions.canEdit) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}', 'edit')">
+                <i class="material-symbols-outlined text-warning">edit</i></button>`;
                     }
-                },
-                { field: "jobOrderNo", title: "Job Order No", type: "string" }, // String type
-                { field: "jobOrderDate", title: "Job Order Date", type: "date", format: "{0:yyyy-MM-dd}" }, // Date type with formatting
-                { field: "customerName", title: "Customer Name", type: "string" }, // String type
-                { field: "currencyName", title: "Currency Name", type: "string" }, // String type
-                { field: "iMONo", title: "IMO No", type: "string" }, // String type
-                { field: "totalAmt", title: "Total Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
-                { field: "totalLocalAmt", title: "Total Local Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
-                { field: "remarks", title: "Remarks", type: "string" } // String type
-            ];
 
-            let grid = $("#gridJobOrder").data("kendoGrid");
-            if (grid) {
-                grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId, fromDate, toDate, status });
-            } else {
-                initializeKendoGrid("gridJobOrder", url, { searchString, companyId, customerId, fromDate, toDate, status }, columns);
-            }
-
-        }
-
-        function openJobOrderModal(id) {
-            $('#viewJobOrderModal').modal('show');
-        }
-
-        // Load status counts for tabs via an AJAX call.
-        function loadStatusCounts() {
-            $.ajax({
-                url: '@Url.Action("GetJobStatusCounts", "Job", new { area = "Project" })',
-                type: 'POST', // Use POST method
-                data: {
-                    searchString: $('#txtsearch').val(),
-                    companyId: $('#companyId').val(),
-                    customerId: $('#customerId').val(),
-                    fromDate: $('#fromDate').val(),
-                    toDate: $('#toDate').val()
-                },
-                success: function (counts) {
-                    debugger;
-                    $('#jobOrderTabs [data-status="all"] .badge').text(counts.all);
-                    $('#jobOrderTabs [data-status="pending"] .badge').text(counts.pending);
-                    $('#jobOrderTabs [data-status="confirm"] .badge').text(counts.confirm);
-                    $('#jobOrderTabs [data-status="completed"] .badge').text(counts.completed);
-                    $('#jobOrderTabs [data-status="cancel"] .badge').text(counts.cancel);
-                    $('#jobOrderTabs [data-status="cancelwithservice"] .badge').text(counts.cancelwithservice);
-                    $('#jobOrderTabs [data-status="post"] .badge').text(counts.post);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error loading status counts:', error);
+                    if (permissions.canDelete) {
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTariff('${dataItem.tariffId}')">
+                <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                    }
+                    return buttons;
                 }
-            });
-        }
+            },
+                { field: "taskName", title: "task", width: "150px" },
+                { field: "chargeName", title: "charges", width: "100px" },
+                { field: "currencyName", title: "Currency", width: "120px" },
+                { field: "uomName", title: "Uom", width: "100px" },
+                { field: "slabUomName", title: "Slab Type", width: "120px" },
+            {
+                field: "basicRate",
+                title: "Basic Rate",
+                width: "100px",
+                format: "{0:n2}" // Format to display 2 decimal places
+            },
+            {
+                field: "minUnit",
+                title: "Min Unit",
+                width: "100px",
+                format: "{0:n2}" // Format to display 2 decimal places
+            },
+            {
+                field: "maxUnit",
+                title: "Max Unit",
+                width: "100px",
+                format: "{0:n2}" // Format to display 2 decimal places
+            },
+            {
+                field: "isAdditional",
+                title: "Is Additional",
+                width: "120px",
+                template: "<input type='checkbox' #= isAdditional ? 'checked' : '' # disabled />" // Checkbox for boolean value
+            },
+            {
+                field: "additionalUnit",
+                title: "Additional Unit",
+                width: "130px",
+                format: "{0:n2}" // Format to display 2 decimal places
+            },
+            {
+                field: "additionalRate",
+                title: "Additional Rate",
+                width: "130px",
+                format: "{0:n2}" // Format to display 2 decimal places
+            },
+            {
+                field: "isPrepayment",
+                title: "Is Prepayment",
+                width: "120px",
+                template: "<input type='checkbox' #= isPrepayment ? 'checked' : '' # disabled />" // Checkbox for boolean value
+            },
+            {
+                field: "prepaymentPercentage",
+                title: "Pre.Pay.Percentage",
+                width: "140px",
+                format: "{0:n2}" // Format to display 2 decimal places
+            },
+            { field: "remarks", title: "Remarks", width: "200px" }
+        ];
 
-        // Clear search filters and reset the grid.
-        function clearSearch() {
-            $('#txtsearch').val('');
-            $('#customerDropdown').val('');
-            // Reset date filters to default three-month range.
-            const today = new Date();
-            const threeMonthsAgo = new Date();
-            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-            $('#fromDate').val(formatDate(threeMonthsAgo));
-            $('#toDate').val(formatDate(today));
-            currentStatus = 'all';
-            $('.nav-link').removeClass('active');
-            $('[data-status="all"]').addClass('active');
-            loadJobOrderGrid();
-            loadStatusCounts();
-        }
+        let grid = $("#grid-PortExpense").data("kendoGrid");
+        if (grid) {
 
-        // Helper function to format a date as yyyy-MM-dd.
-        function formatDate(date) {
-            return date.toISOString().split('T')[0];
+            grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId: customerId, portId: portId });
+        } else {
+            // Initialize grid if it doesn’t exist
+            initializeKendoGrid("grid-PortExpense", url, { searchString, companyId, customerId, portId }, columns);
         }
+    }
+
     </script>
 }
+
+<style>
+
+    .modal-xxl {
+        max-width: 95%;
+    }
+
+    .scrollable-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+
+        .scrollable-tabs::-webkit-scrollbar {
+            display: none; /* Chrome/Safari/Edge */
+        }
+
+    .scroll-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+        padding: 0.5rem;
+        line-height: 1;
+    }
+
+    .scroll-left {
+        left: 0;
+    }
+
+    .scroll-right {
+        right: 0;
+    }
+
+    .nav-item {
+        flex-shrink: 0; /* Prevent tab items from shrinking */
+    }
+</style>

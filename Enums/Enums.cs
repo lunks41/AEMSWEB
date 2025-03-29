@@ -155,4 +155,23 @@ namespace AEMSWEB.Enums
         DocSeqNo = 8,
         UserSetting = 9
     }
+
+    public enum E_Task
+    {
+        PortExpenses = 1,
+        LaunchServices = 2,
+        EquipmentsUsed = 3,
+        CrewSignOn = 4,
+        CrewSignOff = 5,
+        CrewMiscellaneous = 6,
+        MedicalAssistance = 7,
+        ConsignmentImport = 8,
+        ConsignmentExport = 9,
+        ThirdPartySupply = 10,
+        FreshWaterSupply = 11,
+        TechniciansSurveyors = 12,
+        LandingItems = 13,
+        OtherService = 14,
+        AgencyRemuneration = 15
+    }
 }

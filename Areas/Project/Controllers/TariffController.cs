@@ -51,6 +51,27 @@ namespace AEMSWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
+        public async Task<JsonResult> GetTariffFreshWaterList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _customerService.GetTariffFreshWaterListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching job list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
         public async Task<JsonResult> TariffList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, string fromDate, string toDate, string status)
         {
             if (pageNumber < 1 || pageSize < 1)
