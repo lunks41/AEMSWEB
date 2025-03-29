@@ -185,7 +185,7 @@
                     <div class="tab-pane fade show active" id="port-expenses">
                         <!-- Button Group for Port Expenses -->
                         <div class="mb-3">
-                            <button id="btnAddPortExpense" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Port Expense</button>
+                            <button id="btnAddPortExpense" onclick="openChildModal('Common',1)" class="btn btn-primary me-2">Add Port Expense</button>
                         </div>
                         <!-- Grid for Port Expenses -->
                         <div id="grid-PortExpense" class="kendo-grid"></div>
@@ -195,7 +195,7 @@
                     <div class="tab-pane fade" id="launch-services">
                         <!-- Button Group for Launch Services (adjust as needed) -->
                         <div class="mb-3">
-                            <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add Launch Service</button>
+                            <button id="btnAddLaunchService" onclick="openChildModal('LaunchService',2)" class="btn btn-primary me-2">Add Launch Service</button>
                         </div>
                         <!-- Grid for Launch Services -->
                         <div id="grid-LaunchServices" class="kendo-grid"></div>
@@ -205,7 +205,7 @@
                     <div class="tab-pane fade" id="equipments-used">
                         <!-- Button Group for Equipments Used -->
                         <div class="mb-3">
-                            <button id="btnAddEquipmentUsed" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Equipment</button>
+                            <button id="btnAddEquipmentUsed" onclick="openChildModal('Common',3)" class="btn btn-primary me-2">Add Equipment</button>
                         </div>
                         <!-- Grid for Equipments Used -->
                         <div id="grid-EquipmentsUsed" class="kendo-grid"></div>
@@ -215,7 +215,7 @@
                     <div class="tab-pane fade" id="crew-sign-on">
                         <!-- Button Group for Crew Sign On -->
                         <div class="mb-3">
-                            <button id="btnAddCrewSignOn" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Crew Sign On</button>
+                            <button id="btnAddCrewSignOn" onclick="openChildModal('Common',4)" class="btn btn-primary me-2">Add Crew Sign On</button>
                         </div>
                         <!-- Grid for Crew Sign On -->
                         <div id="grid-CrewSignOn" class="kendo-grid"></div>
@@ -225,7 +225,7 @@
                     <div class="tab-pane fade" id="crew-sign-off">
                         <!-- Button Group for Crew Sign Off -->
                         <div class="mb-3">
-                            <button id="btnAddCrewSignOff" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Crew Sign Off</button>
+                            <button id="btnAddCrewSignOff" onclick="openChildModal('Common',5)" class="btn btn-primary me-2">Add Crew Sign Off</button>
                         </div>
                         <!-- Grid for Crew Sign Off -->
                         <div id="grid-CrewSignOff" class="kendo-grid"></div>
@@ -235,7 +235,7 @@
                     <div class="tab-pane fade" id="crew-miscellaneous">
                         <!-- Button Group for Crew Miscellaneous -->
                         <div class="mb-3">
-                            <button id="btnAddCrewMisc" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
+                            <button id="btnAddCrewMisc" onclick="openChildModal('Common',6)" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
                         </div>
                         <!-- Grid for Crew Miscellaneous -->
                         <div id="grid-CrewMiscellaneous" class="kendo-grid"></div>
@@ -245,7 +245,7 @@
                     <div class="tab-pane fade" id="medical-assistance">
                         <!-- Button Group for Medical Assistance -->
                         <div class="mb-3">
-                            <button id="btnAddMedicalAssistance" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Medical Assistance</button>
+                            <button id="btnAddMedicalAssistance" onclick="openChildModal('Common',7)" class="btn btn-primary me-2">Add Medical Assistance</button>
                         </div>
                         <!-- Grid for Medical Assistance -->
                         <div id="grid-MedicalAssistance" class="kendo-grid"></div>
@@ -255,7 +255,7 @@
                     <div class="tab-pane fade" id="consignment-import">
                         <!-- Button Group for Consignment Import -->
                         <div class="mb-3">
-                            <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport')" class="btn btn-primary me-2">Add Consignment Import</button>
+                            <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport',8)" class="btn btn-primary me-2">Add Consignment Import</button>
                         </div>
                         <!-- Grid for Consignment Import -->
                         <div id="grid-ConsignmentImport" class="kendo-grid"></div>
@@ -265,7 +265,7 @@
                     <div class="tab-pane fade" id="consignment-export">
                         <!-- Button Group for Consignment Export -->
                         <div class="mb-3">
-                            <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport')" class="btn btn-primary me-2">Add Consignment Export</button>
+                            <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport',9)" class="btn btn-primary me-2">Add Consignment Export</button>
                         </div>
                         <!-- Grid for Consignment Export -->
                         <div id="grid-ConsignmentExport" class="kendo-grid"></div>
@@ -275,7 +275,7 @@
                     <div class="tab-pane fade" id="third-party-supply">
                         <!-- Button Group for Third Party Supply -->
                         <div class="mb-3">
-                            <button id="btnAddThirdPartySupply" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Third Party Supply</button>
+                            <button id="btnAddThirdPartySupply" onclick="openChildModal('Common',10)" class="btn btn-primary me-2">Add Third Party Supply</button>
                         </div>
                         <!-- Grid for Third Party Supply -->
                         <div id="grid-ThirdPartySupply" class="kendo-grid"></div>
@@ -285,7 +285,7 @@
                     <div class="tab-pane fade" id="fresh-water">
                         <!-- Button Group for Fresh Water -->
                         <div class="mb-3">
-                            <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add Fresh Water</button>
+                            <button id="btnAddFreshWater" onclick="openChildModal('FreshWater',11)" class="btn btn-primary me-2">Add Fresh Water</button>
                         </div>
                         <!-- Grid for Fresh Water -->
                         <div id="grid-FreshWaterSupply" class="kendo-grid"></div>
@@ -295,7 +295,7 @@
                     <div class="tab-pane fade" id="technicians-surveyors">
                         <!-- Button Group for Technicians Surveyors -->
                         <div class="mb-3">
-                            <button id="btnAddTechnicianSurveyor" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Technician Surveyor</button>
+                            <button id="btnAddTechnicianSurveyor" onclick="openChildModal('Common',12)" class="btn btn-primary me-2">Add Technician Surveyor</button>
                         </div>
                         <!-- Grid for Technicians Surveyors -->
                         <div id="grid-TechniciansSurveyors" class="kendo-grid"></div>
@@ -305,7 +305,7 @@
                     <div class="tab-pane fade" id="landing-items">
                         <!-- Button Group for Landing Items -->
                         <div class="mb-3">
-                            <button id="btnAddLandingItem" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Landing Item</button>
+                            <button id="btnAddLandingItem" onclick="openChildModal('Common',14)" class="btn btn-primary me-2">Add Landing Item</button>
                         </div>
                         <!-- Grid for Landing Items -->
                         <div id="grid-LandingItems" class="kendo-grid"></div>
@@ -315,7 +315,7 @@
                     <div class="tab-pane fade" id="other-service">
                         <!-- Button Group for Other Service -->
                         <div class="mb-3">
-                            <button id="btnAddOtherService" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Other Service</button>
+                            <button id="btnAddOtherService" onclick="openChildModal('Common',15)" class="btn btn-primary me-2">Add Other Service</button>
                         </div>
                         <!-- Grid for Other Service -->
                         <div id="grid-OtherService" class="kendo-grid"></div>
@@ -325,7 +325,7 @@
                     <div class="tab-pane fade" id="agency-remuneration">
                         <!-- Button Group for Agency Remuneration -->
                         <div class="mb-3">
-                            <button id="btnAddAgencyRemuneration" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Agency Remuneration</button>
+                            <button id="btnAddAgencyRemuneration" onclick="openChildModal('Common',16)" class="btn btn-primary me-2">Add Agency Remuneration</button>
                         </div>
                         <!-- Grid for Agency Remuneration -->
                         <div id="grid-AgencyRemuneration" class="kendo-grid"></div>
@@ -335,7 +335,7 @@
                     <div class="tab-pane fade" id="visa">
                         <!-- Button Group for Visa -->
                         <div class="mb-3">
-                            <button id="btnAddVisa" onclick="openChildModal('Visa')" class="btn btn-primary me-2">Add Visa</button>
+                            <button id="btnAddVisa" onclick="openChildModal('Visa',0)" class="btn btn-primary me-2">Add Visa</button>
                         </div>
                         <!-- Grid for Visa -->
                         <div id="grid-Visa" class="kendo-grid"></div>
@@ -359,6 +359,7 @@
 
         //================== GLOBAL VARIABLES ================== //
         let companyId = 0;
+        let taskId = 1;
         let permissions = {};
 
         $(document).ready(function () {
@@ -493,8 +494,9 @@
             loadStatusCounts();
         }
 
-        function openChildModal(serviceType) {
+        function openChildModal(serviceType,TaskId) {
             debugger;
+            taskId = TaskId;
             let customerId = getComboBoxValue('#cmb_customer', 0);
             let portId = getComboBoxValue('#cmb_port', 0);
 
@@ -504,6 +506,23 @@
                 const modalId = `#add${serviceType}TariffModal`;
                 const modalElement = $(modalId);
                 modalElement.modal('show');
+
+                // Pre-set Customer/Port in the modal (if needed)
+                modal.find('#common_cmb_customer').val(customerId).trigger('change');
+                modal.find('#common_cmb_port').val(portId).trigger('change');
+                modal.find('#common_cmb_task').val(taskId).trigger('change');
+
+                // Pre-set Customer/Port in the modal (if needed)
+                modal.find('#freshwater_cmb_customer').val(customerId).trigger('change');
+                modal.find('#freshwater_cmb_port').val(portId).trigger('change');
+
+                // Pre-set Customer/Port in the modal (if needed)
+                modal.find('#launchservice_cmb_customer').val(customerId).trigger('change');
+                modal.find('#launchservice_cmb_port').val(portId).trigger('change');
+
+                // Pre-set Customer/Port in the modal (if needed)
+                modal.find('#visa_cmb_customer').val(customerId).trigger('change');
+                modal.find('#visa_cmb_port').val(portId).trigger('change');
             }
         }
 
@@ -684,10 +703,7 @@
         }
 
         function openTariffModal(tariffId, taskId, customerId, portId, chargeId, mode) {
-            const $modal = $('#addTariffModal');
-
-            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
-
+            debugger;
             $.get('@Url.Action("GetTariffById", "Tariff", new { area = "Project" })', {
                 tariffId: tariffId,
                 companyId: companyId,
@@ -698,17 +714,14 @@
             })
                 .done(function (response) {
                     if (response.success) {
-                        populateTariffModalFields(response.data);
-                        setTariffMode(mode);
-                        taskId = response.data.taskId;
+                        debugger;
+                        const serviceType = response.data.rateType; // e.g., 'Common', 'FreshWater'
+                        const modalId = `#add${serviceType}TariffModal`; // Dynamic modal ID
+                        const modal = $(modalId);
+                        openChildModal(serviceType, taskId)
 
-                        let serviceType = response.data.rateType;
-
-                        if (serviceType) {
-                            openChildModal(serviceType);
-                        }
-
-                        //$('#addTariffModal').modal('show');
+                        populateTariffModalFields(response.data); // Populate fields in the correct modal
+                        setTariffMode(mode, modal); // Pass modal to set mode
                     } else {
                         alert(response.message || "Failed to load tariff data.");
                     }
@@ -725,10 +738,8 @@
             debugger;
             $('#tariffId').val(data.tariffId || '');
             $('#rateType').val(data.rateType?.trim() || '');
-            $('#taskId').val(data.taskId || '');
-            $('#chargeId').val(data.chargeId || '');
-            $('#portId').val(data.portId || '');
-            $('#customerId').val(data.customerId || '');
+            $('#common_cmb_task').data('kendoComboBox').value(data.taskId || '');
+            //$('#common_cmb_charge').data('kendoComboBox').value(data.chargeId || '');
             $('#currencyId').val(data.currencyId || 0); // Default to 0 if no value
             $('#uomId').val(data.uomId || '');
             $('#slabUomId').val(data.slabUomId || '');
@@ -814,21 +825,37 @@
             });
         }
 
-        function saveTariff() {
-            // Prepare Tariff data object based on modal fields
+        $('#addCommonTariffModal').on('shown.bs.modal', function () {
+            debugger;
+            const taskUrl = '@Url.Action("GetTaskLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(taskUrl, "#common_cmb_task", "taskName", "taskId");
+
+            const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(uomUrl, "common_cmb_uom", "uomName", "uomId");
+
+            const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(currencyUrl, "common_cmb_currency", "currencyName", "currencyId");
+
+            const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
+            BindComboBox(chargeUrl, "common_cmb_chagre", "chargeName", "chargeId");
+
+        });
+
+        function saveCommonTariff() {
+            debugger;
             let tariffData = {
                 TariffId: parseInt($('#tariffId').val()) || 0,
-                RateType: $('#rateType').val()?.trim() || '',
-                TaskId: parseInt($('#taskId').val()) || 0,
-                ChargeId: parseInt($('#chargeId').val()) || 0,
-                PortId: parseInt($('#portId').val()) || 0,
-                CustomerId: parseInt($('#customerId').val()) || 0,
-                CurrencyId: parseInt($('#currencyId').val()) || 0,
-                UomId: parseInt($('#uomId').val()) || 0,
-                SlabUomId: parseInt($('#slabUomId').val()) || 0,
-                VisaTypeId: parseInt($('#visaTypeId').val()) || 0,
-                FromPlace: parseInt($('#fromPlace').val()) || 0,
-                ToPlace: parseInt($('#toPlace').val()) || 0,
+                RateType: 'common',
+                TaskId: taskId || 0,
+                ChargeId: parseInt($('#common_cmb_chagre').val()) || 0,
+                PortId: getComboBoxValue('#cmb_port', 0) || 0,
+                CustomerId: getComboBoxValue('#cmb_customer', 0) || 0,
+                CurrencyId: parseInt($('#common_cmb_currency').val()) || 0,
+                UomId: parseInt($('#common_cmb_uom').val()) || 0,
+                SlabUomId: 0,
+                VisaTypeId: 0,
+                FromPlace: 0,
+                ToPlace: 0,
                 DisplayRate: parseFloat($('#displayRate').val()) || 0,
                 BasicRate: parseFloat($('#basicRate').val()) || 0,
                 MinUnit: parseFloat($('#minUnit').val()) || 0,
@@ -875,5 +902,7 @@
                 }
             });
         }
+
+
     </script>
 }

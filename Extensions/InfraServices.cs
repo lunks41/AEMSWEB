@@ -78,7 +78,7 @@ public static class InfraServices
 
         #region LookUp
 
-        services.AddScoped<IMasterLookupService, MasterLookupService>();
+        services.AddScoped<ILookupService, LookupService>();
 
         #endregion LookUp
 

@@ -2,20 +2,20 @@
 using AEMSWEB.Entities.Admin;
 using AEMSWEB.Enums;
 using AEMSWEB.IServices;
+using AEMSWEB.Models;
 using AEMSWEB.Models.Admin;
-using AEMSWEB.Models.Masters;
 using AEMSWEB.Repository;
 
 namespace AEMSWEB.Services.Masters
 {
-    internal sealed class MasterLookupService : IMasterLookupService
+    internal sealed class LookupService : ILookupService
     {
         private readonly IRepository<dynamic> _repository;
         private ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private short recordCount = 0;
 
-        public MasterLookupService(IRepository<dynamic> repository, ApplicationDbContext context, IConfiguration configuration)
+        public LookupService(IRepository<dynamic> repository, ApplicationDbContext context, IConfiguration configuration)
         {
             _repository = repository;
             _context = context;
@@ -1695,6 +1695,66 @@ namespace AEMSWEB.Services.Masters
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_DocumentType",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<TaskLookupModel>> GetTaskLookupAsync(Int16 CompanyId, Int16 UserId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<TaskLookupModel>($"select TaskId,TaskCode,TaskName from M_Task where TaskId<>0 And IsActive=1  order by TaskId");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountType,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_AccountType",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<ChargeLookupModel>> GetChargeLookupAsync(Int16 CompanyId, Int16 UserId, int taskId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<ChargeLookupModel>($"SELECT TaskId, ChargeId,ChargeCode,ChargeName from M_Charge where ChargeId<>0 And IsActive=1 AND TaskId={taskId} ");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Charges,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_Charge",
                     ModeId = (short)E_Mode.Lookup,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId

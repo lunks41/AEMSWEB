@@ -6,110 +6,90 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="jobOrderForm">
-
-                    <!-- Section 1: Tariff -->
+                <form id="launchserviceTarifform">
                     <div class="card mb-3">
                         <div class="card-header bg-primary text-white">Tariff Details</div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Customer</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="launchservice_cmb_customer" class="form-label">Customer <span class="text-danger">*</span></label>
+                                        <select id="launchservice_cmb_customer" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Port</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="launchservice_cmb_port" class="form-label">Port <span class="text-danger">*</span></label>
+                                        <select id="launchservice_cmb_port" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Type</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="launchservice_cmb_task" class="form-label">Task <span class="text-danger">*</span></label>
+                                        <select id="launchservice_cmb_task" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Task</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="launchservice_cmb_chagre" class="form-label">Charge <span class="text-danger">*</span></label>
+                                        <select id="launchservice_cmb_chagre" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Charge</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="launchservice_cmb_uom" class="form-label">UOM <span class="text-danger">*</span></label>
+                                        <select id="launchservice_cmb_uom" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">UOM</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="launchservice_cmb_slabuom" class="form-label">Type <span class="text-danger">*</span></label>
+                                        <select id="launchservice_cmb_slabuom" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Currency</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="launchservice_cmb_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                        <select id="launchservice_cmb_currency" style="width: 100%"></select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Calculation Type</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                </div>
-                              
-                               
                                
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Basic Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
+                                        <label for="basicrate" class="control-label">Basic Rate</label>
+                                        <input type="number" class="form-control" id="basicrate" placeholder="Basic Rate" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Min Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
+                                        <label for="minunit" class="control-label">Min Unit</label>
+                                        <input type="number" class="form-control" id="minunit" placeholder="Min Unit" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Max Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
+                                        <label for="maxunit" class="control-label">Max Unit</label>
+                                        <input type="number" class="form-control" id="maxunit" placeholder="Max Unit" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="isActive">
-                                            <label class="form-check-label" for="isActive">Is Additional</label>
+                                            <input class="form-check-input" type="checkbox" id="isAdditional">
+                                            <label class="form-check-label" for="isAdditional">Is Additional</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Additional Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
+                                        <label for="additionalunit" class="control-label">Additional Unit</label>
+                                        <input type="number" class="form-control" id="additionalunit" placeholder="Additional Unit" value="0.000">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="additionalrate" class="control-label">Additional Rate</label>
+                                        <input type="number" class="form-control" id="additionalrate" placeholder="Additional Rate" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -120,7 +100,7 @@
                                         </div>
                                     </div>
                                 </div>
-                               
+
                                 <div class="col-md-12">
                                     <div class="mb-1">
                                         <label class="control-label">Remarks</label>
@@ -193,3 +173,67 @@
         margin-bottom: 1rem;
     }
 </style>
+
+<script>
+    function saveCommonTariff() {
+
+     let tariffData = {
+         TariffId: parseInt($('#tariffId').val()) || 0,
+         RateType: 'LaunchService',
+         TaskId: parseInt($('#taskId').val()) || 0,
+         ChargeId: parseInt($('#chargeId').val()) || 0,
+         PortId: parseInt($('#portId').val()) || 0,
+         CustomerId: parseInt($('#customerId').val()) || 0,
+         CurrencyId: parseInt($('#currencyId').val()) || 0,
+         UomId: parseInt($('#uomId').val()) || 0,
+         SlabUomId: parseInt($('#slabUomId').val()) || 0,
+         VisaTypeId: 0,
+         FromPlace: 0,
+         ToPlace:  0,
+         DisplayRate: 0,
+         BasicRate: parseFloat($('#basicRate').val()) || 0,
+         MinUnit: parseFloat($('#minUnit').val()) || 0,
+         MaxUnit: parseFloat($('#maxUnit').val()) || 0,
+         IsAdditional: $('#isAdditional').prop('checked'),
+         AdditionalUnit: parseFloat($('#additionalUnit').val()) || 0,
+         AdditionalRate: parseFloat($('#additionalRate').val()) || 0,
+         PrepaymentPercentage: 0,
+         IsPrepayment: 0,
+         ItemNo: 0,
+         Remarks: $('#remarks').val()?.trim() || '',
+         IsActive: $('#isActive').prop('checked')
+     };
+
+     console.log("Tariff Data:", tariffData);
+
+     // Validate mandatory fields
+     if (!tariffData.RateType) {
+         alert('Rate Type, Task Name, and Charge Name are required!');
+         return;
+     }
+
+     // AJAX call to save the tariff
+     $.ajax({
+         url: '@Url.Action("SaveTariff", "Tariff", new { area = "Project" })',
+         type: "POST",
+         data: JSON.stringify({ tariff: tariffData, companyId }), // Tariff data with companyId
+         contentType: "application/json",
+         success: function (response) {
+             if (response.success) {
+                 // Reload the grid and reset the form on success
+                 loadTariffGrid();
+                 clearTariffForm();
+                 $('#addTariffModal').modal('hide');
+                 alert("Tariff saved successfully!");
+             } else {
+                 // Show error message if the save was unsuccessful
+                 alert(response.message || "Failed to save tariff. Please try again.");
+             }
+         },
+         error: function (xhr) {
+             // Handle server/network errors
+             alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred. Please try again later."));
+         }
+     });
+ }
+</script>

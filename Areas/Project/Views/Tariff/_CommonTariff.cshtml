@@ -6,126 +6,94 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="jobOrderForm">
-
-                    <!-- Section 1: Tariff -->
+                <form id="commonTarifform">
                     <div class="card mb-3">
                         <div class="card-header bg-primary text-white">Tariff Details</div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Customer</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="common_cmb_task" class="form-label">Task <span class="text-danger">*</span></label>
+                                        <select id="common_cmb_task" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Port</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="common_cmb_chagre" class="form-label">Charge <span class="text-danger">*</span></label>
+                                        <select id="common_cmb_chagre" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Type</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="common_cmb_uom" class="form-label">UOM <span class="text-danger">*</span></label>
+                                        <select id="common_cmb_uom" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Task</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="common_cmb_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                        <select id="common_cmb_currency" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Charge</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="displayrate" class="control-label">Display Rate</label>
+                                        <input type="number" class="form-control" id="displayrate" placeholder="Display Rate" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">UOM</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="basicrate" class="control-label">Basic Rate</label>
+                                        <input type="number" class="form-control" id="basicrate" placeholder="Basic Rate" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Currency</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                </div>
-                               
-                              
-                               
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Display Rate</label>
-                                        <input type="number" class="form-control" placeholder="IMO Number">
+                                        <label for="minunit" class="control-label">Min Unit</label>
+                                        <input type="number" class="form-control" id="minunit" placeholder="Min Unit" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Basic Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Min Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-1">
-                                        <label class="control-label">Max Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
+                                        <label for="maxunit" class="control-label">Max Unit</label>
+                                        <input type="number" class="form-control" id="maxunit" placeholder="Max Unit" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="isActive">
-                                            <label class="form-check-label" for="isActive">Is Additional</label>
+                                            <input class="form-check-input" type="checkbox" id="isAdditional">
+                                            <label class="form-check-label" for="isAdditional">Is Additional</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Additional Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
+                                        <label for="additionalunit" class="control-label">Additional Unit</label>
+                                        <input type="number" class="form-control" id="additionalunit" placeholder="Additional Unit" value="0.000">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="additionalrate" class="control-label">Additional Rate</label>
+                                        <input type="number" class="form-control" id="additionalrate" placeholder="Additional Rate" value="0.000">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="isActive">
-                                            <label class="form-check-label" for="isActive">Is Prepayment</label>
+
+                                            <input class="form-check-input" type="checkbox" id="isprepayment">
+                                            <label class="form-check-label" for="isprepayment">Is Prepayment</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Prepayment Rate</label>
-                                        <input type="number" class="form-control" placeholder="Last Port">
+                                        <label for="prepaymentrate" class="control-label">Prepayment Rate</label>
+                                        <input type="number" class="form-control" id="prepaymentrate" placeholder="Prepayment Rate" value="0.000">
                                     </div>
                                 </div>
-
-
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <div class="form-check">
@@ -134,7 +102,7 @@
                                         </div>
                                     </div>
                                 </div>
-                               
+
                                 <div class="col-md-12">
                                     <div class="mb-1">
                                         <label class="control-label">Remarks</label>
@@ -187,8 +155,7 @@
             <!-- Action Buttons -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Clear</button>
-                <button type="button" class="btn btn-primary">Save & New</button>
-                <button type="submit" class="btn btn-success">Save & Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveCommonTariff();">Save</button>
             </div>
         </div>
     </div>

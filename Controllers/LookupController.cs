@@ -6,9 +6,9 @@ namespace AEMSWEB.Controllers
     public class LookupController : BaseController
     {
         private readonly ILogger<LookupController> _logger;
-        private readonly IMasterLookupService _masterLookupService;
+        private readonly ILookupService _masterLookupService;
 
-        public LookupController(ILogger<LookupController> logger, IBaseService baseService, IMasterLookupService masterLookupService) : base(logger, baseService)
+        public LookupController(ILogger<LookupController> logger, IBaseService baseService, ILookupService masterLookupService) : base(logger, baseService)
         {
             _logger = logger;
             _masterLookupService = masterLookupService;
@@ -63,6 +63,26 @@ namespace AEMSWEB.Controllers
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetTaskLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetTaskLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetChargeLookup(string companyId, short taskId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetChargeLookupAsync(companyIdShort, parsedUserId.Value, taskId);
             return Json(data);
         }
 

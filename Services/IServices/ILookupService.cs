@@ -1,9 +1,11 @@
-﻿using AEMSWEB.Models.Admin;
-using AEMSWEB.Models.Masters;
+﻿
+
+using AEMSWEB.Models;
+using AEMSWEB.Models.Admin;
 
 namespace AEMSWEB.IServices
 {
-    public interface IMasterLookupService
+    public interface ILookupService
     {
         public Task<IEnumerable<CompanyViewModel>> GetCompanyLookupAsync(Int16 UserId);
 
@@ -72,6 +74,8 @@ namespace AEMSWEB.IServices
         public Task<IEnumerable<PortRegionLookupModel>> GetPortRegionLookupAsync(Int16 CompanyId, Int16 UserId);
 
         public Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<TaskLookupModel>> GetTaskLookupAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<ChargeLookupModel>> GetChargeLookupAsync(Int16 CompanyId, Int16 UserId, int taskId);
 
         public Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount);
 
