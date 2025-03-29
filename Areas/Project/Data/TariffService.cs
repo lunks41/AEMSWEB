@@ -2,11 +2,16 @@
 using AEMSWEB.Areas.Project.Models;
 using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
+using AEMSWEB.Entities.Masters;
 using AEMSWEB.Entities.Project;
 using AEMSWEB.Enums;
+using AEMSWEB.Helpers;
 using AEMSWEB.IServices;
 using AEMSWEB.Models;
 using AEMSWEB.Repository;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 
 namespace AEMSWEB.Areas.Project.Data.Services
 {
@@ -695,7 +700,6 @@ namespace AEMSWEB.Areas.Project.Data.Services
                 int countAgencyRemuneration = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.AgencyRemuneration)?.CountId ?? 0;
                 int countVisa = 0;
 
-
                 // Build and return result
                 return new TaskCountsViewModel
                 {
@@ -724,11 +728,11 @@ namespace AEMSWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<TariffViewModel> GetTariffByIdAsync(short CompanyId, short UserId, int TariffId, string TariffCode, string TariffName)
+        public async Task<TariffViewModel> GetTariffByIdAsync(short CompanyId, short UserId, int tariffId, int taskId, int customerId, int portId, int chargeId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<TariffViewModel>($"SELECT   M_Ban.TariffId,M_Ban.CompanyId,M_Ban.TariffCode,M_Ban.TariffName,M_Ban.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Ban.AccountNo,M_Ban.SwiftCode,M_Ban.Remark11,M_Ban.Remark12,M_Ban.IsActive,M_Ban.IsOwnTariff,M_Ban.GLId,M_Chr.GLName,M_Chr.GLCode,M_Ban.CreateById,M_Ban.CreateDate,M_Ban.EditById,M_Ban.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Tariff M_Ban INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Ban.GLId INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Ban.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Ban.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Ban.EditById WHERE (M_Ban.TariffId={TariffId} OR {TariffId}=0) AND (M_Ban.TariffCode='{TariffCode}' OR '{TariffCode}'='{string.Empty}') AND (M_Ban.TariffName='{TariffName}' OR '{TariffName}'='{string.Empty}') AND M_Ban.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TariffViewModel>($"SELECT Ser_Tar.CompanyId,Ser_Tar.TariffId,Ser_Tar.RateType,Ser_Tar.TaskId,M_Tsk.TaskName,Ser_Tar.ChargeId,M_Ch.ChargeName,Ser_Tar.PortId,M_Po.PortName,Ser_Tar.CustomerId,M_Cu.CustomerName,Ser_Tar.CurrencyId,M_Cur.CurrencyName,Ser_Tar.UomId,M_Uo.UomName,Ser_Tar.BasicRate,Ser_Tar.MinUnit,Ser_Tar.MaxUnit,Ser_Tar.IsAdditional,Ser_Tar.AdditionalUnit,Ser_Tar.AdditionalRate FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={taskId} AND  Ser_Tar.TariffId={tariffId} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId} AND Ser_Tar.ChargeId={chargeId}");
 
                 return result;
             }
@@ -738,10 +742,10 @@ namespace AEMSWEB.Areas.Project.Data.Services
                 {
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
-                    TransactionId = (short)E_Project.Job,
-                    DocumentId = 0,
+                    TransactionId = (short)E_Project.Tariff,
+                    DocumentId = taskId,
                     DocumentNo = "",
-                    TblName = "M_Tariff",
+                    TblName = "Ser_Tariff",
                     ModeId = (short)E_Mode.View,
                     Remarks = ex.Message + ex.InnerException,
                     CreateById = UserId,
@@ -752,6 +756,241 @@ namespace AEMSWEB.Areas.Project.Data.Services
 
                 throw new Exception(ex.ToString());
             }
+        }
+
+        public async Task<SqlResponse> SaveTariffAsync(short CompanyId, short UserId, Ser_Tariff ser_Tariff)
+        {
+            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                bool IsEdit = ser_Tariff.TariffId != 0;
+                try
+                {
+                    if (IsEdit)
+                    {
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                            $"SELECT 1 AS IsExist FROM dbo.Ser_Tariff WHERE TariffId=@TariffId",
+                            new { ser_Tariff.TariffId });
+
+                        if ((dataExist?.IsExist ?? 0) > 0)
+                        {
+                            var entityHead = _context.Update(ser_Tariff);
+                            entityHead.Property(b => b.CreateById).IsModified = false;
+                            entityHead.Property(b => b.CompanyId).IsModified = false;
+                        }
+                        else
+                        {
+                            return new SqlResponse { Result = -1, Message = "Tariff Not Found" };
+                        }
+                    }
+                    else
+                    {
+                        // Take the Next Id From SQL
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                            "SELECT ISNULL((SELECT TOP 1 (TariffId + 1) FROM dbo.Ser_Tariff WHERE (TariffId + 1) NOT IN (SELECT TariffId FROM dbo.Ser_Tariff)),1) AS NextId");
+
+                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
+                        {
+                            ser_Tariff.TariffId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            _context.Add(ser_Tariff);
+                        }
+                        else
+                        {
+                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                        }
+                    }
+
+                    var saveChangeRecord = _context.SaveChanges();
+
+                    #region Save AuditLog
+
+                    if (saveChangeRecord > 0)
+                    {
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = CompanyId,
+                            ModuleId = (short)E_Modules.Project,
+                            TransactionId = (short)E_Project.Tariff,
+                            DocumentId = ser_Tariff.TariffId,
+                            DocumentNo = "",
+                            TblName = "Ser_Tariff",
+                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                            Remarks = "Tariff Save Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                    }
+
+                    #endregion Save AuditLog
+
+                    return new SqlResponse();
+                }
+                catch (SqlException sqlEx)
+                {
+                    _context.ChangeTracker.Clear();
+
+                    var errorLog = new AdmErrorLog
+                    {
+                        CompanyId = CompanyId,
+                        ModuleId = (short)E_Modules.Master,
+                        TransactionId = (short)E_Project.Tariff,
+                        DocumentId = 0,
+                        DocumentNo = "",
+                        TblName = "Ser_Tariff",
+                        ModeId = (short)E_Mode.Delete,
+                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                        CreateById = UserId,
+                    };
+
+                    _context.Add(errorLog);
+                    _context.SaveChanges();
+
+                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                    return new SqlResponse
+                    {
+                        Result = -1,
+                        Message = errorMessage
+                    };
+                }
+                catch (Exception ex)
+                {
+                    _context.ChangeTracker.Clear();
+
+                    var errorLog = new AdmErrorLog
+                    {
+                        CompanyId = CompanyId,
+                        ModuleId = (short)E_Modules.Master,
+                        TransactionId = (short)E_Project.Tariff,
+                        DocumentId = ser_Tariff.TariffId,
+                        DocumentNo = "",
+                        TblName = "Ser_Tariff",
+                        ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                        Remarks = ex.Message + ex.InnerException?.Message,
+                        CreateById = UserId
+                    };
+                    _context.Add(errorLog);
+                    _context.SaveChanges();
+
+                    throw;
+                }
+            }
+        }
+
+        public async Task<SqlResponse> DeleteTariffAsync(short CompanyId, short UserId, int tariffId, int taskId, int customerId, int portId, int chargeId)
+        {
+            string accTypeNo = string.Empty;
+            //try
+            //{
+            //    using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            //    {
+            //        accTypeNo = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT AccTypeCode FROM dbo.Ser_Tariff WHERE TariffId={tariffId}");
+
+            //        if (tariffId > 0)
+            //        {
+            //            var accountTypeToRemove = _context.Ser_Tariff
+            //                .Where(x => x.TariffId == tariffId)
+            //                .ExecuteDelete();
+
+            //            if (accountTypeToRemove > 0)
+            //            {
+            //                var auditLog = new AdmAuditLog
+            //                {
+            //                    CompanyId = CompanyId,
+            //                    ModuleId = (short)E_Modules.Master,
+            //                    TransactionId = (short)E_Project.Tariff,
+            //                    DocumentId = tariffId,
+            //                    DocumentNo = accTypeNo,
+            //                    TblName = "Ser_Tariff",
+            //                    ModeId = (short)E_Mode.Delete,
+            //                    Remarks = "Tariff Delete Successfully",
+            //                    CreateById = UserId
+            //                };
+            //                _context.Add(auditLog);
+            //                var auditLogSave = await _context.SaveChangesAsync();
+
+            //                if (auditLogSave > 0)
+            //                {
+            //                    TScope.Complete();
+            //                    return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+            //                }
+            //            }
+            //            else
+            //            {
+            //                return new SqlResponse { Result = -1, Message = "Delete Failed" };
+            //            }
+            //        }
+            //        else
+            //        {
+            //            return new SqlResponse { Result = -1, Message = "TariffId Should be zero" };
+            //        }
+            //        return new SqlResponse();
+            //    }
+            //}
+            //catch (SqlException sqlEx)
+            //{
+            //    _context.ChangeTracker.Clear();
+
+            //    var errorLog = new AdmErrorLog
+            //    {
+            //        CompanyId = CompanyId,
+            //        ModuleId = (short)E_Modules.Master,
+            //        TransactionId = (short)E_Project.Tariff,
+            //        DocumentId = TariffId,
+            //        DocumentNo = "",
+            //        TblName = "Ser_Tariff",
+            //        ModeId = (short)E_Mode.Delete,
+            //        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+            //        CreateById = UserId,
+            //    };
+
+            //    _context.Add(errorLog);
+            //    _context.SaveChanges();
+
+            //    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+            //    return new SqlResponse
+            //    {
+            //        Result = -1,
+            //        Message = errorMessage
+            //    };
+            //}
+            //catch (Exception ex)
+            //{
+            //    _context.ChangeTracker.Clear();
+
+            //    var errorLog = new AdmErrorLog
+            //    {
+            //        CompanyId = CompanyId,
+            //        ModuleId = (short)E_Modules.Master,
+            //        TransactionId = (short)E_Project.Tariff,
+            //        DocumentId = TariffId,
+            //        DocumentNo = "",
+            //        TblName = "Ser_Tariff",
+            //        ModeId = (short)E_Mode.Delete,
+            //        Remarks = ex.Message + ex.InnerException?.Message,
+            //        CreateById = UserId,
+            //    };
+
+            //    _context.Add(errorLog);
+            //    _context.SaveChanges();
+
+            //    throw new Exception(ex.ToString());
+            //}
+
+            return new SqlResponse();
         }
     }
 }

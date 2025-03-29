@@ -1,5 +1,8 @@
 ﻿using AEMSWEB.Areas.Project.Data.IServices;
+using AEMSWEB.Areas.Project.Models;
 using AEMSWEB.Controllers;
+using AEMSWEB.Entities.Project;
+using AEMSWEB.Enums;
 using AEMSWEB.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +52,8 @@ namespace AEMSWEB.Areas.Project.Controllers
 
             return View();
         }
+
+        #region TASKS LIST
 
         [HttpGet]
         public async Task<JsonResult> GetTariffPortExpensesList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
@@ -386,6 +391,10 @@ namespace AEMSWEB.Areas.Project.Controllers
             }
         }
 
+        #endregion
+
+
+
         [HttpPost]
         public async Task<JsonResult> GetTariffStatusCounts(string searchString, string companyId, int customerId, int portId)
         {
@@ -405,5 +414,131 @@ namespace AEMSWEB.Areas.Project.Controllers
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #region CRUD
+
+        [HttpGet]
+        public async Task<JsonResult> GetTariffById(short tariffId, string companyId, int taskId, int customerId, int portId, int chargeId)
+        {
+            // Validate input parameters
+            if (tariffId <= 0)
+            {
+                return Json(new { success = false, message = "Invalid Tariff ID" });
+            }
+
+            // Validate companyId and parsed userId
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult; // Return validation error result
+            }
+
+            try
+            {
+                // Fetch tariff data asynchronously
+                var data = await _tariffService.GetTariffByIdAsync(companyIdShort, parsedUserId.Value, tariffId, taskId, customerId, portId, chargeId);
+
+                // Check if data exists
+                return data == null
+                    ? Json(new { success = false, message = "Tariff not found" }) // Use "Tariff not found" for clarity
+                    : Json(new { success = true, data }); // Return success and data
+            }
+            catch (Exception ex)
+            {
+                // Log error and return user-friendly error response
+                _logger.LogError(ex, $"Error fetching tariff by ID: {tariffId}");
+                return Json(new { success = false, message = "An error occurred while fetching tariff data" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTariff([FromBody] SaveTariffViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var tariffToSave = new Ser_Tariff
+                {
+                    TariffId = model.tariff.TariffId,
+                    CompanyId = companyIdShort,
+                    RateType = model.tariff.RateType?.Trim() ?? string.Empty, // Trim unnecessary spaces
+                    TaskId = model.tariff.TaskId,
+                    ChargeId = model.tariff.ChargeId,
+                    PortId = model.tariff.PortId,
+                    CustomerId = model.tariff.CustomerId,
+                    CurrencyId = model.tariff.CurrencyId,
+                    UomId = model.tariff.UomId,
+                    SlabUomId = model.tariff.SlabUomId,
+                    VisaTypeId = model.tariff.VisaTypeId,
+                    FromPlace = model.tariff.FromPlace,
+                    ToPlace = model.tariff.ToPlace,
+                    DisplayRate = model.tariff.DisplayRate,
+                    BasicRate = model.tariff.BasicRate,
+                    MinUnit = model.tariff.MinUnit,
+                    MaxUnit = model.tariff.MaxUnit,
+                    IsAdditional = model.tariff.IsAdditional,
+                    AdditionalUnit = model.tariff.AdditionalUnit,
+                    AdditionalRate = model.tariff.AdditionalRate,
+                    PrepaymentPercentage = model.tariff.PrepaymentPercentage,
+                    IsPrepayment = model.tariff.IsPrepayment,
+                    ItemNo = model.tariff.ItemNo,
+                    Remarks = model.tariff.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.tariff.IsActive,
+                    CreateById = parsedUserId ?? 0, // Safe handling if parsedUserId is null
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId ?? 0,
+                    EditDate = DateTime.Now
+                };
+
+                var result = await _tariffService.SaveTariffAsync(companyIdShort, parsedUserId.Value, tariffToSave);
+                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving account type");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTariff(short tariffId, string companyId, int taskId, int customerId, int portId, int chargeId)
+        {
+            if (tariffId <= 0)
+            {
+                _logger.LogWarning("Delete failed: Invalid Account Type ID {tariffId}.", tariffId);
+                return Json(new { success = false, message = "Invalid Account Type ID." });
+            }
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Tariff);
+            if (permissions == null || !permissions.IsDelete)
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this account group." });
+            }
+
+            try
+            {
+                await _tariffService.DeleteTariffAsync(companyIdShort, parsedUserId.Value,  tariffId, taskId, customerId,  portId,  chargeId);
+                return Json(new { success = true, message = "Account Type deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Account Type. Account Type ID: {AccTypeId}, Company ID: {CompanyId}.", tariffId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
+            }
+        }
+
+        #endregion
     }
 }

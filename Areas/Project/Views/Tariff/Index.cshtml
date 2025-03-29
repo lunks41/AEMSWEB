@@ -56,6 +56,9 @@
                 <!-- Simple Header Section -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Tariff Management</h4>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal">Copy Tariff Cust2Cust</button>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal">Copy Tariff Company2Cust</button>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal">Add</button>
                 </div>
 
                 <!-- Simple Filter Section -->
@@ -182,7 +185,7 @@
                     <div class="tab-pane fade show active" id="port-expenses">
                         <!-- Button Group for Port Expenses -->
                         <div class="mb-3">
-                            <button id="btnAddPortExpense" onclick="openChildModal('PortExpense')" class="btn btn-primary me-2">Add Port Expense</button>
+                            <button id="btnAddPortExpense" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Port Expense</button>
                         </div>
                         <!-- Grid for Port Expenses -->
                         <div id="grid-PortExpense" class="kendo-grid"></div>
@@ -202,7 +205,7 @@
                     <div class="tab-pane fade" id="equipments-used">
                         <!-- Button Group for Equipments Used -->
                         <div class="mb-3">
-                            <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentUsed')" class="btn btn-primary me-2">Add Equipment</button>
+                            <button id="btnAddEquipmentUsed" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Equipment</button>
                         </div>
                         <!-- Grid for Equipments Used -->
                         <div id="grid-EquipmentsUsed" class="kendo-grid"></div>
@@ -212,7 +215,7 @@
                     <div class="tab-pane fade" id="crew-sign-on">
                         <!-- Button Group for Crew Sign On -->
                         <div class="mb-3">
-                            <button id="btnAddCrewSignOn" onclick="openChildModal('CrewSignOn')" class="btn btn-primary me-2">Add Crew Sign On</button>
+                            <button id="btnAddCrewSignOn" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Crew Sign On</button>
                         </div>
                         <!-- Grid for Crew Sign On -->
                         <div id="grid-CrewSignOn" class="kendo-grid"></div>
@@ -222,7 +225,7 @@
                     <div class="tab-pane fade" id="crew-sign-off">
                         <!-- Button Group for Crew Sign Off -->
                         <div class="mb-3">
-                            <button id="btnAddCrewSignOff" onclick="openChildModal('CrewSignOff')" class="btn btn-primary me-2">Add Crew Sign Off</button>
+                            <button id="btnAddCrewSignOff" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Crew Sign Off</button>
                         </div>
                         <!-- Grid for Crew Sign Off -->
                         <div id="grid-CrewSignOff" class="kendo-grid"></div>
@@ -232,7 +235,7 @@
                     <div class="tab-pane fade" id="crew-miscellaneous">
                         <!-- Button Group for Crew Miscellaneous -->
                         <div class="mb-3">
-                            <button id="btnAddCrewMisc" onclick="openChildModal('CrewMisc')" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
+                            <button id="btnAddCrewMisc" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
                         </div>
                         <!-- Grid for Crew Miscellaneous -->
                         <div id="grid-CrewMiscellaneous" class="kendo-grid"></div>
@@ -242,7 +245,7 @@
                     <div class="tab-pane fade" id="medical-assistance">
                         <!-- Button Group for Medical Assistance -->
                         <div class="mb-3">
-                            <button id="btnAddMedicalAssistance" onclick="openChildModal('MedicalAssistance')" class="btn btn-primary me-2">Add Medical Assistance</button>
+                            <button id="btnAddMedicalAssistance" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Medical Assistance</button>
                         </div>
                         <!-- Grid for Medical Assistance -->
                         <div id="grid-MedicalAssistance" class="kendo-grid"></div>
@@ -272,7 +275,7 @@
                     <div class="tab-pane fade" id="third-party-supply">
                         <!-- Button Group for Third Party Supply -->
                         <div class="mb-3">
-                            <button id="btnAddThirdPartySupply" onclick="openChildModal('ThirdPartySupply')" class="btn btn-primary me-2">Add Third Party Supply</button>
+                            <button id="btnAddThirdPartySupply" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Third Party Supply</button>
                         </div>
                         <!-- Grid for Third Party Supply -->
                         <div id="grid-ThirdPartySupply" class="kendo-grid"></div>
@@ -292,7 +295,7 @@
                     <div class="tab-pane fade" id="technicians-surveyors">
                         <!-- Button Group for Technicians Surveyors -->
                         <div class="mb-3">
-                            <button id="btnAddTechnicianSurveyor" onclick="openChildModal('TechnicianSurveyor')" class="btn btn-primary me-2">Add Technician Surveyor</button>
+                            <button id="btnAddTechnicianSurveyor" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Technician Surveyor</button>
                         </div>
                         <!-- Grid for Technicians Surveyors -->
                         <div id="grid-TechniciansSurveyors" class="kendo-grid"></div>
@@ -302,7 +305,7 @@
                     <div class="tab-pane fade" id="landing-items">
                         <!-- Button Group for Landing Items -->
                         <div class="mb-3">
-                            <button id="btnAddLandingItem" onclick="openChildModal('LandingItem')" class="btn btn-primary me-2">Add Landing Item</button>
+                            <button id="btnAddLandingItem" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Landing Item</button>
                         </div>
                         <!-- Grid for Landing Items -->
                         <div id="grid-LandingItems" class="kendo-grid"></div>
@@ -312,7 +315,7 @@
                     <div class="tab-pane fade" id="other-service">
                         <!-- Button Group for Other Service -->
                         <div class="mb-3">
-                            <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add Other Service</button>
+                            <button id="btnAddOtherService" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Other Service</button>
                         </div>
                         <!-- Grid for Other Service -->
                         <div id="grid-OtherService" class="kendo-grid"></div>
@@ -322,10 +325,20 @@
                     <div class="tab-pane fade" id="agency-remuneration">
                         <!-- Button Group for Agency Remuneration -->
                         <div class="mb-3">
-                            <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add Agency Remuneration</button>
+                            <button id="btnAddAgencyRemuneration" onclick="openChildModal('Common')" class="btn btn-primary me-2">Add Agency Remuneration</button>
                         </div>
                         <!-- Grid for Agency Remuneration -->
                         <div id="grid-AgencyRemuneration" class="kendo-grid"></div>
+                    </div>
+
+                    <!-- Visa Tab -->
+                    <div class="tab-pane fade" id="visa">
+                        <!-- Button Group for Visa -->
+                        <div class="mb-3">
+                            <button id="btnAddVisa" onclick="openChildModal('Visa')" class="btn btn-primary me-2">Add Visa</button>
+                        </div>
+                        <!-- Grid for Visa -->
+                        <div id="grid-Visa" class="kendo-grid"></div>
                     </div>
                 </div>
             </div>
@@ -382,13 +395,24 @@
         function OnSelectDropdown(dataItem, DrpdwnName) {
         }
 
+        function getComboBoxValue(selector, defaultValue = 0) {
+            let comboBox = $(selector).data('kendoComboBox') || $(selector).data('kendoMultiColumnComboBox');
+            if (comboBox) {
+                return parseInt(comboBox.value() || defaultValue, 10);
+            } else {
+                console.error(`ComboBox with selector '${selector}' is not initialized.`);
+                alert(`ComboBox with selector '${selector}' is not loaded correctly. Please refresh the page or contact support.`);
+                return defaultValue;
+            }
+        }
+
         function loadTariffGrid() {
             debugger;
-            let customerId = $('#cmb_customer').data('kendoMultiColumnComboBox').value() || 0;
-            let portId = $('#cmb_port').data('kendoComboBox').value() || 0;
+            let customerId = getComboBoxValue('#cmb_customer', 0);
+            let portId = getComboBoxValue('#cmb_port', 0);
 
-            if (customerId == 0 && portId == 0) {
-                alert("select the customer & port ");
+            if (customerId == 0 || portId == 0) {
+                 alert("Please select both the customer and the port.");
             } else {
                 initializePortExpenseGrid();
                 initializeLaunchServicesGrid();
@@ -408,11 +432,11 @@
                 loadStatusCounts();
             }
         }
-        // Load status counts for tabs via an AJAX call.
+
         function loadStatusCounts() {
             debugger;
-            let customerId = $('#cmb_customer').data('kendoMultiColumnComboBox').value() || 0;
-            let portId = $('#cmb_port').data('kendoComboBox').value() || 0;
+            let customerId = getComboBoxValue('#cmb_customer', 0);
+            let portId = getComboBoxValue('#cmb_port', 0);
 
             $.ajax({
                 url: '@Url.Action("GetTariffStatusCounts", "Tariff", new { area = "Project" })',
@@ -469,6 +493,20 @@
             loadStatusCounts();
         }
 
+        function openChildModal(serviceType) {
+            debugger;
+            let customerId = getComboBoxValue('#cmb_customer', 0);
+            let portId = getComboBoxValue('#cmb_port', 0);
+
+            if (customerId == 0 || portId == 0) {
+                 alert("Please select both the customer and the port.");
+            } else {
+                const modalId = `#add${serviceType}TariffModal`;
+                const modalElement = $(modalId);
+                modalElement.modal('show');
+            }
+        }
+
         //================== SCROLLABLE TABS ================== //
         document.querySelectorAll('.scroll-button').forEach(button => {
             button.addEventListener('click', function (e) {
@@ -487,12 +525,6 @@
 
         container.addEventListener('scroll', checkScroll);
         checkScroll();
-
-        function openChildModal(serviceType) {
-            const modalId = `#add${serviceType}Modal`;
-            const modalElement = $(modalId);
-            modalElement.modal('show');
-        }
 
         //================== GRID FUNCTIONS ================== //
 
@@ -563,24 +595,24 @@
             let searchString = "";
             //let customerId = 1;
             //let portId = 3751;
-            let customerId = $('#cmb_customer').data('kendoMultiColumnComboBox').value();
-            let portId = $('#cmb_port').data('kendoComboBox').value();
+            let customerId = getComboBoxValue('#cmb_customer', 0);
+            let portId = getComboBoxValue('#cmb_port', 0);
 
             let columns = [
                 {
                     title: "Actions",
                     width: "100px",
                     template: function (dataItem) {
-                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}', 'view')">
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}','${dataItem.chargeId}', 'view')">
             <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
                         if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}',  'edit')">
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}','${dataItem.chargeId}',  'edit')">
             <i class="material-symbols-outlined text-warning">edit</i></button>`;
                         }
 
                         if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTariff('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}')">
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTariff('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}','${dataItem.chargeId}')">
             <i class="material-symbols-outlined text-danger">delete</i></button>`;
                         }
                         return buttons;
@@ -651,95 +683,197 @@
             }
         }
 
-    @*function initializePortExpenseGrid() {
-        let searchString = "";
-        let customerId = 1;
-        let portId = 3751;
-        let url = '@Url.Action("GetTariffFreshWaterList", "Tariff", new { area = "Project" })';
-        let columns = [
-            {
-                title: "Actions",
-                width: "100px",
-                template: function (dataItem) {
-                    let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}', 'view')">
-                <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+        function openTariffModal(tariffId, taskId, customerId, portId, chargeId, mode) {
+            const $modal = $('#addTariffModal');
 
-                    if (permissions.canEdit) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}',  'edit')">
-                <i class="material-symbols-outlined text-warning">edit</i></button>`;
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetTariffById", "Tariff", new { area = "Project" })', {
+                tariffId: tariffId,
+                companyId: companyId,
+                taskId: taskId,
+                customerId: customerId,
+                portId: portId,
+                chargeId: chargeId
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        populateTariffModalFields(response.data);
+                        setTariffMode(mode);
+                        taskId = response.data.taskId;
+
+                        let serviceType = response.data.rateType;
+
+                        if (serviceType) {
+                            openChildModal(serviceType);
+                        }
+
+                        //$('#addTariffModal').modal('show');
+                    } else {
+                        alert(response.message || "Failed to load tariff data.");
                     }
-
-                    if (permissions.canDelete) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTariff('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}')">
-                <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                    }
-                    return buttons;
-                }
-            },
-                { field: "taskName", title: "task", width: "150px" },
-                { field: "chargeName", title: "charges", width: "100px" },
-                { field: "currencyName", title: "Currency", width: "120px" },
-                { field: "uomName", title: "Uom", width: "100px" },
-                { field: "slabUomName", title: "Slab Type", width: "120px" },
-            {
-                field: "basicRate",
-                title: "Basic Rate",
-                width: "100px",
-                format: "{0:n2}" // Format to display 2 decimal places
-            },
-            {
-                field: "minUnit",
-                title: "Min Unit",
-                width: "100px",
-                format: "{0:n2}" // Format to display 2 decimal places
-            },
-            {
-                field: "maxUnit",
-                title: "Max Unit",
-                width: "100px",
-                format: "{0:n2}" // Format to display 2 decimal places
-            },
-            {
-                field: "isAdditional",
-                title: "Is Additional",
-                width: "120px",
-                template: "<input type='checkbox' #= isAdditional ? 'checked' : '' # disabled />" // Checkbox for boolean value
-            },
-            {
-                field: "additionalUnit",
-                title: "Additional Unit",
-                width: "130px",
-                format: "{0:n2}" // Format to display 2 decimal places
-            },
-            {
-                field: "additionalRate",
-                title: "Additional Rate",
-                width: "130px",
-                format: "{0:n2}" // Format to display 2 decimal places
-            },
-            {
-                field: "isPrepayment",
-                title: "Is Prepayment",
-                width: "120px",
-                template: "<input type='checkbox' #= isPrepayment ? 'checked' : '' # disabled />" // Checkbox for boolean value
-            },
-            {
-                field: "prepaymentPercentage",
-                title: "Pre.Pay.Percentage",
-                width: "140px",
-                format: "{0:n2}" // Format to display 2 decimal places
-            },
-            { field: "remarks", title: "Remarks", width: "200px" }
-        ];
-
-        let grid = $("#grid-PortExpense").data("kendoGrid");
-        if (grid) {
-
-            grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId: customerId, portId: portId });
-        } else {
-            // Initialize grid if it doesn’t exist
-            initializeKendoGrid("grid-PortExpense", url, { searchString, companyId, customerId, portId }, columns);
+                })
+                .fail(function () {
+                    alert("An error occurred while fetching tariff data. Please try again.");
+                })
+                .always(() => {
+                    $modal.find('.modal-overlay').remove();
+                });
         }
-        }*@
+
+        function populateTariffModalFields(data) {
+            debugger;
+            $('#tariffId').val(data.tariffId || '');
+            $('#rateType').val(data.rateType?.trim() || '');
+            $('#taskId').val(data.taskId || '');
+            $('#chargeId').val(data.chargeId || '');
+            $('#portId').val(data.portId || '');
+            $('#customerId').val(data.customerId || '');
+            $('#currencyId').val(data.currencyId || 0); // Default to 0 if no value
+            $('#uomId').val(data.uomId || '');
+            $('#slabUomId').val(data.slabUomId || '');
+            $('#visaTypeId').val(data.visaTypeId || '');
+            $('#fromPlace').val(data.fromPlace || '');
+            $('#toPlace').val(data.toPlace || '');
+            $('#displayRate').val(data.displayRate || '');
+            $('#basicRate').val(data.basicRate || '');
+            $('#minUnit').val(data.minUnit || '');
+            $('#maxUnit').val(data.maxUnit || '');
+            $('#isAdditional').prop('checked', data.isAdditional ?? false); // Checkbox handling
+            $('#additionalUnit').val(data.additionalUnit || '');
+            $('#additionalRate').val(data.additionalRate || '');
+            $('#prepaymentPercentage').val(data.prepaymentPercentage || '');
+            $('#isPrepayment').prop('checked', data.isPrepayment ?? false); // Checkbox handling
+            $('#itemNo').val(data.itemNo || 0); // Default to 0 if no value
+            $('#remarks').val(data.remarks?.trim() || '');
+            $('#isActive').prop('checked', data.isActive ?? true); // Default to true if no value
+
+            $('#createBy').text(data.createBy || "N/A");
+            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#editBy').text(data.editBy || "N/A");
+            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+            //checkTariffMandatoryFields();
+        }
+
+        function setTariffMode(mode) {
+            const isView = mode === 'view';
+            const isEdit = mode === 'edit';
+            const canEdit = permissions.canEdit && isEdit;
+
+            // Manage input fields' readonly state for editing
+            $('#rateType, #taskCode, #taskName, #chargeCode, #chargeName, #portCode, #portName, #customerCode, #customerName, #currencyCode, #currencyName, #uomCode, #uomName, #slabUomCode, #slabUomName, #visaTypeCode, #visaTypeName, #fromPlaceName, #toPlaceName, #displayRate, #basicRate, #minUnit, #maxUnit, #additionalUnit, #additionalRate, #prepaymentPercentage, #remarks')
+                .prop('readonly', !canEdit);
+
+            // Manage numeric fields (readonly state)
+            $('#tariffId, #taskId, #chargeId, #portId, #customerId, #currencyId, #uomId, #slabUomId, #visaTypeId, #fromPlace, #toPlace, #seqNo, #itemNo')
+                .prop('readonly', !canEdit);
+
+            // Manage checkbox disabled state
+            $('#isAdditional, #isPrepayment, #isActive').prop('disabled', !canEdit);
+
+            // Control visibility of action buttons
+            $('#btnTariffSave').toggle(canEdit); // Save button for edit mode
+            $('#btnTariffEdit').toggle(isView && permissions.canEdit); // Edit button for view mode
+            $('#btnTariffClose').show(); // Always show Close button
+            $('#btnTariffClear').toggle(isEdit); // Show Clear button in edit mode
+
+            // Adjust optional buttons (legacy button)
+            $('#btnTariffClear').hide(); // Hide any redundant clear button if present
+        }
+
+        function deleteTariff(tariffId, taskId, customerId, portId, chargeId) {
+            showDeleteModal("Are you sure you want to delete this record?", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteTariff", "Tariff", new { area = "Project" })',
+                    type: "DELETE",
+                    data: {
+                        tariffId: tariffId,
+                        companyId: companyId,
+                        taskId: taskId,
+                        customerId: customerId,
+                        portId: portId,
+                        chargeId: chargeId
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Reload the grid to reflect the deletion
+                            loadTariffGrid();
+                            $('#confirmationModal').modal('hide');
+                            alert("The record has been successfully deleted.");
+                        } else {
+
+                            alert(response.message || "Failed to delete the record. Please try again.");
+                        }
+                    },
+                    error: function () {
+
+                        alert("An error occurred while attempting to delete the record. Please try again later.");
+                    }
+                });
+            });
+        }
+
+        function saveTariff() {
+            // Prepare Tariff data object based on modal fields
+            let tariffData = {
+                TariffId: parseInt($('#tariffId').val()) || 0,
+                RateType: $('#rateType').val()?.trim() || '',
+                TaskId: parseInt($('#taskId').val()) || 0,
+                ChargeId: parseInt($('#chargeId').val()) || 0,
+                PortId: parseInt($('#portId').val()) || 0,
+                CustomerId: parseInt($('#customerId').val()) || 0,
+                CurrencyId: parseInt($('#currencyId').val()) || 0,
+                UomId: parseInt($('#uomId').val()) || 0,
+                SlabUomId: parseInt($('#slabUomId').val()) || 0,
+                VisaTypeId: parseInt($('#visaTypeId').val()) || 0,
+                FromPlace: parseInt($('#fromPlace').val()) || 0,
+                ToPlace: parseInt($('#toPlace').val()) || 0,
+                DisplayRate: parseFloat($('#displayRate').val()) || 0,
+                BasicRate: parseFloat($('#basicRate').val()) || 0,
+                MinUnit: parseFloat($('#minUnit').val()) || 0,
+                MaxUnit: parseFloat($('#maxUnit').val()) || 0,
+                IsAdditional: $('#isAdditional').prop('checked'),
+                AdditionalUnit: parseFloat($('#additionalUnit').val()) || 0,
+                AdditionalRate: parseFloat($('#additionalRate').val()) || 0,
+                PrepaymentPercentage: parseFloat($('#prepaymentPercentage').val()) || 0,
+                IsPrepayment: $('#isPrepayment').prop('checked'),
+                ItemNo: parseInt($('#itemNo').val()) || 0,
+                Remarks: $('#remarks').val()?.trim() || '',
+                IsActive: $('#isActive').prop('checked')
+            };
+
+            console.log("Tariff Data:", tariffData);
+
+            // Validate mandatory fields
+            if (!tariffData.RateType) {
+                alert('Rate Type, Task Name, and Charge Name are required!');
+                return;
+            }
+
+            // AJAX call to save the tariff
+            $.ajax({
+                url: '@Url.Action("SaveTariff", "Tariff", new { area = "Project" })',
+                type: "POST",
+                data: JSON.stringify({ tariff: tariffData, companyId }), // Tariff data with companyId
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        // Reload the grid and reset the form on success
+                        loadTariffGrid();
+                        clearTariffForm();
+                        $('#addTariffModal').modal('hide');
+                        alert("Tariff saved successfully!");
+                    } else {
+                        // Show error message if the save was unsuccessful
+                        alert(response.message || "Failed to save tariff. Please try again.");
+                    }
+                },
+                error: function (xhr) {
+                    // Handle server/network errors
+                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred. Please try again later."));
+                }
+            });
+        }
     </script>
 }

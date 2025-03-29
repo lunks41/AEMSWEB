@@ -2,7 +2,7 @@
 {
     public class Ser_Tariff
     {
-        public byte CompanyId { get; set; } = 1; // Default value
+        public short CompanyId { get; set; } = 1; // Default value
         public long TariffId { get; set; }
         public string? RateType { get; set; } // Nullable
         public short? TaskId { get; set; }
@@ -15,12 +15,12 @@
         public short? VisaTypeId { get; set; }
         public short? FromPlace { get; set; }
         public short? ToPlace { get; set; }
-        public decimal? DistancePerMile { get; set; }
         public decimal? DisplayRate { get; set; }
         public decimal? BasicRate { get; set; }
-        public decimal? MinRate { get; set; }
-        public decimal? MaxRate { get; set; }
+        public decimal? MinUnit { get; set; }
+        public decimal? MaxUnit { get; set; }
         public bool IsAdditional { get; set; } = false; // Default value
+        public decimal? AdditionalUnit { get; set; }
         public decimal? AdditionalRate { get; set; }
         public decimal? PrepaymentPercentage { get; set; }
         public bool IsPrepayment { get; set; } = false; // Default value

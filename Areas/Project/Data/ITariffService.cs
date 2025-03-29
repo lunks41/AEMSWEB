@@ -1,4 +1,7 @@
 ﻿using AEMSWEB.Areas.Project.Models;
+using AEMSWEB.Entities.Masters;
+using AEMSWEB.Entities.Project;
+using AEMSWEB.Models;
 
 namespace AEMSWEB.Areas.Project.Data.IServices
 {
@@ -36,6 +39,10 @@ namespace AEMSWEB.Areas.Project.Data.IServices
 
         public Task<TaskCountsViewModel> GetTariffStatusCountsAsync(short companyId, short userId, string searchString, int customerId, int portId);
 
-        public Task<TariffViewModel> GetTariffByIdAsync(short CompanyId, short UserId, int TariffId, string TariffCode, string TariffName);
+        public Task<TariffViewModel> GetTariffByIdAsync(short CompanyId, short UserId, int tariffId, int taskId, int customerId, int portId, int chargeId);
+
+        public Task<SqlResponse> SaveTariffAsync(short CompanyId, short UserId, Ser_Tariff ser_Tariff);
+
+        public Task<SqlResponse> DeleteTariffAsync(short CompanyId, short UserId, int tariffId, int taskId, int customerId, int portId, int chargeId);
     }
 }
