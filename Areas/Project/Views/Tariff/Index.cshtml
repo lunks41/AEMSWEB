@@ -11,6 +11,44 @@
     int companyId = ViewBag.CompanyId;
 }
 
+<style>
+
+    .modal-xxl {
+        max-width: 95%;
+    }
+
+    .scrollable-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+
+        .scrollable-tabs::-webkit-scrollbar {
+            display: none; /* Chrome/Safari/Edge */
+        }
+
+    .scroll-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+        padding: 0.5rem;
+        line-height: 1;
+    }
+
+    .scroll-left {
+        left: 0;
+    }
+
+    .scroll-right {
+        right: 0;
+    }
+
+    .nav-item {
+        flex-shrink: 0; /* Prevent tab items from shrinking */
+    }
+</style>
+
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -24,25 +62,22 @@
                 <div class="filter-section bg-light p-3 rounded mb-4">
                     <div class="row align-items-center">
                         <div class="col-md-3">
-                            <select id="customerDropdown" class="form-select form-select-sm">
-                                <option value="">All Customers</option>
-                                <!-- Dynamically populated options -->
-                            </select>
+                            <label for="cmb_customer" class="form-label">Customer <span class="text-danger">*</span></label>
+                            <select id="cmb_customer" style="width: 100%"></select>
                         </div>
                         <div class="col-md-3">
-                            <select id="customerDropdown" class="form-select form-select-sm">
-                                <option value="">All Port</option>
-                                <!-- Dynamically populated options -->
-                            </select>
+                            <label for="cmb_port" class="form-label">Port <span class="text-danger">*</span></label>
+                            <select id="cmb_port" style="width: 100%"></select>
                         </div>
 
                         <div class="col-md-2 d-flex">
-                            <button type="button" class="btn btn-primary btn-sm me-2" onclick="loadTariffGrid();loadStatusCounts();">Search</button>
+                            <button type="button" class="btn btn-primary btn-sm me-2" onclick="loadTariffGrid();">Search</button>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="clearSearch();">Clear</button>
-                            <button class="btn btn-light btn-sm me-2" onclick="loadTariffGrid();loadStatusCounts();">Refresh</button>
+                            <button class="btn btn-light btn-sm me-2" onclick="loadTariffGrid();">Refresh</button>
                         </div>
                     </div>
                 </div>
+
                 <!-- Scrollable Tabs Container -->
                 <div class="position-relative py-2">
                     <!-- Scroll Buttons -->
@@ -58,78 +93,83 @@
                         <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
                             <!-- Main Service Tabs -->
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button" data-status="PortExpense">
                                     <span class="badge bg-secondary me-1">0</span> Port Expenses
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button" data-status="LaunchServices">
                                     <span class="badge bg-secondary me-1">0</span> Launch Services
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button" data-status="EquipmentsUsed">
                                     <span class="badge bg-primary me-1">0</span> Equipments Used
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button" data-status="CrewSignOn">
                                     <span class="badge bg-success me-1">0</span> Crew Sign On
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button" data-status="CrewSignOff">
                                     <span class="badge bg-danger me-1">0</span> Crew Sign Off
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button" data-status="CrewMiscellaneous">
                                     <span class="badge bg-info me-1">0</span> Crew Miscellaneous
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button" data-status="MedicalAssistance">
                                     <span class="badge bg-warning me-1">0</span> Medical Assistance
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button" data-status="ConsignmentImport">
                                     <span class="badge bg-primary me-1">0</span> Consignment Import
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button" data-status="ConsignmentExport">
                                     <span class="badge bg-success me-1">0</span> Consignment Export
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button" data-status="ThirdPartySupply">
                                     <span class="badge bg-danger me-1">0</span> Third Party Supply
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button" data-status="FreshWaterSupply">
                                     <span class="badge bg-info me-1">0</span> Fresh Water
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button" data-status="TechniciansSurveyors">
                                     <span class="badge bg-warning me-1">0</span> Technicians Surveyors
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button" data-status="LandingItems">
                                     <span class="badge bg-primary me-1">0</span> Landing Items
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button" data-status="OtherService">
                                     <span class="badge bg-success me-1">0</span> Other Service
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button" data-status="AgencyRemuneration">
                                     <span class="badge bg-danger me-1">0</span> Agency Remuneration
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#visa" type="button" data-status="Visa">
+                                    <span class="badge bg-danger me-1">0</span> Visa
                                 </button>
                             </li>
                         </ul>
@@ -155,7 +195,7 @@
                             <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add Launch Service</button>
                         </div>
                         <!-- Grid for Launch Services -->
-                        <div id="grid-LaunchService" class="kendo-grid"></div>
+                        <div id="grid-LaunchServices" class="kendo-grid"></div>
                     </div>
 
                     <!-- Equipments Used Tab -->
@@ -165,7 +205,7 @@
                             <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentUsed')" class="btn btn-primary me-2">Add Equipment</button>
                         </div>
                         <!-- Grid for Equipments Used -->
-                        <div id="grid-EquipmentUsed" class="kendo-grid"></div>
+                        <div id="grid-EquipmentsUsed" class="kendo-grid"></div>
                     </div>
 
                     <!-- Crew Sign On Tab -->
@@ -195,7 +235,7 @@
                             <button id="btnAddCrewMisc" onclick="openChildModal('CrewMisc')" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
                         </div>
                         <!-- Grid for Crew Miscellaneous -->
-                        <div id="grid-CrewMisc" class="kendo-grid"></div>
+                        <div id="grid-CrewMiscellaneous" class="kendo-grid"></div>
                     </div>
 
                     <!-- Medical Assistance Tab -->
@@ -233,7 +273,6 @@
                         <!-- Button Group for Third Party Supply -->
                         <div class="mb-3">
                             <button id="btnAddThirdPartySupply" onclick="openChildModal('ThirdPartySupply')" class="btn btn-primary me-2">Add Third Party Supply</button>
-
                         </div>
                         <!-- Grid for Third Party Supply -->
                         <div id="grid-ThirdPartySupply" class="kendo-grid"></div>
@@ -244,10 +283,9 @@
                         <!-- Button Group for Fresh Water -->
                         <div class="mb-3">
                             <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add Fresh Water</button>
-
                         </div>
                         <!-- Grid for Fresh Water -->
-                        <div id="grid-FreshWater" class="kendo-grid"></div>
+                        <div id="grid-FreshWaterSupply" class="kendo-grid"></div>
                     </div>
 
                     <!-- Technicians Surveyors Tab -->
@@ -255,10 +293,9 @@
                         <!-- Button Group for Technicians Surveyors -->
                         <div class="mb-3">
                             <button id="btnAddTechnicianSurveyor" onclick="openChildModal('TechnicianSurveyor')" class="btn btn-primary me-2">Add Technician Surveyor</button>
-
                         </div>
                         <!-- Grid for Technicians Surveyors -->
-                        <div id="grid-TechnicianSurveyor" class="kendo-grid"></div>
+                        <div id="grid-TechniciansSurveyors" class="kendo-grid"></div>
                     </div>
 
                     <!-- Landing Items Tab -->
@@ -266,10 +303,9 @@
                         <!-- Button Group for Landing Items -->
                         <div class="mb-3">
                             <button id="btnAddLandingItem" onclick="openChildModal('LandingItem')" class="btn btn-primary me-2">Add Landing Item</button>
-
                         </div>
                         <!-- Grid for Landing Items -->
-                        <div id="grid-LandingItem" class="kendo-grid"></div>
+                        <div id="grid-LandingItems" class="kendo-grid"></div>
                     </div>
 
                     <!-- Other Service Tab -->
@@ -277,7 +313,6 @@
                         <!-- Button Group for Other Service -->
                         <div class="mb-3">
                             <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add Other Service</button>
-
                         </div>
                         <!-- Grid for Other Service -->
                         <div id="grid-OtherService" class="kendo-grid"></div>
@@ -288,7 +323,6 @@
                         <!-- Button Group for Agency Remuneration -->
                         <div class="mb-3">
                             <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add Agency Remuneration</button>
-
                         </div>
                         <!-- Grid for Agency Remuneration -->
                         <div id="grid-AgencyRemuneration" class="kendo-grid"></div>
@@ -299,10 +333,143 @@
     </div>
 </div>
 
-
+@section externalhtml {
+    @await Html.PartialAsync("_CommonTariff");
+    @await Html.PartialAsync("_FreshWaterTariff");
+    @await Html.PartialAsync("_LaunchServiceTariff");
+    @await Html.PartialAsync("_VisaTariff");
+    @*@await Html.RenderPartialAsync("_VisaTariff");*@
+}
 
 @section Scripts {
     <script>
+
+        //================== GLOBAL VARIABLES ================== //
+        let companyId = 0;
+        let permissions = {};
+
+        $(document).ready(function () {
+
+            companyId = getUrlParameter('companyId') || 1;
+
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+            Refresh();
+            loadTariffGrid();
+
+        });
+
+        function Refresh() {
+            const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(portUrl, "cmb_port", "portName", "portId");
+
+            const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const columnsProperties = [
+                { field: 'customerCode', title: 'Code', width: 100 },
+                { field: 'customerName', title: 'Name', width: 200 }
+            ];
+            const filterFields = ['customerCode', 'customerName'];
+            BindMultiColumnComboBox(customerUrl, "cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
+        }
+
+        function SelectedDropdown(DrpdwnName) {
+        }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) {
+        }
+
+        function loadTariffGrid() {
+            debugger;
+            let customerId = $('#cmb_customer').data('kendoMultiColumnComboBox').value() || 0;
+            let portId = $('#cmb_port').data('kendoComboBox').value() || 0;
+
+            if (customerId == 0 && portId == 0) {
+                alert("select the customer & port ");
+            } else {
+                initializePortExpenseGrid();
+                initializeLaunchServicesGrid();
+                initializeEquipmentsUsedGrid();
+                initializeCrewSignOnGrid();
+                initializeCrewSignOffGrid();
+                initializeCrewMiscellaneousGrid();
+                initializeMedicalAssistanceGrid();
+                initializeConsignmentImportGrid();
+                initializeConsignmentExportGrid();
+                initializeThirdPartySupplyGrid();
+                initializeFreshWaterSupplyGrid();
+                initializeTechniciansSurveyorsGrid();
+                initializeLandingItemsGrid();
+                initializeOtherServiceGrid();
+                initializeAgencyRemunerationGrid();
+                loadStatusCounts();
+            }
+        }
+        // Load status counts for tabs via an AJAX call.
+        function loadStatusCounts() {
+            debugger;
+            let customerId = $('#cmb_customer').data('kendoMultiColumnComboBox').value() || 0;
+            let portId = $('#cmb_port').data('kendoComboBox').value() || 0;
+
+            $.ajax({
+                url: '@Url.Action("GetTariffStatusCounts", "Tariff", new { area = "Project" })',
+                type: 'POST', // Use POST method
+                data: {
+                    searchString: '',
+                    companyId: companyId,
+                    customerId: customerId,
+                    portId: portId
+                },
+                success: function (counts) {
+                    debugger;
+                    $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
+                    $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
+                    $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
+                    $('#serviceTabs [data-status="CrewSignOn"] .badge').text(counts.crewSignOn);
+                    $('#serviceTabs [data-status="CrewSignOff"] .badge').text(counts.crewSignOff);
+                    $('#serviceTabs [data-status="CrewMiscellaneous"] .badge').text(counts.crewMiscellaneous);
+                    $('#serviceTabs [data-status="MedicalAssistance"] .badge').text(counts.medicalAssistance);
+                    $('#serviceTabs [data-status="ConsignmentImport"] .badge').text(counts.consignmentImport);
+                    $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
+                    $('#serviceTabs [data-status="ThirdPartySupply"] .badge').text(counts.thirdPartySupply);
+                    $('#serviceTabs [data-status="FreshWaterSupply"] .badge').text(counts.freshWaterSupply);
+                    $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
+                    $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
+                    $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
+                    $('#serviceTabs [data-status="AgencyRemuneration"] .badge').text(counts.agencyRemuneration);
+                    $('#serviceTabs [data-status="Visa"] .badge').text(counts.visa);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading status counts:', error);
+                }
+            });
+        }
+
+        function clearSearch() {
+            $('#cmb_customer').data('kendoMultiColumnComboBox').value('');
+            $('#cmb_port').data('kendoComboBox').value('');
+            initializePortExpenseGrid();
+            initializeLaunchServicesGrid();
+            initializeEquipmentsUsedGrid();
+            initializeCrewSignOnGrid();
+            initializeCrewSignOffGrid();
+            initializeCrewMiscellaneousGrid();
+            initializeMedicalAssistanceGrid();
+            initializeConsignmentImportGrid();
+            initializeConsignmentExportGrid();
+            initializeThirdPartySupplyGrid();
+            initializeFreshWaterSupplyGrid();
+            initializeTechniciansSurveyorsGrid();
+            initializeLandingItemsGrid();
+            initializeOtherServiceGrid();
+            initializeAgencyRemunerationGrid();
+            loadStatusCounts();
+        }
+
+        //================== SCROLLABLE TABS ================== //
         document.querySelectorAll('.scroll-button').forEach(button => {
             button.addEventListener('click', function (e) {
                 const container = document.querySelector('.scrollable-tabs');
@@ -311,7 +478,6 @@
             });
         });
 
-    // Optional: Hide scroll buttons when at edges
         const container = document.querySelector('.scrollable-tabs');
         const checkScroll = () => {
             document.querySelector('.scroll-left').style.display = container.scrollLeft <= 0 ? 'none' : 'block';
@@ -322,32 +488,170 @@
         container.addEventListener('scroll', checkScroll);
         checkScroll();
 
-        let companyId = 0;
-        let permissions = {};
+        function openChildModal(serviceType) {
+            const modalId = `#add${serviceType}Modal`;
+            const modalElement = $(modalId);
+            modalElement.modal('show');
+        }
 
-        $(document).ready(function () {
-            debugger;
-            companyId = getUrlParameter('companyId') || 1;
+        //================== GRID FUNCTIONS ================== //
 
-            permissions = {
-                canCreate: @Json.Serialize(canCreate),
-                canEdit: @Json.Serialize(canEdit),
-                canDelete: @Json.Serialize(canDelete),
-                canRead: @Json.Serialize(canRead),
-            };
+        function initializePortExpenseGrid() {
+            initializeTaskGrid("PortExpenses",   "@Url.Action("GetTariffPortExpensesList", "Tariff", new { area = "Project" })","grid-PortExpense");
+        }
 
-            initializePortExpenseGrid();
-        });
+        function initializeLaunchServicesGrid() {
+            initializeTaskGrid("LaunchServices","@Url.Action("GetTariffLaunchServicesList", "Tariff", new { area = "Project" })",  "grid-LaunchServices");
+        }
 
-    function openChildModal(serviceType) {
-        const modalId = `#add${serviceType}Modal`;
-        const modalElement = $(modalId);
-        modalElement.modal('show');
-    }
+        function initializeEquipmentsUsedGrid() {
+            initializeTaskGrid("EquipmentsUsed","@Url.Action("GetTariffEquipmentsUsedList", "Tariff", new { area = "Project" })",  "grid-EquipmentsUsed");
+        }
 
-    // ================== PORT EXPENSES GRID ================== //
+        function initializeCrewSignOnGrid() {
+            initializeTaskGrid("CrewSignOn","@Url.Action("GetTariffCrewSignOnList", "Tariff", new { area = "Project" })",  "grid-CrewSignOn");
+        }
 
-    function initializePortExpenseGrid() {
+        function initializeCrewSignOffGrid() {
+            initializeTaskGrid("CrewSignOff", "@Url.Action("GetTariffCrewSignOffList", "Tariff", new { area = "Project" })", "grid-CrewSignOff");
+        }
+
+        function initializeCrewMiscellaneousGrid() {
+            initializeTaskGrid("CrewMiscellaneous", "@Url.Action("GetTariffCrewMiscellaneousList", "Tariff", new { area = "Project" })", "grid-CrewMiscellaneous");
+        }
+
+        function initializeMedicalAssistanceGrid() {
+            initializeTaskGrid("MedicalAssistance", "@Url.Action("GetTariffMedicalAssistanceList", "Tariff", new { area = "Project" })", "grid-MedicalAssistance");
+        }
+
+        function initializeConsignmentImportGrid() {
+            initializeTaskGrid("ConsignmentImport", "@Url.Action("GetTariffConsignmentImportList", "Tariff", new { area = "Project" })", "grid-ConsignmentImport");
+        }
+
+        function initializeConsignmentExportGrid() {
+            initializeTaskGrid("ConsignmentExport", "@Url.Action("GetTariffConsignmentExportList", "Tariff", new { area = "Project" })", "grid-ConsignmentExport");
+        }
+
+        function initializeThirdPartySupplyGrid() {
+            initializeTaskGrid("ThirdPartySupply", "@Url.Action("GetTariffThirdPartySupplyList", "Tariff", new { area = "Project" })","grid-ThirdPartySupply");
+        }
+
+        function initializeFreshWaterSupplyGrid() {
+            initializeTaskGrid("FreshWaterSupply", "@Url.Action("GetTariffFreshWaterSupplyList", "Tariff", new { area = "Project" })", "grid-FreshWaterSupply");
+        }
+
+        function initializeTechniciansSurveyorsGrid() {
+            initializeTaskGrid("TechniciansSurveyors", "@Url.Action("GetTariffTechniciansSurveyorsList", "Tariff", new { area = "Project" })", "grid-TechniciansSurveyors");
+        }
+
+        function initializeLandingItemsGrid() {
+            initializeTaskGrid("LandingItems", "@Url.Action("GetTariffLandingItemsList", "Tariff", new { area = "Project" })", "grid-LandingItems");
+        }
+
+        function initializeOtherServiceGrid() {
+            initializeTaskGrid("OtherService", "@Url.Action("GetTariffOtherServiceList", "Tariff", new { area = "Project" })", "grid-OtherService");
+        }
+
+        function initializeAgencyRemunerationGrid() {
+            initializeTaskGrid("AgencyRemuneration", "@Url.Action("GetTariffAgencyRemunerationList", "Tariff", new { area = "Project" })", "grid-AgencyRemuneration");
+        }
+
+        // ================== COMMON GRID ================== //
+
+        function initializeTaskGrid(taskName, url, gridId) {
+
+            let searchString = "";
+            //let customerId = 1;
+            //let portId = 3751;
+            let customerId = $('#cmb_customer').data('kendoMultiColumnComboBox').value();
+            let portId = $('#cmb_port').data('kendoComboBox').value();
+
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}', 'view')">
+            <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}',  'edit')">
+            <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTariff('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}')">
+            <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "taskName", title: "task", width: "100px" },
+                { field: "chargeName", title: "charges", width: "200px" },
+                { field: "currencyName", title: "Currency", width: "80px" },
+                { field: "uomName", title: "Uom", width: "80px" },
+                { field: "slabUomName", title: "Slab Type", width: "80px" },
+                {
+                    field: "basicRate",
+                    title: "Basic Rate",
+                    width: "100px",
+                    format: "{0:n2}" // Format to display 2 decimal places
+                },
+                {
+                    field: "minUnit",
+                    title: "Min Unit",
+                    width: "100px",
+                    format: "{0:n2}" // Format to display 2 decimal places
+                },
+                {
+                    field: "maxUnit",
+                    title: "Max Unit",
+                    width: "100px",
+                    format: "{0:n2}" // Format to display 2 decimal places
+                },
+                {
+                    field: "isAdditional",
+                    title: "Is Additional",
+                    width: "120px",
+                    template: "<input type='checkbox' #= isAdditional ? 'checked' : '' # disabled />" // Checkbox for boolean value
+                },
+                {
+                    field: "additionalUnit",
+                    title: "Additional Unit",
+                    width: "130px",
+                    format: "{0:n2}" // Format to display 2 decimal places
+                },
+                {
+                    field: "additionalRate",
+                    title: "Additional Rate",
+                    width: "130px",
+                    format: "{0:n2}" // Format to display 2 decimal places
+                },
+                {
+                    field: "isPrepayment",
+                    title: "Is Prepayment",
+                    width: "120px",
+                    template: "<input type='checkbox' #= isPrepayment ? 'checked' : '' # disabled />" // Checkbox for boolean value
+                },
+                {
+                    field: "prepaymentPercentage",
+                    title: "Pre.Pay.Percentage",
+                    width: "140px",
+                    format: "{0:n2}" // Format to display 2 decimal places
+                },
+                { field: "remarks", title: "Remarks", width: "200px" }
+            ];
+
+            let grid = $(`#${gridId}`).data("kendoGrid");
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId: customerId, portId: portId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid(gridId, url, { searchString, companyId, customerId, portId }, columns);
+            }
+        }
+
+    @*function initializePortExpenseGrid() {
         let searchString = "";
         let customerId = 1;
         let portId = 3751;
@@ -357,16 +661,16 @@
                 title: "Actions",
                 width: "100px",
                 template: function (dataItem) {
-                    let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}', 'view')">
+                    let buttons = ` <button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}', 'view')">
                 <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
                     if (permissions.canEdit) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openTariffModal('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}',  'edit')">
                 <i class="material-symbols-outlined text-warning">edit</i></button>`;
                     }
 
                     if (permissions.canDelete) {
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTariff('${dataItem.tariffId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteTariff('${dataItem.tariffId}','${dataItem.taskId}','${dataItem.customerId}','${dataItem.portId}')">
                 <i class="material-symbols-outlined text-danger">delete</i></button>`;
                     }
                     return buttons;
@@ -436,45 +740,6 @@
             // Initialize grid if it doesn’t exist
             initializeKendoGrid("grid-PortExpense", url, { searchString, companyId, customerId, portId }, columns);
         }
-    }
-
+        }*@
     </script>
 }
-
-<style>
-
-    .modal-xxl {
-        max-width: 95%;
-    }
-
-    .scrollable-tabs {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
-    }
-
-        .scrollable-tabs::-webkit-scrollbar {
-            display: none; /* Chrome/Safari/Edge */
-        }
-
-    .scroll-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 1;
-        padding: 0.5rem;
-        line-height: 1;
-    }
-
-    .scroll-left {
-        left: 0;
-    }
-
-    .scroll-right {
-        right: 0;
-    }
-
-    .nav-item {
-        flex-shrink: 0; /* Prevent tab items from shrinking */
-    }
-</style>
