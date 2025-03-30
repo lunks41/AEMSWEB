@@ -408,7 +408,7 @@
         }
 
         function loadTariffGrid() {
-            debugger;
+            
             let customerId = getComboBoxValue('#cmb_customer', 0);
             let portId = getComboBoxValue('#cmb_port', 0);
 
@@ -435,7 +435,7 @@
         }
 
         function loadStatusCounts() {
-            debugger;
+            
             let customerId = getComboBoxValue('#cmb_customer', 0);
             let portId = getComboBoxValue('#cmb_port', 0);
 
@@ -449,7 +449,7 @@
                     portId: portId
                 },
                 success: function (counts) {
-                    debugger;
+                    
                     $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
                     $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
                     $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
@@ -495,8 +495,8 @@
         }
 
         function openChildModal(serviceType,TaskId) {
-            debugger;
-            taskId = TaskId;
+            
+            taskId = parseInt(TaskId);
             let customerId = getComboBoxValue('#cmb_customer', 0);
             let portId = getComboBoxValue('#cmb_port', 0);
 
@@ -506,23 +506,35 @@
                 const modalId = `#add${serviceType}TariffModal`;
                 const modalElement = $(modalId);
                 modalElement.modal('show');
+                debugger;
 
-                // Pre-set Customer/Port in the modal (if needed)
-                modal.find('#common_cmb_customer').val(customerId).trigger('change');
-                modal.find('#common_cmb_port').val(portId).trigger('change');
-                modal.find('#common_cmb_task').val(taskId).trigger('change');
+                if (serviceType == 'FreshWater') {
+                    // Pre-set Customer/Port in the modal (if needed)
+                    modal.find('#freshwater_cmb_customer').val(customerId).trigger('change');
+                    modal.find('#freshwater_cmb_port').val(portId).trigger('change');
+                    const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
+                    BindComboBox(chargeUrl, "freshwater_cmb_chagre", "chargeName", "chargeId");
 
-                // Pre-set Customer/Port in the modal (if needed)
-                modal.find('#freshwater_cmb_customer').val(customerId).trigger('change');
-                modal.find('#freshwater_cmb_port').val(portId).trigger('change');
+                } else if (serviceType == 'LaunchService') {
+                    // Pre-set Customer/Port in the modal (if needed)
+                    modal.find('#launchservice_cmb_customer').val(customerId).trigger('change');
+                    modal.find('#launchservice_cmb_port').val(portId).trigger('change');
+                    const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
+                    BindComboBox(chargeUrl, "launchservice_cmb_chagre", "chargeName", "chargeId");
 
-                // Pre-set Customer/Port in the modal (if needed)
-                modal.find('#launchservice_cmb_customer').val(customerId).trigger('change');
-                modal.find('#launchservice_cmb_port').val(portId).trigger('change');
+                } else if (serviceType == 'Visa') {
+                    // Pre-set Customer/Port in the modal (if needed)
+                    modal.find('#visa_cmb_customer').val(customerId).trigger('change');
+                    modal.find('#visa_cmb_port').val(portId).trigger('change');
+                } else {
+                    // Pre-set Customer/Port in the modal (if needed)
+                    modal.find('#common_cmb_customer').val(customerId).trigger('change');
+                    modal.find('#common_cmb_port').val(portId).trigger('change');
+                    modal.find('#common_cmb_task').val(taskId).trigger('change');
+                    const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
+                    BindComboBox(chargeUrl, "common_cmb_chagre", "chargeName", "chargeId");
 
-                // Pre-set Customer/Port in the modal (if needed)
-                modal.find('#visa_cmb_customer').val(customerId).trigger('change');
-                modal.find('#visa_cmb_port').val(portId).trigger('change');
+                }
             }
         }
 
@@ -703,7 +715,6 @@
         }
 
         function openTariffModal(tariffId, taskId, customerId, portId, chargeId, mode) {
-            debugger;
             $.get('@Url.Action("GetTariffById", "Tariff", new { area = "Project" })', {
                 tariffId: tariffId,
                 companyId: companyId,
@@ -714,57 +725,71 @@
             })
                 .done(function (response) {
                     if (response.success) {
-                        debugger;
-                        const serviceType = response.data.rateType; // e.g., 'Common', 'FreshWater'
-                        const modalId = `#add${serviceType}TariffModal`; // Dynamic modal ID
-                        const modal = $(modalId);
-                        openChildModal(serviceType, taskId)
+                        
+                        const serviceType = response.data.rateType; // e.g., 'Common', 'FreshWater', 'LaunchService'
+                        const modalId = `#add${serviceType}TariffModal`;
 
-                        populateTariffModalFields(response.data); // Populate fields in the correct modal
-                        setTariffMode(mode, modal); // Pass modal to set mode
+                        // Open the modal using openChildModal
+                        openChildModal(serviceType, taskId);
+
+                        // Attach a one-time event handler to populate fields after the modal is shown
+                        $(modalId).one('shown.bs.modal', function () {
+                            populateTariffModalFields(response.data, serviceType);
+                            setTariffMode(mode, $(this)); // Set mode (view/edit)
+                        });
+
+                        
                     } else {
                         alert(response.message || "Failed to load tariff data.");
                     }
                 })
                 .fail(function () {
                     alert("An error occurred while fetching tariff data. Please try again.");
-                })
-                .always(() => {
-                    $modal.find('.modal-overlay').remove();
                 });
         }
 
-        function populateTariffModalFields(data) {
-            debugger;
-            $('#tariffId').val(data.tariffId || '');
-            $('#rateType').val(data.rateType?.trim() || '');
-            $('#common_cmb_task').data('kendoComboBox').value(data.taskId || '');
-            //$('#common_cmb_charge').data('kendoComboBox').value(data.chargeId || '');
-            $('#currencyId').val(data.currencyId || 0); // Default to 0 if no value
-            $('#uomId').val(data.uomId || '');
-            $('#slabUomId').val(data.slabUomId || '');
-            $('#visaTypeId').val(data.visaTypeId || '');
-            $('#fromPlace').val(data.fromPlace || '');
-            $('#toPlace').val(data.toPlace || '');
-            $('#displayRate').val(data.displayRate || '');
-            $('#basicRate').val(data.basicRate || '');
-            $('#minUnit').val(data.minUnit || '');
-            $('#maxUnit').val(data.maxUnit || '');
-            $('#isAdditional').prop('checked', data.isAdditional ?? false); // Checkbox handling
-            $('#additionalUnit').val(data.additionalUnit || '');
-            $('#additionalRate').val(data.additionalRate || '');
-            $('#prepaymentPercentage').val(data.prepaymentPercentage || '');
-            $('#isPrepayment').prop('checked', data.isPrepayment ?? false); // Checkbox handling
-            $('#itemNo').val(data.itemNo || 0); // Default to 0 if no value
+        function populateTariffModalFields(data, serviceType) {
+            
+            const prefix = serviceType.toLowerCase(); // e.g., 'common', 'freshwater', 'launchservice'
+
+            // Set common fields (consistent IDs across modals)
+            $('#tariffId').val(data.tariffId || ''); // Hidden field, assumed present in all modals
+            $('#displayrate').val(data.displayRate || '0.000');
+            $('#basicrate').val(data.basicRate || '0.000');
+            $('#minunit').val(data.minUnit || '0.000');
+            $('#maxunit').val(data.maxUnit || '0.000');
+            $('#isAdditional').prop('checked', data.isAdditional ?? false);
+            $('#additionalunit').val(data.additionalUnit || '0.000');
+            $('#additionalrate').val(data.additionalRate || '0.000');
+            $('#isprepayment').prop('checked', data.isPrepayment ?? false);
+            $('#prepaymentrate').val(data.prepaymentPercentage || '0.000');
             $('#remarks').val(data.remarks?.trim() || '');
-            $('#isActive').prop('checked', data.isActive ?? true); // Default to true if no value
+            $('#isActive').prop('checked', data.isActive ?? true);
 
-            $('#createBy').text(data.createBy || "N/A");
-            $('#createDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-            $('#editBy').text(data.editBy || "N/A");
-            $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-            //checkTariffMandatoryFields();
+            debugger;
+
+            // Set service-specific dropdowns
+            $(`#${prefix}_cmb_task`).data('kendoComboBox').value(data.taskId || '');
+            $(`#${prefix}_cmb_chagre`).data('kendoComboBox').value(data.chargeId || ''); // Note: 'chagre' seems to be a typo in the HTML; should be 'charge'
+            $(`#${prefix}_cmb_uom`).data('kendoComboBox').value(data.uomId || '');
+            $(`#${prefix}_cmb_currency`).data('kendoComboBox').value(data.currencyId || '');
+
+            // Set additional service-specific fields
+            if (serviceType === 'FreshWater') {
+                $(`#${prefix}_cmb_fromplace`).data('kendoComboBox').value(data.fromPlace || '');
+                $(`#${prefix}_cmb_toplace`).data('kendoComboBox').value(data.toPlace || '');
+            } else if (serviceType === 'LaunchService') {
+                $(`#${prefix}_cmb_slabuom`).data('kendoComboBox').value(data.slabUomId || '');
+            }
+            // Add more conditions for other service types (e.g., 'Visa') as needed
+
+            // Set audit fields (assuming they follow the prefix pattern)
+            $(`#${prefix}createBy`).text(data.createBy || "N/A");
+            $(`#${prefix}createDate`).text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $(`#${prefix}editBy`).text(data.editBy || "N/A");
+            $(`#${prefix}editDate`).text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+            $(`#${prefix}editVersion`).text(data.editVersion || "N/A");
         }
 
         function setTariffMode(mode) {
@@ -826,9 +851,9 @@
         }
 
         $('#addCommonTariffModal').on('shown.bs.modal', function () {
-            debugger;
+            
             const taskUrl = '@Url.Action("GetTaskLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(taskUrl, "#common_cmb_task", "taskName", "taskId");
+            BindComboBox(taskUrl, "common_cmb_task", "taskName", "taskId");
 
             const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             BindComboBox(uomUrl, "common_cmb_uom", "uomName", "uomId");
@@ -836,13 +861,12 @@
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             BindComboBox(currencyUrl, "common_cmb_currency", "currencyName", "currencyId");
 
-            const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
-            BindComboBox(chargeUrl, "common_cmb_chagre", "chargeName", "chargeId");
+
 
         });
 
         function saveCommonTariff() {
-            debugger;
+            
             let tariffData = {
                 TariffId: parseInt($('#tariffId').val()) || 0,
                 RateType: 'common',
