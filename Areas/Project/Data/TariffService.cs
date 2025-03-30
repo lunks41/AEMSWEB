@@ -2,7 +2,6 @@
 using AEMSWEB.Areas.Project.Models;
 using AEMSWEB.Data;
 using AEMSWEB.Entities.Admin;
-using AEMSWEB.Entities.Masters;
 using AEMSWEB.Entities.Project;
 using AEMSWEB.Enums;
 using AEMSWEB.Helpers;
@@ -10,7 +9,6 @@ using AEMSWEB.IServices;
 using AEMSWEB.Models;
 using AEMSWEB.Repository;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 
 namespace AEMSWEB.Areas.Project.Data.Services
@@ -805,6 +803,9 @@ namespace AEMSWEB.Areas.Project.Data.Services
 
                     if (saveChangeRecord > 0)
                     {
+                        if (IsEdit)
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_Tariff  set EditVersion=EditVersion+1 WHERE TaskId={ser_Tariff.TaskId} AND  TariffId={ser_Tariff.TariffId} AND CompanyId={CompanyId} AND CustomerId={ser_Tariff.CustomerId} AND PortId={ser_Tariff.PortId} AND ChargeId={ser_Tariff.ChargeId}");
+
                         var auditLog = new AdmAuditLog
                         {
                             CompanyId = CompanyId,

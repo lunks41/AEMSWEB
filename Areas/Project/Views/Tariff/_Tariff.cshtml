@@ -1,0 +1,248 @@
+﻿<div class="modal fade" id="addTariffModal" tabindex="-1" aria-labelledby="addTariffModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTariffModal">Add/Edit Tariff </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+            </div>
+            <div class="modal-body">
+                <form id="tarifform">
+                    <input type="hidden" id="tariffId">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <!-- Section 1: Basic Information -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="tariff_cmb_task" class="form-label">Task <span class="text-danger">*</span></label>
+                                        <select id="tariff_cmb_task" style="width: 100%"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="tariff_cmb_chagre" class="form-label">Charge <span class="text-danger">*</span></label>
+                                        <select id="tariff_cmb_chagre" style="width: 100%"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="tariff_cmb_uom" class="form-label">UOM <span class="text-danger">*</span></label>
+                                        <select id="tariff_cmb_uom" style="width: 100%"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="tariff_cmb_type" class="form-label">Type</label>
+                                        <select id="tariff_cmb_type" style="width: 100%"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Locations -->
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="tariff_cmb_fromplace" class="form-label">From Place</label>
+                                        <select id="tariff_cmb_fromplace" style="width: 100%"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="tariff_cmb_toplace" class="form-label">To Place</label>
+                                        <select id="tariff_cmb_toplace" style="width: 100%"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: Rates & Units -->
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="displayrate" class="control-label">Display Rate (Local Currency)</label>
+                                        <input type="number" class="form-control" id="displayrate" placeholder="Display Rate" value="0.000">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="basicrate" class="control-label">Basic Rate<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="basicrate" placeholder="Basic Rate" value="0.000">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="minunit" class="control-label">Min Unit<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="minunit" placeholder="Min Unit" value="0.000">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <label for="maxunit" class="control-label">Max Unit<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="maxunit" placeholder="Max Unit" value="0.000">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 4: Additional Charges -->
+                            <div class="row mt-3">
+                                <div class="col-md-2">
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="isAdditional">
+                                            <label class="form-check-label" for="isAdditional">Is Additional</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="mb-1">
+                                        <label for="additionalunit" class="control-label">Additional Unit</label>
+                                        <input type="number" class="form-control" id="additionalunit" placeholder="Additional Unit" value="0.000" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="mb-1">
+                                        <label for="additionalrate" class="control-label">Additional Rate</label>
+                                        <input type="number" class="form-control" id="additionalrate" placeholder="Additional Rate" value="0.000" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="isprepayment">
+                                            <label class="form-check-label" for="isprepayment">Is Prepayment</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="mb-1">
+                                        <label for="prepaymentpercentage" class="control-label">Prepayment Rate</label>
+                                        <input type="number" class="form-control" id="prepaymentpercentage" placeholder="Prepayment Rate" value="0.000">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 5: Status & Remarks -->
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="isActive">
+                                            <label class="form-check-label" for="isActive">Is Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <label class="control-label">Remarks</label>
+                                            <textarea class="form-control" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="tariffcreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="tariffcreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="tariffeditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="tariffeditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="tariffeditVersion" class="form-control-plaintext"></p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Action Buttons -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnTariffClear" data-bs-dismiss="modal">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnTariffSave" onclick="saveTariff();">Save & New</button>
+                <button type="submit" class="btn btn-success" id="btnTariffEdit" onclick="saveTariff();">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get references to the "Is Additional" checkbox and its related fields
+        const additionalCheckbox = document.getElementById('isAdditional');
+        const additionalUnit = document.getElementById('additionalunit');
+        const additionalRate = document.getElementById('additionalrate');
+
+        // Function to update the readonly state of "Additional" fields
+        function updateAdditionalFields() {
+            const isAdditionalChecked = additionalCheckbox.checked;
+            additionalUnit.readOnly = !isAdditionalChecked;
+            additionalRate.readOnly = !isAdditionalChecked;
+        }
+
+        // Add event listener for "Is Additional" checkbox
+        additionalCheckbox.addEventListener('change', updateAdditionalFields);
+
+        // Set initial state for "Additional" fields
+        updateAdditionalFields();
+
+        // Get references to the "Is Prepayment" checkbox and its related fields
+        const prepaymentCheckbox = document.getElementById('isprepayment');
+        const prepaymentPercentage = document.getElementById('prepaymentpercentage');
+
+        // Function to update the readonly state of "Prepayment" fields
+        function updatePrepaymentFields() {
+            const isPrepaymentChecked = prepaymentCheckbox.checked;
+            prepaymentPercentage.readOnly = !isPrepaymentChecked;
+        }
+
+        // Add event listener for "Is Prepayment" checkbox
+        prepaymentCheckbox.addEventListener('change', updatePrepaymentFields);
+
+        // Set initial state for "Prepayment" fields
+        updatePrepaymentFields();
+    });
+</script>
+
+<style>
+    .modal-xl {
+        max-width: 1200px;
+    }
+
+    .form-control:read-only {
+        background-color: #f8f9fa;
+    }
+
+    .form-check {
+        margin-bottom: 1rem;
+    }
+
+    .mt-3 {
+        margin-top: 1rem;
+    }
+</style>

@@ -222,45 +222,54 @@ function BindComboBox(url, dropdownId, textField, valueField) {
     try {
         $.ajax({
             url: url,
-            async: false, // Synchronous request (not recommended for modern apps)
+            async: false,
             type: "GET",
             cache: false,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
                 try {
-                    // Parse the response if it's a JSON string
                     const data = typeof response === "string" ? JSON.parse(response) : response;
 
-                    // Initialize the Kendo ComboBox
+                    // Initialize Kendo ComboBox
                     $("#" + dropdownId).kendoComboBox({
                         dataTextField: textField,
                         dataValueField: valueField,
                         placeholder: "Select...",
                         filter: "contains",
-                        dataSource: data || [], // Use empty array if no data is available
+                        dataSource: data || [],
                         select: function (e) {
                             const selectedItem = this.dataItem(e.item.index());
                             if (selectedItem) {
+                                // Store the selected item ID to track changes
+                                $("#" + dropdownId).data("selectedValue", selectedItem[valueField]);
                                 OnSelectDropdown(selectedItem, dropdownId);
                             }
                         },
                         change: function () {
-                            const selectedItem = this.dataItem();
+                            const comboBox = $("#" + dropdownId).data("kendoComboBox");
+                            const selectedItem = comboBox.dataItem();
+
                             if (!selectedItem) {
-                                const comboBox = $("#" + dropdownId).data("kendoComboBox");
-                                comboBox.text("");
-                                comboBox.value("");
-                            } else {
-                                OnSelectDropdown(selectedItem, dropdownId);
+                                comboBox.value(""); // Reset if invalid selection
+                                return;
                             }
+
+                            // Get previously selected value
+                            const prevSelectedValue = $("#" + dropdownId).data("selectedValue");
+
+                            // Prevent duplicate call if value didn't change
+                            if (prevSelectedValue === selectedItem[valueField]) {
+                                return;
+                            }
+
+                            // Update stored value and call OnSelectDropdown
+                            $("#" + dropdownId).data("selectedValue", selectedItem[valueField]);
+                            OnSelectDropdown(selectedItem, dropdownId);
                         }
                     });
 
-                    // Adjust the width of the dropdown list
                     AutoWithBindComboBox(dropdownId);
-
-                    // Trigger additional logic after binding
                     SelectedDropdown(dropdownId);
                 } catch (error) {
                     console.error("Error initializing Kendo ComboBox:", error);
@@ -268,8 +277,6 @@ function BindComboBox(url, dropdownId, textField, valueField) {
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching data for ComboBox:", error);
-
-                // Initialize the ComboBox with an empty data source in case of failure
                 $("#" + dropdownId).kendoComboBox({
                     dataSource: [],
                     placeholder: "Select...",
@@ -278,8 +285,11 @@ function BindComboBox(url, dropdownId, textField, valueField) {
             }
         });
     } catch (e) {
+        console.error("Unexpected error:", e);
     }
 }
+
+
 
 function AutoWithBindComboBox(dropdownId) {
     const comboBox = $("#" + dropdownId).data("kendoComboBox");

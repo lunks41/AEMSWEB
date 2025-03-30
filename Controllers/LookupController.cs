@@ -227,6 +227,16 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
+        public async Task<JsonResult> GetOrderTypeLookup(string companyId, Int16 categoryId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetOrderTypeLookupAsync(companyIdShort, parsedUserId.Value, categoryId);
+            return Json(data);
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetPortRegionLookup(string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);

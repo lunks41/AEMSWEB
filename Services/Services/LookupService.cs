@@ -347,6 +347,36 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
+        public async Task<IEnumerable<OrderTypeLookupModel>> GetOrderTypeLookupAsync(Int16 CompanyId, Int16 UserId, Int16 categoryId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<OrderTypeLookupModel>($"SELECT OrderTypeId,OrderTypeCode,OrderTypeName FROM dbo.M_OrderType where OrderTypeId<>0 and OrderTypeCategoryId={categoryId} And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderType})) order by OrderTypeName");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.OrderType,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_OrderType",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
         public async Task<IEnumerable<BankLookupModel>> GetBankLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try

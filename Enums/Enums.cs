@@ -174,4 +174,21 @@ namespace AEMSWEB.Enums
         OtherService = 14,
         AgencyRemuneration = 15
     }
+
+    public enum OrderTypeCategory
+    {
+        VisaType = 1,
+        AddressType = 2,
+        GenderType = 3,
+        StatusType = 4,
+        BerthType = 5,
+        ModeType = 6,
+        JobType = 7,
+        ConsignmentType = 8,
+        CIDClearanceType = 9,
+        PassType = 10,
+        CarrierType = 11,
+        LocationType = 12,
+        CalculateType = 13
+    }
 }
