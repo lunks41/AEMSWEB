@@ -66,4 +66,30 @@
         public Int64 totalRecords { get; set; }
         public List<TariffViewModel> data { get; set; }
     }
+
+    public class TaskCountViewModel
+    {
+        public int? TaskId { get; set; }
+        public int CountId { get; set; }
+    }
+
+    public class TaskCountsViewModel
+    {
+        public int PortExpense { get; set; }
+        public int LaunchServices { get; set; }
+        public int EquipmentsUsed { get; set; }
+        public int CrewSignOn { get; set; }
+        public int CrewSignOff { get; set; }
+        public int CrewMiscellaneous { get; set; }
+        public int MedicalAssistance { get; set; }
+        public int ConsignmentImport { get; set; }
+        public int ConsignmentExport { get; set; }
+        public int ThirdPartySupply { get; set; }
+        public int FreshWaterSupply { get; set; }
+        public int TechniciansSurveyors { get; set; }
+        public int LandingItems { get; set; }
+        public int OtherService { get; set; }
+        public int AgencyRemuneration { get; set; }
+        public int Visa { get; set; }
+    }
 }

@@ -77,8 +77,6 @@
     #detailsTab {
         margin-top: 20px;
     }
-
-
 </style>
 
 <ul class="nav nav-pills mb-4 border-bottom pb-2" id="invoicePills" role="tablist">
@@ -202,11 +200,11 @@
             BindComboBox(currencyUrl, "cmb_localcurrency", "currencyName", "currencyId");
 
             function updateAndBindComboBox(isVisible, isMandatory, dropdownId) {
-                
+
                 // Convert numbers to booleans explicitly
                 const isVisibleBool = !!isVisible; // Converts 0->false, 1->true
                 const isMandatoryBool = !!isMandatory;
-                
+
                 const moduleUrl = `@Url.Action("GetModuleTransCategoryLookup", "Lookup", new { area = "" })?IsVisible=${isVisibleBool}&IsMandatory=${isMandatoryBool}`;
                 BindComboBox(moduleUrl, dropdownId, "transCategoryName", "transCategoryId");
             }

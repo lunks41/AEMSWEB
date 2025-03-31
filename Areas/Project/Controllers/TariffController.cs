@@ -391,9 +391,7 @@ namespace AEMSWEB.Areas.Project.Controllers
             }
         }
 
-        #endregion
-
-
+        #endregion TASKS LIST
 
         [HttpPost]
         public async Task<JsonResult> GetTariffStatusCounts(string searchString, string companyId, int customerId, int portId)
@@ -529,7 +527,7 @@ namespace AEMSWEB.Areas.Project.Controllers
 
             try
             {
-                await _tariffService.DeleteTariffAsync(companyIdShort, parsedUserId.Value,  tariffId, taskId, customerId,  portId,  chargeId);
+                await _tariffService.DeleteTariffAsync(companyIdShort, parsedUserId.Value, tariffId, taskId, customerId, portId, chargeId);
                 return Json(new { success = true, message = "Account Type deleted successfully." });
             }
             catch (Exception ex)
@@ -539,6 +537,6 @@ namespace AEMSWEB.Areas.Project.Controllers
             }
         }
 
-        #endregion
+        #endregion CRUD
     }
 }

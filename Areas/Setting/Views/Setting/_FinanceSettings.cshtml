@@ -119,11 +119,11 @@
     })();
 
     function getfinancesetting() {
-        
+
         $.get('@Url.Action("GetFinSetting", "Setting", new { area = "Setting" })', { companyId })
             .done(function (response) {
                 if (response.success) {
-                    
+
                     if (response.data != null) {
                         var data = response.data;
                         $('#cmb_basecurrency').data("kendoComboBox").value(data.base_CurrencyId > 0 ? data.base_CurrencyId : '');
@@ -136,7 +136,7 @@
                         $('#cmb_purchasegst').data("kendoComboBox").value(data.purGst_GlId > 0 ? data.purGst_GlId : '');
                         $('#cmb_saledefine').data("kendoComboBox").value(data.saleDef_GlId > 0 ? data.saleDef_GlId : '');
                         $('#cmb_purchasedefine').data("kendoComboBox").value(data.purDef_GlId > 0 ? data.purDef_GlId : '');
-                        
+
                         $('#fincreateBy').text(data.createBy || "N/A");
                         $('#fincreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
                         $('#fineditBy').text(data.editBy || "N/A");
@@ -149,7 +149,7 @@
     }
 
     function saveFinanceSetting() {
-        
+
         let data = {
             Base_CurrencyId: parseInt($('#cmb_basecurrency').data('kendoComboBox').value()) || 0,
             Local_CurrencyId: parseInt($('#cmb_localcurrency').data('kendoComboBox').value()) || 0,

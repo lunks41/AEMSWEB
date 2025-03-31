@@ -444,7 +444,5 @@ namespace AEMSWEB.Controllers
             var data = await _masterLookupService.GetPaymentTypeLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
-
-
     }
 }

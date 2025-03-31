@@ -248,7 +248,6 @@
         function openJobOrderModal(id) {
             $('#viewJobOrderModal').modal('show');
 
-
             @*const $modal = $('#viewJobOrderModal');
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
             $.get('@Url.Action("GetAccountSetupById", "AccountSetup", new { area = "Master" })', { accSetupId: id, companyId })

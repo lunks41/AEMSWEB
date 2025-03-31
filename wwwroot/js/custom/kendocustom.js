@@ -289,8 +289,6 @@ function BindComboBox(url, dropdownId, textField, valueField) {
     }
 }
 
-
-
 function AutoWithBindComboBox(dropdownId) {
     const comboBox = $("#" + dropdownId).data("kendoComboBox");
     if (comboBox) {

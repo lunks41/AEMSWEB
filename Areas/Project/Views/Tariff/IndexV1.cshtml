@@ -408,7 +408,7 @@
         }
 
         function loadTariffGrid() {
-            
+
             let customerId = getComboBoxValue('#cmb_customer', 0);
             let portId = getComboBoxValue('#cmb_port', 0);
 
@@ -435,7 +435,7 @@
         }
 
         function loadStatusCounts() {
-            
+
             let customerId = getComboBoxValue('#cmb_customer', 0);
             let portId = getComboBoxValue('#cmb_port', 0);
 
@@ -449,7 +449,7 @@
                     portId: portId
                 },
                 success: function (counts) {
-                    
+
                     $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
                     $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
                     $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
@@ -495,7 +495,7 @@
         }
 
         function openChildModal(serviceType,TaskId) {
-            
+
             taskId = parseInt(TaskId);
             let customerId = getComboBoxValue('#cmb_customer', 0);
             let portId = getComboBoxValue('#cmb_port', 0);
@@ -725,7 +725,7 @@
             })
                 .done(function (response) {
                     if (response.success) {
-                        
+
                         const serviceType = response.data.rateType; // e.g., 'Common', 'FreshWater', 'LaunchService'
                         const modalId = `#add${serviceType}TariffModal`;
 
@@ -738,7 +738,6 @@
                             setTariffMode(mode, $(this)); // Set mode (view/edit)
                         });
 
-                        
                     } else {
                         alert(response.message || "Failed to load tariff data.");
                     }
@@ -749,7 +748,7 @@
         }
 
         function populateTariffModalFields(data, serviceType) {
-            
+
             const prefix = serviceType.toLowerCase(); // e.g., 'common', 'freshwater', 'launchservice'
 
             // Set common fields (consistent IDs across modals)
@@ -765,7 +764,6 @@
             $('#prepaymentrate').val(data.prepaymentPercentage || '0.000');
             $('#remarks').val(data.remarks?.trim() || '');
             $('#isActive').prop('checked', data.isActive ?? true);
-
 
             debugger;
 
@@ -851,7 +849,7 @@
         }
 
         $('#addCommonTariffModal').on('shown.bs.modal', function () {
-            
+
             const taskUrl = '@Url.Action("GetTaskLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             BindComboBox(taskUrl, "common_cmb_task", "taskName", "taskId");
 
@@ -861,12 +859,10 @@
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             BindComboBox(currencyUrl, "common_cmb_currency", "currencyName", "currencyId");
 
-
-
         });
 
         function saveCommonTariff() {
-            
+
             let tariffData = {
                 TariffId: parseInt($('#tariffId').val()) || 0,
                 RateType: 'common',
@@ -926,7 +922,5 @@
                 }
             });
         }
-
-
     </script>
 }

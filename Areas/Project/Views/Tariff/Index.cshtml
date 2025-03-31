@@ -1,4 +1,4 @@
-﻿@using AEMSWEB.Enums; 
+﻿@using AEMSWEB.Enums;
 
 @{
     ViewData["Title"] = "Tariff";
@@ -58,9 +58,11 @@
                 <!-- Simple Header Section -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Tariff Management</h4>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCopyTariffCustomer2CustomerModal">Copy Tariff Cust2Cust</button>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCopyTariffCompany2CustomerModal">Copy Tariff Company2Cust</button>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTariffModal">Add Tariff</button>
+                    <div>
+                        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addCopyTariffCustomer2CustomerModal">Copy Tariff Cust2Cust</button>
+                        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addCopyTariffCompany2CustomerModal">Copy Tariff Company2Cust</button>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTariffModal">Add Tariff</button>
+                    </div>
                 </div>
 
                 <!-- Simple Filter Section -->
@@ -191,105 +193,105 @@
 
                     <!-- Launch Services Tab -->
                     <div class="tab-pane fade" id="launch-services">
-                       
+
                         <!-- Grid for Launch Services -->
                         <div id="grid-LaunchServices" class="kendo-grid"></div>
                     </div>
 
                     <!-- Equipments Used Tab -->
                     <div class="tab-pane fade" id="equipments-used">
-                       
+
                         <!-- Grid for Equipments Used -->
                         <div id="grid-EquipmentsUsed" class="kendo-grid"></div>
                     </div>
 
                     <!-- Crew Sign On Tab -->
                     <div class="tab-pane fade" id="crew-sign-on">
-                       
+
                         <!-- Grid for Crew Sign On -->
                         <div id="grid-CrewSignOn" class="kendo-grid"></div>
                     </div>
 
                     <!-- Crew Sign Off Tab -->
                     <div class="tab-pane fade" id="crew-sign-off">
-                       
+
                         <!-- Grid for Crew Sign Off -->
                         <div id="grid-CrewSignOff" class="kendo-grid"></div>
                     </div>
 
                     <!-- Crew Miscellaneous Tab -->
                     <div class="tab-pane fade" id="crew-miscellaneous">
-                       
+
                         <!-- Grid for Crew Miscellaneous -->
                         <div id="grid-CrewMiscellaneous" class="kendo-grid"></div>
                     </div>
 
                     <!-- Medical Assistance Tab -->
                     <div class="tab-pane fade" id="medical-assistance">
-                       
+
                         <!-- Grid for Medical Assistance -->
                         <div id="grid-MedicalAssistance" class="kendo-grid"></div>
                     </div>
 
                     <!-- Consignment Import Tab -->
                     <div class="tab-pane fade" id="consignment-import">
-                        
+
                         <!-- Grid for Consignment Import -->
                         <div id="grid-ConsignmentImport" class="kendo-grid"></div>
                     </div>
 
                     <!-- Consignment Export Tab -->
                     <div class="tab-pane fade" id="consignment-export">
-                       
+
                         <!-- Grid for Consignment Export -->
                         <div id="grid-ConsignmentExport" class="kendo-grid"></div>
                     </div>
 
                     <!-- Third Party Supply Tab -->
                     <div class="tab-pane fade" id="third-party-supply">
-                        
+
                         <!-- Grid for Third Party Supply -->
                         <div id="grid-ThirdPartySupply" class="kendo-grid"></div>
                     </div>
 
                     <!-- Fresh Water Tab -->
                     <div class="tab-pane fade" id="fresh-water">
-                      
+
                         <!-- Grid for Fresh Water -->
                         <div id="grid-FreshWaterSupply" class="kendo-grid"></div>
                     </div>
 
                     <!-- Technicians Surveyors Tab -->
                     <div class="tab-pane fade" id="technicians-surveyors">
-                        
+
                         <!-- Grid for Technicians Surveyors -->
                         <div id="grid-TechniciansSurveyors" class="kendo-grid"></div>
                     </div>
 
                     <!-- Landing Items Tab -->
                     <div class="tab-pane fade" id="landing-items">
-                       
+
                         <!-- Grid for Landing Items -->
                         <div id="grid-LandingItems" class="kendo-grid"></div>
                     </div>
 
                     <!-- Other Service Tab -->
                     <div class="tab-pane fade" id="other-service">
-                       
+
                         <!-- Grid for Other Service -->
                         <div id="grid-OtherService" class="kendo-grid"></div>
                     </div>
 
                     <!-- Agency Remuneration Tab -->
                     <div class="tab-pane fade" id="agency-remuneration">
-                        
+
                         <!-- Grid for Agency Remuneration -->
                         <div id="grid-AgencyRemuneration" class="kendo-grid"></div>
                     </div>
 
                     <!-- Visa Tab -->
                     <div class="tab-pane fade" id="visa">
-                       
+
                         <!-- Grid for Visa -->
                         <div id="grid-Visa" class="kendo-grid"></div>
                     </div>
@@ -353,7 +355,6 @@
             const fromplaceUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=${BerthType}`;
             BindComboBox(fromplaceUrl, "tariff_cmb_fromplace", "orderTypeName", "orderTypeId");
             BindComboBox(fromplaceUrl, "tariff_cmb_toplace", "orderTypeName", "orderTypeId");
-
 
         }
 
@@ -796,67 +797,71 @@
         }
 
         function saveTariff() {
+            let customerId = getComboBoxValue('#cmb_customer', 0);
+            let portId = getComboBoxValue('#cmb_port', 0);
 
-            let tariffData = {
-                TariffId: parseInt($('#tariffId').val()) || 0,
-                RateType: 'common',
-                TaskId: parseInt($('#tariff_cmb_task').val()) || 0,
-                ChargeId: parseInt($('#tariff_cmb_chagre').val()) || 0,
-                PortId: getComboBoxValue('#cmb_port', 0) || 0,
-                CustomerId: getComboBoxValue('#cmb_customer', 0) || 0,
-                CurrencyId: 1,
-                UomId: parseInt($('#tariff_cmb_uom').val()) || 0,
-                SlabUomId: parseInt($('#tariff_cmb_type').val()) || 0,
-                VisaTypeId:  0,
-                FromPlace: parseInt($('#tariff_cmb_fromplace').val()) || 0,
-                ToPlace: parseInt($('#tariff_cmb_toplace').val()) || 0,
-                DisplayRate: parseFloat($('#displayrate').val()) || 0,
-                BasicRate: parseFloat($('#basicrate').val()) || 0,
-                MinUnit: parseFloat($('#minunit').val()) || 0,
-                MaxUnit: parseFloat($('#maxunit').val()) || 0,
-                IsAdditional: $('#isAdditional').prop('checked'),
-                AdditionalUnit: parseFloat($('#additionalunit').val()) || 0,
-                AdditionalRate: parseFloat($('#additionalrate').val()) || 0,
-                PrepaymentPercentage: parseFloat($('#prepaymentpercentage').val()) || 0,
-                IsPrepayment: $('#isPrepayment').prop('checked'),
-                ItemNo: parseInt($('#itemNo').val()) || 0,
-                Remarks: $('#remarks').val()?.trim() || '',
-                IsActive: $('#isActive').prop('checked')
-            };
+            if (customerId == 0 || portId == 0) {
+                alert("Please select both the customer and the port.");
+            } else {
+                let tariffData = {
+                    TariffId: parseInt($('#tariffId').val()) || 0,
+                    RateType: 'common',
+                    TaskId: parseInt($('#tariff_cmb_task').val()) || 0,
+                    ChargeId: parseInt($('#tariff_cmb_chagre').val()) || 0,
+                    PortId: getComboBoxValue('#cmb_port', 0) || 0,
+                    CustomerId: getComboBoxValue('#cmb_customer', 0) || 0,
+                    CurrencyId: 1,
+                    UomId: parseInt($('#tariff_cmb_uom').val()) || 0,
+                    SlabUomId: parseInt($('#tariff_cmb_type').val()) || 0,
+                    VisaTypeId: 0,
+                    FromPlace: parseInt($('#tariff_cmb_fromplace').val()) || 0,
+                    ToPlace: parseInt($('#tariff_cmb_toplace').val()) || 0,
+                    DisplayRate: parseFloat($('#displayrate').val()) || 0,
+                    BasicRate: parseFloat($('#basicrate').val()) || 0,
+                    MinUnit: parseFloat($('#minunit').val()) || 0,
+                    MaxUnit: parseFloat($('#maxunit').val()) || 0,
+                    IsAdditional: $('#isAdditional').prop('checked'),
+                    AdditionalUnit: parseFloat($('#additionalunit').val()) || 0,
+                    AdditionalRate: parseFloat($('#additionalrate').val()) || 0,
+                    PrepaymentPercentage: parseFloat($('#prepaymentpercentage').val()) || 0,
+                    IsPrepayment: $('#isPrepayment').prop('checked'),
+                    ItemNo: parseInt($('#itemNo').val()) || 0,
+                    Remarks: $('#remarks').val()?.trim() || '',
+                    IsActive: $('#isActive').prop('checked')
+                };
 
-            console.log("Tariff Data:", tariffData);
+                console.log("Tariff Data:", tariffData);
 
-            // Validate mandatory fields
-            if (!tariffData.RateType) {
-                alert('Rate Type, Task Name, and Charge Name are required!');
-                return;
-            }
-
-            // AJAX call to save the tariff
-            $.ajax({
-                url: '@Url.Action("SaveTariff", "Tariff", new { area = "Project" })',
-                type: "POST",
-                data: JSON.stringify({ tariff: tariffData, companyId }), // Tariff data with companyId
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        // Reload the grid and reset the form on success
-                        loadTariffGrid();
-                        clearTariffForm();
-                        $('#addTariffModal').modal('hide');
-                        alert("Tariff saved successfully!");
-                    } else {
-                        // Show error message if the save was unsuccessful
-                        alert(response.message || "Failed to save tariff. Please try again.");
-                    }
-                },
-                error: function (xhr) {
-                    // Handle server/network errors
-                    alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred. Please try again later."));
+                // Validate mandatory fields
+                if (!tariffData.RateType) {
+                    alert('Rate Type, Task Name, and Charge Name are required!');
+                    return;
                 }
-            });
+
+                // AJAX call to save the tariff
+                $.ajax({
+                    url: '@Url.Action("SaveTariff", "Tariff", new { area = "Project" })',
+                    type: "POST",
+                    data: JSON.stringify({ tariff: tariffData, companyId }), // Tariff data with companyId
+                    contentType: "application/json",
+                    success: function (response) {
+                        if (response.success) {
+                            // Reload the grid and reset the form on success
+                            loadTariffGrid();
+                            clearTariffForm();
+                            $('#addTariffModal').modal('hide');
+                            alert("Tariff saved successfully!");
+                        } else {
+                            // Show error message if the save was unsuccessful
+                            alert(response.message || "Failed to save tariff. Please try again.");
+                        }
+                    },
+                    error: function (xhr) {
+                        // Handle server/network errors
+                        alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred. Please try again later."));
+                    }
+                });
+            }
         }
-
-
     </script>
 }
