@@ -64,7 +64,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                 return Json(new { success = false, message = "Invalid page number or page size." });
             }
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null)
             {
                 return Json(validationResult);
@@ -95,7 +95,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                 return Json(new { success = false, message = "Invalid Account Group ID." });
             }
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null)
             {
                 return Json(validationResult);
@@ -127,7 +127,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                 return Json(new { success = false, message = "Invalid request data." });
             }
 
-            var validationResult = ValidateCompanyAndUserId(model.CompanyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(model.CompanyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null)
             {
                 return validationResult;
@@ -170,7 +170,7 @@ namespace AEMSWEB.Areas.Master.Controllers
                 return Json(new { success = false, message = "Invalid Account Group ID." });
             }
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null)
             {
                 return validationResult;

@@ -224,6 +224,8 @@ namespace AEMSWEB.Data
         //public DbSet<Ser_JobOrderDt> Ser_JobOrderDt { get; set; }
         public DbSet<Ser_Tariff> Ser_Tariff { get; set; }
 
+        public DbSet<Ser_PortExpenses> Ser_PortExpenses { get; set; }
+
         #endregion Project
     }
 }

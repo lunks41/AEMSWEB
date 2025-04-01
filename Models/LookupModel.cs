@@ -183,7 +183,7 @@
     }
     public class OrderTypeLookupModel
     {
-        public short CompanyId { get; set; }
+        public short OrderTypeId { get; set; }
         public string? OrderTypeCode { get; set; }
         public string? OrderTypeName { get; set; }
     }

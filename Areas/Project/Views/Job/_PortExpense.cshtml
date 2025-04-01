@@ -1,5 +1,5 @@
-﻿  <!-- PortExpense Modal -->
-<div class="modal fade" id="addPortExpenseModal" tabindex="-1" aria-labelledby="addPortExpenseModalLabel" aria-hidden="true">
+﻿<!-- PortExpense Modal -->
+<div class="modal fade" id="addPortExpenseModal" tabindex="-1" aria-labelledby="addPortExpenseModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,56 +7,48 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="portExpenseForm">
-                    <input type="hidden" id="portExpense_jobOrderId" />
+                <!-- Container replacing form tag -->
+                <div id="portExpenseContainer">
+                    <input type="hidden" id="companyId" />
+                    <input type="hidden" id="jobOrderId" />
                     <input type="hidden" id="portExpenseId" />
                     <div class="row">
-                        <div class="col-md-3">
-                            <label class="form-label">Supplier <span class="text-danger">*</span></label>
-                            <select class="form-select" id="supplierId" required>
-                                <option value="">Select Supplier</option>
-                            </select>
+                        <div class="col-md-4">
+                            <label for="portExpense_cmb_supplier" class="form-label">Supplier <span class="text-danger">*</span></label>
+                            <select id="portExpense_cmb_supplier" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="portExpense_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="portExpense_cmb_charge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="portExpense_cmb_gl" class="form-label">Gl Account <span class="text-danger">*</span></label>
+                            <select id="portExpense_cmb_gl" style="width: 100%"></select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Charge <span class="text-danger">*</span></label>
-                            <select class="form-select" id="chargeId" required>
-                                <option value="">Select Charge</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select class="form-select" id="glId" required>
-                                <option value="">Select GL</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">UOM <span class="text-danger">*</span></label>
-                            <select class="form-select" id="uomId" required>
-                                <option value="">Select UOM</option>
-                            </select>
+                            <label for="portExpense_cmb_uom" class="form-label">UOM  <span class="text-danger">*</span></label>
+                            <select id="portExpense_cmb_uom" style="width: 100%"></select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Delivery Date</label>
                             <input type="date" class="form-control" id="deliverDate">
                         </div>
+                        <div class="col-md-3">
+                            <label for="portExpense_cmb_status" class="form-label">Status  <span class="text-danger">*</span></label>
+                            <select id="portExpense_cmb_status" style="width: 100%"></select>
+                        </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Description</label>
-                            <input type="text" class="form-control" id="description">
+                            <textarea class="form-control" id="portExpense_description" rows="2"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Remark</label>
-                            <input type="text" class="form-control" id="remark">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select" id="statusId" required>
-                                <option value="">Select Status</option>
-                            </select>
+                            <textarea class="form-control" id="portExpense_remarks" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -64,8 +56,7 @@
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -74,40 +65,246 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="portexpensecreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="portexpensecreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="portexpenseeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="portexpenseeditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="portexpenseeditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankPortExpenseClose" onclick="clearBankPortExpenseForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankPortExpenseEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankPortExpenseClear" onclick="clearBankPortExpenseForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankPortExpenseSave" onclick="saveBankPortExpense()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnPortExpenseClear" onclick="clearPortExpenseForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnPortExpenseSave" onclick="savePortExpense()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+
+    //$('#addPortExpenseModal').on('shown.bs.modal', function () {
+    //    refreshPortExpensesDropdown();
+    //});
+
+    function refreshPortExpensesDropdown() {
+        debugger;
+        const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const suppliercolumnsProperties = [
+            { field: 'supplierCode', title: 'Code', width: 100 },
+            { field: 'supplierName', title: 'Name', width: 200 }
+        ];
+        const supplierfilterFields = ['supplierCode', 'supplierName'];
+        BindMultiColumnComboBox(supplierUrl, "portExpense_cmb_supplier", "supplierName", "supplierId", suppliercolumnsProperties, supplierfilterFields);
+
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        BindMultiColumnComboBox(chartOfAccountUrl, "portExpense_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId=1';
+        BindComboBox(chargeUrl, "portExpense_cmb_charge", "chargeName", "chargeId");
+
+        const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        BindComboBox(uomUrl, "portExpense_cmb_uom", "uomName", "uomId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        BindComboBox(statusUrl, "portExpense_cmb_status", "orderTypeName", "orderTypeId");
+    }
+
+    function SelectedDropdown(DrpdwnName) {
+    }
+
+    function OnSelectDropdown(dataItem, DrpdwnName) {
+
+    }
+
+    function clearPortExpenseForm() {
+        debugger;
+        $('#portExpenseId').val(0);
+        $('#portExpense_description').val('');
+        $('#portExpense_remarks').val('');
+
+        $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value('');
+        $('#portExpense_cmb_charge').data('kendoComboBox').value('');
+        $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#portExpense_cmb_uom').data('kendoComboBox').value('');
+        $('#portExpense_cmb_status').data('kendoComboBox').value('');
+
+        $('#portexpensecreateBy').text('');
+        $('#portexpensecreateDate').text('');
+        $('#portexpenseeditBy').text('');
+        $('#portexpenseeditDate').text('');
+        $('#portexpenseeditVersion').text('');
+
+        $('#isActive').prop('checked', true);
+    }
+
+    function updateSelected(checkbox, jobOrderId, portExpenseId) {
+        debugger;
+        // Your logic to update selection for the debit note creation.
+        console.log("Row with Job Order ID", jobOrderId,'  id :', portExpenseId, "selected:", checkbox.checked);
+    }
+
+    function toggleSelectAll(headerCheckbox) {
+        debugger;
+        let checked = headerCheckbox.checked;
+        document.querySelectorAll('.selectDebitNote').forEach(function (checkbox) {
+            checkbox.checked = checked;
+            // Optionally, you can call updateSelected here if you need to sync selection
+        });
+    }
+
+    function openPortExpenseModal(jobOrderId, portExpenseId, mode) {
+        debugger;
+
+        if (jobOrderId > 0 && portExpenseId > 0) {
+            const $modal = $('#addPortExpenseModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetPortExpensesById", "Job", new { area = "Project" })', { jobOrderId, portExpenseId, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshPortExpensesDropdown();
+                        clearPortExpenseForm();
+                        populatePortExpenseModalFields(response.data);
+                        $('#addPortExpenseModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            refreshPortExpensesDropdown();
+            clearPortExpenseForm();
+            $('#addPortExpenseModal').modal('show');
+        }
+    }
+
+    function populatePortExpenseModalFields(data) {
+        debugger;
+        $('#portExpenseId').val(data.portExpenseId);
+        $('#jobOrderId').val(data.jobOrderId);
+        $('#companyId').val(data.companyId);
+
+        $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value(data.supplierId > 0 ? data.supplierId : '');
+        $('#portExpense_cmb_charge').data('kendoComboBox').value(data.chargeId > 0 ? data.chargeId : '');
+        $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value(data.glId > 0 ? data.glId : '');
+        $('#portExpense_cmb_uom').data('kendoComboBox').value(data.uomId > 0 ? data.uomId : '');
+        $('#portExpense_cmb_status').data('kendoComboBox').value(data.statusId > 0 ? data.statusId : '');
+
+        $('#quantity').val(data.quantity);
+        $('#portExpense_description').val(data.description);
+        $('#portExpense_remarks').val(data.remarks);
+        debugger;
+        const formattedDate = new Date(data.deliverDate).toLocaleDateString('en-CA');
+        $('#deliverDate').val(formattedDate);
+
+        $('#isActive').prop('checked', data.isActive);
+
+        $('#portexpensecreateBy').text(data.createBy || "N/A");
+        $('#portexpensecreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#portexpenseeditBy').text(data.editBy || "N/A");
+        $('#portexpenseeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+
+        $('#portexpenseeditVersion').text(data.editVersion || "0");
+
+        if (data.debitNoteId > 0) {
+            $('#portExpense_cmb_charge').data('kendoComboBox').enable(false);
+            $('#portExpense_cmb_uom').data('kendoComboBox').enable(false);
+            $('#portExpense_cmb_status').data('kendoComboBox').enable(false);
+            $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').enable(false);
+            $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').enable(false);
+
+            // Reset readonly and disabled states
+            $('#quantity, #deliverDate, #description, #portExpense_remarks').prop('readonly', true);
+            $('#isActive').prop('disabled', false);
+            $('#btnPortExpenseSave').prop('disabled', false);
+        } else {
+            $('#portExpense_cmb_charge').data('kendoComboBox').enable(true);
+            $('#portExpense_cmb_uom').data('kendoComboBox').enable(true);
+            $('#portExpense_cmb_status').data('kendoComboBox').enable(true);
+            $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').enable(true);
+            $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').enable(true);
+
+            // Reset readonly and disabled states
+            $('#quantity, #deliverDate, #description, #portExpense_remarks').prop('readonly', false);
+            $('#isActive').prop('disabled', false);
+            $('#btnPortExpenseSave').prop('disabled', false);
+        }
+        $('#btnPortExpenseClear').hide();
+    }
+
+    function deletePortExpense(jobOrderId, portExpenseId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeletePortExpenses", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, portExpenseId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadPortExpenseGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function savePortExpense() {
+        debugger;
+        let portExpenseData = {
+            PortExpenseId: parseInt($('#portExpenseId').val()) || 0,
+            JobOrderId: parseInt($('#jobOrderId').val()) || 0,
+            SupplierId: parseInt($('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value()) || 0,
+            ChargeId: parseInt($('#portExpense_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            Quantity: parseFloat($('#quantity').val()) || 0,
+            UomId: parseInt($('#portExpense_cmb_uom').data('kendoComboBox').value()) || 0,
+            DeliverDate: $('#deliverDate').val() || 0,
+            StatusId: parseInt($('#portExpense_cmb_status').data('kendoComboBox').value()) || 0,
+            Description: $('#portExpense_description').val(),
+            Remarks: $('#portExpense_remarks').val(),
+            IsActive: 1
+        };
+
+        console.log("PortExpense Data : " + portExpenseData);
+
+        $.ajax({
+            url: '@Url.Action("SavePortExpenses", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ portExpense: portExpenseData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    initializePortExpenseGrid();
+                    clearPortExpenseForm();
+                    $('#addPortExpenseModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save port expense.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
+    }
 </script>

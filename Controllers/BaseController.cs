@@ -69,12 +69,12 @@ namespace AEMSWEB.Controllers
             return null;
         }
 
-        protected JsonResult ValidateCompanyAndUserId(string companyId, out short companyIdShort, out short? parsedUserId)
+        protected JsonResult ValidateCompanyAndUserId(string companyId, out byte companyIdByte, out short? parsedUserId)
         {
-            companyIdShort = 0;
+            companyIdByte = 0;
             parsedUserId = GetParsedUserId();
 
-            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out companyIdShort))
+            if (string.IsNullOrEmpty(companyId) || !byte.TryParse(companyId, out companyIdByte))
             {
                 _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
                 return Json(new { success = false, message = "Invalid company ID." });

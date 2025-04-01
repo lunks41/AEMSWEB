@@ -28,7 +28,7 @@
                 <div class="filter-section bg-light p-3 rounded mb-4">
                     <div class="row align-items-center">
                         <div class="col-md-3">
-                            <input type="text" id="txtsearch" class="form-control form-control-sm" placeholder="Search jobs...">
+                            <input type="text" id="txtsearch" class="form-control form-control-sm" placeholder="Search jobs..." onkeydown="handleEnterKey(event)">
                         </div>
                         <div class="col-md-3">
                             <select id="customerDropdown" class="form-select form-select-sm">
@@ -105,23 +105,23 @@
 </div>
 
 @section externalhtml {
-    @await Html.PartialAsync("_AddJobOrder")
-    @await Html.PartialAsync("_JobOrder")
-    @await Html.PartialAsync("_PortExpense")
-    @await Html.PartialAsync("_ThirdPartySupply")
-    @await Html.PartialAsync("_TechniciansSurveyors")
-    @await Html.PartialAsync("_OtherService")
-    @await Html.PartialAsync("_MedicalAssistance")
-    @await Html.PartialAsync("_LaunchServices")
-    @await Html.PartialAsync("_LandingItems")
-    @await Html.PartialAsync("_FreshWater")
-    @await Html.PartialAsync("_EquipmentsUsed")
-    @await Html.PartialAsync("_CrewSignOn")
-    @await Html.PartialAsync("_CrewSignOff")
-    @await Html.PartialAsync("_CrewMiscellaneous")
-    @await Html.PartialAsync("_ConsignmentImport")
-    @await Html.PartialAsync("_ConsignmentExport")
-    @await Html.PartialAsync("_AgencyRemuneration")
+    @await Html.PartialAsync("_AddJobOrder");
+    @await Html.PartialAsync("_JobOrder");
+    @await Html.PartialAsync("_PortExpense");
+    @await Html.PartialAsync("_ThirdPartySupply");
+    @await Html.PartialAsync("_TechniciansSurveyors");
+    @await Html.PartialAsync("_OtherService");
+    @await Html.PartialAsync("_MedicalAssistance");
+    @await Html.PartialAsync("_LaunchServices");
+    @await Html.PartialAsync("_LandingItems");
+    @await Html.PartialAsync("_FreshWater");
+    @await Html.PartialAsync("_EquipmentsUsed");
+    @await Html.PartialAsync("_CrewSignOn");
+    @await Html.PartialAsync("_CrewSignOff");
+    @await Html.PartialAsync("_CrewMiscellaneous");
+    @await Html.PartialAsync("_ConsignmentImport");
+    @await Html.PartialAsync("_ConsignmentExport");
+    @await Html.PartialAsync("_AgencyRemuneration");
 }
 
 <style>
@@ -198,67 +198,8 @@
             });
         });
 
-        function loadJobOrderGrid() {
-            let searchString = $('#txtsearch').val();
-            let customerId= 0;
-            let fromDate= $('#fromDate').val();
-            let toDate= $('#toDate').val();
-            let status = currentStatus;
-
-            let url = '@Url.Action("JobOrderList", "Job", new { area = "Project" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "150px",
-                    template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
-             <i class="material-symbols-outlined text-primary">visibility</i></button>`;
-
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
-             <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
-
-                        if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
-             <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                        }
-                        return buttons;
-                    }
-                },
-                { field: "jobOrderNo", title: "Job Order No", type: "string" }, // String type
-                { field: "jobOrderDate", title: "Job Order Date", type: "date", format: "{0:yyyy-MM-dd}" }, // Date type with formatting
-                { field: "customerName", title: "Customer Name", type: "string" }, // String type
-                { field: "currencyName", title: "Currency Name", type: "string" }, // String type
-                { field: "iMONo", title: "IMO No", type: "string" }, // String type
-                { field: "totalAmt", title: "Total Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
-                { field: "totalLocalAmt", title: "Total Local Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
-                { field: "remarks", title: "Remarks", type: "string" } // String type
-            ];
-
-            let grid = $("#gridJobOrder").data("kendoGrid");
-            if (grid) {
-                grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId, fromDate, toDate, status });
-            } else {
-                initializeKendoGrid("gridJobOrder", url, { searchString, companyId, customerId, fromDate, toDate, status }, columns);
-            }
-
-        }
-
-        function openJobOrderModal(id) {
-            $('#viewJobOrderModal').modal('show');
-
-            @*const $modal = $('#viewJobOrderModal');
-            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
-            $.get('@Url.Action("GetAccountSetupById", "AccountSetup", new { area = "Master" })', { accSetupId: id, companyId })
-                .done(function (response) {
-                    if (response.success) {
-                        populateAccSetupModalFields(response.data);
-                        setAccSetupMode(mode);
-                        $('#viewJobOrderModal').modal('show');
-                    }
-                })
-                .always(() => $modal.find('.modal-overlay').remove());*@
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadJobOrderGrid();
         }
 
         // Load status counts for tabs via an AJAX call.
@@ -311,30 +252,104 @@
             return date.toISOString().split('T')[0];
         }
 
-        @*// Add this modal handling code
-        $('#addJobOrderModal').on('show.bs.modal', function (e) {
-            const modalBody = $(this).find('.modal-body');
-            modalBody.html('<div class="text-center p-3">Loading...</div>');
+        function loadJobOrderGrid() {
+            let searchString = $('#txtsearch').val();
+            let customerId= 0;
+            let fromDate= $('#fromDate').val();
+            let toDate= $('#toDate').val();
+            let status = currentStatus;
 
-            // Load partial view via AJAX
-            $.get('@Url.Action("_JobOrder", "Job")') // Update controller/action as needed
-                .done(function (data) {
-                    modalBody.html(data);
-                    executeScripts(modalBody);
+            let url = '@Url.Action("JobOrderList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
+             <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
+             <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
+             <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "jobOrderNo", title: "Job Order No", type: "string" }, // String type
+                { field: "jobOrderDate", title: "Job Order Date", type: "date", format: "{0:yyyy-MM-dd}" }, // Date type with formatting
+                { field: "customerName", title: "Customer Name", type: "string" }, // String type
+                { field: "currencyName", title: "Currency Name", type: "string" }, // String type
+                { field: "iMONo", title: "IMO No", type: "string" }, // String type
+                { field: "totalAmt", title: "Total Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
+                { field: "totalLocalAmt", title: "Total Local Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
+                { field: "remarks", title: "Remarks", type: "string" } // String type
+            ];
+
+            let grid = $("#gridJobOrder").data("kendoGrid");
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId, fromDate, toDate, status });
+            } else {
+                initializeKendoGrid("gridJobOrder", url, { searchString, companyId, customerId, fromDate, toDate, status }, columns);
+            }
+
+        }
+
+        function openJobOrderModal(id) {
+            const $modal = $('#viewJobOrderModal');
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetJobOrderById", "Job", new { area = "Project" })', { jobOrderId: id, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        debugger;
+                        populateJobOrderModalFields(response.data);
+                        $('#viewJobOrderModal').modal('show');
+                    }
                 })
-                .fail(function () {
-                    modalBody.html('<div class="text-danger">Error loading form</div>');
-                });
-        });
+                .always(() => $modal.find('.modal-overlay').remove());
+        }
 
-        function executeScripts(container) {
-            container.find('script').each(function () {
-                try {
-                    eval($(this).text());
-                } catch (error) {
-                    console.error('Error executing script:', error);
-                }
-            });
-        }*@
+        function populateJobOrderModalFields(data) {
+            debugger;
+            $('#companyId').val(data.companyId);
+            $('#jobOrderId').val(data.jobOrderId);
+            $('#jobOrderNo').text(data.jobOrderNo);
+            $('#jobOrderDate').text(data.jobOrderDate ? new Date(data.jobOrderDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "N/A");
+            $('#customerId').val(data.customerId);
+            $('#customerName').text(data.customerName);
+            $('#currencyId').val(data.currencyId);
+            $('#currencyName').text(data.currencyName);
+            $('#exhRate').text(data.exhRate);
+            $('#vesselId').val(data.vesselId);
+            $('#vesselName').text(data.vesselName);
+            $('#imoNo').text(data.imoNo);
+            $('#vesselDistance').text(data.vesselDistance);
+            $('#portId').val(data.portId);
+            $('#portName').text(data.portName);
+            $('#lastportId').val(data.lastportId);
+            $('#nextportId').val(data.nextportId);
+            $('#lastportName').text(data.lastportName);
+            $('#nextportName').text(data.nextportName);
+            $('#voyageId').val(data.voyageId);
+            $('#voyageNo').text(data.voyageNo);
+            $('#natureOfCall').text(data.NatureOfCall);
+            $('#isps').text(data.iSPS);
+            $('#eta').text(data.etaDate ? new Date(data.etaDate).toLocaleString('en-GB', { hourCycle: 'h23' }) : "N/A");
+            $('#etd').text(data.etdDate ? new Date(data.etdDate).toLocaleString('en-GB', { hourCycle: 'h23' }) : "N/A");
+
+            $('#ownersMaster').text(data.ownerName);
+            $('#ownersAgents').text(data.ownerAgent);
+            $('#mastersName').text(data.masterName);
+            $('#charters').text(data.charters);
+            $('#chartersAgents').text(data.chartersAgent);
+            $('#remarks').text(data.remarks);
+            $('#isTaxable').prop('checked', data.isTaxable);
+
+            initializePortExpenseGrid();
+        }
     </script>
 }

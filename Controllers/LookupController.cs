@@ -59,7 +59,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCurrencyLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, parsedUserId.Value);
@@ -69,7 +69,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetTaskLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetTaskLookupAsync(companyIdShort, parsedUserId.Value);
@@ -79,7 +79,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetChargeLookup(string companyId, short taskId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetChargeLookupAsync(companyIdShort, parsedUserId.Value, taskId);
@@ -89,7 +89,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetBankLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetBankLookupAsync(companyIdShort, parsedUserId.Value);
@@ -99,7 +99,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCreditTermLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCreditTermLookupAsync(companyIdShort, parsedUserId.Value);
@@ -109,7 +109,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetChartOfAccountLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetChartOfAccountLookupAsync(companyIdShort, parsedUserId.Value);
@@ -119,7 +119,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetAccountSetupCategoryLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetAccountSetupCategoryLookupAsync(companyIdShort, parsedUserId.Value);
@@ -129,7 +129,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetAccountSetupLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetAccountSetupLookupAsync(companyIdShort, parsedUserId.Value);
@@ -139,7 +139,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCountryLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCountryLookupAsync(companyIdShort, parsedUserId.Value);
@@ -149,7 +149,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetVesselDynamic(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, parsedUserId.Value);
@@ -159,7 +159,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetVesselLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetVesselLookupAsync(companyIdShort, parsedUserId.Value);
@@ -169,7 +169,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetBargeLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetBargeLookupAsync(companyIdShort, parsedUserId.Value);
@@ -179,7 +179,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCOACategory1Lookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCOACategory1LookupAsync(companyIdShort, parsedUserId.Value);
@@ -189,7 +189,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCOACategory2Lookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCOACategory2LookupAsync(companyIdShort, parsedUserId.Value);
@@ -199,7 +199,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCOACategory3Lookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCOACategory3LookupAsync(companyIdShort, parsedUserId.Value);
@@ -209,7 +209,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetAccountTypeLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetAccountTypeLookupAsync(companyIdShort, parsedUserId.Value);
@@ -219,7 +219,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetAccountGroupLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetAccountGroupLookupAsync(companyIdShort, parsedUserId.Value);
@@ -229,7 +229,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetOrderTypeLookup(string companyId, Int16 categoryId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetOrderTypeLookupAsync(companyIdShort, parsedUserId.Value, categoryId);
@@ -239,7 +239,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetPortRegionLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetPortRegionLookupAsync(companyIdShort, parsedUserId.Value);
@@ -249,7 +249,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetOrderTypeCategoryLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetOrderTypeCategoryLookupAsync(companyIdShort, parsedUserId.Value);
@@ -259,7 +259,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetDepartmentLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetDepartmentLookupAsync(companyIdShort, parsedUserId.Value);
@@ -269,7 +269,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCustomerLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCustomerLookupAsync(companyIdShort, parsedUserId.Value);
@@ -293,7 +293,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetGstCategoryLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetGstCategoryLookupAsync(companyIdShort, parsedUserId.Value);
@@ -303,7 +303,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetTaxCategoryLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetTaxCategoryLookupAsync(companyIdShort, parsedUserId.Value);
@@ -313,7 +313,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetProductLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetProductLookupAsync(companyIdShort, parsedUserId.Value);
@@ -323,7 +323,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetGstLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetGstLookupAsync(companyIdShort, parsedUserId.Value);
@@ -333,7 +333,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetUomLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetUomLookupAsync(companyIdShort, parsedUserId.Value);
@@ -343,7 +343,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetPortLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetPortLookupAsync(companyIdShort, parsedUserId.Value);
@@ -353,7 +353,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetVoyageLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetVoyageLookupAsync(companyIdShort, parsedUserId.Value);
@@ -363,7 +363,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetEmployeeLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetEmployeeLookupAsync(companyIdShort, parsedUserId.Value);
@@ -373,7 +373,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetTaxLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetTaxLookupAsync(companyIdShort, parsedUserId.Value);
@@ -383,7 +383,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCustomerAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
@@ -393,7 +393,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCustomerContactLookupFin(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCustomerContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
@@ -403,7 +403,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetSupplierAddressLookupFin(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetSupplierAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
@@ -413,7 +413,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetSupplierContactLookupFin(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetSupplierContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
@@ -428,7 +428,7 @@ namespace AEMSWEB.Controllers
             //    return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
             //}
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetSupplierLookupAsync(companyIdShort, parsedUserId.Value);
@@ -438,7 +438,7 @@ namespace AEMSWEB.Controllers
         [HttpGet]
         public async Task<JsonResult> GetPaymentTypeLookup(string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetPaymentTypeLookupAsync(companyIdShort, parsedUserId.Value);

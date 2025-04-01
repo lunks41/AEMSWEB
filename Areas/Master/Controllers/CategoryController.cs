@@ -61,7 +61,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -83,7 +83,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (categoryId <= 0)
                 return Json(new { success = false, message = "Invalid Category ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -106,7 +106,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
 
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -141,7 +141,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (categoryId <= 0)
                 return Json(new { success = false, message = "Invalid Category ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
@@ -172,7 +172,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -194,7 +194,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (subCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid SubCategory ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -217,7 +217,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
 
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -252,7 +252,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (subCategoryId <= 0)
                 return Json(new { success = false, message = "Invalid SubCategory ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,

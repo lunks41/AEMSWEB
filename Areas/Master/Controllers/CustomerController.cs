@@ -61,7 +61,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -83,7 +83,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (customerId <= 0)
                 return Json(new { success = false, message = "Invalid Customer ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -106,7 +106,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
 
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -151,7 +151,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int CustomerId, string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
@@ -179,7 +179,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         [HttpGet]
         public async Task<JsonResult> ListContacts(int CustomerId, string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -201,7 +201,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (contactId <= 0)
                 return Json(new { success = false, message = "Invalid Contact ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -224,7 +224,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
 
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -267,7 +267,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (contactId <= 0)
                 return Json(new { success = false, message = "Invalid Contact ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
@@ -295,7 +295,7 @@ namespace AEMSWEB.Areas.Master.Controllers
         [HttpGet]
         public async Task<JsonResult> ListAddresses(int CustomerId, string companyId)
         {
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -317,7 +317,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (addressId <= 0)
                 return Json(new { success = false, message = "Invalid Address ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId.ToString(), out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId.ToString(), out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -340,7 +340,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
 
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
@@ -386,7 +386,7 @@ namespace AEMSWEB.Areas.Master.Controllers
             if (contactId <= 0)
                 return Json(new { success = false, message = "Invalid Address ID" });
 
-            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             var permissions = await HasPermission(companyIdShort, parsedUserId.Value,
