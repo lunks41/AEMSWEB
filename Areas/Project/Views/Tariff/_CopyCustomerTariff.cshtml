@@ -1,0 +1,144 @@
+﻿<div class="modal fade" id="copyRateModal" tabindex="-1" aria-labelledby="copyRateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="copyRateModalLabel">Copy Rates from Customer to Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="copyRateForm">
+                    <!-- Source Section -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">Source Details</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="fromCustomer" class="form-label">From Customer <span class="text-danger">*</span></label>
+                                    <select id="fromCustomer" style="width: 100%"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fromPort" class="form-label">From Port <span class="text-danger">*</span></label>
+                                    <select id="fromPort" style="width: 100%"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fromTask" class="form-label">From Task <span class="text-danger">*</span></label>
+                                    <select id="fromTask" style="width: 100%"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Destination Section -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">Destination Details</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="toCustomer" class="form-label">To Customer <span class="text-danger">*</span></label>
+                                    <select id="toCustomer" style="width: 100%"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="toPort" class="form-label">To Port <span class="text-danger">*</span></label>
+                                    <select id="toPort" style="width: 100%"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="toTask" class="form-label">To Task <span class="text-danger">*</span></label>
+                                    <select id="toTask" style="width: 100%"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Options Section -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">Options</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="overwriteExisting">
+                                        <label class="form-check-label" for="overwriteExisting">Overwrite Existing Rates</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="deleteExisting">
+                                        <label class="form-check-label" for="deleteExisting">Delete Existing Rates</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnCopyRates" onclick="copyRates()">Copy Rates</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const companyId = getUrlParameter('companyId') || 1;
+
+    // Bind ComboBoxes for Source and Destination
+    const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+    const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+    const taskUrl = '@Url.Action("GetTaskLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+
+    BindComboBox(customerUrl, "fromCustomer", "customerName", "customerId");
+    BindComboBox(portUrl, "fromPort", "portName", "portId");
+    BindComboBox(taskUrl, "fromTask", "taskName", "taskId");
+
+    BindComboBox(customerUrl, "toCustomer", "customerName", "customerId");
+    BindComboBox(portUrl, "toPort", "portName", "portId");
+    BindComboBox(taskUrl, "toTask", "taskName", "taskId");
+});
+
+function copyRates() {
+    const fromCustomerId = getComboBoxValue('#fromCustomer');
+    const fromPortId = getComboBoxValue('#fromPort');
+    const fromTaskId = getComboBoxValue('#fromTask');
+
+    const toCustomerId = getComboBoxValue('#toCustomer');
+    const toPortId = getComboBoxValue('#toPort');
+    const toTaskId = getComboBoxValue('#toTask');
+
+    const overwriteExisting = document.getElementById('overwriteExisting').checked;
+    const deleteExisting = document.getElementById('deleteExisting').checked;
+
+    if (!fromCustomerId || !fromPortId || !fromTaskId || !toCustomerId || !toPortId || !toTaskId) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("CopyRates", "Tariff", new { area = "Project" })',
+        type: 'POST',
+        data: {
+            fromCustomerId,
+            fromPortId,
+            fromTaskId,
+            toCustomerId,
+            toPortId,
+            toTaskId,
+            overwriteExisting,
+            deleteExisting
+        },
+        success: function (response) {
+            if (response.success) {
+                alert("Rates copied successfully!");
+                $('#copyRateModal').modal('hide');
+                loadTariffGrid(); // Refresh the grid after copying
+            } else {
+                alert(response.message || "Failed to copy rates. Please try again.");
+            }
+        },
+        error: function () {
+            alert("An error occurred while copying rates. Please try again later.");
+        }
+    });
+}
+</script>

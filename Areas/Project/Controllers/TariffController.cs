@@ -538,5 +538,44 @@ namespace AEMSWEB.Areas.Project.Controllers
         }
 
         #endregion CRUD
+
+        [HttpPost]
+        public IActionResult CopyRates(string companyId, int fromCustomerId, int fromPortId, int fromTaskId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+                return validationResult;
+
+            try
+            {
+                var sourceRates = _tariffService.CopyCustomerTariffAsync(companyIdShort, parsedUserId.Value, fromCustomerId, fromPortId, fromTaskId, toCustomerId, toPortId, toTaskId,
+                                  overwriteExisting, deleteExisting);
+
+                return Json(new { success = true, message = "Rates copied successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CopyCompanyRates(string companyId, int fromCompanyId, int fromCustomerId, int fromPortId, int fromTaskId, int toCompanyId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out short companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+                return validationResult;
+
+            try
+            {
+                var sourceRates = _tariffService.CopyCompanyToCustomerTariffAsync(companyIdShort, parsedUserId.Value, fromCompanyId, fromCustomerId, fromPortId, fromTaskId, toCompanyId, toCustomerId, toPortId, toTaskId, overwriteExisting, deleteExisting);
+
+                return Json(new { success = true, message = "Rates copied successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 }

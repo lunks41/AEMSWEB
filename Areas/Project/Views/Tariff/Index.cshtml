@@ -59,8 +59,8 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Tariff Management</h4>
                     <div>
-                        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addCopyTariffCustomer2CustomerModal">Copy Tariff Cust2Cust</button>
-                        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addCopyTariffCompany2CustomerModal">Copy Tariff Company2Cust</button>
+                        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#copyRateModal">Copy Tariff Cust2Cust</button>
+                        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#copyRateCompany2CustomerModal">Copy Tariff Company2Cust</button>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTariffModal">Add Tariff</button>
                     </div>
                 </div>
@@ -304,6 +304,8 @@
 @section externalhtml {
     @await Html.PartialAsync("_Tariff");
     @await Html.PartialAsync("_VisaTariff");
+    @await Html.PartialAsync("_CopyCompanyTariff");
+    @await Html.PartialAsync("_CopyCustomerTariff");
 }
 
 @section Scripts {
@@ -862,6 +864,56 @@
                     }
                 });
             }
+        }
+
+        function clearTariffForm() {
+            // Reset basic form elements
+            $('#tarifform')[0].reset();
+
+            // Clear hidden ID field
+            $('#tariffId').val(0);
+
+            // Reset Kendo ComboBoxes
+            $('#tariff_cmb_task').data('kendoComboBox').value('');
+            $('#tariff_cmb_chagre').data('kendoComboBox').value('');
+            $('#tariff_cmb_uom').data('kendoComboBox').value('');
+            $('#tariff_cmb_type').data('kendoComboBox').value('');
+            $('#tariff_cmb_fromplace').data('kendoComboBox').value('');
+            $('#tariff_cmb_toplace').data('kendoComboBox').value('');
+
+            // Clear numeric inputs
+            $('#displayrate').val('0.000');
+            $('#basicrate').val('0.000');
+            $('#minunit').val('0.000');
+            $('#maxunit').val('0.000');
+            $('#additionalunit').val('0.000');
+            $('#additionalrate').val('0.000');
+            $('#prepaymentpercentage').val('0.000');
+
+            // Reset checkboxes
+            $('#isAdditional').prop('checked', false);
+            $('#isprepayment').prop('checked', false);
+            $('#isActive').prop('checked', true);
+
+            // Clear remarks
+            $('#remarks').val('');
+
+            // Reset audit fields
+            $('#tariffcreateBy').text('');
+            $('#tariffcreateDate').text('');
+            $('#tariffeditBy').text('');
+            $('#tariffeditDate').text('');
+            $('#tariffeditVersion').text('');
+
+            // Enable all fields and buttons
+            $('.form-control').prop('readonly', false);
+            $('#isActive').prop('disabled', false);
+            $('#btnTariffSave, #btnTariffClear').show().prop('disabled', false);
+            $('#btnTariffEdit').hide();
+
+            // Reset readonly states for additional fields
+            $('#additionalunit, #additionalrate').prop('readonly', true);
+            $('#prepaymentunit, #prepaymentrate').prop('readonly', false);
         }
     </script>
 }

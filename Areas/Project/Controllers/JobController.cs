@@ -50,6 +50,8 @@ namespace AEMSWEB.Areas.Project.Controllers
             return View();
         }
 
+        #region Job Order
+
         [HttpGet]
         public async Task<JsonResult> JobOrderList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, string fromDate, string toDate, string status)
         {
@@ -145,5 +147,13 @@ namespace AEMSWEB.Areas.Project.Controllers
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #endregion
+
+        #region 
+
+        #endregion
+
+
     }
 }

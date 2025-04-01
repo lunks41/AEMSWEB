@@ -993,5 +993,23 @@ namespace AEMSWEB.Areas.Project.Data.Services
 
             return new SqlResponse();
         }
+
+        public async Task<SqlResponse> CopyCustomerTariffAsync(short CompanyId, short UserId, int fromCustomerId, int fromPortId, int fromTaskId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
+        {
+            return new SqlResponse
+            {
+                Result = -1,
+                Message = ""
+            };
+        }
+
+        public async Task<SqlResponse> CopyCompanyToCustomerTariffAsync(short CompanyId, short UserId, int fromCompanyId, int fromCustomerId, int fromPortId, int fromTaskId, int toCompanyId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
+        {
+            return new SqlResponse
+            {
+                Result = -1,
+                Message = ""
+            };
+        }
     }
 }
