@@ -38,6 +38,12 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("PermissionPolicy", policy =>
         policy.Requirements.Add(new PermissionRequirement(0, 0, "")));
+
+    options.AddPolicy("HRPolicy", policy =>
+       policy.RequireRole("HR", "Admin"));
+
+    options.AddPolicy("ManagerPolicy", policy =>
+        policy.RequireRole("Manager", "HR", "Admin"));
 });
 
 builder.Services.RegisterService(builder.Configuration);

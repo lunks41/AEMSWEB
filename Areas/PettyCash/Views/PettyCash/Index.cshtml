@@ -1,0 +1,63 @@
+﻿@using AEMSWEB.Areas.PettyCash.Models;
+
+@model IEnumerable<AEMSWEB.Areas.PettyCash.Models.PettyCashEntry>
+
+<h2>Petty Cash Entries</h2>
+
+<!--<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TransactionDate.ToString("d")</td>
+                <td>@item.Description</td>
+                <td>@item.Amount.ToString("C")</td>
+                <td>@item.Category</td>
+                <td>
+                    <span class="badge GetStatusBadge(item.Status)">
+                        @item.Status
+                    </span>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">View</a>
+                    @if (User.IsInRole("Manager") && item.Status == ApprovalStatus.Pending)
+                    {
+                        <a asp-action="Approve" asp-route-id="@item.Id" class="btn btn-success">Approve</a>
+                        <button type="button" class="btn btn-danger"
+                                data-toggle="modal" data-target="#rejectModal"
+                                data-id="@item.Id">
+                            Reject
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Reject Modal -->
+<!--<div class="modal fade" id="rejectModal">-->
+    <!-- Modal content with form -->
+<!--</div>-->
+
+@*@functions {
+    string GetStatusBadge(ApprovalStatus status)
+    {
+        return status switch
+        {
+            ApprovalStatus.Approved => "badge-success",
+            ApprovalStatus.Rejected => "badge-danger",
+            _ => "badge-warning"
+        };
+    }
+}*@-->

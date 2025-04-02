@@ -1,15 +1,47 @@
-# ASP.NET Core MVC App with Role-Based Authentication and Authorization
-This repository contains an ASP.NET Core MVC application built with a robust role-based authentication and authorization system. The application is designed to demonstrate secure user and access control, making it a perfect starting point for scalable web applications.
+## Project Overview
+This project is a modular, multi-branch management system designed to streamline operations across distributed branches while maintaining data integrity and role-based access control. It empowers organizations to manage customers, suppliers, projects, accounts, HRMS, and administrative tasks efficiently, with branch-specific data isolation and user permissions.
 
-## Features
-* User Authentication: <br />
-  Secure registration and login functionality using ASP.NET Identity. <br />
-* Role-Based Authorization: <br />
-  Admin and User roles implemented for access control. <br />
-  Restrict access to pages based on user roles. <br />
-* Navigation and Error Handling:
-  User-friendly navigation with role-specific menus. <br />
-  Redirection and error handling for unauthorized access. <br />
-* Scalable Architecture:
-  Clean and modular code structure for easy customization. <br />
-  Implements best practices in ASP.NET Core MVC development. <br />
+### **Key Features**  
+
+#### **1. Authentication & Access Control**  
+- **Branch-Wise Login**: Users log in to a specific branch, ensuring access to branch-specific data.  
+- **Role-Based Access**: Permissions are dynamically assigned based on user roles (e.g., Admin, Manager, Employee) within their branch.  
+
+#### **2. Dashboard & Navigation**  
+- **Branch Selection**: Post-login, users can switch between authorized branches via a centralized dashboard.  
+- **Multi-Branch Accessibility**: Open and manage multiple branches simultaneously (e.g., in separate tabs/windows) for seamless multitasking.  
+
+#### **3. Data Management**  
+- **BranchID-Driven Data Isolation**: All data (e.g., transactions, records) is tagged and filtered using a unique `branchId` to prevent cross-branch data leaks.  
+
+#### **4. Modules & Features**  
+**Master Module**:  
+- Manage core entities:  
+  - Customers, Suppliers, Banks, Accounts, and other foundational data.  
+
+**Project Module**:  
+- **Job Handling**: Track project workflows, assignments, and timelines.  
+- **Customer-Specific Tariffs**: Define pricing structures per customer.  
+- **Quotations**: Generate and manage quotes for services/products.  
+
+**Account Module**:  
+- Handle financial transactions, invoicing, and expense tracking.  
+
+**HRMS Module**:  
+- Employee records, attendance, payroll, and performance management.  
+
+**Setting Module**:  
+- Customize configurations (e.g., notifications, themes, regional settings).  
+
+**Admin Module**:  
+- **Document Number Maintenance**: Define numbering formats for invoices, orders, etc.  
+- **User & Role Management**: Create roles, assign permissions, and manage user profiles.  
+- **Audit Logs**: Track system changes and user activities for compliance.  
+
+#### **5. Security & Compliance**  
+- Role-based permissions ensure users access only authorized data.  
+- Data encryption and audit trails for sensitive operations.  
+
+---
+
+This structure ensures scalability, security, and ease of use for multi-branch organizations, with granular control over user roles and branch-specific operations.

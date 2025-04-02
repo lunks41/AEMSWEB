@@ -16,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
@@ -29,10 +30,8 @@
     <Folder Include="Areas\Account\Controllers\AP\" />
     <Folder Include="Areas\Account\Controllers\CB\" />
     <Folder Include="Areas\Account\Controllers\GL\" />
-    <Folder Include="Areas\HRM\Controllers\" />
     <Folder Include="Areas\HRM\Data\" />
-    <Folder Include="Areas\HRM\Models\" />
-    <Folder Include="Areas\HRM\Views\" />
+    <Folder Include="Areas\PettyCash\Data\" />
     <Folder Include="Logs\" />
     <Folder Include="Reports\" />
   </ItemGroup>

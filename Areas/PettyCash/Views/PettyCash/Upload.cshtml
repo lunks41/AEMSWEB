@@ -1,0 +1,15 @@
+﻿@model IFormFile
+
+<h2>Upload Excel File</h2>
+
+<div class="alert alert-info">
+    Download template: <a asp-action="DownloadTemplate">petty-cash-template.xlsx</a>
+</div>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Select Excel File:</label>
+        <input type="file" name="file" class="form-control" accept=".xlsx" />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
