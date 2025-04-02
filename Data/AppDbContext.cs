@@ -1,4 +1,5 @@
-﻿using AEMSWEB.Entities.Accounts.AP;
+﻿using AEMSWEB.Areas.HRM.Models;
+using AEMSWEB.Entities.Accounts.AP;
 using AEMSWEB.Entities.Accounts.AR;
 using AEMSWEB.Entities.Accounts.CB;
 using AEMSWEB.Entities.Accounts.GL;
@@ -227,5 +228,16 @@ namespace AEMSWEB.Data
         public DbSet<Ser_PortExpenses> Ser_PortExpenses { get; set; }
 
         #endregion Project
+
+        #region HRMS
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Position> Positions { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<LeaveType> LeaveTypes { get; set; }
+        public DbSet<Leave> Leaves { get; set; }
+        public DbSet<LeaveBalance> LeaveBalances { get; set; }
+        public DbSet<Payroll> Payrolls { get; set; }
+        #endregion
     }
 }

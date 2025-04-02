@@ -23,7 +23,7 @@ namespace AEMSWEB.Areas.HRM.Models
         public string ApproverComments { get; set; }
     }
 
-    public enum LeaveType
+    public enum LeaveTypeV1
     {
         Vacation,
         Sick,

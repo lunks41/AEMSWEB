@@ -1,0 +1,40 @@
+﻿@model AEMSWEB.Areas.HRM.Models.DashboardViewModel
+<h2>Welcome, @Model.Employee.FirstName @Model.Employee.LastName</h2>
+
+<h3>Your Details</h3>
+<p>Department: @Model.Employee.Department.Name</p>
+<p>Position: @Model.Employee.Position.Title</p>
+
+<h3>Recent Attendance</h3>
+<table class="table">
+    <tr><th>Date</th><th>In Time</th><th>Out Time</th><th>Status</th></tr>
+    @foreach (var attendance in Model.Attendances)
+    {
+        <tr>
+            <td>@attendance.Date.ToShortDateString()</td>
+            <td>@attendance.InTime</td>
+            <td>@attendance.OutTime</td>
+            <td>@attendance.Status</td>
+        </tr>
+    }
+</table>
+
+<h3>Leave Balances</h3>
+<ul>
+    @foreach (var balance in Model.LeaveBalances)
+    {
+        <li>@balance.LeaveType.Name: @balance.Balance days</li>
+    }
+</ul>
+
+<h3>Payroll History</h3>
+<table class="table">
+    <tr><th>Period</th><th>Net Salary</th></tr>
+    @foreach (var payroll in Model.Payrolls)
+    {
+        <tr>
+            <td>@payroll.PayPeriodStart.ToShortDateString() - @payroll.PayPeriodEnd.ToShortDateString()</td>
+            <td>@payroll.NetSalary</td>
+        </tr>
+    }
+</table>

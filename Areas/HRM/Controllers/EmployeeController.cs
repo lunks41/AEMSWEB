@@ -2,6 +2,8 @@
 using AEMSWEB.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AEMSWEB.Areas.HRM.Controllers
 {
@@ -15,36 +17,33 @@ namespace AEMSWEB.Areas.HRM.Controllers
             _context = context;
         }
 
-        // GET: Employee
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            //return View(await _context.Employees
-            //    .Include(e => e.Department)
-            //    .ToListAsync());
-
-            return View();
+            var employees = _context.Employees.Include(e => e.Department).Include(e => e.Position).ToList();
+            return View(employees);
         }
 
-        // GET: Employee/Create
         public IActionResult Create()
         {
-            //ViewBag.Departments = _context.Departments.ToList();
+            ViewBag.Departments = new SelectList(_context.Departments, "Id", "Name");
+            ViewBag.Positions = new SelectList(_context.Positions, "Id", "Title");
             return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Employee employee)
+        public IActionResult Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Employees.Add(employee);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
+            ViewBag.Departments = new SelectList(_context.Departments, "Id", "Name");
+            ViewBag.Positions = new SelectList(_context.Positions, "Id", "Title");
             return View(employee);
         }
 
-        // Add Edit, Details, Delete actions
+        // Add Edit and Delete actions similarly
     }
 }

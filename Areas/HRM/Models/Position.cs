@@ -2,10 +2,10 @@
 
 namespace AEMSWEB.Areas.HRM.Models
 {
-    public class Department
+    public class Position
     {
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string Title { get; set; }
     }
 }
