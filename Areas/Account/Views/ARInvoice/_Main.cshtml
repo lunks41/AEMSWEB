@@ -106,16 +106,16 @@
                             <input type="text" class="form-control" id="totalAftGstLocalAmt" readonly>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="remarks" class="form-label">Remarks</label>
-                            <textarea class="form-control" id="remarks" rows="2"></textarea>
+                            <textarea class="form-control" id="remarks" rows="1"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Header Section -->
+        <!-- Details Section -->
         <div class="col-12">
             <!-- Invoice Header Section -->
             <div class="card border-0 shadow-sm mb-4">
@@ -124,47 +124,55 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Item No</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
                         <div class="col-md-2">
                             <label for="customer" class="form-label">Product <label class="text-danger">*</label></label>
                             <select class="form-select" id="customer" required>
-                                <option value="">Select Customer</option>
+                                <option value="">Select Product</option>
                                 <!-- Customer options -->
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="bank" class="form-label">GlCode</label>
                             <select class="form-select" id="bank">
-                                <option value="">Select Bank</option>
+                                <option value="">Select GlCode</option>
                                 <!-- Bank options -->
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="creditTerm" class="form-label">Task</label>
                             <select class="form-select" id="bank">
-                                <option value="">Select Bank</option>
+                                <option value="">Select Task</option>
                                 <!-- Bank options -->
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="creditTerm" class="form-label">Details</label>
                             <select class="form-select" id="bank">
-                                <option value="">Select Bank</option>
+                                <option value="">Select Details</option>
                                 <!-- Bank options -->
                             </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="creditTerm" class="form-label">Department</label>
+                            <select class="form-select" id="bank">
+                                <option value="">Select Department</option>
+                                <!-- Bank options -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Qty</label>
+                            <input type="number" class="form-control" id="refNo">
                         </div>
                         <div class="col-md-2">
                             <label for="creditTerm" class="form-label">UOM</label>
                             <select class="form-select" id="bank">
-                                <option value="">Select Bank</option>
+                                <option value="">Select UOM</option>
                                 <!-- Bank options -->
                             </select>
-                        </div>
-
-                        <!-- Row 2 -->
-                        <div class="col-md-2">
-                            <label for="refNo" class="form-label">Qty</label>
-                            <input type="number" class="form-control" id="refNo">
                         </div>
                         <div class="col-md-2">
                             <label for="refNo" class="form-label">Unit Price</label>
@@ -177,9 +185,8 @@
                         <div class="col-md-2">
                             <label for="currency" class="form-label">Gst %</label>
                             <select class="form-select" id="currency">
-                                <option value="USD">USD</option>
-                                <option value="SGD">SGD</option>
-                                <!-- More currencies -->
+                                <option value="USD">0%</option>
+                                <option value="SGD">5%</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -190,64 +197,26 @@
                             <label for="refNo" class="form-label">Tot Amt</label>
                             <input type="number" class="form-control" id="refNo">
                         </div>
-                        <div class="col-md-2">
-                            <label for="refNo" class="form-label">Base Amt</label>
-                            <input type="number" class="form-control" id="refNo">
+                        <div class="col-md-4">
+                            <label for="remarks" class="form-label">Remarks</label>
+                            <textarea class="form-control" id="remarks" rows="1"></textarea>
                         </div>
-                        <div class="col-md-2">
-                            <label for="refNo" class="form-label">bsae Gst</label>
-                            <input type="number" class="form-control" id="refNo">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="refNo" class="form-label">Gst Amt</label>
-                            <input type="number" class="form-control" id="refNo">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="refNo" class="form-label">Base Amt</label>
-                            <input type="number" class="form-control" id="refNo">
-                        </div>
-
-                    </div>
-                    <div class="col-md-6">
-                        <label for="remarks" class="form-label">Remarks</label>
-                        <textarea class="form-control" id="remarks" rows="2"></textarea>
-                    </div>
-
-                    <!-- Totals Section -->
-                    <div class="col-md-2">
-                        <div class="input-group">
-                            <label class="form-label">Total Amount</label>
-                            <input type="text" class="form-control" id="totalAmt" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="input-group">
-                            <label class="form-label">GST Amount</label>
-                            <input type="text" class="form-control" id="gstAmt" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="input-group">
-                            <label class="form-label">Total After GST</label>
-                            <input type="text" class="form-control" id="totalAftGstAmt" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="input-group">
-                            <label class="form-label">Total Local Amount</label>
-                            <input type="text" class="form-control" id="totalLocalAmt" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="input-group">
-                            <label class="form-label">GST Local Amount</label>
-                            <input type="text" class="form-control" id="gstLocalAmt" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="input-group">
-                            <label class="form-label">Total After GST Local</label>
-                            <input type="text" class="form-control" id="totalAftGstLocalAmt" readonly>
+                        <!-- Buttons Container -->
+                        <div class="col-md-auto ms-auto">
+                            <div class="d-flex justify-content-end align-items-center gap-2 h-100">
+                                <button type="button" class="btn btn-primary" id="btnSave">
+                                    <span class="material-symbols-outlined me-1">save</span>
+                                    Save
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="btnClear">
+                                    <span class="material-symbols-outlined me-1">clear</span>
+                                    Clear
+                                </button>
+                                <button type="button" class="btn btn-info" id="btnRepeat">
+                                    <span class="material-symbols-outlined me-1">repeat</span>
+                                    Repeat
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -255,5 +224,9 @@
         </div>
     </div>
 
-    <div id="invoicedetailsgrid"></div>
+    <div id="grid_invoicedetails"></div>
 </div>
+
+<script>
+    
+</script>

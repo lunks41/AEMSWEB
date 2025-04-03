@@ -3,80 +3,83 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-@{
-    <style>
-
-        /* Ensure content fits the modal width */
-        #addARInvoiceModal .modal-content {
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #addARInvoiceModal .modal-body {
-            flex: 1;
-            overflow-y: auto;
-        }
-    </style>
-}
-
 <div class="row">
     <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
+        <div class="card p-2 w-100">
+            <div class="card-body p-2">
                 <h3>AR Invoice</h3>
-
-                <!-- Action Row -->
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                    <form id="arInvoiceForm" class="needs-validation" novalidate>
-                        <input type="hidden" id="invoiceId">
-
-                        <!-- Pills Navigation -->
-                        <ul class="nav nav-pills mb-4 border-bottom pb-2" id="invoicePills" role="tablist">
+                <!-- Pills Navigation -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-auto">
+                        <ul class="nav nav-pills" id="invoicePills" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="main-pill" data-bs-toggle="pill" data-bs-target="#main" type="button" role="tab">
-                                    <i class="fas fa-file-invoice me-2"></i>Main
+                                    <span class="material-symbols-outlined" >inventory_2</span> Main
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="other-pill" data-bs-toggle="pill" data-bs-target="#other" type="button" role="tab">
-                                    <i class="fas fa-info-circle me-2"></i>Other
+                                    <span class="material-symbols-outlined" >contact_emergency</span> Other
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="history-pill" data-bs-toggle="pill" data-bs-target="#history" type="button" role="tab">
-                                    <i class="fas fa-history me-2"></i>History
+                                    <span class="material-symbols-outlined" >manage_history</span> History
                                 </button>
                             </li>
                         </ul>
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary" id="btnList">List</button>
-                                <button type="button" class="btn btn-success" id="btnSave">Save</button>
-                                <button type="button" class="btn btn-warning" id="btnReset">Reset</button>
-                                <button type="button" class="btn btn-info" id="btnPrint">Print</button>
-                                <button type="button" class="btn btn-secondary" id="btnClone">Clone</button>
-                                <button type="button" class="btn btn-danger" id="btnDelete">Delete</button>
-                                <button type="button" class="btn btn-dark" id="btnUnpost">Unpost</button>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <div class="d-flex align-items-center gap-3">
+                            <!-- Search Box -->
+                            <div class="flex-grow-1" style="min-width: 200px;">
+                                <input type="search"
+                                       class="form-control"
+                                       placeholder="Search invoices..."
+                                       aria-label="Search">
+                            </div>
+                            <div class="btn-group gap-2">
+
+                                <button type="button" class="btn btn-primary" id="btnList" title="List">
+                                    <span class="material-symbols-outlined" >list</span>
+                                </button>
+                                <button type="button" class="btn btn-success" id="btnSave" title="Save">
+                                    <span class="material-symbols-outlined" >save</span>
+                                </button>
+                                <button type="button" class="btn btn-warning" id="btnReset" title="Reset">
+                                    <span class="material-symbols-outlined" >refresh</span>
+                                </button>
+                                <button type="button" class="btn btn-info" id="btnPrint" title="Print">
+                                    <span class="material-symbols-outlined" >print</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="btnClone" title="Clone">
+                                    <span class="material-symbols-outlined" >content_copy</span>
+                                </button>
+                                <button type="button" class="btn btn-danger" id="btnDelete" title="Delete">
+                                    <span class="material-symbols-outlined" >delete</span>
+                                </button>
+                                <button type="button" class="btn btn-dark" id="btnUnpost" title="Unpost">
+                                    <span class="material-symbols-outlined" >undo</span>
+                                </button>
                             </div>
                         </div>
-
-                        <!-- Tab Contents -->
-                        <div class="tab-content">
-                            @await Html.PartialAsync("_Main")
-                            @await Html.PartialAsync("_Other")
-                            @await Html.PartialAsync("_History")
-                        </div>
-
-                    </form>
+                    </div>
                 </div>
+                <!-- Tab Contents -->
+                <div class="tab-content w-100">
+                    @await Html.PartialAsync("_Main")
+                    @await Html.PartialAsync("_Other")
+                    @await Html.PartialAsync("_History")
+                </div>
+
+
             </div>
         </div>
     </div>
 </div>
 
 @section externalhtml {
-    <div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal fade" id="saveconfirmationModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -98,18 +101,27 @@
     <script>
         // Confirmation handling
         let pendingAction = null;
+        let companyId = 0;
+        let currentStatus = 'all';
+        let permissions = {}; 
+
+        $(document).ready(function () {
+            debugger;
+            companyId = getUrlParameter('companyId') || 1;
+            invoicedetailsgrid();
+        });
 
         function showConfirmation(message, callback) {
             $('#confirmationMessage').text(message);
             pendingAction = callback;
-            $('#confirmationModal').modal('show');
+            $('#saveconfirmationModal').modal('show');
         }
 
         $('#confirmYes').click(function () {
             if (typeof pendingAction === 'function') {
                 pendingAction();
             }
-            $('#confirmationModal').modal('hide');
+            $('#saveconfirmationModal').modal('hide');
         });
 
         // Save button handler
@@ -132,5 +144,51 @@
         $('#btnReset').click(function () {
             $('#arInvoiceForm')[0].reset();
         });
+
+        function invoicedetailsgrid() {
+            $("#grid_invoicedetails").kendoGrid({
+                dataSource: {
+                    data: [], // Your data source here
+                    schema: {
+                        model: {
+                            fields: {
+                                product: { type: "string" },
+                                glCode: { type: "string" },
+                                task: { type: "string" },
+                                qty: { type: "number" },
+                                uom: { type: "string" },
+                                unitPrice: { type: "number" },
+                                amount: { type: "number" },
+                                gstPercent: { type: "number" },
+                                gstAmount: { type: "number" },
+                                totalAmount: { type: "number" }
+                            }
+                        }
+                    },
+                    pageSize: 10
+                },
+                height: 400,
+                columns: [
+                    { field: "product", title: "Product", width: "150px" },
+                    { field: "glCode", title: "GL Code", width: "120px" },
+                    { field: "glName", title: "GL Name", width: "120px" },
+                    { field: "remarks", title: "remarks", width: "80px" },
+                    { field: "qty", title: "Qty", width: "80px" },
+                    { field: "uom", title: "UOM", width: "80px" },
+                    { field: "unitPrice", title: "Unit Price", format: "{0:c}", width: "120px" },
+                    { field: "amount", title: "Amount", format: "{0:c}", width: "120px" },
+                    { field: "gstPercent", title: "GST %", width: "80px" },
+                    { field: "gstAmount", title: "GST Amt", format: "{0:c}", width: "120px" },
+                    { field: "totalAmount", title: "Total", format: "{0:c}", width: "120px" },
+                    { field: "baseAmt", title: "Base Amt", format: "{0:c}", width: "120px" },
+                    { field: "baseAmt", title: "Base Gst", format: "{0:c}", width: "120px" },
+                    { field: "baseAmt", title: "Base Tot Amt", format: "{0:c}", width: "120px" },
+                    { field: "department", title: "Task", width: "120px" },
+                    { field: "task", title: "Task", width: "120px" },
+                    { field: "details", title: "Details", width: "120px" },
+                    
+                ],
+            });
+        }
     </script>
 }
