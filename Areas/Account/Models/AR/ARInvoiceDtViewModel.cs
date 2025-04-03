@@ -45,8 +45,7 @@ namespace AEMSWEB.Areas.Account.Models.AR
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotCtyAmt { get; set; }
-
-        public string? Remarks { get; set; }
+        
         public byte GstId { get; set; }
         public string? GstCode { get; set; }
         public string? GstName { get; set; }
@@ -62,7 +61,7 @@ namespace AEMSWEB.Areas.Account.Models.AR
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal GstCtyAmt { get; set; }
-
+        public string? Remarks { get; set; }
         public string? DeliveryDate
         {
             get { return DateHelperStatic.FormatDate(_deliveryDate); }

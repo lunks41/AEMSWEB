@@ -360,7 +360,7 @@ function OnSelectDropdown(dataItem, DrpdwnName) { }
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        debugger;
+                       
                         loadVoyageGrid();
                         clearVoyageForm();
                         $('#addVoyageModal').modal('hide');

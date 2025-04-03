@@ -70,7 +70,7 @@ namespace AEMSWEB.Areas.Setting.Data
 
         #endregion
 
-        public Task<decimal> GetExchangeRateAsync(short CompanyId, short UserId, Int16 CurrencyId, string TrnsDate);
+        public Task<decimal> GetExchangeRateAsync(short CompanyId, short UserId, Int16 CurrencyId, DateTime? TrnsDate);
 
         public Task<decimal> GetExchangeRateLocalAsync(short CompanyId, short UserId, Int16 CurrencyId, string TrnsDate);
 

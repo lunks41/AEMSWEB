@@ -166,7 +166,7 @@
     }
 
     function openSupplierAddressModal(id, addressId, mode) {
-        debugger;
+       
         event.preventDefault();
         $.get('@Url.Action("GetAddressById", "Supplier", new { area = "Master" })', { supplierId: id, addressId, companyId })
             .done(function (response) {
@@ -255,7 +255,7 @@
 
     function saveSupplierAddress() {
 
-        debugger;
+       
         let successSupplierId = parseInt($('#address_supplierId').val()) || 0;
         const supplieraddressData = {
             SupplierId: parseInt($('#address_supplierId').val()) || 0,

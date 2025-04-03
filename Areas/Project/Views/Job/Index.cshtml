@@ -169,7 +169,7 @@
         let permissions = {}; // Initialize based on your auth system
 
         $(document).ready(function () {
-            debugger;
+           
             companyId = getUrlParameter('companyId') || 1;
 
             permissions = {
@@ -215,7 +215,7 @@
                     toDate: $('#toDate').val()
                 },
                 success: function (counts) {
-                    debugger;
+                   
                     $('#jobOrderTabs [data-status="all"] .badge').text(counts.all);
                     $('#jobOrderTabs [data-status="pending"] .badge').text(counts.pending);
                     $('#jobOrderTabs [data-status="confirm"] .badge').text(counts.confirm);
@@ -305,7 +305,7 @@
             $.get('@Url.Action("GetJobOrderById", "Job", new { area = "Project" })', { jobOrderId: id, companyId })
                 .done(function (response) {
                     if (response.success) {
-                        debugger;
+                       
                         populateJobOrderModalFields(response.data);
                         $('#viewJobOrderModal').modal('show');
                     }
@@ -314,7 +314,7 @@
         }
 
         function populateJobOrderModalFields(data) {
-            debugger;
+           
             $('#companyId').val(data.companyId);
             $('#jobOrderId').val(data.jobOrderId);
             $('#jobOrderNo').text(data.jobOrderNo);

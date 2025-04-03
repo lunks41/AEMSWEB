@@ -105,6 +105,18 @@
                                 <input type="checkbox" id="isSysControl"> <label for="isActive">Is System Control</label>
                             </div>
                             <div class="col-md-3">
+                                <input type="checkbox" id="isDeptMandatory"> <label for="isDeptMandatory">Is Department Mandatory</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="checkbox" id="isBargeMandatory"> <label for="isBargeMandatory">Is Barge Mandatory</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="checkbox" id="isJobOrderMandatory"> <label for="isJobOrderMandatory">Is JobOrder Mandatory</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="checkbox" id="isBankCharges"> <label for="isBankCharges">Is Bank Charges</label>
+                            </div>
+                            <div class="col-md-3">
                                 <input type="checkbox" id="isActive"> <label for="isActive">Is Active</label>
                             </div>
                         </div>
@@ -254,6 +266,10 @@
             $('#remarks').val(data.remarks1);
             $('#isActive').prop('checked', data.isActive);
             $('#isSysControl').prop('checked', data.isSysControl);
+            $('#isDeptMandatory').prop('checked', data.isDeptMandatory);
+            $('#isBargeMandatory').prop('checked', data.isBargeMandatory);
+            $('#isJobOrderMandatory').prop('checked', data.isJobOrderMandatory);
+            $('#isBankCharges').prop('checked', data.isBankCharges);
 
             // Load Details History (always read-only)
             $('#createBy').text(data.createBy || "N/A");
@@ -341,6 +357,10 @@
                 CoaCategoryId1: parseInt($('#cmb_coacategory1').data('kendoComboBox').value()) || 0,
                 CoaCategoryId2: parseInt($('#cmb_coacategory2').data('kendoComboBox').value()) || 0,
                 IsSysControl: $('#isSysControl').prop('checked'),
+                IsDeptMandatory: $('#isDeptMandatory').prop('checked'),
+                IsBargeMandatory: $('#isBargeMandatory').prop('checked'),
+                IsJobOrderMandatory: $('#isJobOrderMandatory').prop('checked'),
+                IsBankCharges: $('#isBankCharges').prop('checked'),
                 SeqNo: $('#seqNo').val().trim(),
                 Remarks: $('#remarks').val().trim(),
                 IsActive: $('#isActive').prop('checked')

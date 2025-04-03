@@ -22,6 +22,10 @@
         public string? COACategoryCode3 { get; set; }
         public string? COACategoryName3 { get; set; }
         public bool IsSysControl { get; set; }
+        public bool IsDeptMandatory { get; set; }
+        public bool IsBargeMandatory { get; set; }
+        public bool IsJobOrderMandatory { get; set; }
+        public bool IsBankCharges { get; set; }
         public Int16 SeqNo { get; set; }
         public string? Remarks { get; set; }
         public bool IsActive { get; set; }

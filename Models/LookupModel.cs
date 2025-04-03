@@ -53,6 +53,11 @@
         public short GLId { get; set; }
         public string? GLCode { get; set; }
         public string? GLName { get; set; }
+        public bool IsSysControl { get; set; }
+        public bool IsDeptMandatory { get; set; }
+        public bool IsBargeMandatory { get; set; }
+        public bool IsJobOrderMandatory { get; set; }
+        public bool IsBankCharges { get; set; }
     }
     public class COACategoryLookupModel
     {
@@ -76,6 +81,7 @@
         public short CreditTermId { get; set; }
         public string? CreditTermCode { get; set; }
         public string? CreditTermName { get; set; }
+        public short NoDays { get; set; }
     }
     public class CurrencyLookupModel
     {
@@ -310,5 +316,12 @@
         public short TaskId { get; set; }
         public string? TaskCode { get; set; }
         public string? TaskName { get; set; }
+    }
+    public class JobOrderLookupModel
+    {
+        public Int64 JobOrderId { get; set; }
+        public string? JobOrderNo { get; set; }
+        public Int64 PortId { get; set; }
+        public Int64 VesselId { get; set; }
     }
 }

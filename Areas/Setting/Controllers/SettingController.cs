@@ -6,6 +6,7 @@ using AEMSWEB.Enums;
 using AEMSWEB.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System.Security.Claims;
 
 namespace AEMSWEB.Areas.Setting.Controllers
@@ -353,5 +354,26 @@ namespace AEMSWEB.Areas.Setting.Controllers
         }
 
         #endregion Mandatory
+
+        #region Commonly Used
+
+        [HttpGet]
+        public async Task<JsonResult> GetExchangeRate(Int16 currencyId, string trnsDate, string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            // Parse the date filters if provided
+            DateTime? trnsDateParsed = null;
+            if (!string.IsNullOrEmpty(trnsDate) && DateTime.TryParse(trnsDate, out DateTime dtFrom))
+            {
+                trnsDateParsed = dtFrom;
+            }
+
+            var data = await _settingService.GetExchangeRateAsync(companyIdShort, parsedUserId.Value, currencyId, trnsDateParsed);
+            return Json(data);
+        }
+
+        #endregion Commonly Used
     }
 }

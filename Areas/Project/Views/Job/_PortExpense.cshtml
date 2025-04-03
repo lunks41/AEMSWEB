@@ -106,7 +106,7 @@
     //});
 
     function refreshPortExpensesDropdown() {
-        debugger;
+       
         const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const suppliercolumnsProperties = [
             { field: 'supplierCode', title: 'Code', width: 100 },
@@ -141,7 +141,7 @@
     }
 
     function clearPortExpenseForm() {
-        debugger;
+       
         $('#portExpenseId').val(0);
         $('#portExpense_description').val('');
         $('#portExpense_remarks').val('');
@@ -162,13 +162,13 @@
     }
 
     function updateSelected(checkbox, jobOrderId, portExpenseId) {
-        debugger;
+       
         // Your logic to update selection for the debit note creation.
         console.log("Row with Job Order ID", jobOrderId,'  id :', portExpenseId, "selected:", checkbox.checked);
     }
 
     function toggleSelectAll(headerCheckbox) {
-        debugger;
+       
         let checked = headerCheckbox.checked;
         document.querySelectorAll('.selectDebitNote').forEach(function (checkbox) {
             checkbox.checked = checked;
@@ -177,7 +177,7 @@
     }
 
     function openPortExpenseModal(jobOrderId, portExpenseId, mode) {
-        debugger;
+       
 
         if (jobOrderId > 0 && portExpenseId > 0) {
             const $modal = $('#addPortExpenseModal');
@@ -200,7 +200,7 @@
     }
 
     function populatePortExpenseModalFields(data) {
-        debugger;
+       
         $('#portExpenseId').val(data.portExpenseId);
         $('#jobOrderId').val(data.jobOrderId);
         $('#companyId').val(data.companyId);
@@ -214,7 +214,7 @@
         $('#quantity').val(data.quantity);
         $('#portExpense_description').val(data.description);
         $('#portExpense_remarks').val(data.remarks);
-        debugger;
+       
         const formattedDate = new Date(data.deliverDate).toLocaleDateString('en-CA');
         $('#deliverDate').val(formattedDate);
 
@@ -270,7 +270,7 @@
     }
 
     function savePortExpense() {
-        debugger;
+       
         let portExpenseData = {
             PortExpenseId: parseInt($('#portExpenseId').val()) || 0,
             JobOrderId: parseInt($('#jobOrderId').val()) || 0,

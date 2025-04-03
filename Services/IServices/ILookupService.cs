@@ -1,6 +1,4 @@
-﻿
-
-using AEMSWEB.Models;
+﻿using AEMSWEB.Models;
 using AEMSWEB.Models.Admin;
 
 namespace AEMSWEB.IServices
@@ -24,6 +22,7 @@ namespace AEMSWEB.IServices
         public Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupAsync(Int16 CompanyId, Int16 UserId);
 
         public Task<IEnumerable<AccountGroupLookupModel>> GetAccountGroupLookupAsync(Int16 CompanyId, Int16 UserId);
+
         public Task<IEnumerable<OrderTypeLookupModel>> GetOrderTypeLookupAsync(Int16 CompanyId, Int16 UserId, Int16 categoryId);
 
         public Task<IEnumerable<AccountTypeLookupModel>> GetAccountTypeLookupAsync(Int16 CompanyId, Int16 UserId);
@@ -75,7 +74,10 @@ namespace AEMSWEB.IServices
         public Task<IEnumerable<PortRegionLookupModel>> GetPortRegionLookupAsync(Int16 CompanyId, Int16 UserId);
 
         public Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync(Int16 CompanyId, Int16 UserId);
+
         public Task<IEnumerable<TaskLookupModel>> GetTaskLookupAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<TaskLookupModel>> GetTaskByJobOrderLookupAsync(Int16 CompanyId, Int16 UserId, long jobOrderId);
+
         public Task<IEnumerable<ChargeLookupModel>> GetChargeLookupAsync(Int16 CompanyId, Int16 UserId, int taskId);
 
         public Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount);
@@ -98,17 +100,13 @@ namespace AEMSWEB.IServices
 
         public Task<IEnumerable<CreditTermLookupModel>> GetCreditTermLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<TaxLookupModel>> GetTaxLookupAsync(Int16 CompanyId, Int16 UserId);
-
-        public Task<IEnumerable<TaxCategoryLookupModel>> GetTaxCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
-
         public Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync(Int16 CompanyId, Int16 UserId);
 
         public Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount);
 
-        public Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId);
+        public Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId);
 
-        public Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId);
+        public Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId);
 
         public Task<IEnumerable<SupplierAddressLookupModel>> GetSupplierAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
 
@@ -119,5 +117,7 @@ namespace AEMSWEB.IServices
         public Task<IEnumerable<YearLookupModel>> GetPeriodCloseNextYearLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
 
         public Task<IEnumerable<DocumentTypeLookupModel>> GetDocumentTypeLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
+
+        public Task<IEnumerable<JobOrderLookupModel>> GetJobOrderLookupAsync(Int16 CompanyId, Int16 UserId);
     }
 }

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using AEMSWEB.Enums;
+@{
     ViewData["Title"] = $"AR Invoice ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -14,17 +15,17 @@
                         <ul class="nav nav-pills" id="invoicePills" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="main-pill" data-bs-toggle="pill" data-bs-target="#main" type="button" role="tab">
-                                    <span class="material-symbols-outlined" >inventory_2</span> Main
+                                    <span class="material-symbols-outlined">inventory_2</span> Main
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="other-pill" data-bs-toggle="pill" data-bs-target="#other" type="button" role="tab">
-                                    <span class="material-symbols-outlined" >contact_emergency</span> Other
+                                    <span class="material-symbols-outlined">contact_emergency</span> Other
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="history-pill" data-bs-toggle="pill" data-bs-target="#history" type="button" role="tab">
-                                    <span class="material-symbols-outlined" >manage_history</span> History
+                                    <span class="material-symbols-outlined">manage_history</span> History
                                 </button>
                             </li>
                         </ul>
@@ -41,25 +42,25 @@
                             <div class="btn-group gap-2">
 
                                 <button type="button" class="btn btn-primary" id="btnList" title="List">
-                                    <span class="material-symbols-outlined" >list</span>
+                                    <span class="material-symbols-outlined">list</span>
                                 </button>
                                 <button type="button" class="btn btn-success" id="btnSave" title="Save">
-                                    <span class="material-symbols-outlined" >save</span>
+                                    <span class="material-symbols-outlined">save</span>
                                 </button>
                                 <button type="button" class="btn btn-warning" id="btnReset" title="Reset">
-                                    <span class="material-symbols-outlined" >refresh</span>
+                                    <span class="material-symbols-outlined">refresh</span>
                                 </button>
                                 <button type="button" class="btn btn-info" id="btnPrint" title="Print">
-                                    <span class="material-symbols-outlined" >print</span>
+                                    <span class="material-symbols-outlined">print</span>
                                 </button>
                                 <button type="button" class="btn btn-secondary" id="btnClone" title="Clone">
-                                    <span class="material-symbols-outlined" >content_copy</span>
+                                    <span class="material-symbols-outlined">content_copy</span>
                                 </button>
                                 <button type="button" class="btn btn-danger" id="btnDelete" title="Delete">
-                                    <span class="material-symbols-outlined" >delete</span>
+                                    <span class="material-symbols-outlined">delete</span>
                                 </button>
                                 <button type="button" class="btn btn-dark" id="btnUnpost" title="Unpost">
-                                    <span class="material-symbols-outlined" >undo</span>
+                                    <span class="material-symbols-outlined">undo</span>
                                 </button>
                             </div>
                         </div>
@@ -71,8 +72,6 @@
                     @await Html.PartialAsync("_Other")
                     @await Html.PartialAsync("_History")
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -103,13 +102,21 @@
         let pendingAction = null;
         let companyId = 0;
         let currentStatus = 'all';
-        let permissions = {}; 
+        let permissions = {};
 
         $(document).ready(function () {
-            debugger;
+
             companyId = getUrlParameter('companyId') || 1;
+            Refresh();
+            defaultsection();
+
             invoicedetailsgrid();
         });
+
+        function defaultsection() {
+            $("#invoice_cmb_task, #invoice_cmb_details").closest(".col-md-2").hide();
+            $("#invoice_cmb_department").closest(".col-md-2").hide();
+        }
 
         function showConfirmation(message, callback) {
             $('#confirmationMessage').text(message);
@@ -120,6 +127,7 @@
         $('#confirmYes').click(function () {
             if (typeof pendingAction === 'function') {
                 pendingAction();
+                saveInvoice();
             }
             $('#saveconfirmationModal').modal('hide');
         });
@@ -127,7 +135,6 @@
         // Save button handler
         $('#btnSave').click(function () {
             showConfirmation('Do you want to save?', function () {
-                // Actual save logic here
                 $('#arInvoiceForm').submit();
             });
         });
@@ -135,7 +142,7 @@
         // Unpost button handler
         $('#btnUnpost').click(function () {
             showConfirmation('Do you want to unpost?', function () {
-                // Actual unpost logic here
+                unpostInvoice();
                 console.log('Unposting...');
             });
         });
@@ -143,7 +150,339 @@
         // Other button handlers
         $('#btnReset').click(function () {
             $('#arInvoiceForm')[0].reset();
+            ClearInvoice();
         });
+
+        function Refresh() {
+
+            const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const columnsProperties = [
+                { field: 'customerCode', title: 'Code', width: 100 },
+                { field: 'customerName', title: 'Name', width: 200 }
+            ];
+            const filterFields = ['customerCode', 'customerName'];
+            BindMultiColumnComboBox(customerUrl, "invoice_cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
+
+            // Credit Terms
+            const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(creditTermsUrl, "invoice_cmb_creditTerms", "creditTermName", "creditTermId");
+
+            // Bank
+            const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(bankUrl, "invoice_cmb_bank", "bankName", "bankId");
+
+            // Currency
+            const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(currencyUrl, "invoice_cmb_currency", "currencyCode", "currencyId");
+
+            // Job Order
+            const jobOrderUrl = '@Url.Action("GetJobOrderLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(jobOrderUrl, "invoice_cmb_jobOrder", "jobOrderNo", "jobOrderId");
+
+            //port
+            const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(portUrl, "invoice_cmb_port", "portName", "portId");
+
+            // Vessel
+            const vesselUrl = '@Url.Action("GetVesselLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(vesselUrl, "invoice_cmb_vessel", "vesselName", "vesselId");
+
+            // Barge
+            const launchUrl = '@Url.Action("GetBargeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(launchUrl, "invoice_cmb_barge", "bargeName", "bargeId");
+
+            // Service Type
+            var ServiceType = @((int)OrderTypeCategory.ServiceType);
+
+            const serviceTypeUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=${ServiceType}`;
+            BindComboBox(serviceTypeUrl, "invoice_cmb_serviceType", "orderTypeName", "orderTypeId");
+
+            // Product
+            const productUrl = '@Url.Action("GetProductLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(productUrl, "invoice_cmb_product", "productName", "productId");
+
+            // GL Account
+            const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const glcolumnsProperties = [
+                { field: 'glCode', title: 'Code', width: 100 },
+                { field: 'glName', title: 'Name', width: 200 }
+            ];
+            const glfilterFields = ['glCode', 'glName'];
+            BindMultiColumnComboBox(chartOfAccountUrl, "invoice_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+            // Department
+            const departmentUrl = '@Url.Action("GetDepartmentLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(departmentUrl, "invoice_cmb_department", "departmentName", "departmentId");
+
+            // UOM
+            const uomUrl = '@Url.Action("GetUOMLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(uomUrl, "invoice_cmb_uom", "uomName", "uomId");
+
+            // GST
+            const gstUrl = '@Url.Action("GetGstLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(gstUrl, "invoice_cmb_gst", "gstName", "gstId");
+
+            // Country
+            const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            BindComboBox(countryUrl, "invoice_cmb_country", "countryName", "countryId");
+        }
+
+        function SelectedDropdown(DrpdwnName) {
+        }
+
+        function OnSelectDropdown(dataItem, DrpdwnName) {
+            if (DrpdwnName === "invoice_cmb_jobOrder") {
+                if (!dataItem || !dataItem.jobOrderId) {
+                    // Clear Vessel combobox
+                    let vesselCombo = $("#invoice_cmb_vessel").data("kendoComboBox");
+                    if (vesselCombo) {
+                        vesselCombo.value("");
+                        vesselCombo.trigger("change");
+                    }
+                    // Clear Port combobox
+                    let portCombo = $("#invoice_cmb_port").data("kendoComboBox");
+                    if (portCombo) {
+                        portCombo.value("");
+                        portCombo.trigger("change");
+                    }
+                } else {
+                    // When a valid Job Order is selected, load related tasks and handle job order selection
+                    loadTaskDropdown(dataItem.jobOrderId);
+                    handleJobOrderSelection(dataItem);
+                }
+            }
+            else if (DrpdwnName === "invoice_cmb_task") {
+                let selectedTaskId = dataItem.taskId;
+                if (selectedTaskId) {
+                    loadChargesDropdown(selectedTaskId);
+                }
+            }
+            else if (DrpdwnName === "invoice_cmb_gl") {
+                let selecteddataItem = dataItem;
+                if (selecteddataItem) {
+                    handleGlAccountSelection(selecteddataItem);
+                }
+            } else if (DrpdwnName === "invoice_cmb_creditTerms") {
+                let selecteddataItem = dataItem;
+                if (selecteddataItem) {
+                    handleCreditTermsSelection(selecteddataItem);
+                }
+            } else if (DrpdwnName === "invoice_cmb_currency") {
+                let selecteddataItem = dataItem;
+                if (selecteddataItem) {
+                    handleCurrencySelection(selecteddataItem);
+                }
+            } else if (DrpdwnName === "invoice_cmb_customer") {
+                let selectedCustomerId = dataItem.customerId;
+                if (selectedCustomerId) {
+                    loadCustomerDependentDropdown(selectedCustomerId);
+                }
+            } else if (DrpdwnName === "invoice_cmb_customeraddress") {
+                let selectedaddressdataItem = dataItem;
+                if (selectedaddressdataItem) {
+                    handleAddressSelection(selectedaddressdataItem);
+                }
+            } else if (DrpdwnName === "invoice_cmb_customercontact") {
+                let selectedcontactdataItem = dataItem;
+                if (selectedcontactdataItem) {
+                    handleContactSelection(selectedcontactdataItem);
+                }
+            }
+        }
+
+        function loadCustomerDependentDropdown(customerId) {
+
+            const addressUrl = `@Url.Action("GetCustomerAddressLookupFin", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${customerId}`
+            BindComboBox(addressUrl, "invoice_cmb_customeraddress", "address1", "addressId");
+
+            const contactUrl = `@Url.Action("GetCustomerContactLookupFin", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${customerId}`
+            BindComboBox(contactUrl, "invoice_cmb_customercontact", "contactName", "contactId");
+        }
+
+        function handleAddressSelection(selectedaddressdataItem) {
+            debugger;
+            try {
+                if (!selectedaddressdataItem) {
+                    throw new Error("Invalid address data");
+                }
+
+                $("#addressLine1").val(selectedaddressdataItem.address1);
+                $("#addressLine2").val(selectedaddressdataItem.address2);
+                $("#addressLine3").val(selectedaddressdataItem.address3);
+                $("#addressLine4").val(selectedaddressdataItem.address4);
+                $("#pinCode").val(selectedaddressdataItem.pinCode);
+                $("#phoneNo").val(selectedaddressdataItem.phoneNo);
+                $("#invoice_cmb_country").data("kendoComboBox").value(selectedaddressdataItem.countryId > 0 ? selectedaddressdataItem.countryId : '');
+                $("#faxNo").val(selectedaddressdataItem.faxNo);
+                $("#emailAdd").val(selectedaddressdataItem.emailAdd);
+                $("#webUrl").val(selectedaddressdataItem.webUrl);
+
+            } catch (error) {
+                console.error("Error handling address:", error);
+                alert("Failed to load address details. Please try again.");
+            }
+        }
+
+        function handleContactSelection(selectedcontactdataItem) {
+            debugger;
+            try {
+                if (!selectedcontactdataItem) {
+                    throw new Error("Invalid contact data");
+                }
+
+                $("#otherName").val(selectedcontactdataItem.otherName);
+                $("#emailAdd").val(selectedcontactdataItem.emailAdd);
+                $("#mobileNo").val(selectedcontactdataItem.mobileNo);
+                $("#offNo").val(selectedcontactdataItem.offNo);
+                $("#pinCode").val(selectedcontactdataItem.pinCode);
+                $("#faxNo").val(selectedcontactdataItem.faxNo);
+                $("#messId").val(selectedcontactdataItem.messId);
+                $("#contactMessType").val(selectedcontactdataItem.contactMessType);
+
+            } catch (error) {
+                console.error("Error handling contact:", error);
+                alert("Failed to load contact details. Please try again.");
+            }
+        }
+
+        function handleCurrencySelection(selectedDataItem) {
+            debugger;
+            try {
+                if (!selectedDataItem) {
+                    throw new Error("Invalid Currency data");
+                }
+
+                const selectCurrencyId = selectedDataItem.currencyId;
+                const accountDateStr = $("#accountDate").val();
+                debugger;
+                $.ajax({
+                    url: '@Url.Action("GetExchangeRate", "Setting", new { area = "Setting" })',
+                    type: "GET",
+                    contentType: "application/json",
+                    data: {
+                        currencyId: selectCurrencyId,
+                        trnsDate: accountDateStr,
+                        companyId: companyId
+                    },
+                    success: function (response) {
+                        debugger;
+                        if (response) {
+                            $("#exhRate").val(response);
+                        } else {
+                            throw new Error("Exchange rate not found in response.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                        alert("Failed to retrieve exchange rate. Please try again.");
+                    }
+                });
+            } catch (error) {
+                console.error("Error handling Currency:", error);
+                alert("Failed to load Currency details. Please try again.");
+            }
+        }
+
+        function handleCreditTermsSelection(selecteddataItem) {
+            debugger;
+            try {
+                if (!selecteddataItem) {
+                    throw new Error("Invalid CreditTerms data");
+                }
+
+                const noDays = selecteddataItem.noDays;
+                const accountDateStr = $("#accountDate").val();
+
+                if (accountDateStr) {
+                    // Parse the account date (assuming a standard date format e.g., "yyyy-MM-dd")
+                    const accountDate = new Date(accountDateStr);
+                    if (isNaN(accountDate)) {
+                        throw new Error("Invalid account date format");
+                    }
+                    // Add the number of days
+                    accountDate.setDate(accountDate.getDate() + noDays);
+
+                    // Format the new date as a string (e.g., "yyyy-MM-dd")
+                    const year = accountDate.getFullYear();
+                    const month = ("0" + (accountDate.getMonth() + 1)).slice(-2);
+                    const day = ("0" + accountDate.getDate()).slice(-2);
+                    const dueDateStr = `${year}-${month}-${day}`;
+
+                    $("#dueDate").val(dueDateStr);
+                } else {
+                    // If no account date is available, clear the due date field
+                    $("#dueDate").val("");
+                }
+            } catch (error) {
+                console.error("Error handling CreditTerms:", error);
+                alert("Failed to load CreditTerms details. Please try again.");
+            }
+        }
+
+        function handleJobOrderSelection(selecteddataItem) {
+
+            try {
+                if (!selecteddataItem) {
+                    throw new Error("Invalid Job Order data");
+                }
+                const portCombo = $("#invoice_cmb_port").data("kendoComboBox");
+                const vesselCombo = $("#invoice_cmb_vessel").data("kendoComboBox");
+
+                if (selecteddataItem.portId) {
+                    portCombo.value(selecteddataItem.portId);
+                    portCombo.trigger("change");
+                }
+
+                if (selecteddataItem.vesselId) {
+                    vesselCombo.value(selecteddataItem.vesselId);
+                    vesselCombo.trigger("change");
+                }
+
+            } catch (error) {
+                console.error("Error handling Job Order:", error);
+                alert("Failed to load job order details. Please try again.");
+            }
+        }
+
+        function handleGlAccountSelection(selecteddataItem) {
+
+            try {
+                if (!selecteddataItem) {
+                    throw new Error("Invalid GL Account data");
+                }
+                const isJobOrder = selecteddataItem.isJobOrderMandatory;
+
+                // Toggle visibility based on job order requirement
+                if (isJobOrder) {
+                    $("#invoice_cmb_task").closest(".col-md-2").show();
+                    $("#invoice_cmb_details").closest(".col-md-2").show();
+                    $("#invoice_cmb_department").closest(".col-md-2").hide();
+                } else {
+                    $("#invoice_cmb_task").closest(".col-md-2").hide();
+                    $("#invoice_cmb_details").closest(".col-md-2").hide();
+                    $("#invoice_cmb_department").closest(".col-md-2").show();
+                }
+
+                // Clear hidden fields
+                $("#invoice_cmb_task").data("kendoComboBox").value("");
+                $("#invoice_cmb_details").data("kendoComboBox").value("");
+                $("#invoice_cmb_department").data("kendoComboBox").value("");
+            } catch (error) {
+                console.error("Error handling GL Account:", error);
+                // Show user-friendly message
+            }
+        }
+
+        function loadTaskDropdown(jobOrderId) {
+            // Task
+            const taskUrl = `@Url.Action("GetTaskByJobOrderLookup", "Lookup", new { area = "" })?companyId=${companyId}&jobOrderId=${jobOrderId}`
+            BindComboBox(taskUrl, "invoice_cmb_task", "taskName", "taskId");
+        }
+
+        function loadChargesDropdown(taskId) {
+            const chargesUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=${taskId}`
+            BindComboBox(chargesUrl, "tariff_cmb_chagre", "chargeName", "chargeId");
+        }
 
         function invoicedetailsgrid() {
             $("#grid_invoicedetails").kendoGrid({
@@ -186,9 +525,187 @@
                     { field: "department", title: "Task", width: "120px" },
                     { field: "task", title: "Task", width: "120px" },
                     { field: "details", title: "Details", width: "120px" },
-                    
+
                 ],
             });
+        }
+
+        //Invoice Details
+        function ClearInvoice() {
+            // Clear all inputs
+            //delete all details also
+        }
+
+        function ClearInvoiceDetails() {
+            // Clear inputs
+            $("#itemNo, #qty, #unitPrice, #amount, #gstAmount, #totalAmount").val("0");
+            $("#remarks").val("");
+
+            $("#invoice_cmb_product").data("kendoComboBox").value("");
+            $("#invoice_cmb_gl").data("kendoComboBox").value("");
+            $("#invoice_cmb_task").data("kendoComboBox").value("");
+            $("#invoice_cmb_details").data("kendoComboBox").value("");
+            $("#invoice_cmb_department").data("kendoComboBox").value("");
+            $("#invoice_cmb_uom").data("kendoComboBox").value("");
+            $("#invoice_cmb_gst").data("kendoComboBox").value("");
+        }
+
+        function AddInvoiceDetails() {
+            // Get input values with proper validation
+            const itemNo = $("#itemNo").val() || "";
+            const qty = parseFloat($("#qty").val()) || 0;
+            const unitPrice = parseFloat($("#unitPrice").val()) || 0;
+            const remarks = $("#remarks").val() || "";
+
+            // Get combobox values with fallbacks
+            const productCombo = $("#invoice_cmb_product").data("kendoComboBox");
+            const glCombo = $("#invoice_cmb_gl").data("kendoComboBox");
+            const taskCombo = $("#invoice_cmb_task").data("kendoComboBox");
+            const detailsCombo = $("#invoice_cmb_details").data("kendoComboBox");
+            const departmentCombo = $("#invoice_cmb_department").data("kendoComboBox");
+            const uomCombo = $("#invoice_cmb_uom").data("kendoComboBox");
+            const gstCombo = $("#invoice_cmb_gst").data("kendoComboBox");
+
+            // Validate mandatory fields
+            if (!productCombo.value() || !glCombo.value() || !taskCombo.value()) {
+                alert("Please fill all mandatory fields (*)");
+                return;
+            }
+
+            // Calculate amounts
+            const amount = qty * unitPrice;
+            const gstPercent = parseFloat(gstCombo.value()) || 0;
+            const gstAmount = (amount * gstPercent) / 100;
+            const totalAmount = amount + gstAmount;
+
+            // Create detail object with proper field names
+            const detailItem = {
+                // Item Info
+                itemNo: itemNo,
+                remarks: remarks,
+
+                // Product Info
+                productId: productCombo.value(),
+                productName: productCombo.text(),
+
+                // GL Account Info
+                glId: glCombo.value(),
+                glCode: glCombo.value(),  // Assuming code is stored in value
+                glName: glCombo.text(),
+
+                // Department/Task Info
+                departmentId: departmentCombo.value(),
+                departmentName: departmentCombo.text(),
+                taskId: taskCombo.value(),
+                taskName: taskCombo.text(),
+
+                // Service/Details
+                serviceId: detailsCombo.value(),
+                serviceName: detailsCombo.text(),
+
+                // UOM Info
+                uomId: uomCombo.value(),
+                uomName: uomCombo.text(),
+
+                // Pricing Info
+                qty: qty,
+                unitPrice: unitPrice,
+                amount: amount,
+
+                // GST Info
+                gstId: gstCombo.value(),
+                gstName: gstCombo.text(),
+                gstPercent: gstPercent,
+                gstAmount: gstAmount,
+
+                // Totals
+                totalAmount: totalAmount,
+                totalLocalAmount: totalAmount,  // Add currency conversion logic if needed
+                gstLocalAmount: gstAmount       // Add currency conversion logic if needed
+            };
+
+            // Add to grid
+            const grid = $("#grid_invoicedetails").data("kendoGrid");
+            grid.dataSource.add(detailItem);
+            grid.refresh();
+
+            // Clear form fields
+            ClearInvoiceDetails();
+        }
+
+        function saveInvoice() {
+            // 1. Collect Header Data
+            const invoiceHd = {
+                InvoiceId: $("#invoiceId").val(),
+                InvoiceNo: $("#invoiceNo").val(),
+                AccountDate: $("#accountDate").val(),
+                DueDate: $("#dueDate").val(),
+                ReferenceNo: $("#referenceNo").val(),
+                CustomerId: $("#invoice_cmb_customer").data("kendoComboBox").value()||0,
+                CreditTermId: $("#invoice_cmb_creditTerms").data("kendoComboBox").value() || 0,
+                CurrencyId: $("#invoice_cmb_currency").data("kendoComboBox").value() || 0,
+                ExhRate: $("#exhRate").val(),
+                BankId: $("#invoice_cmb_bank").data("kendoComboBox").value() || 0,
+                JobOrderId: $("#invoice_cmb_jobOrder").data("kendoComboBox").value() || 0,
+                VesselId: $("#invoice_cmb_vessel").data("kendoComboBox").value() || 0,
+                PortId: $("#invoice_cmb_port").data("kendoComboBox").value() || 0,
+                BargeId: $("#invoice_cmb_barge").data("kendoComboBox").value() || 0,
+                ServiceTypeId: $("#invoice_cmb_serviceType").data("kendoComboBox").value() || 0,
+                TotAmt: $("#totAmt").val(),
+                TotLocalAmt: $("#totLocalAmt").val(),
+                GstAmt: $("#gstAmt").val(),
+                GstLocalAmt: $("#gstLocalAmt").val(),
+                TotAmtAftGst: $("#totAmtAftGst").val(),
+                TotLocalAmtAftGst: $("#totLocalAmtAftGst").val(),
+                Remarks: $("#remarks").val(),
+            };
+
+            // 2. Collect Grid Data (Details)
+            const grid = $("#grid_invoicedetails").data("kendoGrid");
+            const invoiceDt = grid.dataSource.data().map(item => ({
+                ItemNo: item.itemNo,
+                ProductId: item.productId,
+                DepartmentId: item.departmentId,
+                TaskId: item.taskId,
+                ServiceId: item.serviceId,
+                GlId: item.glId,
+                QTY: item.qty,
+                UomId: item.uomId,
+                UnitPrice: item.unitPrice,
+                TotAmt: item.totAmt,
+                TotLocalAmt: item.totLocalAmt,
+                GstId: item.gstId,
+                GstPercentage: item.gstPercentage,
+                GstAmt: item.gstAmt,
+                GstLocalAmt: item.gstLocalAmt,
+                Remarks: item.remarks,
+            }));
+
+            // 3. Combine into One Object
+            const invoiceData = {
+                invoiceHd: invoiceHd,
+                invoiceDt: invoiceDt
+            };
+
+            // 4. Send to Server (Example using AJAX)
+            $.ajax({
+               url: '@Url.Action("Save", "ArInvoice", new { area = "Account" })',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(invoiceData),
+                success: function (response) {
+
+                    console.log("Invoice saved:", response);
+                },
+                error: function (error) {
+                    console.error("Error saving invoice:", error);
+                }
+            });
+        }
+
+        function unpostInvoice() {
+            // Unpost logic here
+            console.log("Unposting invoice...");
         }
     </script>
 }

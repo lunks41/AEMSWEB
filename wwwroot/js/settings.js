@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeSettings() {
-    debugger;
+   
     // Initialize company ID
     const companyId = getUrlParameter('companyId') || window.settingsConfig.companyId;
 

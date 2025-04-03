@@ -213,7 +213,7 @@
         }
 
     function populateUomDtModalFields(data) {
-        debugger;
+       
         $('#cmd_uom').data("kendoComboBox").value(data.uomId > 0 ? data.uomId : '');
         $('#cmd_packUom').data("kendoComboBox").value(data.packUomId > 0 ? data.packUomId : '');
         $('#uomFactor').val(data.uomFactor);
@@ -275,7 +275,7 @@
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    debugger;
+                   
                     loadUomDtGrid();
                     clearUomDtForm();
                     $('#addUomDtModal').modal('hide');

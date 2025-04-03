@@ -222,7 +222,7 @@
         }
 
     function populateAccSetupModalFields(data) {
-        debugger;
+       
             $('#accSetupId').val(data.accSetupId);
             $('#accSetupCode').val(data.accSetupCode);
             $('#accSetupName').val(data.accSetupName);
@@ -291,7 +291,7 @@
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        debugger;
+                       
                         loadAccSetupGrid();
                         clearAccSetupForm();
                         $('#addAccSetupModal').modal('hide');

@@ -217,7 +217,7 @@
         }
 
     function populateGstCategoryModalFields(data) {
-        debugger;
+       
         $('#gstCategoryId').val(data.gstCategoryId);
         $('#gstCategoryCode').val(data.gstCategoryCode);
         $('#gstCategoryName').val(data.gstCategoryName);
@@ -284,7 +284,7 @@
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        debugger;
+                       
                         loadGstCategoryGrid();
                         clearGstCategoryForm();
                         $('#addGstCategoryModal').modal('hide');

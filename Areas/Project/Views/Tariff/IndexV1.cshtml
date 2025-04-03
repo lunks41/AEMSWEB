@@ -506,7 +506,7 @@
                 const modalId = `#add${serviceType}TariffModal`;
                 const modalElement = $(modalId);
                 modalElement.modal('show');
-                debugger;
+               
 
                 if (serviceType == 'FreshWater') {
                     // Pre-set Customer/Port in the modal (if needed)
@@ -765,7 +765,7 @@
             $('#remarks').val(data.remarks?.trim() || '');
             $('#isActive').prop('checked', data.isActive ?? true);
 
-            debugger;
+           
 
             // Set service-specific dropdowns
             $(`#${prefix}_cmb_task`).data('kendoComboBox').value(data.taskId || '');

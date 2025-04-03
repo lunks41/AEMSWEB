@@ -166,7 +166,7 @@
     }
 
     function openBankAddressModal(id, addressId, mode) {
-        debugger;
+       
         event.preventDefault();
         $.get('@Url.Action("GetAddressById", "Bank", new { area = "Master" })', { bankId: id, addressId, companyId })
             .done(function (response) {
@@ -255,7 +255,7 @@
 
     function saveBankAddress() {
 
-        debugger;
+       
         let successBankId = parseInt($('#address_bankId').val()) || 0;
         const bankaddressData = {
             BankId: parseInt($('#address_bankId').val()) || 0,

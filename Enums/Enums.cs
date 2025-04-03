@@ -189,6 +189,7 @@ namespace AEMSWEB.Enums
         PassType = 10,
         CarrierType = 11,
         LocationType = 12,
-        CalculateType = 13
+        CalculateType = 13,
+        ServiceType = 14
     }
 }

@@ -77,6 +77,16 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
+        public async Task<JsonResult> GetTaskByJobOrderLookup(string companyId, long jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetTaskByJobOrderLookupAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+            return Json(data);
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetChargeLookup(string companyId, short taskId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -301,16 +311,6 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTaxCategoryLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetTaxCategoryLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
-
-        [HttpGet]
         public async Task<JsonResult> GetProductLookup(string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -371,32 +371,22 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTaxLookup(string companyId)
+        public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId,int customerId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetTaxLookupAsync(companyIdShort, parsedUserId.Value);
+            var data = await _masterLookupService.GetCustomerAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, customerId);
             return Json(data);
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId)
+        public async Task<JsonResult> GetCustomerContactLookupFin(string companyId,int customerId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetCustomerAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerContactLookupFin(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetCustomerContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
+            var data = await _masterLookupService.GetCustomerContactLookup_FinAsync(companyIdShort, parsedUserId.Value, customerId);
             return Json(data);
         }
 
@@ -442,6 +432,16 @@ namespace AEMSWEB.Controllers
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetPaymentTypeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetJobOrderLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetJobOrderLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
     }

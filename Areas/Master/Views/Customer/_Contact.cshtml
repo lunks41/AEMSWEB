@@ -143,7 +143,7 @@
     }
 
     function openCustomerContactModal(contact_customerId, contactId, mode) {
-        debugger;
+       
         event.preventDefault();
         $.get('@Url.Action("GetContactById", "Customer", new { area = "Master" })', { customerId: contact_customerId, contactId, companyId })
             .done(function (response) {
@@ -169,7 +169,7 @@
     }
 
     function populateCustomerContactFields(data) {
-        debugger;
+       
         $('#contact_customerId').val(data.customerId);
         $('#contactId').val(data.contactId);
 

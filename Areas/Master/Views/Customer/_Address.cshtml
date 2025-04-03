@@ -166,7 +166,7 @@
     }
 
     function openCustomerAddressModal(id, addressId, mode) {
-        debugger;
+       
         event.preventDefault();
         $.get('@Url.Action("GetAddressById", "Customer", new { area = "Master" })', { customerId: id, addressId, companyId })
             .done(function (response) {
@@ -255,7 +255,7 @@
 
     function saveCustomerAddress() {
 
-        debugger;
+       
         let successCustomerId = parseInt($('#address_customerId').val()) || 0;
         const customeraddressData = {
             CustomerId: parseInt($('#address_customerId').val()) || 0,

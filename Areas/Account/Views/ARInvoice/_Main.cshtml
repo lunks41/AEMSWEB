@@ -1,8 +1,8 @@
 ﻿<div class="tab-pane fade show active" id="main" role="tabpanel">
     <div class="row g-3">
+        <input type="hidden" id="invoiceId">
         <!-- Header Section -->
         <div class="col-12">
-            <!-- Invoice Header Section -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header">
                     <h6 class="mb-0">Invoice Header</h6>
@@ -11,104 +11,98 @@
                     <div class="row">
                         <!-- Row 1 -->
                         <div class="col-md-2">
-                            <label for="trnDate" class="form-label">Transaction Date <label class="text-danger">*</label></label>
-                            <input type="date" class="form-control" id="trnDate" required>
-                            <div class="invalid-feedback">Please select transaction date</div>
+                            <label for="accountDate" class="form-label">Account Date <label class="text-danger">*</label></label>
+                            <input type="date" class="form-control" id="accountDate" required>
                         </div>
                         <div class="col-md-2">
-                            <label for="customer" class="form-label">Customer <label class="text-danger">*</label></label>
-                            <select class="form-select" id="customer" required>
-                                <option value="">Select Customer</option>
-                                <!-- Customer options -->
-                            </select>
+                            <label for="invoice_cmb_customer" class="form-label">Customer <span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_customer" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="refNo" class="form-label">Reference No.</label>
-                            <input type="text" class="form-control" id="refNo">
+                            <label for="referenceNo" class="form-label">Reference No.</label>
+                            <input type="text" class="form-control" id="referenceNo">
                         </div>
                         <div class="col-md-2">
-                            <label for="creditTerm" class="form-label">Credit Terms</label>
-                            <input type="text" class="form-control" id="creditTerm" placeholder="Days">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="bank" class="form-label">Bank</label>
-                            <select class="form-select" id="bank">
-                                <option value="">Select Bank</option>
-                                <!-- Bank options -->
-                            </select>
+                            <label for="invoice_cmb_creditTerms" class="form-label">Credit Terms <span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_creditTerms" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
                             <label for="dueDate" class="form-label">Due Date</label>
                             <input type="date" class="form-control" id="dueDate">
                         </div>
                         <div class="col-md-2">
-                            <label for="currency" class="form-label">Currency</label>
-                            <select class="form-select" id="currency">
-                                <option value="USD">USD</option>
-                                <option value="SGD">SGD</option>
-                                <!-- More currencies -->
-                            </select>
+                            <label for="invoice_cmb_bank" class="form-label">Bank <span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_bank" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="exRate" class="form-label">Exchange Rate</label>
-                            <input type="number" step="0.0001" class="form-control" id="exRate" value="1.0000">
+                            <label for="invoice_cmb_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_currency" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="jobOrder" class="form-label">Job Order</label>
-                            <input type="text" class="form-control" id="jobOrder">
+                            <label for="exhRate" class="form-label">Exchange Rate</label>
+                            <input type="number" step="0.0001" class="form-control" id="exhRate" value="1.0000">
                         </div>
                         <div class="col-md-2">
-                            <label for="vessel" class="form-label">Vessel</label>
-                            <input type="text" class="form-control" id="vessel">
+                            <label class="form-label">Operation No</label>
+                            <input type="text" class="form-control" id="operationno">
                         </div>
                         <div class="col-md-2">
-                            <label for="port" class="form-label">Port</label>
-                            <input type="text" class="form-control" id="port">
+                            <label for="invoice_cmb_jobOrder" class="form-label">Job No<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_jobOrder" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="launch" class="form-label">Launch</label>
-                            <input type="text" class="form-control" id="launch">
+                            <label for="invoice_cmb_vessel" class="form-label">Vessel<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_vessel" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="serviceType" class="form-label">Service Type</label>
-                            <select class="form-select" id="serviceType">
-                                <option value="">Select Service Type</option>
-                                <option>Standard</option>
-                                <option>Express</option>
-                                <!-- More service types -->
-                            </select>
+                            <label for="invoice_cmb_port" class="form-label">Port<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_port" style="width: 100%"></select>
                         </div>
-
+                        <div class="col-md-2">
+                            <label for="invoice_cmb_barge" class="form-label">Launch/Barge<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_barge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="invoice_cmb_transtype" class="form-label">Trans Type<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_transtype" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="invoice_cmb_serviceType" class="form-label">Service Type<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_serviceType" style="width: 100%"></select>
+                        </div>
 
                         <!-- Totals Section -->
                         <div class="col-md-2">
-                            <label class="form-label">Total Amount</label>
-                            <input type="text" class="form-control" id="totalAmt" readonly>
+                            <label for="totAmt" class="form-label">Amt</label>
+                            <input type="number" class="form-control" id="totAmt" readonly>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">GST Amount</label>
-                            <input type="text" class="form-control" id="gstAmt" readonly>
+                            <label class="form-label">GST</label>
+                            <input type="number" class="form-control" id="gstAmt" readonly>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">Total After GST</label>
-                            <input type="text" class="form-control" id="totalAftGstAmt" readonly>
+                            <label class="form-label">Tot Amt</label>
+                            <input type="number" class="form-control" id="totAmtAftGst" readonly>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">Total Local Amount</label>
-                            <input type="text" class="form-control" id="totalLocalAmt" readonly>
+                            <label class="form-label">Base Amt</label>
+                            <input type="number" class="form-control" id="totLocalAmt" readonly>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">GST Local Amount</label>
-                            <input type="text" class="form-control" id="gstLocalAmt" readonly>
+                            <label class="form-label">Base GST</label>
+                            <input type="number" class="form-control" id="gstLocalAmt" readonly>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">Total After GST Local</label>
-                            <input type="text" class="form-control" id="totalAftGstLocalAmt" readonly>
+                            <label class="form-label">Base Tot Amt</label>
+                            <input type="number" class="form-control" id="totLocalAmtAftGst" readonly>
                         </div>
-
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="remarks" class="form-label">Remarks</label>
                             <textarea class="form-control" id="remarks" rows="1"></textarea>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="remarks" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" rows="1"></textarea>
                         </div>
                     </div>
                 </div>
@@ -125,77 +119,56 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <label for="refNo" class="form-label">Item No</label>
-                            <input type="number" class="form-control" id="refNo">
+                            <label for="itemNo" class="form-label">Item No</label>
+                            <input type="number" class="form-control" id="itemNo">
                         </div>
                         <div class="col-md-2">
-                            <label for="customer" class="form-label">Product <label class="text-danger">*</label></label>
-                            <select class="form-select" id="customer" required>
-                                <option value="">Select Product</option>
-                                <!-- Customer options -->
-                            </select>
+                            <label for="invoice_cmb_product" class="form-label">Product<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_product" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="bank" class="form-label">GlCode</label>
-                            <select class="form-select" id="bank">
-                                <option value="">Select GlCode</option>
-                                <!-- Bank options -->
-                            </select>
+                            <label for="invoice_cmb_gl" class="form-label">Gl Account<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_gl" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="creditTerm" class="form-label">Task</label>
-                            <select class="form-select" id="bank">
-                                <option value="">Select Task</option>
-                                <!-- Bank options -->
-                            </select>
+                            <label for="invoice_cmb_task" class="form-label">Task<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_task" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="creditTerm" class="form-label">Details</label>
-                            <select class="form-select" id="bank">
-                                <option value="">Select Details</option>
-                                <!-- Bank options -->
-                            </select>
+                            <label for="invoice_cmb_details" class="form-label">Details<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_details" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="creditTerm" class="form-label">Department</label>
-                            <select class="form-select" id="bank">
-                                <option value="">Select Department</option>
-                                <!-- Bank options -->
-                            </select>
+                            <label for="invoice_cmb_department" class="form-label">Department<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_department" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="refNo" class="form-label">Qty</label>
-                            <input type="number" class="form-control" id="refNo">
+                            <label for="qty" class="form-label">Qty</label>
+                            <input type="number" class="form-control" id="qty">
                         </div>
                         <div class="col-md-2">
-                            <label for="creditTerm" class="form-label">UOM</label>
-                            <select class="form-select" id="bank">
-                                <option value="">Select UOM</option>
-                                <!-- Bank options -->
-                            </select>
+                            <label for="invoice_cmb_uom" class="form-label">UOM<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_uom" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="refNo" class="form-label">Unit Price</label>
-                            <input type="number" class="form-control" id="refNo">
+                            <label for="unitPrice" class="form-label">Unit Price</label>
+                            <input type="number" class="form-control" id="unitPrice">
                         </div>
                         <div class="col-md-2">
-                            <label for="refNo" class="form-label">Amt</label>
-                            <input type="number" class="form-control" id="refNo">
+                            <label for="totAmt" class="form-label">Amt</label>
+                            <input type="number" class="form-control" id="totAmt">
                         </div>
                         <div class="col-md-2">
-                            <label for="currency" class="form-label">Gst %</label>
-                            <select class="form-select" id="currency">
-                                <option value="USD">0%</option>
-                                <option value="SGD">5%</option>
-                            </select>
+                            <label for="invoice_cmb_gst" class="form-label">Gst %<span class="text-danger">*</span></label>
+                            <select id="invoice_cmb_gst" style="width: 100%"></select>
                         </div>
                         <div class="col-md-2">
-                            <label for="refNo" class="form-label">Gst</label>
-                            <input type="number" class="form-control" id="refNo">
+                            <label for="gstAmt" class="form-label">Gst</label>
+                            <input type="number" class="form-control" id="gstAmt">
                         </div>
                         <div class="col-md-2">
-                            <label for="refNo" class="form-label">Tot Amt</label>
-                            <input type="number" class="form-control" id="refNo">
+                            <label for="totAmtAftGst" class="form-label">Tot Amt</label>
+                            <input type="number" class="form-control" id="totAmtAftGst">
                         </div>
                         <div class="col-md-4">
                             <label for="remarks" class="form-label">Remarks</label>
@@ -204,11 +177,11 @@
                         <!-- Buttons Container -->
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex justify-content-end align-items-center gap-2 h-100">
-                                <button type="button" class="btn btn-primary" id="btnSave">
+                                <button type="button" class="btn btn-primary" id="btnSave" onclick="AddInvoiceDetails();">
                                     <span class="material-symbols-outlined me-1">save</span>
                                     Save
                                 </button>
-                                <button type="button" class="btn btn-secondary" id="btnClear">
+                                <button type="button" class="btn btn-secondary" id="btnClear" onclick="ClearInvoiceDetails();">
                                     <span class="material-symbols-outlined me-1">clear</span>
                                     Clear
                                 </button>
@@ -226,7 +199,3 @@
 
     <div id="grid_invoicedetails"></div>
 </div>
-
-<script>
-    
-</script>

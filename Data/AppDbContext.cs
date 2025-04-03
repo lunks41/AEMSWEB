@@ -127,9 +127,6 @@ namespace AEMSWEB.Data
         public DbSet<M_SupplierAddress> M_SupplierAddress { get; set; }
         public DbSet<M_SupplierContact> M_SupplierContact { get; set; }
         public DbSet<M_SupplierBank> M_SupplierBank { get; set; }
-        public DbSet<M_Tax> M_Tax { get; set; }
-        public DbSet<M_TaxCategory> M_TaxCategory { get; set; }
-        public DbSet<M_TaxDt> M_TaxDt { get; set; }
         public DbSet<M_Uom> M_Uom { get; set; }
         public DbSet<M_UomDt> M_UomDt { get; set; }
         public DbSet<M_Vessel> M_Vessel { get; set; }
@@ -230,6 +227,7 @@ namespace AEMSWEB.Data
         #endregion Project
 
         #region HRMS
+
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Position> Positions { get; set; }
@@ -238,6 +236,7 @@ namespace AEMSWEB.Data
         public DbSet<Leave> Leaves { get; set; }
         public DbSet<LeaveBalance> LeaveBalances { get; set; }
         public DbSet<Payroll> Payrolls { get; set; }
-        #endregion
+
+        #endregion HRMS
     }
 }

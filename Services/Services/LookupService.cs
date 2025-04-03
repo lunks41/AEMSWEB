@@ -471,7 +471,7 @@ namespace AEMSWEB.Services.Masters
         {
             try
             {
-                var result = await _repository.GetQueryAsync<ChartOfAccountLookupModel>($"select GLId,GLCode,GLName from M_ChartOfAccount where GLId<>0 And IsActive=1 And CompanyId ={CompanyId} order by GLName");
+                var result = await _repository.GetQueryAsync<ChartOfAccountLookupModel>($"select GLId,GLCode,GLName,IsSysControl,IsDeptMandatory,IsBargeMandatory,IsJobOrderMandatory,IsBankCharges from M_ChartOfAccount where GLId<>0 And IsActive=1 And CompanyId ={CompanyId} order by GLName");
 
                 return result;
             }
@@ -1071,7 +1071,7 @@ namespace AEMSWEB.Services.Masters
         {
             try
             {
-                var result = await _repository.GetQueryAsync<CreditTermLookupModel>($"SELECT CreditTermId,CreditTermCode,CreditTermName FROM dbo.M_CreditTerm WHERE CreditTermId<>0 And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm})) order by CreditTermName");
+                var result = await _repository.GetQueryAsync<CreditTermLookupModel>($"SELECT CreditTermId,CreditTermCode,CreditTermName,NoDays FROM dbo.M_CreditTerm WHERE CreditTermId<>0 And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm})) order by CreditTermName");
 
                 return result;
             }
@@ -1082,36 +1082,6 @@ namespace AEMSWEB.Services.Masters
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Master,
                     TransactionId = (short)E_Master.CreditTerm,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "M_CreditTerm",
-                    ModeId = (short)E_Mode.Lookup,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
-
-        public async Task<IEnumerable<TaxLookupModel>> GetTaxLookupAsync(Int16 CompanyId, Int16 UserId)
-        {
-            try
-            {
-                var result = await _repository.GetQueryAsync<TaxLookupModel>($"SELECT TaxId,TaxCode,TaxName FROM dbo.M_Tax WHERE TaxId<>0 And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Tax})) order by TaxName");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.Tax,
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_CreditTerm",
@@ -1493,7 +1463,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId)
+        public async Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId)
         {
             try
             {
@@ -1523,7 +1493,7 @@ namespace AEMSWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 CustomerId)
+        public async Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId)
         {
             try
             {
@@ -1601,36 +1571,6 @@ namespace AEMSWEB.Services.Masters
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_SupplierContact",
-                    ModeId = (short)E_Mode.Lookup,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
-
-        public async Task<IEnumerable<TaxCategoryLookupModel>> GetTaxCategoryLookupAsync(Int16 CompanyId, Int16 UserId)
-        {
-            try
-            {
-                var result = await _repository.GetQueryAsync<TaxCategoryLookupModel>($"SELECT TaxCategoryId,TaxCategoryCode,TaxCategoryName FROM dbo.M_TaxCategory WHERE TaxCategoryId<>0 And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.TaxCategory})) order by TaxCategoryName");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.TaxCategory,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "M_CreditTerm",
                     ModeId = (short)E_Mode.Lookup,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId
@@ -1754,7 +1694,37 @@ namespace AEMSWEB.Services.Masters
                     TransactionId = (short)E_Master.AccountType,
                     DocumentId = 0,
                     DocumentNo = "",
-                    TblName = "M_AccountType",
+                    TblName = "M_Task",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<TaskLookupModel>> GetTaskByJobOrderLookupAsync(Int16 CompanyId, Int16 UserId, long jobOrderId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<TaskLookupModel>($"SELECT Ser_Job.TaskId,M_Tsk.TaskCode,M_Tsk.TaskName FROM dbo.Ser_JobOrderDt Ser_Job INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Job.TaskId WHERE Ser_Job.JobOrderId={jobOrderId} order by Ser_Job.TaskId");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Task,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_JobOrder",
                     ModeId = (short)E_Mode.Lookup,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId
@@ -1785,6 +1755,36 @@ namespace AEMSWEB.Services.Masters
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_Charge",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<JobOrderLookupModel>> GetJobOrderLookupAsync(Int16 CompanyId, Int16 UserId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<JobOrderLookupModel>($"SELECT JobOrderId,JobOrderNo,PortId,VesselId FROM dbo.Ser_JobOrderHd WHERE JobOrderId<>0 AND CompanyId={CompanyId} and JobOrderNo NOT LIKE '' ORDER BY JobOrderDate DESC");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountType,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_AccountType",
                     ModeId = (short)E_Mode.Lookup,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId
