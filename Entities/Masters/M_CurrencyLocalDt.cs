@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Masters
+namespace AMESWEB.Entities.Masters
 {
     [PrimaryKey(nameof(CurrencyId), nameof(CompanyId), nameof(ValidFrom))]
     public class M_CurrencyLocalDt

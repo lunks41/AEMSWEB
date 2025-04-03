@@ -1,9 +1,9 @@
-﻿using AEMSWEB.Models;
-using AEMSWEB.Services.IServices;
+﻿using AMESWEB.Models;
+using AMESWEB.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Controllers
+namespace AMESWEB.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class ChangelogController : ControllerBase

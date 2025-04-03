@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.GL
+namespace AMESWEB.Entities.Accounts.GL
 {
     [PrimaryKey(nameof(ContraId), nameof(ItemNo))]
     public class GLContraDt

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Admin
+namespace AMESWEB.Entities.Admin
 {
     public class AdmAuditLog
     {

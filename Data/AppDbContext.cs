@@ -1,18 +1,18 @@
-﻿using AEMSWEB.Areas.HRM.Models;
-using AEMSWEB.Entities.Accounts.AP;
-using AEMSWEB.Entities.Accounts.AR;
-using AEMSWEB.Entities.Accounts.CB;
-using AEMSWEB.Entities.Accounts.GL;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Entities.Masters;
-using AEMSWEB.Entities.Project;
-using AEMSWEB.Entities.Setting;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.HRM.Models;
+using AMESWEB.Entities.Accounts.AP;
+using AMESWEB.Entities.Accounts.AR;
+using AMESWEB.Entities.Accounts.CB;
+using AMESWEB.Entities.Accounts.GL;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Entities.Masters;
+using AMESWEB.Entities.Project;
+using AMESWEB.Entities.Setting;
+using AMESWEB.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Data
+namespace AMESWEB.Data
 {
     public class ApplicationDbContext : IdentityDbContext<AdmUser, AdmUserGroup, short>
     {

@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Areas.Account.Models.AP;
-using AEMSWEB.Entities.Accounts.AP;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Account.Models.AP;
+using AMESWEB.Entities.Accounts.AP;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Account.Data.IServices.AP
+namespace AMESWEB.Areas.Account.Data.IServices.AP
 {
     public interface IAPCreditNoteService
     {

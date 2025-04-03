@@ -1,14 +1,14 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Enums;
-using AEMSWEB.Helpers;
-using AEMSWEB.Models;
-using AEMSWEB.Models.Admin;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Enums;
+using AMESWEB.Helpers;
+using AMESWEB.Models;
+using AMESWEB.Models.Admin;
+using AMESWEB.Repository;
 using Microsoft.Data.SqlClient;
 using System.Transactions;
 
-namespace AEMSWEB.Areas.Admin.Data
+namespace AMESWEB.Areas.Admin.Data
 {
     public sealed class CompanyService : ICompanyService
     {

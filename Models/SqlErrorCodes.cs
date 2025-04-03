@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Models
+﻿namespace AMESWEB.Models
 {
     public static class SqlErrorCodes
     {

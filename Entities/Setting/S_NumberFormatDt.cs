@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Entities.Setting
+namespace AMESWEB.Entities.Setting
 {
     [PrimaryKey(nameof(NumberId), nameof(NumYear))]
     public class S_NumberFormatDt

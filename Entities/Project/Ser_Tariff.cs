@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Project
+namespace AMESWEB.Entities.Project
 {
     public class Ser_Tariff
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Admin
+namespace AMESWEB.Entities.Admin
 {
     [PrimaryKey(nameof(CompanyId), nameof(ModuleId), nameof(TransactionId), nameof(DocumentId), nameof(ItemNo))]
     public class AdmDocuments

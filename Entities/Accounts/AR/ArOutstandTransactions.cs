@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Entities.Accounts.AR
+﻿namespace AMESWEB.Entities.Accounts.AR
 {
     public class ArOutstandTransactions
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Areas.Admin.Controllers
+namespace AMESWEB.Areas.Admin.Controllers
 {
     [Area("admin")]
     [Authorize]

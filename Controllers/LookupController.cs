@@ -1,7 +1,7 @@
-﻿using AEMSWEB.IServices;
+﻿using AMESWEB.IServices;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Controllers
+namespace AMESWEB.Controllers
 {
     public class LookupController : BaseController
     {
@@ -371,7 +371,7 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId,int customerId)
+        public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId, int customerId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -381,7 +381,7 @@ namespace AEMSWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCustomerContactLookupFin(string companyId,int customerId)
+        public async Task<JsonResult> GetCustomerContactLookupFin(string companyId, int customerId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;

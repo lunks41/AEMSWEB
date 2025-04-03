@@ -1,16 +1,16 @@
-﻿using AEMSWEB.Areas.Account.Data.IServices;
-using AEMSWEB.Areas.Account.Data.IServices.GL;
-using AEMSWEB.Areas.Account.Models.GL;
-using AEMSWEB.Data;
-using AEMSWEB.Entities.Accounts.GL;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
-using AEMSWEB.Models;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Areas.Account.Data.IServices;
+using AMESWEB.Areas.Account.Data.IServices.GL;
+using AMESWEB.Areas.Account.Models.GL;
+using AMESWEB.Data;
+using AMESWEB.Entities.Accounts.GL;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
+using AMESWEB.Models;
+using AMESWEB.Repository;
 using System.Transactions;
 
-namespace AEMSWEB.Areas.Account.Data.Services.GL
+namespace AMESWEB.Areas.Account.Data.Services.GL
 {
     public sealed class GLOpeningBalanceService : IGLOpeningBalanceService
     {

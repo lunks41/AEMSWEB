@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Controllers
+namespace AMESWEB.Controllers
 {
     public class ReportsController : Controller
     {

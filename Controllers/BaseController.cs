@@ -1,10 +1,10 @@
-﻿using AEMSWEB.IServices;
-using AEMSWEB.Models.Admin;
+﻿using AMESWEB.IServices;
+using AMESWEB.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
-namespace AEMSWEB.Controllers
+namespace AMESWEB.Controllers
 {
     public abstract class BaseController : Controller
     {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace AEMSWEB.Models
+namespace AMESWEB.Models
 {
     public class Response
     {

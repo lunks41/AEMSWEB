@@ -1,18 +1,18 @@
-﻿using AEMSWEB.Areas.Account.Data.IServices;
-using AEMSWEB.Areas.Account.Data.IServices.AP;
-using AEMSWEB.Areas.Account.Models.AP;
-using AEMSWEB.Data;
-using AEMSWEB.Entities.Accounts.AP;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
-using AEMSWEB.Models;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Areas.Account.Data.IServices;
+using AMESWEB.Areas.Account.Data.IServices.AP;
+using AMESWEB.Areas.Account.Models.AP;
+using AMESWEB.Data;
+using AMESWEB.Entities.Accounts.AP;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
+using AMESWEB.Models;
+using AMESWEB.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
 
-namespace AEMSWEB.Areas.Account.Data.Services.AP
+namespace AMESWEB.Areas.Account.Data.Services.AP
 {
     public sealed class APPaymentService : IAPPaymentService
     {

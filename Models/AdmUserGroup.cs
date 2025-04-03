@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Models
+﻿namespace AMESWEB.Models
 {
     using Microsoft.AspNetCore.Identity;
     using System.ComponentModel.DataAnnotations.Schema;

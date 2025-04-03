@@ -1,13 +1,13 @@
-﻿using AEMSWEB.Areas.Admin.Data;
-using AEMSWEB.Controllers;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
-using AEMSWEB.Models;
-using AEMSWEB.Models.Admin;
+﻿using AMESWEB.Areas.Admin.Data;
+using AMESWEB.Controllers;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
+using AMESWEB.Models;
+using AMESWEB.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace AEMSWEB.Areas.Admin.Controllers
+namespace AMESWEB.Areas.Admin.Controllers
 {
     public class CompanyController : BaseController
     {

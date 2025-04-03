@@ -1,7 +1,7 @@
-﻿using AEMSWEB.Helpers;
+﻿using AMESWEB.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Areas.Account.Models.AP
+namespace AMESWEB.Areas.Account.Models.AP
 {
     public class APInvoiceViewModel
     {

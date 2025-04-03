@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Masters
+namespace AMESWEB.Entities.Masters
 {
     [PrimaryKey(nameof(CompanyId), nameof(AccSetupId), nameof(CurrencyId), nameof(GLId))]
     public class M_AccountSetupDt

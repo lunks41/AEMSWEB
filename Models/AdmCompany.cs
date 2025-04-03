@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AEMSWEB.Models
+namespace AMESWEB.Models
 {
     public class AdmCompany
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Setting
+namespace AMESWEB.Entities.Setting
 {
     public class S_DecSettings
     {

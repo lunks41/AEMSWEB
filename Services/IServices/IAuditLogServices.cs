@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Entities.Admin;
+﻿using AMESWEB.Entities.Admin;
 
-namespace AEMSWEB.ModelsServices
+namespace AMESWEB.ModelsServices
 {
     public interface IAuditLogServices
     {

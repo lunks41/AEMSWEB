@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Models
+namespace AMESWEB.Models
 {
     [PrimaryKey(nameof(UserGroupId), nameof(ModuleId), nameof(TransactionId))]
     public class AdmUserGroupRights

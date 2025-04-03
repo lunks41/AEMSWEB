@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Masters
+namespace AMESWEB.Entities.Masters
 {
     [PrimaryKey(nameof(SupplierId), nameof(AddressId))]
     public class M_SupplierAddress

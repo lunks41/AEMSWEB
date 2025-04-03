@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Entities.Masters;
-using AEMSWEB.Models;
-using AEMSWEB.Models.Masters;
+﻿using AMESWEB.Entities.Masters;
+using AMESWEB.Models;
+using AMESWEB.Models.Masters;
 
-namespace AEMSWEB.Areas.Master.Data.IServices
+namespace AMESWEB.Areas.Master.Data.IServices
 {
     public interface IUomService
     {

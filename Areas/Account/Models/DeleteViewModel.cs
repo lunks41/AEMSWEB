@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Account.Models
+﻿namespace AMESWEB.Areas.Account.Models
 {
     public class DeleteViewModel
     {

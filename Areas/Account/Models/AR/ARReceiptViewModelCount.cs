@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Account.Models.AR
+﻿namespace AMESWEB.Areas.Account.Models.AR
 {
     public class ARReceiptViewModelCount
     {

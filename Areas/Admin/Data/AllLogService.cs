@@ -1,13 +1,13 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
-using AEMSWEB.Models;
-using AEMSWEB.Models.Admin;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
+using AMESWEB.Models;
+using AMESWEB.Models.Admin;
+using AMESWEB.Repository;
 using System.Transactions;
 
-namespace AEMSWEB.Areas.Admin.Data
+namespace AMESWEB.Areas.Admin.Data
 {
     public sealed class AllLogService : IAllLogService
     {

@@ -1,9 +1,9 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Models;
+﻿using AMESWEB.Data;
+using AMESWEB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Helpers
+namespace AMESWEB.Helpers
 {
     public class PermissionRequirement : IAuthorizationRequirement
     {

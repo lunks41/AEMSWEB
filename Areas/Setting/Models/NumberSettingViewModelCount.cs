@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Setting.Models
+﻿namespace AMESWEB.Areas.Setting.Models
 {
     public class NumberSettingViewModelCount
     {

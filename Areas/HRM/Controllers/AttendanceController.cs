@@ -1,11 +1,11 @@
-﻿using AEMSWEB.Areas.HRM.Models;
-using AEMSWEB.Data;
+﻿using AMESWEB.Areas.HRM.Models;
+using AMESWEB.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 
-namespace AEMSWEB.Areas.HRM.Controllers
+namespace AMESWEB.Areas.HRM.Controllers
 {
     [Authorize(Roles = "HR")]
     public class AttendanceController : Controller

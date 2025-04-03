@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Models.Admin
+﻿namespace AMESWEB.Models.Admin
 {
     public class UserModuleViewModel
     {

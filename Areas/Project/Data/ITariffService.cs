@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Areas.Project.Models;
-using AEMSWEB.Entities.Project;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Project.Models;
+using AMESWEB.Entities.Project;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Project.Data.IServices
+namespace AMESWEB.Areas.Project.Data.IServices
 {
     public interface ITariffService
     {

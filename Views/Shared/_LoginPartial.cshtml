@@ -1,4 +1,4 @@
-﻿@using AEMSWEB.Extensions
+﻿@using AMESWEB.Extensions
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity;
 @inject IHttpContextAccessor HttpContextAccessor
@@ -7,7 +7,7 @@
 @{
     // Get companyId from the URL route
     var companyId = HttpContextAccessor.HttpContext.GetRouteValue("companyId")?.ToString();
-    var companies = Context.Session.GetObject<List<AEMSWEB.Models.AdmCompany>>("AvailableCompanies");
+    var companies = Context.Session.GetObject<List<AMESWEB.Models.AdmCompany>>("AvailableCompanies");
     var currentCompany = companies?.FirstOrDefault(c => c.CompanyId.ToString() == companyId);
 }
 

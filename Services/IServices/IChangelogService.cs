@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Models;
+﻿using AMESWEB.Models;
 
-namespace AEMSWEB.Services.IServices
+namespace AMESWEB.Services.IServices
 {
     public interface IChangelogService
     {

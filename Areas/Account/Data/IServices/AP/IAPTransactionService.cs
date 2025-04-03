@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Areas.Account.Models;
+﻿using AMESWEB.Areas.Account.Models;
 
-namespace AEMSWEB.Areas.Account.Data.IServices.AP
+namespace AMESWEB.Areas.Account.Data.IServices.AP
 {
     public interface IAPTransactionService
     {

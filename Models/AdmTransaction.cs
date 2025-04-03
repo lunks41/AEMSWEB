@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Models
+namespace AMESWEB.Models
 {
     [PrimaryKey(nameof(ModuleId), nameof(TransactionId))]
     public class AdmTransaction

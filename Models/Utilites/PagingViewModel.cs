@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Models.Utilites
+﻿namespace AMESWEB.Models.Utilites
 {
     public class PagingViewModel
     {

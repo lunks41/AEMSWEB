@@ -1,18 +1,18 @@
-﻿using AEMSWEB.Areas.Project.Data.IServices;
-using AEMSWEB.Areas.Project.Models;
-using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Entities.Project;
-using AEMSWEB.Enums;
-using AEMSWEB.Helpers;
-using AEMSWEB.IServices;
-using AEMSWEB.Models;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Areas.Project.Data.IServices;
+using AMESWEB.Areas.Project.Models;
+using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Entities.Project;
+using AMESWEB.Enums;
+using AMESWEB.Helpers;
+using AMESWEB.IServices;
+using AMESWEB.Models;
+using AMESWEB.Repository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 
-namespace AEMSWEB.Areas.Project.Data.Services
+namespace AMESWEB.Areas.Project.Data.Services
 {
     public sealed class JoborderService : IJobOrderService
     {

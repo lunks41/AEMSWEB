@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Models;
+﻿using AMESWEB.Models;
 
-namespace AEMSWEB.Helpers
+namespace AMESWEB.Helpers
 {
     public static class SqlErrorHelper
     {

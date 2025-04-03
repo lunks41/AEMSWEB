@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Masters
+namespace AMESWEB.Entities.Masters
 {
     public class M_SubCategory
     {

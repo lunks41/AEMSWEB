@@ -1,13 +1,13 @@
-﻿using AEMSWEB.Areas.Master.Data.IServices;
-using AEMSWEB.Controllers;
-using AEMSWEB.Entities.Masters;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
-using AEMSWEB.Models.Masters;
+﻿using AMESWEB.Areas.Master.Data.IServices;
+using AMESWEB.Controllers;
+using AMESWEB.Entities.Masters;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
+using AMESWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Areas.Master.Controllers
+namespace AMESWEB.Areas.Master.Controllers
 {
     [Area("master")]
     [Authorize]

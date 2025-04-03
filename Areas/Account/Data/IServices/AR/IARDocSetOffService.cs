@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Areas.Account.Models.AR;
-using AEMSWEB.Entities.Accounts.AR;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Account.Models.AR;
+using AMESWEB.Entities.Accounts.AR;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Account.Data.IServices.AR
+namespace AMESWEB.Areas.Account.Data.IServices.AR
 {
     public interface IARDocSetOffService
     {

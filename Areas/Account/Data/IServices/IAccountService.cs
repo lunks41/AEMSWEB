@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Account.Data.IServices
+﻿namespace AMESWEB.Areas.Account.Data.IServices
 {
     public interface IAccountService
     {

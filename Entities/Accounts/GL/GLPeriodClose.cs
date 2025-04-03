@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Entities.Accounts.GL
+namespace AMESWEB.Entities.Accounts.GL
 {
     [PrimaryKey(nameof(CompanyId), nameof(FinYear), nameof(FinMonth))]
     public class GLPeriodClose

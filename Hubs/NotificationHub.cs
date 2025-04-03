@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace AEMSWEB.Hubs
+namespace AMESWEB.Hubs
 {
     public class NotificationHub : Hub
     {

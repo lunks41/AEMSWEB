@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Account.Models.AP
+﻿namespace AMESWEB.Areas.Account.Models.AP
 {
     public class APCreditNoteViewModelCount
     {

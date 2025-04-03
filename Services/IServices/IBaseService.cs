@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Models.Admin;
+﻿using AMESWEB.Models.Admin;
 
-namespace AEMSWEB.IServices
+namespace AMESWEB.IServices
 {
     public interface IBaseService
     {

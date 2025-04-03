@@ -1,10 +1,10 @@
-﻿using AEMSWEB.Data;
+﻿using AMESWEB.Data;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace AEMSWEB.Repository
+namespace AMESWEB.Repository
 {
     //Unit of Work Pattern
     public class Repository<T> : IRepository<T> where T : class

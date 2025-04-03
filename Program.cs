@@ -1,8 +1,8 @@
-using AEMSWEB.Data;
-using AEMSWEB.Extensions;
-using AEMSWEB.Helpers;
-using AEMSWEB.Hubs;
-using AEMSWEB.Models;
+using AMESWEB.Data;
+using AMESWEB.Extensions;
+using AMESWEB.Helpers;
+using AMESWEB.Hubs;
+using AMESWEB.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
@@ -202,12 +202,12 @@ app.MapControllerRoute(
 
 app.Run();
 
-//using AEMSWEB.Data;
-//using AEMSWEB.Extension;
-//using AEMSWEB.Extensions;
-//using AEMSWEB.Helpers;
-//using AEMSWEB.Hubs;
-//using AEMSWEB.Models;
+//using AMESWEB.Data;
+//using AMESWEB.Extension;
+//using AMESWEB.Extensions;
+//using AMESWEB.Helpers;
+//using AMESWEB.Hubs;
+//using AMESWEB.Models;
 //using Microsoft.AspNetCore.Authentication.Cookies;
 //using Microsoft.AspNetCore.Authorization;
 //using Microsoft.AspNetCore.Diagnostics;

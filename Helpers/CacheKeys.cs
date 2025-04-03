@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Helpers
+﻿namespace AMESWEB.Helpers
 {
     public static class CacheKeys
     {

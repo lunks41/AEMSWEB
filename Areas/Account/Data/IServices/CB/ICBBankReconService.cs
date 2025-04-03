@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Areas.Account.Models.CB;
-using AEMSWEB.Entities.Accounts.CB;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Account.Models.CB;
+using AMESWEB.Entities.Accounts.CB;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Account.Data.IServices.CB
+namespace AMESWEB.Areas.Account.Data.IServices.CB
 {
     public interface ICBBankReconService
     {

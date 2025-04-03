@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Account.Models.GL
+﻿namespace AMESWEB.Areas.Account.Models.GL
 {
     public class GLJournalViewModel
     {

@@ -1,6 +1,6 @@
 ﻿// Ignore Spelling: Admin
 
-namespace AEMSWEB.Enums
+namespace AMESWEB.Enums
 {
     public enum E_Mode
     {

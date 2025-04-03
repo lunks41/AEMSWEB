@@ -1,14 +1,14 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Extensions;
-using AEMSWEB.Models;
-using AEMSWEB.ViewModels;
+﻿using AMESWEB.Data;
+using AMESWEB.Extensions;
+using AMESWEB.Models;
+using AMESWEB.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Controllers
+namespace AMESWEB.Controllers
 {
     public class AccountController : Controller
     {

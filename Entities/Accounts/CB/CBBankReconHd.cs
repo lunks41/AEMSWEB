@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.CB
+namespace AMESWEB.Entities.Accounts.CB
 {
     public class CBBankReconHd
     {

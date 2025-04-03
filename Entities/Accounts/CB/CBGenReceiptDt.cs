@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.CB
+namespace AMESWEB.Entities.Accounts.CB
 {
     [PrimaryKey(nameof(ReceiptId), nameof(ItemNo))]
     public class CBGenReceiptDt

@@ -1,14 +1,14 @@
-﻿using AEMSWEB.Areas.Account.Data.IServices.AR;
-using AEMSWEB.Areas.Account.Models.AR;
-using AEMSWEB.Entities.Accounts.AR;
-using AEMSWEB.Helpers;
-using AEMSWEB.Hubs;
+﻿using AMESWEB.Areas.Account.Data.IServices.AR;
+using AMESWEB.Areas.Account.Models.AR;
+using AMESWEB.Entities.Accounts.AR;
+using AMESWEB.Helpers;
+using AMESWEB.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
-namespace AEMSWEB.Areas.Account.Controllers
+namespace AMESWEB.Areas.Account.Controllers
 {
     [Area("account")]
     [Authorize]

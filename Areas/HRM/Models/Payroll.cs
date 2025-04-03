@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AEMSWEB.Areas.HRM.Models
+namespace AMESWEB.Areas.HRM.Models
 {
     public class Payroll
     {

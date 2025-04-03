@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Areas.Account.Models.GL
+namespace AMESWEB.Areas.Account.Models.GL
 {
     public class GLJournalDtViewModel
     {

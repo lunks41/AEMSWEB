@@ -1,11 +1,11 @@
-﻿using AEMSWEB.Areas.HRM.Models;
-using AEMSWEB.Data;
+﻿using AMESWEB.Areas.HRM.Models;
+using AMESWEB.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Areas.HRM.Controllers
+namespace AMESWEB.Areas.HRM.Controllers
 {
     [Authorize(Roles = "HR,Admin")]
     public class EmployeeController : Controller

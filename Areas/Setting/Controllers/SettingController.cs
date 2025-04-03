@@ -1,15 +1,15 @@
-﻿using AEMSWEB.Areas.Setting.Data;
-using AEMSWEB.Areas.Setting.Models;
-using AEMSWEB.Controllers;
-using AEMSWEB.Entities.Setting;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
+﻿using AMESWEB.Areas.Setting.Data;
+using AMESWEB.Areas.Setting.Models;
+using AMESWEB.Controllers;
+using AMESWEB.Entities.Setting;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using System.Security.Claims;
 
-namespace AEMSWEB.Areas.Setting.Controllers
+namespace AMESWEB.Areas.Setting.Controllers
 {
     [Area("setting")]
     [Authorize]

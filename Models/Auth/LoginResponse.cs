@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Models.Auth
+﻿namespace AMESWEB.Models.Auth
 {
     public class LoginResponse
     {

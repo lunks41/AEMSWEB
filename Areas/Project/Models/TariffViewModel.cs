@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Project.Models
+﻿namespace AMESWEB.Areas.Project.Models
 {
     public class SaveTariffViewModel
     {

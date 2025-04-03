@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Models.Masters
+namespace AMESWEB.Models.Masters
 {
     public class CustomerCreditLimitViewModel
     {

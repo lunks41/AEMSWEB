@@ -1,11 +1,11 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Enums;
-using AEMSWEB.Models.Admin;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Enums;
+using AMESWEB.Models.Admin;
+using AMESWEB.Repository;
 using Dapper;
 
-namespace AEMSWEB.Areas.Admin.Data
+namespace AMESWEB.Areas.Admin.Data
 {
     public sealed class TransactionService : ITransactionService
     {

@@ -1,16 +1,16 @@
-﻿using AEMSWEB.Areas.Master.Data.IServices;
-using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Entities.Masters;
-using AEMSWEB.Enums;
-using AEMSWEB.Models;
-using AEMSWEB.Models.Masters;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Areas.Master.Data.IServices;
+using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Entities.Masters;
+using AMESWEB.Enums;
+using AMESWEB.Models;
+using AMESWEB.Models.Masters;
+using AMESWEB.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
 
-namespace AEMSWEB.Areas.Master.Data.Services
+namespace AMESWEB.Areas.Master.Data.Services
 {
     public sealed class SupplierBankService : ISupplierBankService
     {

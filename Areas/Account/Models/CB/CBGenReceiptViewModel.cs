@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Account.Models.CB
+﻿namespace AMESWEB.Areas.Account.Models.CB
 {
     public class CBGenReceiptViewModel
     {

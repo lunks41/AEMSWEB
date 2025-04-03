@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Areas.Setting.Models;
-using AEMSWEB.Entities.Setting;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Setting.Models;
+using AMESWEB.Entities.Setting;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Setting.Data
+namespace AMESWEB.Areas.Setting.Data
 {
     public interface ISettingService
     {

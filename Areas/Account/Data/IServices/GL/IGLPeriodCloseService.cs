@@ -1,7 +1,7 @@
-﻿using AEMSWEB.Areas.Account.Models.GL;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Account.Models.GL;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Account.Data.IServices.GL
+namespace AMESWEB.Areas.Account.Data.IServices.GL
 {
     public interface IGLPeriodCloseService
     {

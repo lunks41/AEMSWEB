@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AEMSWEB.Areas.PettyCash.Models
+namespace AMESWEB.Areas.PettyCash.Models
 {
     // Models/PettyCashEntry.cs
     public enum ApprovalStatus

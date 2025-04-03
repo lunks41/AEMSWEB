@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Masters
+namespace AMESWEB.Entities.Masters
 {
     [Keyless]
     public class M_Vessel_Back

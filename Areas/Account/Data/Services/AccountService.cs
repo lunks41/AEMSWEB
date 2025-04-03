@@ -1,11 +1,11 @@
-﻿using AEMSWEB.Areas.Account.Data.IServices;
-using AEMSWEB.Data;
-using AEMSWEB.IServices;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Areas.Account.Data.IServices;
+using AMESWEB.Data;
+using AMESWEB.IServices;
+using AMESWEB.Repository;
 using Dapper;
 using System.Data;
 
-namespace AEMSWEB.Areas.Account.Data.Services
+namespace AMESWEB.Areas.Account.Data.Services
 {
     public sealed class AccountService : IAccountService
     {

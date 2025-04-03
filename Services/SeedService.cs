@@ -1,9 +1,9 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Models;
+﻿using AMESWEB.Data;
+using AMESWEB.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace AEMSWEB.Services
+namespace AMESWEB.Services
 {
     public class SeedService
     {

@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Models.Admin;
+﻿using AMESWEB.Models.Admin;
 
-namespace AEMSWEB.Areas.Admin.Data
+namespace AMESWEB.Areas.Admin.Data
 {
     public interface IModuleService
     {

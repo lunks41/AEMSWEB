@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Entities.Accounts.GL
+﻿namespace AMESWEB.Entities.Accounts.GL
 {
     public class GLBalances_GLCode
     {

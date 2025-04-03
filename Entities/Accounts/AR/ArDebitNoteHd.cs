@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.AR
+namespace AMESWEB.Entities.Accounts.AR
 {
     public class ArDebitNoteHd
     {

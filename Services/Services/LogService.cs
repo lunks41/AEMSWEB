@@ -1,9 +1,9 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
+﻿using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
 
-namespace AEMSWEB.Services
+namespace AMESWEB.Services
 {
     public class LogService : ILogService
     {

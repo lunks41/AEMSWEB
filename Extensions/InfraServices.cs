@@ -1,25 +1,25 @@
-using AEMSWEB.Areas.Account.Data.IServices;
-using AEMSWEB.Areas.Account.Data.IServices.AP;
-using AEMSWEB.Areas.Account.Data.IServices.AR;
-using AEMSWEB.Areas.Account.Data.IServices.CB;
-using AEMSWEB.Areas.Account.Data.IServices.GL;
-using AEMSWEB.Areas.Account.Data.Services;
-using AEMSWEB.Areas.Account.Data.Services.AP;
-using AEMSWEB.Areas.Account.Data.Services.AR;
-using AEMSWEB.Areas.Account.Data.Services.CB;
-using AEMSWEB.Areas.Account.Data.Services.GL;
-using AEMSWEB.Areas.Admin.Data;
-using AEMSWEB.Areas.Master.Data.IServices;
-using AEMSWEB.Areas.Master.Data.Services;
-using AEMSWEB.Areas.Project.Data.IServices;
-using AEMSWEB.Areas.Project.Data.Services;
-using AEMSWEB.Areas.Setting.Data;
-using AEMSWEB.IServices;
-using AEMSWEB.Repository;
-using AEMSWEB.Services;
-using AEMSWEB.Services.Masters;
+using AMESWEB.Areas.Account.Data.IServices;
+using AMESWEB.Areas.Account.Data.IServices.AP;
+using AMESWEB.Areas.Account.Data.IServices.AR;
+using AMESWEB.Areas.Account.Data.IServices.CB;
+using AMESWEB.Areas.Account.Data.IServices.GL;
+using AMESWEB.Areas.Account.Data.Services;
+using AMESWEB.Areas.Account.Data.Services.AP;
+using AMESWEB.Areas.Account.Data.Services.AR;
+using AMESWEB.Areas.Account.Data.Services.CB;
+using AMESWEB.Areas.Account.Data.Services.GL;
+using AMESWEB.Areas.Admin.Data;
+using AMESWEB.Areas.Master.Data.IServices;
+using AMESWEB.Areas.Master.Data.Services;
+using AMESWEB.Areas.Project.Data.IServices;
+using AMESWEB.Areas.Project.Data.Services;
+using AMESWEB.Areas.Setting.Data;
+using AMESWEB.IServices;
+using AMESWEB.Repository;
+using AMESWEB.Services;
+using AMESWEB.Services.Masters;
 
-namespace AEMSWEB.Extensions;
+namespace AMESWEB.Extensions;
 
 public static class InfraServices
 {

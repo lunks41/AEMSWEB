@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Areas.Account.Models.GL;
-using AEMSWEB.Entities.Accounts.GL;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Account.Models.GL;
+using AMESWEB.Entities.Accounts.GL;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Account.Data.IServices.GL
+namespace AMESWEB.Areas.Account.Data.IServices.GL
 {
     public interface IGLContraService
     {

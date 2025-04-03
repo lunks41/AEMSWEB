@@ -1,9 +1,9 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.IServices;
-using AEMSWEB.Models.Admin;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Data;
+using AMESWEB.IServices;
+using AMESWEB.Models.Admin;
+using AMESWEB.Repository;
 
-namespace AEMSWEB.Services
+namespace AMESWEB.Services
 {
     public class BaseService : IBaseService
     {

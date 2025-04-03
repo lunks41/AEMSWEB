@@ -1,13 +1,13 @@
-﻿using AEMSWEB.Areas.Project.Data.IServices;
-using AEMSWEB.Areas.Project.Models;
-using AEMSWEB.Controllers;
-using AEMSWEB.Entities.Project;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
+﻿using AMESWEB.Areas.Project.Data.IServices;
+using AMESWEB.Areas.Project.Models;
+using AMESWEB.Controllers;
+using AMESWEB.Entities.Project;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Areas.Project.Controllers
+namespace AMESWEB.Areas.Project.Controllers
 {
     //Rates of tariff task wise
     [Area("project")]

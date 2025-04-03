@@ -1,17 +1,17 @@
-﻿using AEMSWEB.Areas.Setting.Models;
-using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Entities.Setting;
-using AEMSWEB.Enums;
-using AEMSWEB.Helpers;
-using AEMSWEB.IServices;
-using AEMSWEB.Models;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Areas.Setting.Models;
+using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Entities.Setting;
+using AMESWEB.Enums;
+using AMESWEB.Helpers;
+using AMESWEB.IServices;
+using AMESWEB.Models;
+using AMESWEB.Repository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 
-namespace AEMSWEB.Areas.Setting.Data
+namespace AMESWEB.Areas.Setting.Data
 {
     public sealed class SettingServices : ISettingService
     {

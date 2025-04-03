@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Models
+namespace AMESWEB.Models
 {
     public class AdmUser : IdentityUser<short>
     {

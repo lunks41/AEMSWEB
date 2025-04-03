@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Areas.Master.Models;
-using AEMSWEB.Entities.Masters;
-using AEMSWEB.Models;
+﻿using AMESWEB.Areas.Master.Models;
+using AMESWEB.Entities.Masters;
+using AMESWEB.Models;
 
-namespace AEMSWEB.Areas.Master.Data.IServices
+namespace AMESWEB.Areas.Master.Data.IServices
 {
     public interface IChartOfAccountService
     {

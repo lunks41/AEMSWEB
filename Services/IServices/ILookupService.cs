@@ -1,7 +1,7 @@
-﻿using AEMSWEB.Models;
-using AEMSWEB.Models.Admin;
+﻿using AMESWEB.Models;
+using AMESWEB.Models.Admin;
 
-namespace AEMSWEB.IServices
+namespace AMESWEB.IServices
 {
     public interface ILookupService
     {

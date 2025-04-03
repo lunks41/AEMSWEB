@@ -1,7 +1,7 @@
-﻿using AEMSWEB.Helpers;
+﻿using AMESWEB.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Models
+namespace AMESWEB.Models
 {
     public class HeaderViewModelV1
     {

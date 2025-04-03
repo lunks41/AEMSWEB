@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.Master.Models
+﻿namespace AMESWEB.Areas.Master.Models
 {
     public class ChartOfAccountViewModel
     {

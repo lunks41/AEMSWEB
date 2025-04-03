@@ -1,11 +1,11 @@
-﻿using AEMSWEB.Data;
-using AEMSWEB.Models;
+﻿using AMESWEB.Data;
+using AMESWEB.Models;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace AEMSWEB.Components
+namespace AMESWEB.Components
 {
     public class NavigationViewComponent : ViewComponent
     {

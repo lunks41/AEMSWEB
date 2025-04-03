@@ -1,4 +1,4 @@
-﻿namespace AEMSWEB.Areas.HRM.Models
+﻿namespace AMESWEB.Areas.HRM.Models
 {
     public class DashboardViewModel
     {

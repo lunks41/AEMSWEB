@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Setting
+namespace AMESWEB.Entities.Setting
 {
     [PrimaryKey(nameof(CompanyId), nameof(UserId))]
     public class S_UserSettings

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.GL
+namespace AMESWEB.Entities.Accounts.GL
 {
     [PrimaryKey(nameof(ContraId))]
     public class GLContraHd

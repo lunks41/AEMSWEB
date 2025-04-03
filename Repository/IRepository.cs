@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using System.Data;
 
-namespace AEMSWEB.Repository
+namespace AMESWEB.Repository
 {
     //Unit of Work Pattern
     public interface IRepository<T> where T : class

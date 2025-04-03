@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.AR
+namespace AMESWEB.Entities.Accounts.AR
 {
     [PrimaryKey(nameof(ReceiptId), nameof(ItemNo))]
     public class ArReceiptDt

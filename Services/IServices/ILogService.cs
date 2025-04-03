@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Enums;
+﻿using AMESWEB.Enums;
 
-namespace AEMSWEB.IServices
+namespace AMESWEB.IServices
 {
     public interface ILogService
     {

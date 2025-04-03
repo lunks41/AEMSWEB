@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace AEMSWEB.Extensions
+namespace AMESWEB.Extensions
 {
     public static class SessionExtensions
     {

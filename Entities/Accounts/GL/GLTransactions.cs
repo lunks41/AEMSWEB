@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.GL
+namespace AMESWEB.Entities.Accounts.GL
 {
     public class GLTransactions
     {

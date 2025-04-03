@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AEMSWEB.ViewModels
+namespace AMESWEB.ViewModels
 {
     public class VerifyEmailViewModel
     {

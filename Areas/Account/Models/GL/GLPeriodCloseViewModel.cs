@@ -1,6 +1,6 @@
-﻿using AEMSWEB.Helpers;
+﻿using AMESWEB.Helpers;
 
-namespace AEMSWEB.Areas.Account.Models.GL
+namespace AMESWEB.Areas.Account.Models.GL
 {
     public class GLPeriodCloseViewModel
     {

@@ -1,13 +1,13 @@
-﻿using AEMSWEB.Areas.Account.Data.IServices;
-using AEMSWEB.Areas.Account.Data.IServices.AP;
-using AEMSWEB.Areas.Account.Models;
-using AEMSWEB.Data;
-using AEMSWEB.Entities.Admin;
-using AEMSWEB.Enums;
-using AEMSWEB.IServices;
-using AEMSWEB.Repository;
+﻿using AMESWEB.Areas.Account.Data.IServices;
+using AMESWEB.Areas.Account.Data.IServices.AP;
+using AMESWEB.Areas.Account.Models;
+using AMESWEB.Data;
+using AMESWEB.Entities.Admin;
+using AMESWEB.Enums;
+using AMESWEB.IServices;
+using AMESWEB.Repository;
 
-namespace AEMSWEB.Areas.Account.Data.Services.AP
+namespace AMESWEB.Areas.Account.Data.Services.AP
 {
     public sealed class APTransactionService : IAPTransactionService
     {

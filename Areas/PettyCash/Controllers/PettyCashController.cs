@@ -1,8 +1,8 @@
-﻿using AEMSWEB.Data;
+﻿using AMESWEB.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Areas.PettyCash.Controllers
+namespace AMESWEB.Areas.PettyCash.Controllers
 {
     [Authorize]
     public class PettyCashController : Controller

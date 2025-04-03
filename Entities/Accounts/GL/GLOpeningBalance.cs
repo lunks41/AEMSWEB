@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.GL
+namespace AMESWEB.Entities.Accounts.GL
 {
     [PrimaryKey(nameof(DocumentId), nameof(ItemNo))]
     public class GLOpeningBalance

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Areas.Project.Models
+namespace AMESWEB.Areas.Project.Models
 {
     public class SaveJobOrderHdViewModel
     {

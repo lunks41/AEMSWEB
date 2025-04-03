@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AEMSWEB.Entities.Accounts.AP
+namespace AMESWEB.Entities.Accounts.AP
 {
     [PrimaryKey(nameof(DebitNoteId), nameof(ItemNo))]
     public class ApDebitNoteDt

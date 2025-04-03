@@ -1,9 +1,9 @@
-using AEMSWEB.Models;
+using AMESWEB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace AEMSWEB.Controllers
+namespace AMESWEB.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,8 +1,8 @@
-using AEMSWEB.IServices;
+using AMESWEB.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AEMSWEB.Controllers
+namespace AMESWEB.Controllers
 {
     [Authorize]
     [Route("{companyId:int}/[controller]")]
