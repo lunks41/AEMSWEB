@@ -28,41 +28,6 @@
 
                 <!-- Action Row -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                    <!-- Search Section -->
-                    <div class="d-flex flex-grow-1 gap-2 align-items-center me-3">
-                        <div style="width: 150px;">
-                            <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
-                            <i class="mdi mdi-magnify"></i> Search
-                        </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
-                            <i class="mdi mdi-close"></i> Clear
-                        </button>
-                    </div>
-
-                    <!-- Add Button -->
-                    <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addARInvoiceModal" id="addrecord">
-                            <i class="mdi mdi-plus me-1"></i> Add
-                        </button>
-                    </div>
-                </div>
-                <div id="grid"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section externalhtml {
-    <div class="modal fade" id="addARInvoiceModal" tabindex="-1" aria-labelledby="addARInvoiceModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="addARInvoiceModalLabel">AR Invoice Management</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
-                </div>
-                <div class="modal-body p-4">
                     <form id="arInvoiceForm" class="needs-validation" novalidate>
                         <input type="hidden" id="invoiceId">
 
@@ -84,413 +49,45 @@
                                 </button>
                             </li>
                         </ul>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary" id="btnList">List</button>
+                                <button type="button" class="btn btn-success" id="btnSave">Save</button>
+                                <button type="button" class="btn btn-warning" id="btnReset">Reset</button>
+                                <button type="button" class="btn btn-info" id="btnPrint">Print</button>
+                                <button type="button" class="btn btn-secondary" id="btnClone">Clone</button>
+                                <button type="button" class="btn btn-danger" id="btnDelete">Delete</button>
+                                <button type="button" class="btn btn-dark" id="btnUnpost">Unpost</button>
+                            </div>
+                        </div>
 
                         <!-- Tab Contents -->
                         <div class="tab-content">
-
-                            <!-- Main Tab -->
-                            <div class="tab-pane fade show active" id="main" role="tabpanel">
-                                <div class="row g-3">
-                                    <!-- Header Section -->
-                                    <div class="col-12">
-                                        <!-- Invoice Header Section -->
-                                        <div class="card border-0 shadow-sm mb-4">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0">Invoice Header</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <!-- Row 1 -->
-                                                    <div class="col-md-2">
-                                                        <label for="trnDate" class="form-label">Transaction Date <span class="text-danger">*</span></label>
-                                                        <input type="date" class="form-control" id="trnDate" required>
-                                                        <div class="invalid-feedback">Please select transaction date</div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="customer" class="form-label">Customer <span class="text-danger">*</span></label>
-                                                        <select class="form-select" id="customer" required>
-                                                            <option value="">Select Customer</option>
-                                                            <!-- Customer options -->
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="bank" class="form-label">Bank</label>
-                                                        <select class="form-select" id="bank">
-                                                            <option value="">Select Bank</option>
-                                                            <!-- Bank options -->
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="creditTerm" class="form-label">Credit Terms</label>
-                                                        <input type="text" class="form-control" id="creditTerm" placeholder="Days">
-                                                    </div>
-
-                                                    <!-- Row 2 -->
-                                                    <div class="col-md-2">
-                                                        <label for="refNo" class="form-label">Reference No.</label>
-                                                        <input type="text" class="form-control" id="refNo">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="currency" class="form-label">Currency</label>
-                                                        <select class="form-select" id="currency">
-                                                            <option value="USD">USD</option>
-                                                            <option value="SGD">SGD</option>
-                                                            <!-- More currencies -->
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="dueDate" class="form-label">Due Date</label>
-                                                        <input type="date" class="form-control" id="dueDate">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="exRate" class="form-label">Exchange Rate</label>
-                                                        <input type="number" step="0.0001" class="form-control" id="exRate" value="1.0000">
-                                                    </div>
-
-                                                    <!-- Row 3 -->
-                                                    <div class="col-md-2">
-                                                        <label for="jobOrder" class="form-label">Job Order</label>
-                                                        <input type="text" class="form-control" id="jobOrder">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="vessel" class="form-label">Vessel</label>
-                                                        <input type="text" class="form-control" id="vessel">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="port" class="form-label">Port</label>
-                                                        <input type="text" class="form-control" id="port">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="launch" class="form-label">Launch</label>
-                                                        <input type="text" class="form-control" id="launch">
-                                                    </div>
-
-                                                    <!-- Row 4 -->
-                                                    <div class="col-md-2">
-                                                        <label for="serviceType" class="form-label">Service Type</label>
-                                                        <select class="form-select" id="serviceType">
-                                                            <option value="">Select Service Type</option>
-                                                            <option>Standard</option>
-                                                            <option>Express</option>
-                                                            <!-- More service types -->
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label for="remarks" class="form-label">Remarks</label>
-                                                        <textarea class="form-control" id="remarks" rows="2"></textarea>
-                                                    </div>
-
-                                                    <!-- Totals Section -->
-                                                    <div class="col-md-2">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">Total Amount</span>
-                                                            <input type="text" class="form-control bg-light" id="totalAmt" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">GST Amount</span>
-                                                            <input type="text" class="form-control bg-light" id="gstAmt" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">Total After GST</span>
-                                                            <input type="text" class="form-control bg-light" id="totalAftGstAmt" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">Total Local Amount</span>
-                                                            <input type="text" class="form-control bg-light" id="totalLocalAmt" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">GST Local Amount</span>
-                                                            <input type="text" class="form-control bg-light" id="gstLocalAmt" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">Total After GST Local</span>
-                                                            <input type="text" class="form-control bg-light" id="totalAftGstLocalAmt" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Details Section -->
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm">
-                                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                                <h6 class="mb-0">Invoice Details</h6>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary" id="addDetail">
-                                                        <i class="fas fa-plus me-2"></i>Add Item
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="clearDetail">
-                                                        <i class="fas fa-eraser me-2"></i>Clear
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered align-middle">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>Item No</th>
-                                                                <th>GL Code</th>
-                                                                <th>GST</th>
-                                                                <th>UOM</th>
-                                                                <th>Qty</th>
-                                                                <th>Unit Price</th>
-                                                                <th>Total</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="detailsTableBody">
-                                                            <!-- Dynamic rows will be added here -->
-                                                            <tr class="detail-row">
-                                                                <td><input type="text" class="form-control form-control-sm item-no" required></td>
-                                                                <td>
-                                                                    <select class="form-select form-select-sm gl-code">
-                                                                        <option>Select GL</option>
-                                                                        <!-- GL options -->
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select class="form-select form-select-sm gst-rate">
-                                                                        <option value="7">7%</option>
-                                                                        <option value="0">0%</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select class="form-select form-select-sm uom">
-                                                                        <option>EA</option>
-                                                                        <option>HRS</option>
-                                                                        <!-- More UOMs -->
-                                                                    </select>
-                                                                </td>
-                                                                <td><input type="number" class="form-control form-control-sm qty" step="0.1"></td>
-                                                                <td><input type="number" class="form-control form-control-sm unit-price" step="0.01"></td>
-                                                                <td><input type="number" class="form-control form-control-sm total" readonly></td>
-                                                                <td class="text-center">
-                                                                    <button class="btn btn-sm btn-danger remove-row">
-                                                                        <i class="fas fa-times"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Totals Section -->
-                                    <div class="col-12 mt-4">
-                                        <div class="row g-3 justify-content-end">
-                                            <div class="col-md-2">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Total Amount</span>
-                                                    <input type="text" class="form-control bg-light" id="totalAmt" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">GST Amount</span>
-                                                    <input type="text" class="form-control bg-light" id="gstAmt" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Net Total</span>
-                                                    <input type="text" class="form-control bg-light" id="totalAftGstAmt" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Other Tab -->
-                            <div class="tab-pane fade" id="other" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <div class="card border-0 shadow-sm h-100">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0">Billing Information</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <label for="country" class="form-label">Address</label>
-                                                    <select class="form-select" id="Address">
-                                                        <option>Address 1</option>
-                                                        <!-- More countries -->
-                                                    </select>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="billingName" class="form-label">Billing Name</label>
-                                                    <input type="text" class="form-control" id="billingName">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="address1" class="form-label">Address 1</label>
-                                                    <textarea class="form-control" id="address1" rows="2"></textarea>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="address2" class="form-label">Address 3</label>
-                                                    <textarea class="form-control" id="address2" rows="2"></textarea>
-                                                </div>
-                                                <div class="row g-2">
-                                                    <div class="col-md-6">
-                                                        <label for="country" class="form-label">Country</label>
-                                                        <select class="form-select" id="country">
-                                                            <option>Singapore</option>
-                                                            <!-- More countries -->
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label for="postalCode" class="form-label">Postal Code</label>
-                                                        <input type="text" class="form-control" id="postalCode">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="card border-0 shadow-sm h-100">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0">Contact Information</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <label for="country" class="form-label">Contact</label>
-                                                    <select class="form-select" id="Contact">
-                                                        <option>Contact 1</option>
-                                                        <!-- More countries -->
-                                                    </select>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">Email</label>
-                                                    <input type="email" class="form-control" id="email">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="phoneNumber" class="form-label">Phone Number</label>
-                                                    <input type="tel" class="form-control" id="phoneNumber">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="faxNumber" class="form-label">Fax Number</label>
-                                                    <input type="text" class="form-control" id="faxNumber">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- History Tab -->
-                            <div class="tab-pane fade" id="history" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0">Audit Trail</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row g-3 mb-4">
-                                                    <div class="col-md-2">
-                                                        <label class="form-label text-muted">Created By</label>
-                                                        <div class="form-control-plaintext">John Doe</div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label class="form-label text-muted">Created Date</label>
-                                                        <div class="form-control-plaintext">2023-07-20 14:30</div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label class="form-label text-muted">Last Updated By</label>
-                                                        <div class="form-control-plaintext">Jane Smith</div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label class="form-label text-muted">Last Updated Date</label>
-                                                        <div class="form-control-plaintext">2023-07-21 09:15</div>
-                                                    </div>
-                                                </div>
-
-                                                <h6 class="mt-4 mb-3">Payment History</h6>
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>Date</th>
-                                                                <th>Amount</th>
-                                                                <th>Method</th>
-                                                                <th>Reference</th>
-                                                                <th>Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <!-- Payment history rows -->
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                                <h6 class="mt-4 mb-3">GL History</h6>
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>Date</th>
-                                                                <th>Amount</th>
-                                                                <th>Method</th>
-                                                                <th>Reference</th>
-                                                                <th>Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <!-- GL history rows -->
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                                <h6 class="mt-4 mb-3">Edit History</h6>
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>Date</th>
-                                                                <th>Amount</th>
-                                                                <th>Method</th>
-                                                                <th>Reference</th>
-                                                                <th>Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <!-- Editiiiiiiiiiiiiiii history rows -->
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @await Html.PartialAsync("_Main")
+                            @await Html.PartialAsync("_Other")
+                            @await Html.PartialAsync("_History")
                         </div>
+
                     </form>
                 </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearForm()">
-                        <i class="fas fa-times me-2"></i>Close
-                    </button>
-                    <button type="button" class="btn btn-warning" onclick="clearForm()">
-                        <i class="fas fa-undo me-2"></i>Reset
-                    </button>
-                    <button type="button" class="btn btn-primary" id="btnSave">
-                        <i class="fas fa-save me-2"></i>Save Invoice
-                    </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section externalhtml {
+    <div class="modal fade" id="confirmationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmationMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="confirmYes">Yes</button>
                 </div>
             </div>
         </div>
@@ -499,69 +96,41 @@
 
 @section Scripts {
     <script>
-        let companyId = 0;
-        $(document).ready(function () {
+        // Confirmation handling
+        let pendingAction = null;
 
-            companyId = getUrlParameter('companyId');
+        function showConfirmation(message, callback) {
+            $('#confirmationMessage').text(message);
+            pendingAction = callback;
+            $('#confirmationModal').modal('show');
+        }
+
+        $('#confirmYes').click(function () {
+            if (typeof pendingAction === 'function') {
+                pendingAction();
+            }
+            $('#confirmationModal').modal('hide');
         });
 
-        $('#addrecord').on('click', function () {
-            clearForm();
-            setDefaultValues();
-            $('#btnClose').show();
-            $('#btnClear').show();
-            $('#btnSave').show();
-            $('#btnEdit').hide();
+        // Save button handler
+        $('#btnSave').click(function () {
+            showConfirmation('Do you want to save?', function () {
+                // Actual save logic here
+                $('#arInvoiceForm').submit();
+            });
         });
 
-        function clearForm() {
+        // Unpost button handler
+        $('#btnUnpost').click(function () {
+            showConfirmation('Do you want to unpost?', function () {
+                // Actual unpost logic here
+                console.log('Unposting...');
+            });
+        });
+
+        // Other button handlers
+        $('#btnReset').click(function () {
             $('#arInvoiceForm')[0].reset();
-            $('#accGroupId').val(0);
-            $('#btnSave').prop('disabled', true);
-        }
-
-        //// Initialize modal with restrictions
-        //const myModal = new bootstrap.Modal('#addARInvoiceModal', {
-        //    keyboard: false, // Disable ESC key
-        //    backdrop: 'static' // Disable backdrop clicks
-        //});
-
-        //// Manual close button control
-        //document.querySelector('.modal-close-btn').addEventListener('click', () => {
-        //    myModal.hide();
-        //});
-
-        // Sample edit handling
-        function loadInvoiceData(invoiceId) {
-            fetch(`/api/invoices/${invoiceId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Main Tab
-                    document.getElementById('trnDate').value = data.transactionDate;
-
-                    // Other Tab
-                    document.getElementById('address1').value = data.address;
-
-                    // History Tab
-                    document.getElementById('createdBy').value = data.createdBy;
-                    initGLGrid(data.glHistory);
-                    initPaymentGrid(data.payments);
-
-                    // Initialize grids
-                    refreshDetailsGrid(data.items);
-                });
-        }
-
-        function initGLGrid(data) {
-            // Initialize GL grid with data
-            const glGrid = new GridJS({
-                columns: ['Date', 'Account', 'Amount'],
-                data: data.map(item => [item.date, item.account, item.amount])
-            }).render(document.getElementById("glGrid"));
-        }
-
-        function initPaymentGrid(data) {
-            // Initialize Payment grid
-        }
+        });
     </script>
 }

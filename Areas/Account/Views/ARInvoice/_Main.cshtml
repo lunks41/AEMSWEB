@@ -1,0 +1,259 @@
+﻿<div class="tab-pane fade show active" id="main" role="tabpanel">
+    <div class="row g-3">
+        <!-- Header Section -->
+        <div class="col-12">
+            <!-- Invoice Header Section -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">Invoice Header</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Row 1 -->
+                        <div class="col-md-2">
+                            <label for="trnDate" class="form-label">Transaction Date <label class="text-danger">*</label></label>
+                            <input type="date" class="form-control" id="trnDate" required>
+                            <div class="invalid-feedback">Please select transaction date</div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="customer" class="form-label">Customer <label class="text-danger">*</label></label>
+                            <select class="form-select" id="customer" required>
+                                <option value="">Select Customer</option>
+                                <!-- Customer options -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Reference No.</label>
+                            <input type="text" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="creditTerm" class="form-label">Credit Terms</label>
+                            <input type="text" class="form-control" id="creditTerm" placeholder="Days">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="bank" class="form-label">Bank</label>
+                            <select class="form-select" id="bank">
+                                <option value="">Select Bank</option>
+                                <!-- Bank options -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="dueDate" class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="dueDate">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="currency" class="form-label">Currency</label>
+                            <select class="form-select" id="currency">
+                                <option value="USD">USD</option>
+                                <option value="SGD">SGD</option>
+                                <!-- More currencies -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="exRate" class="form-label">Exchange Rate</label>
+                            <input type="number" step="0.0001" class="form-control" id="exRate" value="1.0000">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="jobOrder" class="form-label">Job Order</label>
+                            <input type="text" class="form-control" id="jobOrder">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="vessel" class="form-label">Vessel</label>
+                            <input type="text" class="form-control" id="vessel">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="port" class="form-label">Port</label>
+                            <input type="text" class="form-control" id="port">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="launch" class="form-label">Launch</label>
+                            <input type="text" class="form-control" id="launch">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="serviceType" class="form-label">Service Type</label>
+                            <select class="form-select" id="serviceType">
+                                <option value="">Select Service Type</option>
+                                <option>Standard</option>
+                                <option>Express</option>
+                                <!-- More service types -->
+                            </select>
+                        </div>
+
+
+                        <!-- Totals Section -->
+                        <div class="col-md-2">
+                            <label class="form-label">Total Amount</label>
+                            <input type="text" class="form-control" id="totalAmt" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">GST Amount</label>
+                            <input type="text" class="form-control" id="gstAmt" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Total After GST</label>
+                            <input type="text" class="form-control" id="totalAftGstAmt" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Total Local Amount</label>
+                            <input type="text" class="form-control" id="totalLocalAmt" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">GST Local Amount</label>
+                            <input type="text" class="form-control" id="gstLocalAmt" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Total After GST Local</label>
+                            <input type="text" class="form-control" id="totalAftGstLocalAmt" readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="remarks" class="form-label">Remarks</label>
+                            <textarea class="form-control" id="remarks" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header Section -->
+        <div class="col-12">
+            <!-- Invoice Header Section -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">Invoice Deatils</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-md-2">
+                            <label for="customer" class="form-label">Product <label class="text-danger">*</label></label>
+                            <select class="form-select" id="customer" required>
+                                <option value="">Select Customer</option>
+                                <!-- Customer options -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="bank" class="form-label">GlCode</label>
+                            <select class="form-select" id="bank">
+                                <option value="">Select Bank</option>
+                                <!-- Bank options -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="creditTerm" class="form-label">Task</label>
+                            <select class="form-select" id="bank">
+                                <option value="">Select Bank</option>
+                                <!-- Bank options -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="creditTerm" class="form-label">Details</label>
+                            <select class="form-select" id="bank">
+                                <option value="">Select Bank</option>
+                                <!-- Bank options -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="creditTerm" class="form-label">UOM</label>
+                            <select class="form-select" id="bank">
+                                <option value="">Select Bank</option>
+                                <!-- Bank options -->
+                            </select>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Qty</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Unit Price</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Amt</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="currency" class="form-label">Gst %</label>
+                            <select class="form-select" id="currency">
+                                <option value="USD">USD</option>
+                                <option value="SGD">SGD</option>
+                                <!-- More currencies -->
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Gst</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Tot Amt</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Base Amt</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">bsae Gst</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Gst Amt</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="refNo" class="form-label">Base Amt</label>
+                            <input type="number" class="form-control" id="refNo">
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarks" rows="2"></textarea>
+                    </div>
+
+                    <!-- Totals Section -->
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <label class="form-label">Total Amount</label>
+                            <input type="text" class="form-control" id="totalAmt" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <label class="form-label">GST Amount</label>
+                            <input type="text" class="form-control" id="gstAmt" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <label class="form-label">Total After GST</label>
+                            <input type="text" class="form-control" id="totalAftGstAmt" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <label class="form-label">Total Local Amount</label>
+                            <input type="text" class="form-control" id="totalLocalAmt" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <label class="form-label">GST Local Amount</label>
+                            <input type="text" class="form-control" id="gstLocalAmt" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <label class="form-label">Total After GST Local</label>
+                            <input type="text" class="form-control" id="totalAftGstLocalAmt" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="invoicedetailsgrid"></div>
+</div>
