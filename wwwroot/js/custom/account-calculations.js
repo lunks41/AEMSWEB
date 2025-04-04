@@ -35,92 +35,52 @@ const calculateSubtractionAmount = (baseAmount, subtractAmt, precision) => {
     return mathRound(total, precision);
 };
 
+
 // Handle Quantity Change
-const handleQtyChange = (hdForm, dtForm, decimals, visible) => {
-    const billQty = dtForm.getValues()?.billQTY;
-    const unitPrice = dtForm.getValues()?.unitPrice;
-    const exchangeRate = hdForm.getValues()?.exhRate;
+function handleQtyChange() {
+    const qty = parseFloat($("#qtyDt").val()) || 0;
+    const unitPrice = parseFloat($("#unitPriceDt").val()) || 0;
+    const exchangeRate = parseFloat($("#exhRateHd").val()) || 0;
 
-    if (billQty && unitPrice) {
-        const totAmt = calculateMultiplierAmount(billQty, unitPrice, decimals?.amtDec);
-        dtForm.setValue("totAmt", totAmt);
-        dtForm.trigger("totAmt");
-
-        if (exchangeRate) {
-            handleTotalAmountChange(hdForm, dtForm, decimals, visible);
-        }
+    if (qty && unitPrice) {
+        const totAmt = calculateMultiplierAmount(qty, unitPrice, 2);
+        $("#totAmtDt").val(totAmt);
+        if (exchangeRate)
+            handleTotalAmountChange();
     }
-};
+}
 
 // Handle Total Amount Change
-const handleTotalAmountChange = (hdForm, dtForm, decimals, visible) => {
-    const totAmt = dtForm.getValues()?.totAmt;
-    const exchangeRate = hdForm.getValues()?.exhRate;
+function handleTotalAmountChange() {
+    const totAmt = parseFloat($("#totAmtDt").val()) || 0;
+    const gstPercent = parseFloat($("#gstPercentageDt").val()) || 0;
+    const exchangeRate = parseFloat($("#exhRateHd").val()) || 0;
 
-    if (exchangeRate) {
-        const totLocalAmt = calculateMultiplierAmount(totAmt, exchangeRate, decimals?.locAmtDec);
-        dtForm.setValue("totLocalAmt", totLocalAmt);
-        dtForm.trigger("totLocalAmt");
+    const totLocalAmt = calculateMultiplierAmount(totAmt, exchangeRate, 2);
+    $("totLocalAmtDt", totLocalAmt);
 
-        handleTotalCityAmountChange(hdForm, dtForm, decimals, visible);
+    // Calculate GST
+    const gstAmt = calculatePercentageAmount(totAmt, gstPercent, 2);
+    $("#gstAmtDt").val(gstAmt);
 
-        if (totAmt) {
-            handleGstPercentageChange(hdForm, dtForm, decimals, visible);
-        }
-    }
-};
+    // Calculate Total After GST
+    const totalAfterGst = calculateAdditionAmount(totAmt, gstAmt, 2);
+    $("#totAmtAftGstDt").val(totalAfterGst);
+}
 
 // Handle GST Percentage Change
-const handleGstPercentageChange = (hdForm, dtForm, decimals, visible) => {
-    const totAmt = dtForm.getValues()?.totAmt;
-    const gstRate = dtForm.getValues()?.gstPercentage;
+function handleGstPercentageChange() {
+    const totAmt = parseFloat($("#totAmtDt").val()) || 0;
+    const gstPercent = parseFloat($("#gstPercentageDt").val()) || 0;
 
     if (totAmt) {
-        const gstAmt = calculatePercentageAmount(totAmt, gstRate, decimals?.amtDec);
-        dtForm.setValue("gstAmt", gstAmt);
-        dtForm.trigger("gstAmt");
+        const gstAmt = calculatePercentageAmount(totAmt, gstPercent, 2);
+        $("gstAmtDt", gstAmt);
 
-        const exchangeRate = hdForm.getValues()?.exhRate;
+        const exchangeRate = parseFloat($("#exhRateHd").val()) || 0;
         if (exchangeRate) {
-            const gstLocalAmt = calculateMultiplierAmount(gstAmt, exchangeRate, decimals?.locAmtDec);
-            dtForm.setValue("gstLocalAmt", gstLocalAmt);
-            dtForm.trigger("gstLocalAmt");
-
-            handleGstCityPercentageChange(hdForm, dtForm, decimals, visible);
+            const gstLocalAmt = calculateMultiplierAmount(gstAmt, exchangeRate, 2);
+            $("gstLocalAmtDt", gstLocalAmt);
         }
     }
-};
-
-// Handle Total City Amount Change
-const handleTotalCityAmountChange = (hdForm, dtForm, decimals, visible) => {
-    const totAmt = dtForm.getValues()?.totAmt;
-    const exchangeRate = hdForm.getValues()?.exhRate;
-    const cityExchangeRate = hdForm.getValues()?.ctyExhRate;
-    let totCtyAmt = 0;
-
-    if (visible?.m_CtyCurr) {
-        totCtyAmt = calculateMultiplierAmount(totAmt, cityExchangeRate, decimals?.locAmtDec);
-    } else {
-        totCtyAmt = calculateMultiplierAmount(totAmt, exchangeRate, decimals?.locAmtDec);
-    }
-
-    dtForm.setValue("totCtyAmt", totCtyAmt);
-    dtForm.trigger("totCtyAmt");
-};
-
-// Handle GST City Percentage Change
-const handleGstCityPercentageChange = (hdForm, dtForm, decimals, visible) => {
-    const gstAmt = dtForm.getValues()?.gstAmt;
-    const exchangeRate = hdForm.getValues()?.exhRate;
-    const cityExchangeRate = hdForm.getValues()?.ctyExhRate;
-    let gstCtyAmt = 0;
-
-    if (visible?.m_CtyCurr) {
-        gstCtyAmt = calculateMultiplierAmount(gstAmt, cityExchangeRate, decimals?.locAmtDec);
-    } else {
-        gstCtyAmt = calculateMultiplierAmount(gstAmt, exchangeRate, decimals?.locAmtDec);
-    }
-
-    dtForm.setValue("gstCtyAmt", gstCtyAmt);
-    dtForm.trigger("gstCtyAmt");
-};
+}

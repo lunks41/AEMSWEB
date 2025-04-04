@@ -115,6 +115,7 @@
         let companyId = 0;
         let currentStatus = 'all';
         let permissions = {};
+        let currentItemNo = 1; // Global counter for item numbers
 
         $(document).ready(function () {
 
@@ -128,6 +129,8 @@
 
             Refresh();
             defaultsection();
+            // Initialize item number display
+            $("#itemNo").val(currentItemNo);
         });
 
         function openListModal() {
@@ -332,6 +335,11 @@
                 if (selectedcontactdataItem) {
                     handleContactSelection(selectedcontactdataItem);
                 }
+            } else if (DrpdwnName === "invoice_cmb_gst") {
+                let selecteddataItem = dataItem;
+                if (selecteddataItem) {
+                    handleGstSelection(selecteddataItem);
+                }
             }
         }
 
@@ -345,7 +353,7 @@
         }
 
         function handleAddressSelection(selectedaddressdataItem) {
-            debugger;
+           
             try {
                 if (!selectedaddressdataItem) {
                     throw new Error("Invalid address data");
@@ -369,7 +377,7 @@
         }
 
         function handleContactSelection(selectedcontactdataItem) {
-            debugger;
+           
             try {
                 if (!selectedcontactdataItem) {
                     throw new Error("Invalid contact data");
@@ -390,8 +398,47 @@
             }
         }
 
-        function handleCurrencySelection(selectedDataItem) {
+        function handleGstSelection(selectedDataItem) {
             debugger;
+            try {
+                if (!selectedDataItem) {
+                    throw new Error("Invalid Gst data");
+                }
+
+                const selectGstId = selectedDataItem.gstId;
+                const accountDateStr = $("#accountDate").val();
+               
+                $.ajax({
+                    url: '@Url.Action("GetGstPercentage", "Setting", new { area = "Setting" })',
+                    type: "GET",
+                    contentType: "application/json",
+                    data: {
+                        gstId: selectGstId,
+                        trnsDate: accountDateStr,
+                        companyId: companyId
+                    },
+                    success: function (response) {
+                        debugger;
+                        if (response) {
+                            $("#gstPercentageDt").val(response);
+                            handleGstPercentageChange();
+                        } else {
+                            throw new Error("Gst Percentage not found in response.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                        alert("Failed to retrieve gst Percentage. Please try again.");
+                    }
+                });
+            } catch (error) {
+                console.error("Error handling Gst:", error);
+                alert("Failed to load Gst details. Please try again.");
+            }
+        }
+
+        function handleCurrencySelection(selectedDataItem) {
+           
             try {
                 if (!selectedDataItem) {
                     throw new Error("Invalid Currency data");
@@ -399,7 +446,7 @@
 
                 const selectCurrencyId = selectedDataItem.currencyId;
                 const accountDateStr = $("#accountDate").val();
-                debugger;
+               
                 $.ajax({
                     url: '@Url.Action("GetExchangeRate", "Setting", new { area = "Setting" })',
                     type: "GET",
@@ -410,9 +457,9 @@
                         companyId: companyId
                     },
                     success: function (response) {
-                        debugger;
+                       
                         if (response) {
-                            $("#exhRate").val(response);
+                            $("#exhRateHd").val(response);
                         } else {
                             throw new Error("Exchange rate not found in response.");
                         }
@@ -429,7 +476,7 @@
         }
 
         function handleCreditTermsSelection(selecteddataItem) {
-            debugger;
+           
             try {
                 if (!selecteddataItem) {
                     throw new Error("Invalid CreditTerms data");
@@ -490,7 +537,6 @@
         }
 
         function handleGlAccountSelection(selecteddataItem) {
-
             try {
                 if (!selecteddataItem) {
                     throw new Error("Invalid GL Account data");
@@ -508,13 +554,18 @@
                     $("#invoice_cmb_department").closest(".col-md-2").show();
                 }
 
-                // Clear hide fields
-                $("#invoice_cmb_task").data("kendoComboBox").value("");
-                $("#invoice_cmb_details").data("kendoComboBox").value("");
-                $("#invoice_cmb_department").data("kendoComboBox").value("");
+                // Clear hidden fields only if KendoComboBox is initialized
+                const taskCombo = $("#invoice_cmb_task").data("kendoComboBox");
+                if (taskCombo) taskCombo.value("");
+
+                const detailsCombo = $("#invoice_cmb_details").data("kendoComboBox");
+                if (detailsCombo) detailsCombo.value("");
+
+                const departmentCombo = $("#invoice_cmb_department").data("kendoComboBox");
+                if (departmentCombo) departmentCombo.value("");
             } catch (error) {
                 console.error("Error handling GL Account:", error);
-                // Show user-friendly message
+                alert("An error occurred while processing the GL Account selection. Please try again.");
             }
         }
 
@@ -532,23 +583,95 @@
         //clear Invoice & Details
 
         function ClearInvoice() {
-            // Clear all inputs
-            //delete all details also
+            try {
+                // Reset main form fields
+                $('#invoiceId, #accountDate, #referenceNo, #dueDate, #exhRateHd, #operationno, #totAmtHd, #gstAmtHd, #totAmtAftGstHd, #totLocalAmtHd, #gstLocalAmtHd, #totLocalAmtAftGstHd, #remarksHd, #description').val('');
+
+                // Reset Kendo comboboxes in header
+                const headerCombos = [
+                    'invoice_cmb_creditTerms', 'invoice_cmb_bank',
+                    'invoice_cmb_currency', 'invoice_cmb_jobOrder', 'invoice_cmb_vessel',
+                    'invoice_cmb_port', 'invoice_cmb_barge', 'invoice_cmb_serviceType'
+                ];
+
+                headerCombos.forEach(comboId => {
+                    const combo = $('#' + comboId).data("kendoComboBox");
+                    if (combo) {
+                        combo.value('');
+                        combo.trigger("change");
+                    }
+                });
+
+                $("#invoice_cmb_customer").data("kendoMultiColumnComboBox").value("");
+
+                // Clear address/contact fields
+                $('#addressLine1, #addressLine2, #addressLine3, #addressLine4, #pinCode, #phoneNo, #faxNo, #emailAdd, #webUrl, #otherName, #mobileNo, #offNo, #messId, #contactMessType').val('');
+                $('#invoice_cmb_country').data("kendoComboBox").value('');
+
+                // Clear details grid
+                const grid = $("#grid_invoicedetails").data("kendoGrid");
+                if (grid) {
+                    grid.dataSource.data([]);
+                }
+
+                // Reset details form
+                ClearInvoiceDetails();
+
+                // Reset to default item number
+                currentItemNo = 1;
+                $("#itemNo").val(currentItemNo);
+
+                // Show main tab
+                $('#main-pill').tab('show');
+                $('.tab-pane').removeClass('show active');
+                $('#main').addClass('show active');
+
+                // Reset UI sections
+                defaultsection();
+
+                // Clear any error states
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+
+            } catch (error) {
+                console.error("Error clearing invoice:", error);
+                alert("Failed to reset form. Please try again.");
+            }
         }
 
+        // Modified ClearInvoiceDetails for details section only
         function ClearInvoiceDetails() {
-            // Clear inputs
-            $("#itemNo, #qty, #unitPrice, #amount, #gstAmount, #totalAmount").val("0");
-            $("#remarks").val("");
+            // Clear input fields
+            $('#qtyDt, #unitPriceDt, #gstPercentageDt,#totAmtDt, #gstAmtDt, #totAmtAftGstDt').val('0');
+            $('#remarksDt').val('');
 
-            $("#invoice_cmb_product").data("kendoComboBox").value("");
-            $("#invoice_cmb_gl").data("kendoComboBox").value("");
-            $("#invoice_cmb_task").data("kendoComboBox").value("");
-            $("#invoice_cmb_details").data("kendoComboBox").value("");
-            $("#invoice_cmb_department").data("kendoComboBox").value("");
-            $("#invoice_cmb_uom").data("kendoComboBox").value("");
-            $("#invoice_cmb_gst").data("kendoComboBox").value("");
+            // Reset comboboxes
+            const detailCombos = [
+                'invoice_cmb_product', 'invoice_cmb_task',
+                'invoice_cmb_details', 'invoice_cmb_department', 'invoice_cmb_uom',
+                'invoice_cmb_gst'
+            ];
+
+            detailCombos.forEach(comboId => {
+                const combo = $('#' + comboId).data("kendoComboBox");
+                if (combo) {
+                    combo.value('');
+                    combo.trigger("change");
+                }
+            });
+
+            $("#invoice_cmb_gl").data("kendoMultiColumnComboBox").value("");
+
+            // Reset focus to first field
+            $('#itemNo').focus();
         }
+
+        // Update btnReset click handler
+        $('#btnReset').click(function () {
+            showConfirmation('Are you sure you want to reset the form?', function () {
+                ClearInvoice();
+            });
+        });
 
         function loadInvoiceGrid() {
             let searchString = $('#txtsearch').val();
@@ -559,34 +682,15 @@
 
             let url = '@Url.Action("List", "ArInvoice", new { area = "Account" })';
             let columns = [
-                {
-                    title: "Actions",
-                    width: "150px",
-                    template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
-<i class="material-symbols-outlined text-primary">visibility</i></button>`;
-
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
-<i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
-
-                        if (permissions.canDelete) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
-<i class="material-symbols-outlined text-danger">delete</i></button>`;
-                        }
-                        return buttons;
-                    }
-                },
                 { field: "invoiceNo", title: "Invoice No", type: "string", width: "150px" },
-                { field: "accountDate", title: "Account Date", type: "date", format: "{0:yyyy-MM-dd}", width: "130px" },
+                { field: "accountDate", title: "Account Date", type: "date", format: "{0:dd-MM-yy}", width: "130px" },
                 { field: "customerName", title: "Customer Name", type: "string", width: "200px" },
                 { field: "currencyCode", title: "Currency Name", type: "string", width: "120px" },
                 { field: "creditTermName", title: "Terms", type: "string", width: "150px" },
                 { field: "bankName", title: "Bank", type: "string", width: "180px" },
-                { field: "totAmt", title: "Amount", type: "number", format: "{0:n2}", width: "120px" },
-                { field: "gstAmt", title: "Gst Amount", type: "number", format: "{0:n2}", width: "120px" },
-                { field: "totAmtAftGst", title: "Total Amount", type: "number", format: "{0:n2}", width: "140px" },
+                { field: "totAmt", title: "Amt", type: "number", format: "{0:n2}", width: "120px" },
+                { field: "gstAmt", title: "Gst Amt", type: "number", format: "{0:n2}", width: "120px" },
+                { field: "totAmtAftGst", title: "Total Amt", type: "number", format: "{0:n2}", width: "140px" },
                 { field: "createBy", title: "CreateBy", type: "string", width: "150px" },
                 { field: "editBy", title: "EditBy", type: "string", width: "150px" }
             ];
@@ -602,7 +706,7 @@
                     let dataItem = $("#grid_invoice").data("kendoGrid").dataItem(this);
 
                     if (dataItem) {
-                        debugger;
+                       
                         let invoiceId = dataItem.invoiceId; // Assuming invoiceId exists in dataItem
                         let companyId = dataItem.companyId; // Assuming companyId exists in dataItem
 
@@ -615,7 +719,7 @@
                             type: "GET",
                             data: { invoiceId: invoiceId, invoiceNo: '', companyId: companyId },
                             success: function (response) {
-                                debugger;
+                               
                                 if (response.success) {
                                     populateModalFields(response.data);
                                 } else {
@@ -633,7 +737,7 @@
         }
 
         function populateModalFields(data) {
-            debugger;
+           
             $('#accountDate').val(formatDateToDDMMYYYY(data.accountDate));
             $('#invoice_cmb_customer').data("kendoMultiColumnComboBox").value(data.customerId > 0 ? data.customerId : '');
             $('#referenceNo').val(data.referenceNo);
@@ -641,7 +745,7 @@
             $('#dueDate').val(formatDateToDDMMYYYY(data.dueDate));
             $('#invoice_cmb_bank').data("kendoComboBox").value(data.bankId > 0 ? data.bankId : '');
             $('#invoice_cmb_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
-            $('#exhRate').val(data.exhRate);
+            $('#exhRateHd').val(data.exhRate);
             $('#operationno').val(data.operationNo);
             $('#invoice_cmb_jobOrder').data("kendoComboBox").value(data.jobOrderId > 0 ? data.jobOrderId : '');
             $('#invoice_cmb_vessel').data("kendoComboBox").value(data.vesselId > 0 ? data.vesselId : '');
@@ -649,25 +753,33 @@
             $('#invoice_cmb_barge').data("kendoComboBox").value(data.bargeId > 0 ? data.bargeId : '');
            /* $('#invoice_cmb_transtype').data("kendoComboBox").value(data.transTypeId > 0 ? data.transTypeId : '');*/
             $('#invoice_cmb_serviceType').data("kendoComboBox").value(data.serviceTypeId > 0 ? data.serviceTypeId : '');
-            $('#totAmt').val(data.totAmt);
-            $('#gstAmt').val(data.gstAmt);
-            $('#totAmtAftGst').val(data.totAmtAftGst);
-            $('#totLocalAmt').val(data.totLocalAmt);
-            $('#gstLocalAmt').val(data.gstLocalAmt);
-            $('#totLocalAmtAftGst').val(data.totLocalAmtAftGst);
-            $('#remarks').val(data.remarks);
+            $('#totAmtHd').val(data.totAmt);
+            $('#gstAmtHd').val(data.gstAmt);
+            $('#totAmtAftGstHd').val(data.totAmtAftGst);
+            $('#totLocalAmtHd').val(data.totLocalAmt);
+            $('#gstLocalAmtHd').val(data.gstLocalAmt);
+            $('#totLocalAmtAftGstHd').val(data.totLocalAmtAftGst);
+            $('#remarksHd').val(data.remarks);
             $('#description').val(data.description);
 
-            debugger;
+           
             //data.data_details
-            populateInvoiceDetailsGrid(data.data_details)
+            populateInvoiceDetailsGrid(data.data_details);
+
+            // Set item number based on existing data or default
+            if (data.data_details && data.data_details.length > 0) {
+                currentItemNo = Math.max(...data.data_details.map(item => item.itemNo)) + 1;
+            } else {
+                currentItemNo = 1; // Reset to default if no details
+            }
+            $("#itemNo").val(currentItemNo);
 
         }
 
         //Invoice Details
 
         function populateInvoiceDetailsGrid(dataDetails) {
-            debugger;
+           
             let grid = $("#grid_invoicedetails").data("kendoGrid");
 
             if (grid) {
@@ -680,21 +792,17 @@
                         title: "Actions",
                         width: "150px",
                         template: function (dataItem) {
-                            let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
-                            <i class="material-symbols-outlined text-primary">visibility</i></button>`;
-                           
-                                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
+                            let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openInvoiceDtModal('${dataItem.itemNo}')">
                             <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                            
-                                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
+
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.itemNo}')">
                             <i class="material-symbols-outlined text-danger">delete</i></button>`;
-                           
 
                             return buttons;
                         }
                     },
                     { field: "itemNo", title: "Item No", width: "120px" },
-                   
+
                     { field: "productId", title: "Product ID", width: "100px" ,hidden:true},
                     { field: "productName", title: "Product Name", width: "150px" },
                     { field: "glId", title: "GL ID", width: "100px", hidden: true },
@@ -702,11 +810,11 @@
                     { field: "glName", title: "GL Name", width: "150px" },
                     { field: "qty", title: "Quantity", format: "{0:n2}", width: "100px" },
                     { field: "unitPrice", title: "Unit Price", format: "{0:c}", width: "120px" },
-                    { field: "amount", title: "Amount", format: "{0:c}", width: "120px" },
+                    { field: "totAmt", title: "Amt", format: "{0:c}", width: "120px" },
                     { field: "gstPercent", title: "GST Percent", format: "{0:p}", width: "100px" },
-                    { field: "gstAmount", title: "GST Amount", format: "{0:c}", width: "120px" },
-                    { field: "totalAmount", title: "Total Amount", format: "{0:c}", width: "150px" },
-                  
+                    { field: "gstAmt", title: "GST Amt", format: "{0:c}", width: "120px" },
+                    { field: "totalAmt", title: "Total Amt", format: "{0:c}", width: "150px" },
+
                     { field: "remarks", title: "Remarks", width: "150px" },
                     { field: "departmentId", title: "Department ID", width: "120px", hidden: true },
                     { field: "departmentName", title: "Department Name", width: "150px" },
@@ -718,23 +826,88 @@
                     { field: "uomName", title: "UOM Name", width: "120px" },
                     { field: "gstId", title: "GST ID", width: "100px", hidden: true },
                     { field: "gstName", title: "GST Name", width: "150px" },
-                    { field: "totalLocalAmount", title: "Total Local Amount", format: "{0:c}", width: "150px" },
-                    { field: "gstLocalAmount", title: "GST Local Amount", format: "{0:c}", width: "150px" }
+                    { field: "totalLocalAmt", title: "Total Local Amt", format: "{0:c}", width: "150px" },
+                    { field: "gstLocalAmt", title: "GST Local Amt", format: "{0:c}", width: "150px" }
                 ], 600);
                 $("#grid_invoicedetails").data("kendoGrid").dataSource.data(dataDetails);
             }
         }
 
-        function AddInvoiceDetails() {
-            // Get input values with proper validation
-            const itemNo = $("#itemNo").val() || "";
-            const qty = parseFloat($("#qty").val()) || 0;
-            const unitPrice = parseFloat($("#unitPrice").val()) || 0;
-            const remarks = $("#remarks").val() || "";
+        function openInvoiceDtModal(itemNo) {
+            debugger;
+            try {
+                const itemNoInt = parseInt(itemNo, 10);
 
-            // Get combobox values with fallbacks
+                const grid = $("#grid_invoicedetails").data("kendoGrid");
+                const existingData = grid ? grid.dataSource.data() : [];
+
+                const selectedData = existingData.find(data => parseInt(data.itemNo, 10) === itemNoInt);
+
+                if (!selectedData) {
+                    console.error(`No data found for itemNo: ${itemNoInt}`);
+                    alert("Unable to find details for the selected item.");
+                    return;
+                }
+
+                $('#itemNo').val(selectedData.itemNo || '');
+                $('#invoice_cmb_product').data("kendoComboBox")?.value(selectedData.productId || '');
+                $('#invoice_cmb_gl').data("kendoMultiColumnComboBox")?.value(selectedData.glId || '');
+                $('#invoice_cmb_task').data("kendoComboBox")?.value(selectedData.taskId || '');
+                $('#invoice_cmb_details').data("kendoComboBox")?.value(selectedData.serviceId || '');
+                $('#invoice_cmb_department').data("kendoComboBox")?.value(selectedData.departmentId || '');
+                $('#invoice_cmb_uom').data("kendoComboBox")?.value(selectedData.uomId || '');
+                $('#invoice_cmb_gst').data("kendoComboBox")?.value(selectedData.gstId || '');
+
+                // Populate numeric fields
+                $('#totAmtDt').val(selectedData.totAmt || 0);
+                $('#gstAmtDt').val(selectedData.gstAmt || 0);
+                $('#gstPercentageDt').val(selectedData.gstPercent || 0);
+                $('#totAmtAftGstDt').val(selectedData.totalAmt || 0);
+
+                // Populate text fields
+                $('#remarksDt').val(selectedData.remarks || '');
+
+            } catch (error) {
+                console.error("Error in openInvoiceDtModal:", error);
+                alert("An error occurred while opening the modal. Please try again.");
+            }
+        }
+
+        function calculateTotAmt() {
+            try {
+                const qty = parseFloat($("#qtyDt").val()) || 0;
+                const unitPrice = parseFloat($("#unitPriceDt").val()) || 0;
+
+                // Use the calculation function with 2 decimal places precision
+                const totAmt = calculateMultiplierAmt(qty, unitPrice, 2);
+
+                $("#totAmtDt").val(totAmt.toFixed(2));
+            } catch (error) {
+                console.error("Error calculating total Amt:", error);
+                $("#totAmtDt").val("0.00");
+            }
+        }
+
+        function AddInvoiceDetails() {
+            // Get existing grid data to find max itemNo
+            const grid = $("#grid_invoicedetails").data("kendoGrid");
+            const existingData = grid ? grid.dataSource.data() : [];
+
+            // Auto-increment itemNo
+            if (existingData.length > 0) {
+                currentItemNo = Math.max(...existingData.map(item => item.itemNo)) + 1;
+            } else {
+
+            }
+
+            // Get input values
+            const qty = parseFloat($("#qtyDt").val()) || 0;
+            const unitPrice = parseFloat($("#unitPriceDt").val()) || 0;
+            const remarks = $("#remarksDt").val() || "";
+
+            // Get combobox values
             const productCombo = $("#invoice_cmb_product").data("kendoComboBox");
-            const glCombo = $("#invoice_cmb_gl").data("kendoComboBox");
+            const glCombo = $("#invoice_cmb_gl").data("kendoMultiColumnComboBox");
             const taskCombo = $("#invoice_cmb_task").data("kendoComboBox");
             const detailsCombo = $("#invoice_cmb_details").data("kendoComboBox");
             const departmentCombo = $("#invoice_cmb_department").data("kendoComboBox");
@@ -747,65 +920,75 @@
                 return;
             }
 
-            // Calculate amounts
-            const amount = qty * unitPrice;
+            // Calculate Amts using account-calculations.js functions
+            const Amt = calculateMultiplierAmt(qty, unitPrice, 2);
             const gstPercent = parseFloat(gstCombo.value()) || 0;
-            const gstAmount = (amount * gstPercent) / 100;
-            const totalAmount = amount + gstAmount;
+            const gstAmt = calculatePercentageAmt(Amt, gstPercent, 2);
+            const totalAmt = calculateAdditionAmt(Amt, gstAmt, 2);
 
-            // Create detail object with proper field names
+            // Create detail item
             const detailItem = {
-                // Item Info
-                itemNo: itemNo,
+                itemNo: currentItemNo,
                 remarks: remarks,
-
-                // Product Info
                 productId: productCombo.value(),
                 productName: productCombo.text(),
-
-                // GL Account Info
                 glId: glCombo.value(),
-                glCode: glCombo.value(),  // Assuming code is stored in value
+                glCode: glCombo.value(),
                 glName: glCombo.text(),
-
-                // Department/Task Info
                 departmentId: departmentCombo.value(),
                 departmentName: departmentCombo.text(),
                 taskId: taskCombo.value(),
                 taskName: taskCombo.text(),
-
-                // Service/Details
                 serviceId: detailsCombo.value(),
                 serviceName: detailsCombo.text(),
-
-                // UOM Info
                 uomId: uomCombo.value(),
                 uomName: uomCombo.text(),
-
-                // Pricing Info
                 qty: qty,
                 unitPrice: unitPrice,
-                amount: amount,
-
-                // GST Info
+                Amt: Amt,
                 gstId: gstCombo.value(),
                 gstName: gstCombo.text(),
                 gstPercent: gstPercent,
-                gstAmount: gstAmount,
-
-                // Totals
-                totalAmount: totalAmount,
-                totalLocalAmount: totalAmount,  // Add currency conversion logic if needed
-                gstLocalAmount: gstAmount       // Add currency conversion logic if needed
+                gstAmt: gstAmt,
+                totalAmt: totalAmt,
+                totalLocalAmt: totalAmt,
+                gstLocalAmt: gstAmt
             };
 
             // Add to grid
-            const grid = $("#grid_invoicedetails").data("kendoGrid");
-            grid.dataSource.add(detailItem);
-            grid.refresh();
+            if (!grid) {
+                populateInvoiceDetailsGrid([detailItem]);
+            } else {
+                grid.dataSource.add(detailItem);
+            }
 
-            // Clear form fields
+            // Update header totals using invoice-calculations.js
+            updateHeaderTotals();
+
+            // Clear form and increment item number
             ClearInvoiceDetails();
+            $("#itemNo").val(currentItemNo + 1);
+            currentItemNo++;
+        }
+
+        function updateHeaderTotals() {
+            const grid = $("#grid_invoicedetails").data("kendoGrid");
+            if (!grid) return;
+
+            const data = grid.dataSource.data();
+            const totals = getInvoiceDetailsSum(data, {
+                amtDec: 2,
+                locAmtDec: 4,
+                ctyAmtDec: 4
+            });
+
+            // Update header fields
+            $("#totAmtHd").val(totals.totAmt);
+            $("#gstAmtHd").val(totals.gstAmt);
+            $("#totAmtAftGstHd").val(calculateAdditionAmt(totals.totAmt, totals.gstAmt, 2));
+            $("#totLocalAmtHd").val(totals.totLocalAmt);
+            $("#gstLocalAmtHd").val(totals.gstLocalAmt);
+            $("#totLocalAmtAftGstHd").val(calculateAdditionAmt(totals.totLocalAmt, totals.gstLocalAmt, 4));
         }
 
         //Invoice Save
@@ -817,23 +1000,23 @@
                 AccountDate: $("#accountDate").val(),
                 DueDate: $("#dueDate").val(),
                 ReferenceNo: $("#referenceNo").val(),
-                CustomerId: $("#invoice_cmb_customer").data("kendoComboBox").value()||0,
+                CustomerId: $("#invoice_cmb_customer").data("kendoMultiColumnComboBox").value()||0,
                 CreditTermId: $("#invoice_cmb_creditTerms").data("kendoComboBox").value() || 0,
                 CurrencyId: $("#invoice_cmb_currency").data("kendoComboBox").value() || 0,
-                ExhRate: $("#exhRate").val(),
+                ExhRate: $("#exhRateHd").val(),
                 BankId: $("#invoice_cmb_bank").data("kendoComboBox").value() || 0,
                 JobOrderId: $("#invoice_cmb_jobOrder").data("kendoComboBox").value() || 0,
                 VesselId: $("#invoice_cmb_vessel").data("kendoComboBox").value() || 0,
                 PortId: $("#invoice_cmb_port").data("kendoComboBox").value() || 0,
                 BargeId: $("#invoice_cmb_barge").data("kendoComboBox").value() || 0,
                 ServiceTypeId: $("#invoice_cmb_serviceType").data("kendoComboBox").value() || 0,
-                TotAmt: $("#totAmt").val(),
-                TotLocalAmt: $("#totLocalAmt").val(),
-                GstAmt: $("#gstAmt").val(),
-                GstLocalAmt: $("#gstLocalAmt").val(),
-                TotAmtAftGst: $("#totAmtAftGst").val(),
-                TotLocalAmtAftGst: $("#totLocalAmtAftGst").val(),
-                Remarks: $("#remarks").val(),
+                TotAmt: $("#totAmtHd").val(),
+                TotLocalAmt: $("#totLocalAmtHd").val(),
+                GstAmt: $("#gstAmtHd").val(),
+                GstLocalAmt: $("#gstLocalAmtHd").val(),
+                TotAmtAftGst: $("#totAmtAftGstHd").val(),
+                TotLocalAmtAftGst: $("#totLocalAmtAftGstHd").val(),
+                Remarks: $("#remarksHd").val(),
             };
 
             // 2. Collect Grid Data (Details)
@@ -841,10 +1024,10 @@
             const invoiceDt = grid.dataSource.data().map(item => ({
                 ItemNo: item.itemNo,
                 ProductId: item.productId,
+                GlId: item.glId,
                 DepartmentId: item.departmentId,
                 TaskId: item.taskId,
                 ServiceId: item.serviceId,
-                GlId: item.glId,
                 QTY: item.qty,
                 UomId: item.uomId,
                 UnitPrice: item.unitPrice,

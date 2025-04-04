@@ -38,8 +38,8 @@
                         <select id="invoice_cmb_currency" style="width: 100%"></select>
                     </div>
                     <div class="col-md-2">
-                        <label for="exhRate" class="form-label">Exchange Rate</label>
-                        <input type="number" step="0.0001" class="form-control" id="exhRate" value="1.0000">
+                        <label for="exhRateHd" class="form-label">Exchange Rate</label>
+                        <input type="number" step="0.0001" class="form-control" id="exhRateHd" value="1.0000">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Operation No</label>
@@ -72,32 +72,32 @@
 
                     <!-- Totals Section -->
                     <div class="col-md-2">
-                        <label for="totAmt" class="form-label">Amt</label>
-                        <input type="number" class="form-control" id="totAmt" readonly>
+                        <label for="totAmtHd" class="form-label">Amt</label>
+                        <input type="number" class="form-control" id="totAmtHd" readonly>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">GST</label>
-                        <input type="number" class="form-control" id="gstAmt" readonly>
+                        <label for="gstAmtHd" class="form-label">GST</label>
+                        <input type="number" class="form-control" id="gstAmtHd" readonly>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">Tot Amt</label>
-                        <input type="number" class="form-control" id="totAmtAftGst" readonly>
+                        <label for="totAmtAftGstHd" class="form-label">Tot Amt</label>
+                        <input type="number" class="form-control" id="totAmtAftGstHd" readonly>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">Base Amt</label>
-                        <input type="number" class="form-control" id="totLocalAmt" readonly>
+                        <label for="totLocalAmtHd" class="form-label">Base Amt</label>
+                        <input type="number" class="form-control" id="totLocalAmtHd" readonly>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">Base GST</label>
-                        <input type="number" class="form-control" id="gstLocalAmt" readonly>
+                        <label for="gstLocalAmtHd" class="form-label">Base GST</label>
+                        <input type="number" class="form-control" id="gstLocalAmtHd" readonly>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">Base Tot Amt</label>
-                        <input type="number" class="form-control" id="totLocalAmtAftGst" readonly>
+                        <label for="totLocalAmtAftGstHd" class="form-label">Base Tot Amt</label>
+                        <input type="number" class="form-control" id="totLocalAmtAftGstHd" readonly>
                     </div>
                     <div class="col-md-3">
-                        <label for="remarks" class="form-label">Remarks</label>
-                        <textarea class="form-control" id="remarks" rows="1"></textarea>
+                        <label for="remarksHd" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarksHd" rows="1"></textarea>
                     </div>
                     <div class="col-md-3">
                         <label for="remarks" class="form-label">Description</label>
@@ -112,7 +112,7 @@
         <!-- Invoice Header Section -->
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header">
-                <h6 class="mb-0">Invoice Deatils</h6>
+                <h6 class="mb-0">Invoice Details</h6>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -141,36 +141,40 @@
                         <select id="invoice_cmb_department" style="width: 100%"></select>
                     </div>
                     <div class="col-md-2">
-                        <label for="qty" class="form-label">Qty</label>
-                        <input type="number" class="form-control" id="qty">
+                        <label for="qtyDt" class="form-label">Qty</label>
+                        <input type="number" class="form-control" id="qtyDt" onblur="handleQtyChange();">
                     </div>
                     <div class="col-md-2">
                         <label for="invoice_cmb_uom" class="form-label">UOM<span class="text-danger">*</span></label>
                         <select id="invoice_cmb_uom" style="width: 100%"></select>
                     </div>
                     <div class="col-md-2">
-                        <label for="unitPrice" class="form-label">Unit Price</label>
-                        <input type="number" class="form-control" id="unitPrice">
+                        <label for="unitPriceDt" class="form-label">Unit Price</label>
+                        <input type="number" class="form-control" id="unitPriceDt" onblur="handleQtyChange();">
                     </div>
                     <div class="col-md-2">
-                        <label for="totAmt" class="form-label">Amt</label>
-                        <input type="number" class="form-control" id="totAmt">
+                        <label for="totAmtDt" class="form-label">Amt</label>
+                        <input type="number" class="form-control" id="totAmtDt" onblur="handleTotalAmountChange();">
                     </div>
                     <div class="col-md-2">
-                        <label for="invoice_cmb_gst" class="form-label">Gst %<span class="text-danger">*</span></label>
+                        <label for="invoice_cmb_gst" class="form-label">Gst<span class="text-danger">*</span></label>
                         <select id="invoice_cmb_gst" style="width: 100%"></select>
                     </div>
-                    <div class="col-md-2">
-                        <label for="gstAmt" class="form-label">Gst</label>
-                        <input type="number" class="form-control" id="gstAmt">
+                    <div class="col-md-1">
+                        <label for="gstPercentageDt" class="form-label">Gst %</label>
+                        <input type="number" class="form-control" id="gstPercentageDt" onblur="handleGstPercentageChange();">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="gstAmtDt" class="form-label">Gst Amt</label>
+                        <input type="number" class="form-control" id="gstAmtDt">
                     </div>
                     <div class="col-md-2">
-                        <label for="totAmtAftGst" class="form-label">Tot Amt</label>
-                        <input type="number" class="form-control" id="totAmtAftGst">
+                        <label for="totAmtAftGstDt" class="form-label">Tot Amt</label>
+                        <input type="number" class="form-control" id="totAmtAftGstDt">
                     </div>
                     <div class="col-md-4">
-                        <label for="remarks" class="form-label">Remarks</label>
-                        <textarea class="form-control" id="remarks" rows="1"></textarea>
+                        <label for="remarksDt" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarksDt" rows="1"></textarea>
                     </div>
                     <!-- Buttons Container -->
                     <div class="col-md-auto ms-auto">

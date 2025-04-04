@@ -374,6 +374,23 @@ namespace AMESWEB.Areas.Setting.Controllers
             return Json(data);
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetGstPercentage(Int16 gstId, string trnsDate, string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            // Parse the date filters if provided
+            DateTime? trnsDateParsed = null;
+            if (!string.IsNullOrEmpty(trnsDate) && DateTime.TryParse(trnsDate, out DateTime dtFrom))
+            {
+                trnsDateParsed = dtFrom;
+            }
+
+            var data = await _settingService.GetGstPercentageAsync(companyIdShort, parsedUserId.Value, gstId, trnsDate);
+            return Json(data);
+        }
+
         #endregion Commonly Used
     }
 }
