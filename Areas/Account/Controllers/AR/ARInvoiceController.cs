@@ -1,8 +1,10 @@
 ﻿using AMESWEB.Areas.Account.Data.IServices.AR;
 using AMESWEB.Areas.Account.Models.AR;
+using AMESWEB.Controllers;
 using AMESWEB.Entities.Accounts.AR;
 using AMESWEB.Helpers;
 using AMESWEB.Hubs;
+using AMESWEB.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -12,13 +14,14 @@ namespace AMESWEB.Areas.Account.Controllers
 {
     [Area("account")]
     [Authorize]
-    public class ARInvoiceController : Controller
+    public class ARInvoiceController : BaseController
     {
         private readonly ILogger<ARInvoiceController> _logger;
         private readonly IARInvoiceService _arInvoiceService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ARInvoiceController(ILogger<ARInvoiceController> logger, IARInvoiceService arInvoiceService, IHubContext<NotificationHub> hubContext)
+        public ARInvoiceController(ILogger<ARInvoiceController> logger, IBaseService baseService, IARInvoiceService arInvoiceService, IHubContext<NotificationHub> hubContext)
+            : base(logger, baseService)
         {
             _logger = logger;
             _arInvoiceService = arInvoiceService;
@@ -48,7 +51,7 @@ namespace AMESWEB.Areas.Account.Controllers
                     return Json(new { success = false, message = "User not logged in or invalid user ID." });
                 }
 
-                var data = await _arInvoiceService.GetARInvoiceListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty, fromdate, todate);
+                var data = await _arInvoiceService.GetARInvoiceListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty, 0, fromdate, todate, false);
 
                 var total = data.totalRecords;
                 var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
@@ -58,6 +61,27 @@ namespace AMESWEB.Areas.Account.Controllers
             {
                 _logger.LogError(ex, "An error occurred while fetching AR invoices.");
                 return Json(new { Result = -1, Message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> ArInvoiceList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, string fromDate, string toDate, bool isShowAll)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+                return Json(new { success = false, message = "Invalid page parameters" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _arInvoiceService.GetARInvoiceListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, fromDate, toDate, isShowAll);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching job list");
+                return Json(new { success = false, message = "An error occurred" });
             }
         }
 

@@ -6,7 +6,7 @@ namespace AMESWEB.Areas.Account.Data.IServices.AR
 {
     public interface IARInvoiceService
     {
-        public Task<ARInvoiceViewModelCount> GetARInvoiceListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, string fromDate, string toDate);
+        public Task<ARInvoiceViewModelCount> GetARInvoiceListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, string fromDate, string toDate, bool isShowAll);
 
         public Task<ARInvoiceViewModel> GetARInvoiceByIdNoAsync(short CompanyId, short UserId, long InvoiceId, string InvoiceNo);
 

@@ -41,7 +41,7 @@
                             </div>
                             <div class="btn-group gap-2">
 
-                                <button type="button" class="btn btn-primary" id="btnList" title="List">
+                                <button type="button" class="btn btn-primary" id="btnList" title="List" onclick="openListModal();">
                                     <span class="material-symbols-outlined">list</span>
                                 </button>
                                 <button type="button" class="btn btn-success" id="btnSave" title="Save">
@@ -77,6 +77,7 @@
     </div>
 </div>
 
+
 @section externalhtml {
     <div class="modal fade" id="saveconfirmationModal" tabindex="-1">
         <div class="modal-dialog">
@@ -94,10 +95,13 @@
             </div>
         </div>
     </div>
+
+    @await Html.PartialAsync("_List");
 }
 
 @section Scripts {
     <script>
+
         // Confirmation handling
         let pendingAction = null;
         let companyId = 0;
@@ -109,9 +113,38 @@
             companyId = getUrlParameter('companyId') || 1;
             Refresh();
             defaultsection();
+            
 
             invoicedetailsgrid();
         });
+
+        function openListModal() {
+            try {
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('viewInvoiceListModal'));
+                modal.show();
+
+                // Set default date range (last 3 months)
+                const today = new Date();
+                const threeMonthsAgo = new Date(today);
+                threeMonthsAgo.setMonth(today.getMonth() - 3);
+
+                // Format dates for input fields (YYYY-MM-DD)
+                const formatDate = (date) => {
+                    return date.toISOString().slice(0, 10);
+                };
+
+                // Set date values
+                document.getElementById('fromDate').value = formatDate(threeMonthsAgo);
+                document.getElementById('toDate').value = formatDate(today);
+
+                // Load grid data
+                loadInvoiceGrid();
+            } catch (error) {
+                console.error('Error opening list modal:', error);
+                alert('Failed to open invoice list. Please try again.');
+            }
+        }
 
         function defaultsection() {
             $("#invoice_cmb_task, #invoice_cmb_details").closest(".col-md-2").hide();
@@ -482,6 +515,57 @@
         function loadChargesDropdown(taskId) {
             const chargesUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=${taskId}`
             BindComboBox(chargesUrl, "tariff_cmb_chagre", "chargeName", "chargeId");
+        }
+
+
+        function loadInvoiceGrid() {
+            let searchString = $('#txtsearch').val();
+            let customerId = 0;
+            let fromDate = $('#fromDate').val();
+            let toDate = $('#toDate').val();
+            let isShowAll = 1;
+
+            let url = '@Url.Action("ArInvoiceList", "ArInvoice", new { area = "Account" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "150px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
+     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+
+                        if (permissions.canEdit) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
+     <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        }
+
+                        if (permissions.canDelete) {
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
+     <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        }
+                        return buttons;
+                    }
+                },
+                { field: "invoiceNo", title: "Invoice No", type: "string", width: "150px" },
+                { field: "accountDate", title: "Account Date", type: "date", format: "{0:yyyy-MM-dd}", width: "130px" },
+                { field: "customerName", title: "Customer Name", type: "string", width: "200px" },
+                { field: "currencyCode", title: "Currency Name", type: "string", width: "120px" },
+                { field: "creditTermName", title: "Terms", type: "string", width: "150px" },
+                { field: "bankName", title: "Bank", type: "string", width: "180px" },
+                { field: "totAmt", title: "Amount", type: "number", format: "{0:n2}", width: "120px" },
+                { field: "gstAmt", title: "Gst Amount", type: "number", format: "{0:n2}", width: "120px" },
+                { field: "totAmtAftGst", title: "Total Amount", type: "number", format: "{0:n2}", width: "140px" },
+                { field: "createBy", title: "CreateBy", type: "string", width: "150px" },
+                { field: "editBy", title: "EditBy", type: "string", width: "150px" }
+            ];
+
+            let grid = $("#grid_invoice").data("kendoGrid");
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId, fromDate, toDate, isShowAll });
+            } else {
+                initializeKendoGrid("grid_invoice", url, { searchString, companyId, customerId, fromDate, toDate, isShowAll }, columns);
+            }
+
         }
 
         function invoicedetailsgrid() {
