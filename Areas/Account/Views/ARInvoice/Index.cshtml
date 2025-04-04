@@ -3,6 +3,15 @@
     ViewData["Title"] = $"AR Invoice ";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@{
+    bool canCreate = ViewBag.IsCreate ?? false;
+    bool canEdit = ViewBag.IsEdit ?? false;
+    bool canDelete = ViewBag.IsDelete ?? false;
+    bool canRead = ViewBag.IsRead ?? false;
+    bool canExport = ViewBag.IsExport ?? false;
+    bool canPrint = ViewBag.IsPrint ?? false;
+    int companyId = ViewBag.CompanyId;
+}
 
 <div class="row">
     <div class="col-lg-12">
@@ -77,7 +86,6 @@
     </div>
 </div>
 
-
 @section externalhtml {
     <div class="modal fade" id="saveconfirmationModal" tabindex="-1">
         <div class="modal-dialog">
@@ -111,11 +119,15 @@
         $(document).ready(function () {
 
             companyId = getUrlParameter('companyId') || 1;
+            permissions = {
+                canCreate: @Json.Serialize(canCreate),
+                canEdit: @Json.Serialize(canEdit),
+                canDelete: @Json.Serialize(canDelete),
+                canRead: @Json.Serialize(canRead),
+            };
+
             Refresh();
             defaultsection();
-            
-
-            invoicedetailsgrid();
         });
 
         function openListModal() {
@@ -496,7 +508,7 @@
                     $("#invoice_cmb_department").closest(".col-md-2").show();
                 }
 
-                // Clear hidden fields
+                // Clear hide fields
                 $("#invoice_cmb_task").data("kendoComboBox").value("");
                 $("#invoice_cmb_details").data("kendoComboBox").value("");
                 $("#invoice_cmb_department").data("kendoComboBox").value("");
@@ -517,6 +529,26 @@
             BindComboBox(chargesUrl, "tariff_cmb_chagre", "chargeName", "chargeId");
         }
 
+        //clear Invoice & Details
+
+        function ClearInvoice() {
+            // Clear all inputs
+            //delete all details also
+        }
+
+        function ClearInvoiceDetails() {
+            // Clear inputs
+            $("#itemNo, #qty, #unitPrice, #amount, #gstAmount, #totalAmount").val("0");
+            $("#remarks").val("");
+
+            $("#invoice_cmb_product").data("kendoComboBox").value("");
+            $("#invoice_cmb_gl").data("kendoComboBox").value("");
+            $("#invoice_cmb_task").data("kendoComboBox").value("");
+            $("#invoice_cmb_details").data("kendoComboBox").value("");
+            $("#invoice_cmb_department").data("kendoComboBox").value("");
+            $("#invoice_cmb_uom").data("kendoComboBox").value("");
+            $("#invoice_cmb_gst").data("kendoComboBox").value("");
+        }
 
         function loadInvoiceGrid() {
             let searchString = $('#txtsearch').val();
@@ -525,23 +557,23 @@
             let toDate = $('#toDate').val();
             let isShowAll = 1;
 
-            let url = '@Url.Action("ArInvoiceList", "ArInvoice", new { area = "Account" })';
+            let url = '@Url.Action("List", "ArInvoice", new { area = "Account" })';
             let columns = [
                 {
                     title: "Actions",
                     width: "150px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
-     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+<i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
                         if (permissions.canEdit) {
                             buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
-     <i class="material-symbols-outlined text-warning">edit</i></button>`;
+<i class="material-symbols-outlined text-warning">edit</i></button>`;
                         }
 
                         if (permissions.canDelete) {
                             buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
-     <i class="material-symbols-outlined text-danger">delete</i></button>`;
+<i class="material-symbols-outlined text-danger">delete</i></button>`;
                         }
                         return buttons;
                     }
@@ -564,74 +596,133 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, customerId, fromDate, toDate, isShowAll });
             } else {
                 initializeKendoGrid("grid_invoice", url, { searchString, companyId, customerId, fromDate, toDate, isShowAll }, columns);
-            }
 
+                // Add row double-click event listener
+                $("#" + "grid_invoice").on("dblclick", "tr", function () {
+                    let dataItem = $("#grid_invoice").data("kendoGrid").dataItem(this);
+
+                    if (dataItem) {
+                        debugger;
+                        let invoiceId = dataItem.invoiceId; // Assuming invoiceId exists in dataItem
+                        let companyId = dataItem.companyId; // Assuming companyId exists in dataItem
+
+                        // Hide the modal
+                        $('#viewInvoiceListModal').modal('hide');
+
+                        // Perform an AJAX call to fetch invoice details
+                        $.ajax({
+                            url: `@Url.Action("GetById", "ArInvoice", new { area = "Account" })`, // Replace with your actual API endpoint
+                            type: "GET",
+                            data: { invoiceId: invoiceId, invoiceNo: '', companyId: companyId },
+                            success: function (response) {
+                                debugger;
+                                if (response.success) {
+                                    populateModalFields(response.data);
+                                } else {
+                                    alert("No data found for the selected invoice.");
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error fetching invoice details:", error);
+                                alert("Failed to fetch invoice details. Please try again.");
+                            }
+                        });
+                    }
+                });
+            }
         }
 
-        function invoicedetailsgrid() {
-            $("#grid_invoicedetails").kendoGrid({
-                dataSource: {
-                    data: [], // Your data source here
-                    schema: {
-                        model: {
-                            fields: {
-                                product: { type: "string" },
-                                glCode: { type: "string" },
-                                task: { type: "string" },
-                                qty: { type: "number" },
-                                uom: { type: "string" },
-                                unitPrice: { type: "number" },
-                                amount: { type: "number" },
-                                gstPercent: { type: "number" },
-                                gstAmount: { type: "number" },
-                                totalAmount: { type: "number" }
-                            }
-                        }
-                    },
-                    pageSize: 10
-                },
-                height: 400,
-                columns: [
-                    { field: "product", title: "Product", width: "150px" },
-                    { field: "glCode", title: "GL Code", width: "120px" },
-                    { field: "glName", title: "GL Name", width: "120px" },
-                    { field: "remarks", title: "remarks", width: "80px" },
-                    { field: "qty", title: "Qty", width: "80px" },
-                    { field: "uom", title: "UOM", width: "80px" },
-                    { field: "unitPrice", title: "Unit Price", format: "{0:c}", width: "120px" },
-                    { field: "amount", title: "Amount", format: "{0:c}", width: "120px" },
-                    { field: "gstPercent", title: "GST %", width: "80px" },
-                    { field: "gstAmount", title: "GST Amt", format: "{0:c}", width: "120px" },
-                    { field: "totalAmount", title: "Total", format: "{0:c}", width: "120px" },
-                    { field: "baseAmt", title: "Base Amt", format: "{0:c}", width: "120px" },
-                    { field: "baseAmt", title: "Base Gst", format: "{0:c}", width: "120px" },
-                    { field: "baseAmt", title: "Base Tot Amt", format: "{0:c}", width: "120px" },
-                    { field: "department", title: "Task", width: "120px" },
-                    { field: "task", title: "Task", width: "120px" },
-                    { field: "details", title: "Details", width: "120px" },
+        function populateModalFields(data) {
+            debugger;
+            $('#accountDate').val(formatDateToDDMMYYYY(data.accountDate));
+            $('#invoice_cmb_customer').data("kendoMultiColumnComboBox").value(data.customerId > 0 ? data.customerId : '');
+            $('#referenceNo').val(data.referenceNo);
+            $('#invoice_cmb_creditTerms').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
+            $('#dueDate').val(formatDateToDDMMYYYY(data.dueDate));
+            $('#invoice_cmb_bank').data("kendoComboBox").value(data.bankId > 0 ? data.bankId : '');
+            $('#invoice_cmb_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+            $('#exhRate').val(data.exhRate);
+            $('#operationno').val(data.operationNo);
+            $('#invoice_cmb_jobOrder').data("kendoComboBox").value(data.jobOrderId > 0 ? data.jobOrderId : '');
+            $('#invoice_cmb_vessel').data("kendoComboBox").value(data.vesselId > 0 ? data.vesselId : '');
+            $('#invoice_cmb_port').data("kendoComboBox").value(data.portId > 0 ? data.portId : '');
+            $('#invoice_cmb_barge').data("kendoComboBox").value(data.bargeId > 0 ? data.bargeId : '');
+           /* $('#invoice_cmb_transtype').data("kendoComboBox").value(data.transTypeId > 0 ? data.transTypeId : '');*/
+            $('#invoice_cmb_serviceType').data("kendoComboBox").value(data.serviceTypeId > 0 ? data.serviceTypeId : '');
+            $('#totAmt').val(data.totAmt);
+            $('#gstAmt').val(data.gstAmt);
+            $('#totAmtAftGst').val(data.totAmtAftGst);
+            $('#totLocalAmt').val(data.totLocalAmt);
+            $('#gstLocalAmt').val(data.gstLocalAmt);
+            $('#totLocalAmtAftGst').val(data.totLocalAmtAftGst);
+            $('#remarks').val(data.remarks);
+            $('#description').val(data.description);
 
-                ],
-            });
+            debugger;
+            //data.data_details
+            populateInvoiceDetailsGrid(data.data_details)
+
         }
 
         //Invoice Details
-        function ClearInvoice() {
-            // Clear all inputs
-            //delete all details also
-        }
 
-        function ClearInvoiceDetails() {
-            // Clear inputs
-            $("#itemNo, #qty, #unitPrice, #amount, #gstAmount, #totalAmount").val("0");
-            $("#remarks").val("");
+        function populateInvoiceDetailsGrid(dataDetails) {
+            debugger;
+            let grid = $("#grid_invoicedetails").data("kendoGrid");
 
-            $("#invoice_cmb_product").data("kendoComboBox").value("");
-            $("#invoice_cmb_gl").data("kendoComboBox").value("");
-            $("#invoice_cmb_task").data("kendoComboBox").value("");
-            $("#invoice_cmb_details").data("kendoComboBox").value("");
-            $("#invoice_cmb_department").data("kendoComboBox").value("");
-            $("#invoice_cmb_uom").data("kendoComboBox").value("");
-            $("#invoice_cmb_gst").data("kendoComboBox").value("");
+            if (grid) {
+                // Clear existing data and add new details
+                grid.dataSource.data(dataDetails);
+            } else {
+                // Initialize Kendo Grid if not already initialized
+                initializeKendoGridWithoutPaging("grid_invoicedetails", null, {}, [
+                    {
+                        title: "Actions",
+                        width: "150px",
+                        template: function (dataItem) {
+                            let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
+                            <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                           
+                                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
+                            <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                            
+                                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
+                            <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                           
+
+                            return buttons;
+                        }
+                    },
+                    { field: "itemNo", title: "Item No", width: "120px" },
+                   
+                    { field: "productId", title: "Product ID", width: "100px" ,hidden:true},
+                    { field: "productName", title: "Product Name", width: "150px" },
+                    { field: "glId", title: "GL ID", width: "100px", hidden: true },
+                    { field: "glCode", title: "GL Code", width: "100px" },
+                    { field: "glName", title: "GL Name", width: "150px" },
+                    { field: "qty", title: "Quantity", format: "{0:n2}", width: "100px" },
+                    { field: "unitPrice", title: "Unit Price", format: "{0:c}", width: "120px" },
+                    { field: "amount", title: "Amount", format: "{0:c}", width: "120px" },
+                    { field: "gstPercent", title: "GST Percent", format: "{0:p}", width: "100px" },
+                    { field: "gstAmount", title: "GST Amount", format: "{0:c}", width: "120px" },
+                    { field: "totalAmount", title: "Total Amount", format: "{0:c}", width: "150px" },
+                  
+                    { field: "remarks", title: "Remarks", width: "150px" },
+                    { field: "departmentId", title: "Department ID", width: "120px", hidden: true },
+                    { field: "departmentName", title: "Department Name", width: "150px" },
+                    { field: "taskId", title: "Task ID", width: "120px", hidden: true },
+                    { field: "taskName", title: "Task Name", width: "150px" },
+                    { field: "serviceId", title: "Service ID", width: "120px", hidden: true },
+                    { field: "serviceName", title: "Service Name", width: "150px" },
+                    { field: "uomId", title: "UOM ID", width: "100px", hidden: true },
+                    { field: "uomName", title: "UOM Name", width: "120px" },
+                    { field: "gstId", title: "GST ID", width: "100px", hidden: true },
+                    { field: "gstName", title: "GST Name", width: "150px" },
+                    { field: "totalLocalAmount", title: "Total Local Amount", format: "{0:c}", width: "150px" },
+                    { field: "gstLocalAmount", title: "GST Local Amount", format: "{0:c}", width: "150px" }
+                ], 600);
+                $("#grid_invoicedetails").data("kendoGrid").dataSource.data(dataDetails);
+            }
         }
 
         function AddInvoiceDetails() {
@@ -717,6 +808,7 @@
             ClearInvoiceDetails();
         }
 
+        //Invoice Save
         function saveInvoice() {
             // 1. Collect Header Data
             const invoiceHd = {
@@ -787,7 +879,13 @@
             });
         }
 
+        //Invoice Unpost & Delete
         function unpostInvoice() {
+            // Unpost logic here
+            console.log("Unposting invoice...");
+        }
+
+        function deleteInvoice() {
             // Unpost logic here
             console.log("Unposting invoice...");
         }

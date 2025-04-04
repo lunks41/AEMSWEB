@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AMESWEB.Areas.Account.Models.AR
 {
-    public class ARInvoiceViewModel
+    public class ArInvoiceViewModel
     {
         //Get & Set the formate
 
@@ -152,12 +152,12 @@ namespace AMESWEB.Areas.Account.Models.AR
         public string? EditBy { get; set; }
         public string? CancelBy { get; set; }
         public byte EditVersion { get; set; }
-        public List<ARInvoiceDtViewModel> data_details { get; set; }
+        public List<ArInvoiceDtViewModel> data_details { get; set; }
     }
 
-    public class SaveARInvoiceViewModel
+    public class SaveArInvoiceViewModel
     {
-        public ARInvoiceViewModel ARInvoice { get; set; }
+        public ArInvoiceViewModel ArInvoice { get; set; }
         public string? CompanyId { get; set; }
     }
 }

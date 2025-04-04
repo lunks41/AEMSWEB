@@ -2,6 +2,7 @@
 using AMESWEB.Areas.Account.Models.AR;
 using AMESWEB.Controllers;
 using AMESWEB.Entities.Accounts.AR;
+using AMESWEB.Enums;
 using AMESWEB.Helpers;
 using AMESWEB.Hubs;
 using AMESWEB.IServices;
@@ -14,13 +15,13 @@ namespace AMESWEB.Areas.Account.Controllers
 {
     [Area("account")]
     [Authorize]
-    public class ARInvoiceController : BaseController
+    public class ArInvoiceController : BaseController
     {
-        private readonly ILogger<ARInvoiceController> _logger;
-        private readonly IARInvoiceService _arInvoiceService;
+        private readonly ILogger<ArInvoiceController> _logger;
+        private readonly IArInvoiceService _arInvoiceService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ARInvoiceController(ILogger<ARInvoiceController> logger, IBaseService baseService, IARInvoiceService arInvoiceService, IHubContext<NotificationHub> hubContext)
+        public ArInvoiceController(ILogger<ArInvoiceController> logger, IBaseService baseService, IArInvoiceService arInvoiceService, IHubContext<NotificationHub> hubContext)
             : base(logger, baseService)
         {
             _logger = logger;
@@ -28,44 +29,37 @@ namespace AMESWEB.Areas.Account.Controllers
             _hubContext = hubContext;
         }
 
-        // GET: /master/ARInvoice/Index
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index(int? companyId)
         {
+            if (!companyId.HasValue || companyId <= 0)
+            {
+                _logger.LogWarning("Invalid company ID: {CompanyId}", companyId);
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
+
+            var parsedUserId = GetParsedUserId();
+            if (!parsedUserId.HasValue)
+            {
+                _logger.LogWarning("User not logged in or invalid user ID.");
+                return Json(new { success = false, message = "User not logged in or invalid user ID." });
+            }
+
+            var permissions = await HasPermission((short)companyId, parsedUserId.Value, (short)E_Modules.AR, (short)E_AR.Invoice);
+
+            ViewBag.IsRead = permissions?.IsRead ?? false;
+            ViewBag.IsCreate = permissions?.IsCreate ?? false;
+            ViewBag.IsEdit = permissions?.IsEdit ?? false;
+            ViewBag.IsDelete = permissions?.IsDelete ?? false;
+            ViewBag.IsExport = permissions?.IsExport ?? false;
+            ViewBag.IsPrint = permissions?.IsPrint ?? false;
+            ViewBag.CompanyId = companyId;
+
             return View();
         }
 
-        [HttpGet("List")]
-        public async Task<JsonResult> List(short pageNumber, short pageSize, string searchString, string companyId, string fromdate, string todate)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-                {
-                    return Json(new { Result = -1, Message = "Invalid company ID" });
-                }
-
-                var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var data = await _arInvoiceService.GetARInvoiceListAsync(companyIdShort, parsedUserId, pageSize, pageNumber, searchString ?? string.Empty, 0, fromdate, todate, false);
-
-                var total = data.totalRecords;
-                var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return Json(new { data = paginatedData, total });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching AR invoices.");
-                return Json(new { Result = -1, Message = "An error occurred" });
-            }
-        }
-
         [HttpGet]
-        public async Task<JsonResult> ArInvoiceList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, string fromDate, string toDate, bool isShowAll)
+        public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId, int customerId, string fromDate, string toDate, bool isShowAll)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -75,8 +69,12 @@ namespace AMESWEB.Areas.Account.Controllers
 
             try
             {
-                var data = await _arInvoiceService.GetARInvoiceListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, fromDate, toDate, isShowAll);
+                var data = await _arInvoiceService.GetArInvoiceListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, fromDate, toDate, isShowAll);
                 return Json(new { data = data.data, total = data.totalRecords });
+
+                //var total = data.totalRecords;
+                //var paginatedData = data.data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                //return Json(new { data = paginatedData, total });
             }
             catch (Exception ex)
             {
@@ -85,7 +83,6 @@ namespace AMESWEB.Areas.Account.Controllers
             }
         }
 
-        // GET: /master/ARInvoice/GetById
         [HttpGet]
         public async Task<JsonResult> GetById(string invoiceId, string invoiceNo, string companyId)
         {
@@ -108,7 +105,7 @@ namespace AMESWEB.Areas.Account.Controllers
 
             try
             {
-                var data = await _arInvoiceService.GetARInvoiceByIdNoAsync(companyIdShort, parsedUserId, Convert.ToInt64(invoiceId), invoiceNo);
+                var data = await _arInvoiceService.GetArInvoiceByIdNoAsync(companyIdShort, parsedUserId, Convert.ToInt64(invoiceId), invoiceNo);
 
                 if (data == null)
                 {
@@ -124,16 +121,15 @@ namespace AMESWEB.Areas.Account.Controllers
             }
         }
 
-        // POST: /master/ARInvoice/Save
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveARInvoiceViewModel model)
+        public async Task<IActionResult> Save([FromBody] SaveArInvoiceViewModel model)
         {
             if (model == null)
             {
                 return Json(new { success = false, message = "Data operation failed due to null model." });
             }
 
-            var arInvoice = model.ARInvoice;
+            var arInvoice = model.ArInvoice;
 
             if (string.IsNullOrEmpty(model.CompanyId) || !short.TryParse(model.CompanyId, out short companyIdShort))
             {
@@ -250,7 +246,7 @@ namespace AMESWEB.Areas.Account.Controllers
 
             try
             {
-                var data = await _arInvoiceService.SaveARInvoiceAsync(companyIdShort, parsedUserId, arInvoiceToSave, arInvoiceDtEntities);
+                var data = await _arInvoiceService.SaveArInvoiceAsync(companyIdShort, parsedUserId, arInvoiceToSave, arInvoiceDtEntities);
 
                 if (data == null)
                 {

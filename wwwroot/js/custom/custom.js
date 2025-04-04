@@ -1457,3 +1457,10 @@ function validateNumberInput(input) {
         return true;
     }
 }
+
+/**
+ * date formating
+ */
+function formatDateToDDMMYYYY(date) {
+    return date ? new Date(date).toLocaleDateString("en-GB") : ""; // Returns dd/mm/yyyy or an empty string
+}

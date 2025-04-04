@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AMESWEB.Areas.Account.Models.AR
 {
-    public class ARInvoiceDtViewModel
+    public class ArInvoiceDtViewModel
     {
         //Get & Set the formate
 

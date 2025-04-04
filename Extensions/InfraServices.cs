@@ -86,7 +86,7 @@ public static class InfraServices
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ILogService, LogService>();
 
-        services.AddScoped<IARInvoiceService, ARInvoiceService>();
+        services.AddScoped<IArInvoiceService, ArInvoiceService>();
         services.AddScoped<IARCreditNoteService, ARCreditNoteService>();
         services.AddScoped<IARDebitNoteService, ARDebitNoteService>();
         services.AddScoped<IARReceiptService, ARReceiptService>();

@@ -7,13 +7,13 @@
     <style>
 
         /* Ensure content fits the modal width */
-        #addARInvoiceModal .modal-content {
+        #addArInvoiceModal .modal-content {
             min-height: 80vh;
             display: flex;
             flex-direction: column;
         }
 
-        #addARInvoiceModal .modal-body {
+        #addArInvoiceModal .modal-body {
             flex: 1;
             overflow-y: auto;
         }
@@ -43,7 +43,7 @@
 
                     <!-- Add Button -->
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addARInvoiceModal" id="addrecord">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArInvoiceModal" id="addrecord">
                             <i class="mdi mdi-plus me-1"></i> Add
                         </button>
                     </div>
@@ -55,11 +55,11 @@
 </div>
 
 @section externalhtml {
-    <div class="modal fade" id="addARInvoiceModal" tabindex="-1" aria-labelledby="addARInvoiceModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="addArInvoiceModal" tabindex="-1" aria-labelledby="addArInvoiceModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="addARInvoiceModalLabel">AR Invoice Management</h5>
+                    <h5 class="modal-title" id="addArInvoiceModalLabel">AR Invoice Management</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="clearForm();"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -521,7 +521,7 @@
         }
 
         //// Initialize modal with restrictions
-        //const myModal = new bootstrap.Modal('#addARInvoiceModal', {
+        //const myModal = new bootstrap.Modal('#addArInvoiceModal', {
         //    keyboard: false, // Disable ESC key
         //    backdrop: 'static' // Disable backdrop clicks
         //});

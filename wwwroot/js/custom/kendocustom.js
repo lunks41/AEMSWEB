@@ -31,7 +31,7 @@ function getCookie(name) {
     return null;
 }
 
-function initializeKendoGrid(gridId, url, params, columns) {
+function initializeKendoGrid(gridId, url, params, columns, height = 600) {
     $("#" + gridId).kendoGrid({
         dataSource: {
             transport: {
@@ -58,7 +58,9 @@ function initializeKendoGrid(gridId, url, params, columns) {
                 total: "total" // Field containing the total record count
             }
         },
-        scrollable: true,
+        scrollable: {
+            virtual: true // Use virtual scrolling for large datasets
+        },
         columnMenu: {
             filterable: false
         },
@@ -67,18 +69,22 @@ function initializeKendoGrid(gridId, url, params, columns) {
         navigatable: true,
         resizable: true,
         reorderable: true,
-        pageable: true,
+        pageable: {
+            refresh: true,
+            pageSizes: [20, 50, 100, 1000],
+        },
         toolbar: ["excel", "pdf", "search"],
         pdfExport: function (e) {
             const width = e.sender.wrapper.width();
             e.sender.wrapperClone.width(width);
             e.sender.wrapperClone.addClass('k-clone');
         },
-        columns: columns
+        columns: columns,
+        height: height // Dynamically set grid height
     });
 }
 
-function initializeKendoGridWithoutPaging(gridId, url, params, columns) {
+function initializeKendoGridWithoutPaging(gridId, url, params, columns, height = 600) {
     $("#" + gridId).kendoGrid({
         dataSource: {
             transport: {
@@ -100,8 +106,9 @@ function initializeKendoGridWithoutPaging(gridId, url, params, columns) {
         navigatable: true, // Enables keyboard navigation
         resizable: true, // Allows resizing of columns
         reorderable: true, // Allows reordering of columns
-        toolbar: [ "search"],
-        columns: columns
+        toolbar: ["search"],
+        columns: columns,
+        height: height // Dynamically set grid height
     });
 }
 
