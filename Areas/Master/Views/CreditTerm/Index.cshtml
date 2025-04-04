@@ -76,7 +76,7 @@
 
         function Refresh() {
             const CreditTermDtUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(CreditTermDtUrl, "cmd_creditTermDt", "creditTermName", "creditTermId");
+            bindComboBox(CreditTermDtUrl, "cmd_creditTermDt", "creditTermName", "creditTermId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

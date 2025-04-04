@@ -606,22 +606,22 @@
 
         function Refresh() {
             const glUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(glUrl, "cmb_exhgainloss", "glName", "glId");
-            BindComboBox(glUrl, "cmb_bankcharges", "glName", "glId");
-            BindComboBox(glUrl, "cmb_profitndloss", "glName", "glId");
-            BindComboBox(glUrl, "cmb_returneraing", "glName", "glId");
-            BindComboBox(glUrl, "cmb_salegst", "glName", "glId");
-            BindComboBox(glUrl, "cmb_purchasegst", "glName", "glId");
-            BindComboBox(glUrl, "cmb_saledefine", "glName", "glId");
-            BindComboBox(glUrl, "cmb_purchasedefine", "glName", "glId");
+            bindComboBox(glUrl, "cmb_exhgainloss", "glName", "glId");
+            bindComboBox(glUrl, "cmb_bankcharges", "glName", "glId");
+            bindComboBox(glUrl, "cmb_profitndloss", "glName", "glId");
+            bindComboBox(glUrl, "cmb_returneraing", "glName", "glId");
+            bindComboBox(glUrl, "cmb_salegst", "glName", "glId");
+            bindComboBox(glUrl, "cmb_purchasegst", "glName", "glId");
+            bindComboBox(glUrl, "cmb_saledefine", "glName", "glId");
+            bindComboBox(glUrl, "cmb_purchasedefine", "glName", "glId");
 
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(currencyUrl, "cmb_basecurrency", "currencyName", "currencyId");
-            BindComboBox(currencyUrl, "cmb_localcurrency", "currencyName", "currencyId");
+            bindComboBox(currencyUrl, "cmb_basecurrency", "currencyName", "currencyId");
+            bindComboBox(currencyUrl, "cmb_localcurrency", "currencyName", "currencyId");
 
               @*const moduleUrl = '@Url.Action("GetModuleLookup", "Lookup", new { area = "" })';
-              BindComboBox(moduleUrl, "cmb_mandatorymodule", "moduleName", "moduleId");
-              BindComboBox(moduleUrl, "cmb_visiblitymodule", "moduleName", "moduleId");*@
+              bindComboBox(moduleUrl, "cmb_mandatorymodule", "moduleName", "moduleId");
+              bindComboBox(moduleUrl, "cmb_visiblitymodule", "moduleName", "moduleId");*@
         }
 
         document.addEventListener('DOMContentLoaded', function () {

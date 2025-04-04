@@ -113,7 +113,7 @@
             { field: 'supplierName', title: 'Name', width: 200 }
         ];
         const supplierfilterFields = ['supplierCode', 'supplierName'];
-        BindMultiColumnComboBox(supplierUrl, "portExpense_cmb_supplier", "supplierName", "supplierId", suppliercolumnsProperties, supplierfilterFields);
+        bindMultiColumnComboBox(supplierUrl, "portExpense_cmb_supplier", "supplierName", "supplierId", suppliercolumnsProperties, supplierfilterFields);
 
         const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const glcolumnsProperties = [
@@ -121,16 +121,16 @@
             { field: 'glName', title: 'Name', width: 200 }
         ];
         const glfilterFields = ['glCode', 'glName'];
-        BindMultiColumnComboBox(chartOfAccountUrl, "portExpense_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+        bindMultiColumnComboBox(chartOfAccountUrl, "portExpense_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
 
         const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId=1';
-        BindComboBox(chargeUrl, "portExpense_cmb_charge", "chargeName", "chargeId");
+        bindComboBox(chargeUrl, "portExpense_cmb_charge", "chargeName", "chargeId");
 
         const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        BindComboBox(uomUrl, "portExpense_cmb_uom", "uomName", "uomId");
+        bindComboBox(uomUrl, "portExpense_cmb_uom", "uomName", "uomId");
 
         const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
-        BindComboBox(statusUrl, "portExpense_cmb_status", "orderTypeName", "orderTypeId");
+        bindComboBox(statusUrl, "portExpense_cmb_status", "orderTypeName", "orderTypeId");
     }
 
     function SelectedDropdown(DrpdwnName) {

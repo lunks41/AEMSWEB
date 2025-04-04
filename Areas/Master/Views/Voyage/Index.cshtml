@@ -180,10 +180,10 @@
         function Refresh() {
 
     const vesselUrl = '@Url.Action("GetVesselLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(vesselUrl, "cmd_vessel", "vesselName", "vesselId");
+            bindComboBox(vesselUrl, "cmd_vessel", "vesselName", "vesselId");
 
     const bargeUrl = '@Url.Action("GetBargeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(bargeUrl, "cmd_barge", "bargeName", "bargeId");
+            bindComboBox(bargeUrl, "cmd_barge", "bargeName", "bargeId");
 
 }
 

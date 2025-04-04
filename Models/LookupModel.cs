@@ -324,4 +324,9 @@
         public Int64 PortId { get; set; }
         public Int64 VesselId { get; set; }
     }
+
+    public class CustomerCodeLookupModel
+    {
+        public string? CustomerCode { get; set; }
+    }
 }

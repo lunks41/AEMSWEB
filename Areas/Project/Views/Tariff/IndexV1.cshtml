@@ -379,7 +379,7 @@
 
         function Refresh() {
             const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(portUrl, "cmb_port", "portName", "portId");
+            bindComboBox(portUrl, "cmb_port", "portName", "portId");
 
             const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             const columnsProperties = [
@@ -387,7 +387,7 @@
                 { field: 'customerName', title: 'Name', width: 200 }
             ];
             const filterFields = ['customerCode', 'customerName'];
-            BindMultiColumnComboBox(customerUrl, "cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
+            bindMultiColumnComboBox(customerUrl, "cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
         }
 
         function SelectedDropdown(DrpdwnName) {
@@ -513,14 +513,14 @@
                     modal.find('#freshwater_cmb_customer').val(customerId).trigger('change');
                     modal.find('#freshwater_cmb_port').val(portId).trigger('change');
                     const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
-                    BindComboBox(chargeUrl, "freshwater_cmb_chagre", "chargeName", "chargeId");
+                    bindComboBox(chargeUrl, "freshwater_cmb_chagre", "chargeName", "chargeId");
 
                 } else if (serviceType == 'LaunchService') {
                     // Pre-set Customer/Port in the modal (if needed)
                     modal.find('#launchservice_cmb_customer').val(customerId).trigger('change');
                     modal.find('#launchservice_cmb_port').val(portId).trigger('change');
                     const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
-                    BindComboBox(chargeUrl, "launchservice_cmb_chagre", "chargeName", "chargeId");
+                    bindComboBox(chargeUrl, "launchservice_cmb_chagre", "chargeName", "chargeId");
 
                 } else if (serviceType == 'Visa') {
                     // Pre-set Customer/Port in the modal (if needed)
@@ -532,7 +532,7 @@
                     modal.find('#common_cmb_port').val(portId).trigger('change');
                     modal.find('#common_cmb_task').val(taskId).trigger('change');
                     const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId' + taskId;
-                    BindComboBox(chargeUrl, "common_cmb_chagre", "chargeName", "chargeId");
+                    bindComboBox(chargeUrl, "common_cmb_chagre", "chargeName", "chargeId");
 
                 }
             }
@@ -851,13 +851,13 @@
         $('#addCommonTariffModal').on('shown.bs.modal', function () {
 
             const taskUrl = '@Url.Action("GetTaskLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(taskUrl, "common_cmb_task", "taskName", "taskId");
+            bindComboBox(taskUrl, "common_cmb_task", "taskName", "taskId");
 
             const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(uomUrl, "common_cmb_uom", "uomName", "uomId");
+            bindComboBox(uomUrl, "common_cmb_uom", "uomName", "uomId");
 
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(currencyUrl, "common_cmb_currency", "currencyName", "currencyId");
+            bindComboBox(currencyUrl, "common_cmb_currency", "currencyName", "currencyId");
 
         });
 

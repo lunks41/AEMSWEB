@@ -88,13 +88,13 @@
     const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
     const taskUrl = '@Url.Action("GetTaskLookup", "Lookup", new { area = "" })?companyId=' + companyId;
 
-    BindComboBox(customerUrl, "fromCustomer", "customerName", "customerId");
-    BindComboBox(portUrl, "fromPort", "portName", "portId");
-    BindComboBox(taskUrl, "fromTask", "taskName", "taskId");
+    bindComboBox(customerUrl, "fromCustomer", "customerName", "customerId");
+    bindComboBox(portUrl, "fromPort", "portName", "portId");
+    bindComboBox(taskUrl, "fromTask", "taskName", "taskId");
 
-    BindComboBox(customerUrl, "toCustomer", "customerName", "customerId");
-    BindComboBox(portUrl, "toPort", "portName", "portId");
-    BindComboBox(taskUrl, "toTask", "taskName", "taskId");
+    bindComboBox(customerUrl, "toCustomer", "customerName", "customerId");
+    bindComboBox(portUrl, "toPort", "portName", "portId");
+    bindComboBox(taskUrl, "toTask", "taskName", "taskId");
 });
 
 function copyRates() {

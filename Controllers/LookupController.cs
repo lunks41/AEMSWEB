@@ -21,6 +21,8 @@ namespace AMESWEB.Controllers
             return Json(data);
         }
 
+
+
         [HttpGet]
         public async Task<JsonResult> GetUserLookup()
         {
@@ -63,6 +65,16 @@ namespace AMESWEB.Controllers
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetCurrencyLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerCodeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerCodeLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 

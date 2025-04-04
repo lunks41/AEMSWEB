@@ -106,10 +106,10 @@
 
         function Refresh() {
              const gstUrl = '@Url.Action("GetGstLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(gstUrl, "cmd_gst", "gstName", "gstId");
+            bindComboBox(gstUrl, "cmd_gst", "gstName", "gstId");
 
             const gstCategoryUrl = '@Url.Action("GetGstCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(gstCategoryUrl, "cmd_gstCategory", "gstCategoryName", "gstCategoryId");
+            bindComboBox(gstCategoryUrl, "cmd_gstCategory", "gstCategoryName", "gstCategoryId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

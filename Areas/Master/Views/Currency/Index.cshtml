@@ -115,10 +115,10 @@
 
         function Refresh() {
             const CurrencyDtUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(CurrencyDtUrl, "cmd_currencyDt", "currencyName", "currencyId");
+            bindComboBox(CurrencyDtUrl, "cmd_currencyDt", "currencyName", "currencyId");
 
             const CurrencyLocalUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(CurrencyLocalUrl, "cmd_currencyLocalDt", "currencyName", "currencyId");
+            bindComboBox(CurrencyLocalUrl, "cmd_currencyLocalDt", "currencyName", "currencyId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

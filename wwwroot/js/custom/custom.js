@@ -1,3 +1,36 @@
+function getUrlParameter() {
+    // Check if companyId is passed as a query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const companyIdFromQuery = urlParams.get('companyId');
+
+    // Since the route pattern is "{companyId}/...", the first segment is the companyId
+    const pathSegments = window.location.pathname.split('/').filter(segment => segment);
+    const companyIdFromRoute = pathSegments.length > 0 ? pathSegments[0] : null;
+
+    // Fallback to cookies if needed (assuming you have a getCookie function)
+    const companyIdFromCookies = getCookie('CompanyId');
+
+    // Determine the final companyId value
+    const finalCompanyId = companyIdFromQuery || companyIdFromRoute || companyIdFromCookies || null;
+
+    // Optionally, store it in session storage
+    sessionStorage.setItem('companyId', finalCompanyId);
+
+    return finalCompanyId;
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.indexOf(nameEQ) === 0) {
+            return cookie.substring(nameEQ.length);
+        }
+    }
+    return null;
+}
+
 (function () {
     "use strict";
 

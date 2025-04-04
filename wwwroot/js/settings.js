@@ -24,12 +24,12 @@ function refreshComboboxes(companyId) {
         'cmb_exhgainloss', 'cmb_bankcharges', 'cmb_profitndloss',
         'cmb_returneraing', 'cmb_salegst', 'cmb_purchasegst',
         'cmb_saledefine', 'cmb_purchasedefine'
-    ].forEach(id => BindComboBox(glUrl, id, 'glName', 'glId'));
+    ].forEach(id => bindComboBox(glUrl, id, 'glName', 'glId'));
 
     // Currency Comboboxes
     const currencyUrl = `${window.settingsConfig.urls.currencyLookup}?companyId=${companyId}`;
     ['cmb_basecurrency', 'cmb_localcurrency'].forEach(id =>
-        BindComboBox(currencyUrl, id, 'currencyName', 'currencyId'));
+        bindComboBox(currencyUrl, id, 'currencyName', 'currencyId'));
 }
 
 function setupFormValidations() {

@@ -108,20 +108,23 @@
         }
 
         function Refresh() {
+             const customerCodeUrl = `@Url.Action("GetCustomerCodeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+            bindAutoComplete(customerCodeUrl, "customerCode", "customerCode");
+
             const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
+            bindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
 
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
+            bindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
 
             const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
+            bindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
 
             const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
+            bindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
 
             const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
+            bindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
 
         }
 

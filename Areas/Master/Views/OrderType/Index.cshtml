@@ -80,7 +80,7 @@
 
         function Refresh() {
             const orderTypeCategoryUrl = '@Url.Action("GetOrderTypeCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(orderTypeCategoryUrl, "cmd_orderTypeCategory", "orderTypeCategoryName", "orderTypeCategoryId");
+            bindComboBox(orderTypeCategoryUrl, "cmd_orderTypeCategory", "orderTypeCategoryName", "orderTypeCategoryId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

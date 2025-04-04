@@ -416,16 +416,16 @@
 
         function Refresh() {
             const accountTypeUrl = '@Url.Action("GetAccountTypeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(accountTypeUrl, "cmb_acctype", "accTypeName", "accTypeId");
+            bindComboBox(accountTypeUrl, "cmb_acctype", "accTypeName", "accTypeId");
 
             const accountGroupUrl = '@Url.Action("GetAccountGroupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(accountGroupUrl, "cmb_accgroup", "accGroupName", "accGroupId");
+            bindComboBox(accountGroupUrl, "cmb_accgroup", "accGroupName", "accGroupId");
 
             const coaCategory1Url = '@Url.Action("GetCOACategory1Lookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(coaCategory1Url, "cmb_coacategory1", "coaCategoryName", "coaCategoryId");
+            bindComboBox(coaCategory1Url, "cmb_coacategory1", "coaCategoryName", "coaCategoryId");
 
             const coaCategory2Url = '@Url.Action("GetCOACategory2Lookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(coaCategory2Url, "cmb_coacategory2", "coaCategoryName", "coaCategoryId");
+            bindComboBox(coaCategory2Url, "cmb_coacategory2", "coaCategoryName", "coaCategoryId");
         }
 
         function SelectedDropdown(DrpdwnName) {

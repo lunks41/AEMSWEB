@@ -1,37 +1,4 @@
-﻿function getUrlParameter() {
-    // Check if companyId is passed as a query parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const companyIdFromQuery = urlParams.get('companyId');
-
-    // Since the route pattern is "{companyId}/...", the first segment is the companyId
-    const pathSegments = window.location.pathname.split('/').filter(segment => segment);
-    const companyIdFromRoute = pathSegments.length > 0 ? pathSegments[0] : null;
-
-    // Fallback to cookies if needed (assuming you have a getCookie function)
-    const companyIdFromCookies = getCookie('CompanyId');
-
-    // Determine the final companyId value
-    const finalCompanyId = companyIdFromQuery || companyIdFromRoute || companyIdFromCookies || null;
-
-    // Optionally, store it in session storage
-    sessionStorage.setItem('companyId', finalCompanyId);
-
-    return finalCompanyId;
-}
-
-function getCookie(name) {
-    const nameEQ = name + "=";
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.indexOf(nameEQ) === 0) {
-            return cookie.substring(nameEQ.length);
-        }
-    }
-    return null;
-}
-
-function initializeKendoGrid(gridId, url, params, columns, height = 600) {
+﻿function initializeKendoGrid(gridId, url, params, columns, height = 600) {
     $("#" + gridId).kendoGrid({
         dataSource: {
             transport: {
@@ -83,7 +50,6 @@ function initializeKendoGrid(gridId, url, params, columns, height = 600) {
         height: height // Dynamically set grid height
     });
 }
-
 function initializeKendoGridWithoutPaging(gridId, url, params, columns, height = 600) {
     $("#" + gridId).kendoGrid({
         dataSource: {
@@ -111,128 +77,114 @@ function initializeKendoGridWithoutPaging(gridId, url, params, columns, height =
         height: height // Dynamically set grid height
     });
 }
-
-//function initializeKendoGrid(gridId, url, params, columns) {
-//    $("#" + gridId).kendoGrid({
-//        dataSource: {
-//            transport: {
-//                read: {
-//                    url: url,
-//                    data: params,
-//                    dataType: "json"
-//                }
-//            },
-//            pageSize: 15,
-//            schema: {
-//                // If the server returns a raw array:
-//                data: function (response) {
-//
-//                    return response; // Return the raw array
-//                },
-//                total: function (response) {
-//
-//                    return response.length; // Use for client-side paging
-//                }
-//            },
-//        },
-//        filterable: {
-//            mode: "row"
-//        },
-//        pageable: {
-//            refresh: true,
-//            pageSizes: [10, 20, 50, 100],
-//            buttonCount: 5
-//        },
-//        sortable: true,
-//        navigatable: true,
-//        resizable: true,
-//        reorderable: true,
-//        toolbar: ["search"],
-//        columns: columns
-//    });
-//}
-
-//async function BindComboBox(url, dropdownId, textField, valueField) {
-//    try {
-//        const response = await $.ajax({
-//            url: url,
-//            type: "GET",
-//            cache: true // Enable caching for static data
-//        });
-
-//        const data = typeof response === "string" ? JSON.parse(response) : response;
-
-//        // Initialize ComboBox
-//        initComboBox(dropdownId, textField, valueField, data);
-//    } catch (error) {
-//        console.error("ComboBox error:", error);
-//        initComboBox(dropdownId, textField, valueField, []);
-//    }
-//}
-
-//function initComboBox(dropdownId, textField, valueField, data) {
-//    $("#" + dropdownId).kendoComboBox({
-//        dataSource: {
-//            data: data,
-//            serverFiltering: true // Enable server-side filtering
-//        },
-//        dataTextField: textField,
-//        dataValueField: valueField,
-//        filter: "contains",
-//        minLength: 3 // Wait for 3 characters before filtering
-//    }).data("kendoComboBox");
-//}
-
-function BindAutoCompleteComboBoxData(url, dropdownId, textField, valueField) {
+function initializeKendoTreeList(treeListId, url, params, columns, height = 600) {
+    $("#" + treeListId).kendoTreeList({
+        dataSource: {
+            transport: {
+                read: {
+                    url: url,
+                    dataType: "json",
+                    data: function (options) {
+                        return {
+                            ...params, // Static parameters
+                            parentId: options.id || null, // Current node ID for hierarchical data
+                            level: options.level || 0 // Node depth level
+                        };
+                    }
+                }
+            },
+            serverPaging: false, // Typically false for hierarchical data
+            serverFiltering: true,
+            serverSorting: true,
+            autoSync: true,
+            schema: {
+                model: {
+                    id: "id", // Unique identifier field
+                    parentId: "parentId", // Parent identifier field
+                    fields: {
+                        id: { type: "number" }, // Configure field types
+                        parentId: { type: "number", nullable: true },
+                        // Add other fields from your schema
+                        expanded: { type: "boolean", defaultValue: true }
+                    },
+                    expanded: true // Initial expansion state
+                },
+                data: "data", // Response data field
+                total: "total" // Response total field
+            }
+        },
+        columns: [
+            // Hierarchy column should be first
+            {
+                field: "name", // Your main display field
+                title: "Name",
+                template: function (dataItem) {
+                    // Add indentation based on hierarchy level
+                    const indent = dataItem.level * 30;
+                    return `<div style="padding-left:${indent}px">${dataItem.name}</div>`;
+                }
+            },
+            ...columns // Additional columns
+        ],
+        filterable: {
+            mode: "row" // Row filter mode
+        },
+        sortable: true,
+        resizable: true,
+        reorderable: true,
+        toolbar: ["excel", "pdf", "search"],
+        pdfExport: function (e) {
+            const width = e.sender.wrapper.width();
+            e.sender.wrapperClone.width(width);
+            e.sender.wrapperClone.addClass('k-clone');
+        },
+        height: height,
+        // TreeList specific configurations
+        autoBind: true,
+        loadOnDemand: false, // Set true for lazy loading
+        dataBound: function (e) {
+            // Optional: Expand all nodes after data binding
+            this.expand(".k-treelist-row");
+        },
+        error: function (e) {
+            console.error("TreeList error:", e.xhr.responseText);
+        }
+    });
+}
+function bindAutoComplete(url, dropdownId, textField) {
     $.ajax({
         url: url,
-        async: false, // Synchronous request (not recommended for modern apps)
+        async: false, // Synchronous request (deprecated - consider using async/await)
         type: "GET",
         cache: false,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
             try {
-                // Parse the response if it's a JSON string
+                // Parse response data
                 const data = typeof response === "string" ? JSON.parse(response) : response;
 
-                // Initialize the Kendo AutoComplete
+                // Initialize Kendo AutoComplete
                 $("#" + dropdownId).kendoAutoComplete({
                     dataTextField: textField,
-                    dataValueField: valueField,
                     filter: "contains",
-                    dataSource: data || [], // Use empty array if no data is available
-                    select: function (e) {
-                        const selectedItem = this.dataItem(e.item.index());
-                        if (selectedItem) {
-                            OnSelectDropdown(selectedItem, dropdownId);
-                        }
-                    },
-                    change: function () {
-                        const selectedItem = this.dataItem();
-                        if (!selectedItem) {
-                            const autoComplete = $("#" + dropdownId).data("kendoAutoComplete");
-                            autoComplete.text("");
-                            autoComplete.value("");
-                        } else {
-                            OnSelectDropdown(selectedItem, dropdownId);
-                        }
-                    }
+                    dataSource: data || [],
                 });
 
-                // Adjust the width of the dropdown list
-                AutoWithBindAutoCompleteComboBox(dropdownId);
-
-                // Trigger additional logic after binding
-                SelectedDropdown(dropdownId);
+                // Integrated width adjustment logic
+                const autoComplete = $("#" + dropdownId).data("kendoAutoComplete");
+                if (autoComplete) {
+                    const listWidth = autoComplete.list.width();
+                    if (listWidth > 100) {
+                        autoComplete.list.width("auto");
+                    }
+                }
             } catch (error) {
                 console.error("Error initializing Kendo AutoComplete:", error);
             }
         },
         error: function (xhr, status, error) {
             console.error("Error fetching data for AutoComplete:", error);
-
-            // Initialize the AutoComplete with an empty data source in case of failure
             $("#" + dropdownId).kendoAutoComplete({
                 dataSource: [],
                 placeholder: "Select...",
@@ -241,18 +193,7 @@ function BindAutoCompleteComboBoxData(url, dropdownId, textField, valueField) {
         }
     });
 }
-
-function AutoWithBindAutoCompleteComboBox(dropdownId) {
-    const autoComplete = $("#" + dropdownId).data("kendoAutoComplete");
-    if (autoComplete) {
-        const listWidth = autoComplete.list.width();
-        if (listWidth > 100) {
-            autoComplete.list.width("auto");
-        }
-    }
-}
-
-function BindComboBox(url, dropdownId, textField, valueField) {
+function bindComboBox(url, dropdownId, textField, valueField) {
     try {
         // Cleanup previous instances
         if ($("#" + dropdownId).data("kendoComboBox")) {
@@ -309,7 +250,15 @@ function BindComboBox(url, dropdownId, textField, valueField) {
                         }
                     });
 
-                    AutoWithBindComboBox(dropdownId);
+                    // Adjust dropdown width to "auto" if needed
+                    const comboBox = $("#" + dropdownId).data("kendoComboBox");
+                    if (comboBox) {
+                        const listWidth = comboBox.list.width();
+                        if (listWidth > 100) {
+                            comboBox.list.width("auto");
+                        }
+                    }
+
                     SelectedDropdown(dropdownId);
                 } catch (error) {
                     console.error("Error initializing Kendo ComboBox:", error);
@@ -328,18 +277,7 @@ function BindComboBox(url, dropdownId, textField, valueField) {
         console.error("Unexpected error:", e);
     }
 }
-
-function AutoWithBindComboBox(dropdownId) {
-    const comboBox = $("#" + dropdownId).data("kendoComboBox");
-    if (comboBox) {
-        const listWidth = comboBox.list.width();
-        if (listWidth > 100) {
-            comboBox.list.width("auto");
-        }
-    }
-}
-
-function BindMultiColumnComboBox(url, dropdownId, textField, valueField, columnsProperties, filterFields) {
+function bindMultiColumnComboBox(url, dropdownId, textField, valueField, columnsProperties, filterFields) {
     $.ajax({
         url: url,
         async: false, // Synchronous request (not recommended for modern apps)
@@ -358,14 +296,13 @@ function BindMultiColumnComboBox(url, dropdownId, textField, valueField, columns
                     dataValueField: valueField,
                     placeholder: "Select...",
                     filter: "contains",
-                    dataSource: data || [], // Use empty array if no data is available
+                    dataSource: data || [],
                     columns: columnsProperties || [],
                     footerTemplate: 'Total #: instance.dataSource.total() # items found',
                     filterFields: filterFields || [],
                     autoWidth: true,
-                    dropDownWidth: "auto", // Auto-width for dropdown
-                    autoWidth: true, // Auto-width for input
-                    htmlAttributes: { class: "wide-combobox" }, // Apply CSS class
+                    dropDownWidth: "auto",
+                    htmlAttributes: { class: "wide-combobox" },
                     select: function (e) {
                         const selectedItem = this.dataItem(e.item.index());
                         if (selectedItem) {
@@ -375,17 +312,23 @@ function BindMultiColumnComboBox(url, dropdownId, textField, valueField, columns
                     change: function () {
                         const selectedItem = this.dataItem();
                         if (!selectedItem) {
-                            const multiColumnComboBox = $("#" + dropdownId).data("kendoMultiColumnComboBox");
-                            multiColumnComboBox.text("");
-                            multiColumnComboBox.value("");
+                            const comboBox = $("#" + dropdownId).data("kendoMultiColumnComboBox");
+                            comboBox.text("");
+                            comboBox.value("");
                         } else {
                             OnSelectDropdown(selectedItem, dropdownId);
                         }
                     }
                 });
 
-                // Adjust the width of the dropdown list
-                AutoWithBindMultiColumnComboBox(dropdownId);
+                // Integrated width adjustment logic
+                const comboBox = $("#" + dropdownId).data("kendoMultiColumnComboBox");
+                if (comboBox) {
+                    const listWidth = comboBox.list.width();
+                    if (listWidth > 100) {
+                        comboBox.list.width("auto");
+                    }
+                }
 
                 // Trigger additional logic after binding
                 SelectedDropdown(dropdownId);
@@ -395,8 +338,6 @@ function BindMultiColumnComboBox(url, dropdownId, textField, valueField, columns
         },
         error: function (xhr, status, error) {
             console.error("Error fetching data for MultiColumnComboBox:", error);
-
-            // Initialize the MultiColumnComboBox with an empty data source in case of failure
             $("#" + dropdownId).kendoMultiColumnComboBox({
                 dataSource: [],
                 placeholder: "Select...",
@@ -405,24 +346,6 @@ function BindMultiColumnComboBox(url, dropdownId, textField, valueField, columns
         }
     });
 }
-
-function AutoWithBindMultiColumnComboBox(dropdownId) {
-    const comboBox = $("#" + dropdownId).data("kendoMultiColumnComboBox");
-    //if (comboBox) {
-    //    // Set input width
-    //    comboBox.input.width("100%");
-    //    // Set dropdown list width to match content
-    //    comboBox.list.width("auto");
-    //}
-
-    if (comboBox) {
-        const listWidth = comboBox.list.width();
-        if (listWidth > 100) {
-            comboBox.list.width("auto");
-        }
-    }
-}
-
 function initializeKendoDatePicker(selector, options = {}) {
     const defaults = {
         format: "dd/MM/yyyy",

@@ -325,7 +325,7 @@
 
         function Refresh() {
             const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(portUrl, "cmb_port", "portName", "portId");
+            bindComboBox(portUrl, "cmb_port", "portName", "portId");
 
             const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             const columnsProperties = [
@@ -333,23 +333,23 @@
                 { field: 'customerName', title: 'Name', width: 200 }
             ];
             const filterFields = ['customerCode', 'customerName'];
-            BindMultiColumnComboBox(customerUrl, "cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
+            bindMultiColumnComboBox(customerUrl, "cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
 
             const taskUrl = '@Url.Action("GetTaskLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(taskUrl, "tariff_cmb_task", "taskName", "taskId");
+            bindComboBox(taskUrl, "tariff_cmb_task", "taskName", "taskId");
 
             const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(uomUrl, "tariff_cmb_uom", "uomName", "uomId");
+            bindComboBox(uomUrl, "tariff_cmb_uom", "uomName", "uomId");
 
             var CalculateType = @((int)OrderTypeCategory.CalculateType);
             var BerthType = @((int)OrderTypeCategory.BerthType);
 
             const typeUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=${CalculateType}`;
-            BindComboBox(typeUrl, "tariff_cmb_type", "orderTypeName", "orderTypeId");
+            bindComboBox(typeUrl, "tariff_cmb_type", "orderTypeName", "orderTypeId");
 
             const fromplaceUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=${BerthType}`;
-            BindComboBox(fromplaceUrl, "tariff_cmb_fromplace", "orderTypeName", "orderTypeId");
-            BindComboBox(fromplaceUrl, "tariff_cmb_toplace", "orderTypeName", "orderTypeId");
+            bindComboBox(fromplaceUrl, "tariff_cmb_fromplace", "orderTypeName", "orderTypeId");
+            bindComboBox(fromplaceUrl, "tariff_cmb_toplace", "orderTypeName", "orderTypeId");
 
         }
 
@@ -368,7 +368,7 @@
 
         function loadChargesDropdown(taskId) {
             const chargesUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=${taskId}`
-            BindComboBox(chargesUrl, "tariff_cmb_chagre", "chargeName", "chargeId");
+            bindComboBox(chargesUrl, "tariff_cmb_chagre", "chargeName", "chargeId");
         }
 
         function getComboBoxValue(selector, defaultValue = 0) {

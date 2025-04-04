@@ -647,6 +647,36 @@ namespace AMESWEB.Services.Masters
             }
         }
 
+        public async Task<IEnumerable<CustomerCodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<CustomerCodeLookupModel>($"SELECT CustomerId,CustomerCode FROM M_Customer WHERE CustomerId<>0 And IsActive=1 And CompanyId ={CompanyId} order by CustomerCode desc");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Currency,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_Currency",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
         public async Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try

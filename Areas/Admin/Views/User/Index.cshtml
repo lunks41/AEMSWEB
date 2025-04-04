@@ -145,11 +145,11 @@
 
         function Refresh() {
             const userUrl = '@Url.Action("GetUserLookup", "Lookup", new { area = "" })';
-            BindComboBox(userUrl, "cmb_user", "userName", "userId");
+            bindComboBox(userUrl, "cmb_user", "userName", "userId");
 
             const userGroupUrl = '@Url.Action("GetUserGroupLookup", "Lookup", new { area = "" })';
-            BindComboBox(userGroupUrl, "cmb_usergroup", "userGroupName", "userGroupId");
-            BindComboBox(userGroupUrl, "cmb_usergroup_user", "userGroupName", "userGroupId");
+            bindComboBox(userGroupUrl, "cmb_usergroup", "userGroupName", "userGroupId");
+            bindComboBox(userGroupUrl, "cmb_usergroup_user", "userGroupName", "userGroupId");
         }
 
         function SelectedDropdown(DrpdwnName) {

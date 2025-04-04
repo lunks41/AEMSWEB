@@ -209,45 +209,45 @@
                 { field: 'customerName', title: 'Name', width: 200 }
             ];
             const filterFields = ['customerCode', 'customerName'];
-            BindMultiColumnComboBox(customerUrl, "invoice_cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
+            bindMultiColumnComboBox(customerUrl, "invoice_cmb_customer", "customerName", "customerId", columnsProperties, filterFields);
 
             // Credit Terms
             const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(creditTermsUrl, "invoice_cmb_creditTerms", "creditTermName", "creditTermId");
+            bindComboBox(creditTermsUrl, "invoice_cmb_creditTerms", "creditTermName", "creditTermId");
 
             // Bank
             const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(bankUrl, "invoice_cmb_bank", "bankName", "bankId");
+            bindComboBox(bankUrl, "invoice_cmb_bank", "bankName", "bankId");
 
             // Currency
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(currencyUrl, "invoice_cmb_currency", "currencyCode", "currencyId");
+            bindComboBox(currencyUrl, "invoice_cmb_currency", "currencyCode", "currencyId");
 
             // Job Order
             const jobOrderUrl = '@Url.Action("GetJobOrderLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(jobOrderUrl, "invoice_cmb_jobOrder", "jobOrderNo", "jobOrderId");
+            bindComboBox(jobOrderUrl, "invoice_cmb_jobOrder", "jobOrderNo", "jobOrderId");
 
             //port
             const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(portUrl, "invoice_cmb_port", "portName", "portId");
+            bindComboBox(portUrl, "invoice_cmb_port", "portName", "portId");
 
             // Vessel
             const vesselUrl = '@Url.Action("GetVesselLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(vesselUrl, "invoice_cmb_vessel", "vesselName", "vesselId");
+            bindComboBox(vesselUrl, "invoice_cmb_vessel", "vesselName", "vesselId");
 
             // Barge
             const launchUrl = '@Url.Action("GetBargeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(launchUrl, "invoice_cmb_barge", "bargeName", "bargeId");
+            bindComboBox(launchUrl, "invoice_cmb_barge", "bargeName", "bargeId");
 
             // Service Type
             var ServiceType = @((int)OrderTypeCategory.ServiceType);
 
             const serviceTypeUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=${ServiceType}`;
-            BindComboBox(serviceTypeUrl, "invoice_cmb_serviceType", "orderTypeName", "orderTypeId");
+            bindComboBox(serviceTypeUrl, "invoice_cmb_serviceType", "orderTypeName", "orderTypeId");
 
             // Product
             const productUrl = '@Url.Action("GetProductLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(productUrl, "invoice_cmb_product", "productName", "productId");
+            bindComboBox(productUrl, "invoice_cmb_product", "productName", "productId");
 
             // GL Account
             const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
@@ -256,23 +256,23 @@
                 { field: 'glName', title: 'Name', width: 200 }
             ];
             const glfilterFields = ['glCode', 'glName'];
-            BindMultiColumnComboBox(chartOfAccountUrl, "invoice_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+            bindMultiColumnComboBox(chartOfAccountUrl, "invoice_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
 
             // Department
             const departmentUrl = '@Url.Action("GetDepartmentLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(departmentUrl, "invoice_cmb_department", "departmentName", "departmentId");
+            bindComboBox(departmentUrl, "invoice_cmb_department", "departmentName", "departmentId");
 
             // UOM
             const uomUrl = '@Url.Action("GetUOMLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(uomUrl, "invoice_cmb_uom", "uomName", "uomId");
+            bindComboBox(uomUrl, "invoice_cmb_uom", "uomName", "uomId");
 
             // GST
             const gstUrl = '@Url.Action("GetGstLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(gstUrl, "invoice_cmb_gst", "gstName", "gstId");
+            bindComboBox(gstUrl, "invoice_cmb_gst", "gstName", "gstId");
 
             // Country
             const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(countryUrl, "invoice_cmb_country", "countryName", "countryId");
+            bindComboBox(countryUrl, "invoice_cmb_country", "countryName", "countryId");
         }
 
         function SelectedDropdown(DrpdwnName) {
@@ -346,10 +346,10 @@
         function loadCustomerDependentDropdown(customerId) {
 
             const addressUrl = `@Url.Action("GetCustomerAddressLookupFin", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${customerId}`
-            BindComboBox(addressUrl, "invoice_cmb_customeraddress", "address1", "addressId");
+            bindComboBox(addressUrl, "invoice_cmb_customeraddress", "address1", "addressId");
 
             const contactUrl = `@Url.Action("GetCustomerContactLookupFin", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${customerId}`
-            BindComboBox(contactUrl, "invoice_cmb_customercontact", "contactName", "contactId");
+            bindComboBox(contactUrl, "invoice_cmb_customercontact", "contactName", "contactId");
         }
 
         function handleAddressSelection(selectedaddressdataItem) {
@@ -572,12 +572,12 @@
         function loadTaskDropdown(jobOrderId) {
             // Task
             const taskUrl = `@Url.Action("GetTaskByJobOrderLookup", "Lookup", new { area = "" })?companyId=${companyId}&jobOrderId=${jobOrderId}`
-            BindComboBox(taskUrl, "invoice_cmb_task", "taskName", "taskId");
+            bindComboBox(taskUrl, "invoice_cmb_task", "taskName", "taskId");
         }
 
         function loadChargesDropdown(taskId) {
             const chargesUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=${taskId}`
-            BindComboBox(chargesUrl, "tariff_cmb_chagre", "chargeName", "chargeId");
+            bindComboBox(chargesUrl, "tariff_cmb_chagre", "chargeName", "chargeId");
         }
 
         //clear Invoice & Details

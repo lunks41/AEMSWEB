@@ -174,7 +174,7 @@
 
         function Refresh() {
             const portRegionUrl = '@Url.Action("GetPortRegionLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            BindComboBox(portRegionUrl, "cmd_portRegion", "portRegionName", "portRegionId");
+            bindComboBox(portRegionUrl, "cmd_portRegion", "portRegionName", "portRegionId");
         }
 
         function SelectedDropdown(DrpdwnName) { }
