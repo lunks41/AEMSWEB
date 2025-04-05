@@ -3,6 +3,7 @@ using AMESWEB.Controllers;
 using AMESWEB.Entities.Masters;
 using AMESWEB.Enums;
 using AMESWEB.IServices;
+using AMESWEB.Models;
 using AMESWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -138,8 +139,16 @@ namespace AMESWEB.Areas.Master.Controllers
                     EditDate = DateTime.Now
                 };
 
-                var result = await _customerService.SaveCustomerAsync(companyIdShort, parsedUserId.Value, customerToSave);
-                return Json(new { success = true, message = "Customer saved successfully", data = result });
+                var sqlResponse = await _customerService.SaveCustomerAsync(companyIdShort, parsedUserId.Value, customerToSave);
+
+                if (sqlResponse.Result > 0)
+                {
+                    var customerModel = await _customerService.GetCustomerByIdAsync(companyIdShort, parsedUserId.Value, Convert.ToInt32(sqlResponse.Result), "", "");
+
+                    return Json(new { success = true, message = "Customer saved successfully", data = customerModel });
+                }
+
+                return Json(new { success = true, message = "Customer saved successfully", data = sqlResponse });
             }
             catch (Exception ex)
             {

@@ -78,7 +78,6 @@
 
     function initializeCustomerContactForm() {
         clearCustomerContactForm();
-        $('#isActiveCont').prop('checked', true);
     }
 
     function clearCustomerContactForm() {
@@ -95,7 +94,11 @@
         $('#isDefaultCont').prop('checked', false);
         $('#isFinanceCont').prop('checked', false);
         $('#isSalesCont').prop('checked', false);
-        $('#isActiveCont').prop('checked', false);
+        $('#isActiveCont').prop('checked', true);
+        $('#btnCustomerContactSave').prop('disabled', false);
+        $('#btnCustomerContactSave').show();
+        $('#btnCustomerContactClear').show();
+        $('#btnCustomerContactEdit').hide();
     }
 
     function loadcustomerContactGrid(contact_customerId) {
@@ -138,13 +141,13 @@
         if (grid) {
             grid.dataSource.read({ customerId: contact_customerId, companyId: companyId });
         } else {
-            initializeKendoGrid("gridcontact", url, { customerId:contact_customerId, companyId }, columns);
+            initializeKendoGridWithoutPaging("gridcontact", url, { customerId:contact_customerId, companyId }, columns);
         }
     }
 
     function openCustomerContactModal(contact_customerId, contactId, mode) {
-       
-        event.preventDefault();
+
+        event.preventDefault();// Add for prevent the form
         $.get('@Url.Action("GetContactById", "Customer", new { area = "Master" })', { customerId: contact_customerId, contactId, companyId })
             .done(function (response) {
                 console.log("Response:", response); // Debug response structure
@@ -169,7 +172,7 @@
     }
 
     function populateCustomerContactFields(data) {
-       
+
         $('#contact_customerId').val(data.customerId);
         $('#contactId').val(data.contactId);
 
@@ -204,18 +207,16 @@
 
     function setCustomerContactMode(mode) {
         const isView = mode === 'view';
-        const canEdit = permissions.canEdit && !isView;
+        const isAdd = mode === 'add';
+        const canEdit = (permissions.canEdit && !isView) || isAdd;
 
-        $('#contactName, #otherName,  #mobileNo,#offNocont, #faxNocont,  #emailAddcont, #messId,  #contactMessType').prop('readonly', !canEdit);
-        $('#isDefaultCont').prop('disabled', !canEdit);
-        $('#isFinanceCont').prop('disabled', !canEdit);
-        $('#isSalesCont').prop('disabled', !canEdit);
-        $('#isActiveCont').prop('disabled', !canEdit);
+        // Enable/disable fields
+        $('#contactName, #otherName, #mobileNo, #emailAddcont, #offNocont, #faxNocont, #messId,  #contactMessType').prop('readonly', !canEdit);
+        $('#isDefaultCont, #isFinanceCont, #isSalesCont, #isActiveCont').prop('disabled', !canEdit);
 
         $('#btnCustomerContactSave').toggle(canEdit);
         $('#btnCustomerContactEdit').toggle(isView && permissions.canEdit);
-        $('#btnCustomerContactClose').show();
-        $('#btnCustomerContactClear').hide();
+        $('#btnCustomerContactClear').toggle(isAdd);
     }
 
     function deleteCustomerContact(contact_customerId, contactId) {
@@ -223,7 +224,7 @@
             $.ajax({
                 url: '@Url.Action("DeleteContact", "Customer", new { area = "Master" })',
                 type: "DELETE",
-                data: { customerId: id, contactId: contactId, companyId: companyId },
+                data: { customerId: contact_customerId, contactId: contactId, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
                         loadcustomerContactGrid(contact_customerId);
@@ -234,7 +235,32 @@
         });
     }
 
+    // Add validation function
+    function validateContactFields() {
+        let isValid = true;
+        const contactName = $('#contactName').val().trim();
+        const mobileNo = $('#mobileNo').val().trim();
+        const email = $('#emailAddcont').val().trim();
+
+        if (!contactName) {
+            toastr.error('Contact Name is required', 'Validation Error');
+            isValid = false;
+        }
+        if (!mobileNo) {
+            toastr.error('Mobile Number is required', 'Validation Error');
+            isValid = false;
+        }
+        if (!email) {
+            toastr.error('Email is required', 'Validation Error');
+            isValid = false;
+        }
+        return isValid;
+    }
+
+
     function saveCustomerContact() {
+        if (!validateContactFields()) return; // Exit if validation fails
+
         let successCustomerId = parseInt($('#contact_customerId').val()) || 0;
         const customerContactData = {
             CustomerId: parseInt( $('#contact_customerId').val()) || 0,

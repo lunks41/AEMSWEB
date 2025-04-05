@@ -353,7 +353,7 @@
         }
 
         function handleAddressSelection(selectedaddressdataItem) {
-           
+
             try {
                 if (!selectedaddressdataItem) {
                     throw new Error("Invalid address data");
@@ -377,7 +377,7 @@
         }
 
         function handleContactSelection(selectedcontactdataItem) {
-           
+
             try {
                 if (!selectedcontactdataItem) {
                     throw new Error("Invalid contact data");
@@ -407,7 +407,7 @@
 
                 const selectGstId = selectedDataItem.gstId;
                 const accountDateStr = $("#accountDate").val();
-               
+
                 $.ajax({
                     url: '@Url.Action("GetGstPercentage", "Setting", new { area = "Setting" })',
                     type: "GET",
@@ -438,7 +438,7 @@
         }
 
         function handleCurrencySelection(selectedDataItem) {
-           
+
             try {
                 if (!selectedDataItem) {
                     throw new Error("Invalid Currency data");
@@ -446,7 +446,7 @@
 
                 const selectCurrencyId = selectedDataItem.currencyId;
                 const accountDateStr = $("#accountDate").val();
-               
+
                 $.ajax({
                     url: '@Url.Action("GetExchangeRate", "Setting", new { area = "Setting" })',
                     type: "GET",
@@ -457,7 +457,7 @@
                         companyId: companyId
                     },
                     success: function (response) {
-                       
+
                         if (response) {
                             $("#exhRateHd").val(response);
                         } else {
@@ -476,7 +476,7 @@
         }
 
         function handleCreditTermsSelection(selecteddataItem) {
-           
+
             try {
                 if (!selecteddataItem) {
                     throw new Error("Invalid CreditTerms data");
@@ -706,7 +706,7 @@
                     let dataItem = $("#grid_invoice").data("kendoGrid").dataItem(this);
 
                     if (dataItem) {
-                       
+
                         let invoiceId = dataItem.invoiceId; // Assuming invoiceId exists in dataItem
                         let companyId = dataItem.companyId; // Assuming companyId exists in dataItem
 
@@ -719,7 +719,7 @@
                             type: "GET",
                             data: { invoiceId: invoiceId, invoiceNo: '', companyId: companyId },
                             success: function (response) {
-                               
+
                                 if (response.success) {
                                     populateModalFields(response.data);
                                 } else {
@@ -737,7 +737,7 @@
         }
 
         function populateModalFields(data) {
-           
+
             $('#accountDate').val(formatDateToDDMMYYYY(data.accountDate));
             $('#invoice_cmb_customer').data("kendoMultiColumnComboBox").value(data.customerId > 0 ? data.customerId : '');
             $('#referenceNo').val(data.referenceNo);
@@ -762,7 +762,6 @@
             $('#remarksHd').val(data.remarks);
             $('#description').val(data.description);
 
-           
             //data.data_details
             populateInvoiceDetailsGrid(data.data_details);
 
@@ -779,7 +778,7 @@
         //Invoice Details
 
         function populateInvoiceDetailsGrid(dataDetails) {
-           
+
             let grid = $("#grid_invoicedetails").data("kendoGrid");
 
             if (grid) {

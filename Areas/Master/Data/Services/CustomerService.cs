@@ -26,13 +26,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             _context = context; _logService = logService;
         }
 
-        #region
-        #endregion
-        #region
-        #endregion
-        #region
-        #endregion
-
+        #region CUSTOMER
         public async Task<CustomerViewModelCount> GetCustomerListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CustomerViewModelCount countViewModel = new CustomerViewModelCount();
@@ -174,12 +168,12 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponse { Result = m_Customer.CustomerId, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponse { Result = -1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
@@ -336,8 +330,9 @@ namespace AMESWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
+        #endregion
 
-        //Customer Address List
+        #region ADDRESS
         public async Task<IEnumerable<CustomerAddressViewModel>> GetCustomerAddressByCustomerIdAsync(short CompanyId, short UserId, int CustomerId)
         {
             try
@@ -469,6 +464,10 @@ namespace AMESWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
+        #endregion
+
+        #region CONTACT
+        
 
         public async Task<IEnumerable<CustomerContactViewModel>> GetCustomerContactByCustomerIdAsync(short CompanyId, short UserId, int CustomerId)
         {
@@ -757,5 +756,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
+
+        #endregion
     }
 }

@@ -15,7 +15,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label class="form-label">Customer Code <span class="text-danger">*</span></label>
-                                <input id="customerCode" required>
+                                <input id="customerCode" required onblur="convertToUpperCase(this)">
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -117,33 +117,38 @@
                     </div>
 
                     <!-- Address & Contact Tabs -->
-                    <ul class="nav nav-pills mt-4" id="customerTabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
-                        </li>
-                    </ul>
+                    <!-- Tab Row with Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <!-- Tabs Navigation -->
+                        <ul class="nav nav-pills" id="customerTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
+                            </li>
+                        </ul>
 
+                        <!-- Action Buttons -->
+                        <div>
+                            <button type="button" class="btn btn-primary me-2" id="openChildAddressModal">
+                                <i class="mdi mdi-plus"></i> Add Address
+                            </button>
+                            <button type="button" class="btn btn-primary" id="openChildContactModal">
+                                <i class="mdi mdi-plus"></i> Add Contact
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content -->
                     <div class="tab-content mt-3" id="customerSubTabs">
                         <!-- Addresses Tab -->
                         <div class="tab-pane fade show active" id="addresses">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" id="openChildAddressModal">
-                                    <i class="mdi mdi-plus"></i> Add Address
-                                </button>
-                            </div>
                             <div id="gridaddress"></div>
                         </div>
 
                         <!-- Contacts Tab -->
                         <div class="tab-pane fade" id="contacts">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" id="openChildContactModal">
-                                    <i class="mdi mdi-plus"></i> Add Contact
-                                </button>
-                            </div>
                             <div id="gridcontact"></div>
                         </div>
                     </div>
@@ -197,7 +202,6 @@
 
     function initializeCustomerForm() {
         clearCustomerForm();
-        $('#isActive').prop('checked', true);
     }
 
     function clearCustomerForm() {
@@ -216,7 +220,7 @@
         $('#isVendor').prop('checked', false);
         $('#isTrader').prop('checked', false);
         $('#isSupplier').prop('checked', false);
-        $('#isActive').prop('checked', false);
+        $('#isActive').prop('checked', true);
         $('#createBy').text('');
         $('#createDate').text('');
         $('#editBy').text('');
@@ -227,6 +231,8 @@
         $('#btnCustomerEdit').hide();
         $('#customerTabs').hide();
         $('#customerSubTabs').hide();
+        $('#openChildAddressModal').hide();
+        $('#openChildContactModal').hide();
         // Check if grids exist before clearing
         const addressGrid = $("#gridaddress").data("kendoGrid");
         if (addressGrid) {
@@ -283,12 +289,9 @@
         $.get('@Url.Action("GetById", "Customer", new { area = "Master" })', { customerId: id, companyId })
             .done(function (response) {
                 if (response.success) {
-
                     populateCustomerFields(response.data);
                     setCustomerMode(mode);
-
                     $('#addCustomerModal').modal('show');
-
                 }
             });
     }
@@ -316,13 +319,15 @@
         $('#editBy').text(data.editBy || "N/A");
         $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-        // Destroy existing grids if they exist
-        if ($("#gridaddress").data("kendoGrid")) {
-            $("#gridaddress").data("kendoGrid").destroy();
+        // Before initializing grids, destroy existing ones
+        const addressGrid = $("#gridaddress").data("kendoGrid");
+        if (addressGrid) {
+            addressGrid.destroy();
             $("#gridaddress").empty();
         }
-        if ($("#gridcontact").data("kendoGrid")) {
-            $("#gridcontact").data("kendoGrid").destroy();
+        const contactGrid = $("#gridcontact").data("kendoGrid");
+        if (contactGrid) {
+            contactGrid.destroy();
             $("#gridcontact").empty();
         }
 
@@ -345,11 +350,13 @@
         $('#btnCustomerClear').hide();
         $('#customerTabs').show();
         $('#customerSubTabs').show();
+        $('#openChildAddressModal').show();
+        $('#openChildContactModal').show();
     }
 
     function deleteCustomer(id) {
         if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
+            toastr.info('You do not have permission to delete records.');
             return;
         }
 
@@ -368,25 +375,89 @@
         });
     }
 
+    function validateMandatoryFields() {
+        debugger;
+        const customerCode = document.getElementById('customerCode').value.trim();
+        const customerName = document.getElementById('customerName').value.trim();
+        const currency = $('#cmd_currency').data('kendoComboBox').value();
+        const creditTerm = $('#cmd_creditTerm').data('kendoComboBox').value();
+        const accountSetup = $('#cmd_accSetup').data('kendoComboBox').value();
+        const bank = $('#cmd_bank').data('kendoComboBox').value();
+
+        let isValid = true;
+
+        if (!customerCode) {
+            toastr.error('Customer Code is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!customerName) {
+            toastr.error('Customer Name is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!currency) {
+            toastr.error('Currency is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!creditTerm) {
+            toastr.error('Credit Term is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!accountSetup) {
+            toastr.error('Account Setup is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!bank) {
+            toastr.error('Bank is required', 'Missing Field');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
     function saveCustomer() {
+
         const customerData = {
-            CustomerId: $('#customerId').val() || 0,
-            CustomerCode: $('#customerCode').val().trim(),
+            CustomerId: parseInt($('#customerId').val()) || 0,
+            CustomerCode: $('#customerCode').val().trim().toUpperCase(),
             CustomerName: $('#customerName').val().trim(),
-            // Add other fields
+            CustomerOtherName: $('#customerOtherName').val(),
+            CustomerShortName: $('#customerShortName').val(),
+            CustomerRegNo: $('#customerRegNo').val(),
+            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
+            CreditTermId: parseInt($('#cmd_creditTerm').data("kendoComboBox").value()) || 0,
+            AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
+            BankId: parseInt($('#cmd_bank').data("kendoComboBox").value()) || 0,
+            Remarks: $('#remarks').val(),
+            IsCustomer: $('#isCustomer').prop('checked'),
+            IsVendor: $('#isVendor').prop('checked'),
+            IsTrader: $('#isTrader').prop('checked'),
+            IsSupplier: $('#isSupplier').prop('checked'),
+            IsActive: $('#isActive').prop('checked'),
+            ParentCustomerId: 0,
+            SupplierId: 0
         };
-        $.ajax({
-            url: '@Url.Action("Save", "Customer", new { area = "Master" })',
-            type: "POST",
-            data: JSON.stringify({ customer: customerData, companyId }),
-            contentType: "application/json",
-            success: function (response) {
-                if (response.success) {
-                    $('#addCustomerModal').modal('hide');
-                    loadCustomerGrid();
-                    clearForm();
+
+
+        if (validateMandatoryFields()) {
+            $.ajax({
+                url: '@Url.Action("Save", "Customer", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ customer: customerData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        populateCustomerFields(response.data);
+                        setCustomerMode('edit');
+                        loadCustomerGrid();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 </script>
