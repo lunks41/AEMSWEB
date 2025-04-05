@@ -26,17 +26,19 @@ namespace AMESWEB.Areas.Master.Data.Services
             _context = context; _logService = logService;
         }
 
+        #region CUSTOMER
+
         public async Task<BankViewModelCount> GetBankListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             BankViewModelCount countViewModel = new BankViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_Bank M_Ban INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Ban.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Ban.GLId WHERE (M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.AccountNo LIKE '%{searchString}%' OR M_Ban.SwiftCode LIKE '%{searchString}%' OR M_Ban.Remarks1 LIKE '%{searchString}%' OR M_Ban.Remarks2 LIKE '%{searchString}%' OR M_Chr.GLName LIKE '%{searchString}%' OR M_Chr.GLCode LIKE '%{searchString}%') AND M_Ban.BankId<>0 AND M_Ban.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Bank M_Bnk INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Bnk.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Bnk.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Bnk.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Bnk.EditById WHERE (M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Bnk.BankName LIKE '%{searchString}%' OR M_Bnk.BankCode LIKE '%{searchString}%' OR M_Bnk.Remarks LIKE '%{searchString}%') AND M_Bnk.BankId<>0 AND M_Bnk.CompanyId ={CompanyId}");
 
-                var result = await _repository.GetQueryAsync<BankViewModel>($"SELECT M_Ban.BankId,M_Ban.CompanyId,M_Ban.BankCode,M_Ban.BankName,M_Cur.CurrencyId,M_Cur.CurrencyName,M_Cur.CurrencyCode,M_Ban.AccountNo,M_Ban.SwiftCode,M_Ban.Remarks1,M_Ban.Remarks2,M_Ban.GLId,M_Chr.GLCode,M_Chr.GLName,M_Ban.IsActive,M_Ban.IsOwnBank,M_Ban.CreateById,M_Ban.CreateDate,M_Ban.EditById,M_Ban.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy  FROM dbo.M_Bank M_Ban INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Ban.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Ban.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Ban.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Ban.EditById WHERE (M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.AccountNo LIKE '%{searchString}%' OR M_Ban.SwiftCode LIKE '%{searchString}%' OR M_Ban.Remarks1 LIKE '%{searchString}%' OR M_Ban.Remarks2 LIKE '%{searchString}%' OR M_Chr.GLName LIKE '%{searchString}%' OR M_Chr.GLCode LIKE '%{searchString}%') AND M_Ban.BankId<>0 AND M_Ban.CompanyId={CompanyId} ORDER BY M_Ban.BankName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                var result = await _repository.GetQueryAsync<BankViewModel>($"SELECT M_Bnk.BankId,M_Bnk.CompanyId,M_Bnk.BankCode,M_Bnk.BankName,M_Bnk.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Bnk.AccountNo,M_Bnk.SwiftCode,M_Bnk.Remarks1,M_Bnk.Remarks2,M_Bnk.Remarks3,M_Bnk.GLId,M_Chr.GLCode,M_Chr.GLName,M_Bnk.IsActive,M_Bnk.IsOwnBank,M_Bnk.CreateById,M_Bnk.CreateDate,M_Bnk.EditById,M_Bnk.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Bank M_Bnk INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Bnk.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Bnk.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Bnk.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Bnk.EditById WHERE (M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Bnk.BankName LIKE '%{searchString}%' OR M_Bnk.BankCode LIKE '%{searchString}%' OR M_Bnk.Remarks LIKE '%{searchString}%') AND M_Bnk.BankId<>0 AND M_Bnk.CompanyId ={CompanyId} ORDER BY M_Bnk.BankName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
-                countViewModel.responseMessage = "Success";
+                countViewModel.responseMessage = "success";
                 countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
                 countViewModel.data = result?.ToList() ?? new List<BankViewModel>();
 
@@ -53,7 +55,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     DocumentNo = "",
                     TblName = "M_Bank",
                     ModeId = (short)E_Mode.View,
-                    Remarks = ex.Message + ex.InnerException?.Message,
+                    Remarks = ex.Message + ex.InnerException,
                     CreateById = UserId
                 };
 
@@ -68,7 +70,7 @@ namespace AMESWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<BankViewModel>($"SELECT\r\nM_Ban.BankId,M_Ban.CompanyId,M_Ban.BankCode,M_Ban.BankName,M_Ban.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Ban.AccountNo,M_Ban.SwiftCode,M_Ban.Remarks1,M_Ban.Remarks2,M_Ban.IsActive,M_Ban.IsOwnBank,M_Ban.GLId,M_Chr.GLName,M_Chr.GLCode,M_Ban.CreateById,M_Ban.CreateDate,M_Ban.EditById,M_Ban.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Bank M_Ban INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Ban.GLId INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Ban.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Ban.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Ban.EditById WHERE (M_Ban.BankId={BankId} OR {BankId}=0) AND (M_Ban.BankCode='{BankCode}' OR '{BankCode}'='{string.Empty}') AND (M_Ban.BankName='{BankName}' OR '{BankName}'='{string.Empty}') AND M_Ban.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<BankViewModel>($"SELECT M_Bnk.BankId,M_Bnk.CompanyId,M_Bnk.BankCode,M_Bnk.BankName,M_Bnk.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Bnk.AccountNo,M_Bnk.SwiftCode,M_Bnk.Remarks1,M_Bnk.Remarks2,M_Bnk.Remarks3,M_Bnk.GLId,M_Chr.GLCode,M_Chr.GLName,M_Bnk.IsActive,M_Bnk.IsOwnBank,M_Bnk.CreateById,M_Bnk.CreateDate,M_Bnk.EditById,M_Bnk.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Bank M_Bnk INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Bnk.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chr ON M_Chr.GLId = M_Bnk.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Bnk.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Bnk.EditById WHERE (M_Bnk.BankId={BankId} OR {BankId}=0) AND (M_Bnk.BankCode='{BankCode}' OR '{BankCode}'='{string.Empty}') AND (M_Bnk.BankName='{BankName}' OR '{BankName}'='{string.Empty}') AND M_Bnk.CompanyId ={CompanyId}");
 
                 return result;
             }
@@ -96,28 +98,24 @@ namespace AMESWEB.Areas.Master.Data.Services
 
         public async Task<SqlResponse> SaveBankAsync(short CompanyId, short UserId, M_Bank m_Bank)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            bool IsEdit = m_Bank.BankId != 0;
+            try
             {
-                bool IsEdit = m_Bank.BankId != 0;
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        $"SELECT 1 AS IsExist FROM dbo.M_Bank WHERE BankId<>@BankId AND BankCode=@BankCode",
-                        new { m_Bank.BankId, m_Bank.BankCode });
-                    if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Bank Code already exists." };
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Bank WHERE BankId <>{m_Bank.BankId} AND BankCode='{m_Bank.BankCode}' AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Bank}))");
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        $"SELECT 1 AS IsExist FROM dbo.M_Bank WHERE BankId<>@BankId AND BankName=@BankName",
-                        new { m_Bank.BankId, m_Bank.BankName });
-                    if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Bank Name already exists." };
+                    if ((codeExist?.IsExist ?? 0) > 0)
+                        return new SqlResponse { Result = -1, Message = "Bank Code exists" };
+
+                    //var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>( $"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Bank WHERE BankId <>{m_Bank.BankId} AND BankName='{m_Bank.BankName}' AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Bank}))");
+
+                    //if ((nameExist?.IsExist ?? 0) > 0)
+                    //    return new SqlResponse { Result = -1, Message = "Bank Name exists" };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                            $"SELECT 1 AS IsExist FROM dbo.M_Bank WHERE BankId=@BankId",
-                            new { m_Bank.BankId });
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Bank WHERE BankId<>0 AND BankId={m_Bank.BankId} AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Bank}))");
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
@@ -126,32 +124,31 @@ namespace AMESWEB.Areas.Master.Data.Services
                             entityHead.Property(b => b.CompanyId).IsModified = false;
                         }
                         else
-                        {
                             return new SqlResponse { Result = -1, Message = "Bank Not Found" };
-                        }
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                            "SELECT ISNULL((SELECT TOP 1 (BankId + 1) FROM dbo.M_Bank WHERE (BankId + 1) NOT IN (SELECT BankId FROM dbo.M_Bank)),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>("SELECT ISNULL((SELECT TOP 1 (BankId + 1) FROM dbo.M_Bank WHERE (BankId + 1) NOT IN (SELECT BankId FROM dbo.M_Bank)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
                             m_Bank.BankId = Convert.ToInt16(sqlMissingResponse.NextId);
+
+                            m_Bank.EditDate = null;
+                            m_Bank.EditById = null;
                             _context.Add(m_Bank);
                         }
                         else
-                        {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
-                        }
+                            return new SqlResponse { Result = -1, Message = "BankId Should not be zero" };
                     }
 
-                    var saveChangeRecord = _context.SaveChanges();
+                    var BankToSave = _context.SaveChanges();
 
                     #region Save AuditLog
 
-                    if (saveChangeRecord > 0)
+                    if (BankToSave > 0)
                     {
+                        //Saving Audit log
                         var auditLog = new AdmAuditLog
                         {
                             CompanyId = CompanyId,
@@ -172,77 +169,80 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponse { Result = m_Bank.BankId, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponse { Result = -1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Bank,
+                    DocumentId = 0,
+                    DocumentNo = m_Bank.BankCode,
+                    TblName = "M_Bank",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Bank,
-                        DocumentId = m_Bank.BankId,
-                        DocumentNo = m_Bank.BankCode,
-                        TblName = "AdmUser",
-                        ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId
-                    };
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Bank,
+                    DocumentId = 0,
+                    DocumentNo = m_Bank.BankCode,
+                    TblName = "M_Bank",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException,
+                    CreateById = UserId
+                };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw;
-                }
+                throw new Exception(ex.ToString());
             }
         }
 
-        public async Task<SqlResponse> DeleteBankAsync(short CompanyId, short UserId, short BankId)
+        public async Task<SqlResponse> DeleteBankAsync(short CompanyId, short UserId, int BankId)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            string BankCode = string.Empty;
+            try
             {
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (BankId > 0)
+                    BankCode = await _repository.GetQuerySingleOrDefaultAsync<string>($"SELECT BankCode FROM dbo.M_Bank WHERE BankId={BankId}");
+
+                    if (BankId > 0 && BankCode != null)
                     {
                         var BankToRemove = _context.M_Bank.Where(x => x.BankId == BankId).ExecuteDelete();
 
@@ -254,7 +254,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                                 ModuleId = (short)E_Modules.Master,
                                 TransactionId = (short)E_Master.Bank,
                                 DocumentId = BankId,
-                                DocumentNo = "",
+                                DocumentNo = BankCode,
                                 TblName = "M_Bank",
                                 ModeId = (short)E_Mode.Delete,
                                 Remarks = "Bank Delete Successfully",
@@ -279,64 +279,68 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Bank,
+                    DocumentId = BankId,
+                    DocumentNo = BankCode,
+                    TblName = "M_Bank",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.COACategory1,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_COACategory1",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Master,
-                        TransactionId = (short)E_Master.Bank,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "M_Bank",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Bank,
+                    DocumentId = BankId,
+                    DocumentNo = BankCode,
+                    TblName = "M_Bank",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException,
+                    CreateById = UserId,
+                };
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw new Exception(ex.ToString());
-                }
+                throw new Exception(ex.ToString());
             }
         }
+
+        #endregion CUSTOMER
+
+        #region ADDRESS
 
         public async Task<IEnumerable<BankAddressViewModel>> GetBankAddressByBankIdAsync(short CompanyId, short UserId, int BankId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<BankAddressViewModel>($"SELECT  M_BanAdd.BankId,M_BanAdd.AddressId,M_BanAdd.Address1,M_BanAdd.Address2,M_BanAdd.Address3,M_BanAdd.Address4,M_BanAdd.PhoneNo,M_BanAdd.EmailAdd,M_BanAdd.IsDefaultAdd,M_BanAdd.IsDeliveryAdd,M_BanAdd.IsFinAdd,M_BanAdd.IsSalesAdd,M_BanAdd.IsActive,M_Ban.BankCode,M_Ban.BankName,M_BanAdd.CountryId,M_Cou.CountryCode,M_Cou.CountryName,M_BanAdd.CreateById,M_BanAdd.CreateDate,M_BanAdd.EditById,M_BanAdd.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_BankAddress M_BanAdd INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = M_BanAdd.BankId INNER JOIN dbo.M_Country M_Cou ON M_Cou.CountryId = M_BanAdd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_BanAdd.CreateById LEFT JOIN AdmUser Usr1 ON Usr1.UserId = M_BanAdd.EditById WHERE M_BanAdd.BankId = {BankId} AND M_BanAdd.AddressId <>0 ");
+                var result = await _repository.GetQueryAsync<BankAddressViewModel>($"SELECT  M_CusAdd.BankId,M_Bnk.BankCode,M_Bnk.BankName,M_CusAdd.AddressId,M_CusAdd.Address1,M_CusAdd.Address2,M_CusAdd.Address3,M_CusAdd.Address4,M_CusAdd.PinCode,M_CusAdd.CountryId,M_Cou.CountryCode,M_Cou.CountryName  ,M_CusAdd.PhoneNo,M_CusAdd.FaxNo,M_CusAdd.EmailAdd,M_CusAdd.WebUrl,M_CusAdd.IsDefaultAdd,M_CusAdd.IsDeliveryAdd,M_CusAdd.IsFinAdd,M_CusAdd.IsSalesAdd,M_CusAdd.IsActive,M_CusAdd.CreateById,M_CusAdd.CreateDate,M_CusAdd.EditById,M_CusAdd.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_BankAddress M_CusAdd INNER JOIN dbo.M_Bank M_Cus ON M_Bnk.BankId = M_CusAdd.BankId INNER JOIN dbo.M_Country M_Cou ON M_Cou.CountryId = M_CusAdd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_CusAdd.CreateById LEFT JOIN AdmUser Usr1 ON Usr1.UserId = M_CusAdd.EditById WHERE M_CusAdd.BankId = {BankId} AND M_CusAdd.AddressId <>0 ");
 
                 return result;
             }
@@ -352,7 +356,7 @@ namespace AMESWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<BankAddressViewModel>($"SELECT  M_BanAdd.BankId,M_BanAdd.AddressId,M_BanAdd.Address1,M_BanAdd.Address2,M_BanAdd.Address3,M_BanAdd.Address4,M_BanAdd.PinCode,M_BanAdd.PhoneNo,M_BanAdd.FaxNo,M_BanAdd.WebUrl,M_BanAdd.EmailAdd,M_BanAdd.IsDefaultAdd,M_BanAdd.IsDeliveryAdd,M_BanAdd.IsFinAdd,M_BanAdd.IsSalesAdd,M_BanAdd.IsActive,M_Ban.BankCode,M_Ban.BankName,M_BanAdd.CountryId,M_Cou.CountryCode,M_Cou.CountryName,M_BanAdd.CreateById,M_BanAdd.CreateDate,M_BanAdd.EditById,M_BanAdd.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_BankAddress M_BanAdd INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = M_BanAdd.BankId INNER JOIN dbo.M_Country M_Cou ON M_Cou.CountryId = M_BanAdd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_BanAdd.CreateById LEFT JOIN AdmUser Usr1 ON Usr1.UserId = M_BanAdd.EditById WHERE M_BanAdd.BankId = {BankId} And M_BanAdd.AddressId={AddressId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<BankAddressViewModel>($"SELECT  M_CusAdd.BankId,M_Bnk.BankCode,M_Bnk.BankName,M_CusAdd.AddressId,M_CusAdd.Address1,M_CusAdd.Address2,M_CusAdd.Address3,M_CusAdd.Address4,M_CusAdd.PinCode,M_CusAdd.CountryId,M_Cou.CountryCode,M_Cou.CountryName  ,M_CusAdd.PhoneNo,M_CusAdd.FaxNo,M_CusAdd.EmailAdd,M_CusAdd.WebUrl,M_CusAdd.IsDefaultAdd,M_CusAdd.IsDeliveryAdd,M_CusAdd.IsFinAdd,M_CusAdd.IsSalesAdd,M_CusAdd.IsActive,M_CusAdd.CreateById,M_CusAdd.CreateDate,M_CusAdd.EditById,M_CusAdd.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_BankAddress M_CusAdd INNER JOIN dbo.M_Bank M_Cus ON M_Bnk.BankId = M_CusAdd.BankId INNER JOIN dbo.M_Country M_Cou ON M_Cou.CountryId = M_CusAdd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_CusAdd.CreateById LEFT JOIN AdmUser Usr1 ON Usr1.UserId = M_CusAdd.EditById WHERE M_CusAdd.BankId = {BankId} And M_CusAdd.AddressId={AddressId}");
 
                 return result;
             }
@@ -464,11 +468,15 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
+        #endregion ADDRESS
+
+        #region CONTACT
+
         public async Task<IEnumerable<BankContactViewModel>> GetBankContactByBankIdAsync(short CompanyId, short UserId, int BankId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<BankContactViewModel>($"SELECT M_BanCon.BankId,M_BanCon.ContactId,M_BanCon.ContactName,M_BanCon.OtherName,M_BanCon.MobileNo,M_BanCon.OffNo,M_BanCon.FaxNo,M_BanCon.EmailAdd,M_BanCon.MessId,M_BanCon.ContactMessType,M_BanCon.IsDefault,M_BanCon.IsFinance,M_BanCon.IsSales,M_BanCon.IsActive,M_Ban.BankCode,M_Ban.BankName,M_BanCon.CreateById,M_BanCon.CreateDate,M_BanCon.EditById,M_BanCon.EditDate FROM dbo.M_BankContact M_BanCon INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = M_BanCon.BankId WHERE M_BanCon.BankId = {BankId}");
+                var result = await _repository.GetQueryAsync<BankContactViewModel>($"SELECT M_CusCon.BankId,M_CusCon.ContactId,M_CusCon.ContactName,M_CusCon.OtherName,M_CusCon.MobileNo,M_CusCon.OffNo,M_CusCon.FaxNo,M_CusCon.EmailAdd,M_CusCon.MessId,M_CusCon.ContactMessType,M_CusCon.IsDefault,M_CusCon.IsFinance,M_CusCon.IsSales,M_CusCon.IsActive,M_Bnk.BankCode,M_Bnk.BankName,M_CusCon.CreateById,M_CusCon.CreateDate,M_CusCon.EditById,M_CusCon.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_BankContact M_CusCon INNER JOIN dbo.M_Bank M_Cus ON M_Bnk.BankId = M_CusCon.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_CusCon.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_CusCon.EditById WHERE M_CusCon.BankId = {BankId}");
 
                 return result;
             }
@@ -498,7 +506,7 @@ namespace AMESWEB.Areas.Master.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<BankContactViewModel>($"SELECT M_BanCon.BankId,M_BanCon.ContactId,M_BanCon.ContactName,M_BanCon.OtherName,M_BanCon.MobileNo,M_BanCon.OffNo,M_BanCon.FaxNo,M_BanCon.EmailAdd,M_BanCon.MessId,M_BanCon.ContactMessType,M_BanCon.IsDefault,M_BanCon.IsFinance,M_BanCon.IsSales,M_BanCon.IsActive,M_Ban.BankCode,M_Ban.BankName,M_BanCon.CreateById,M_BanCon.CreateDate,M_BanCon.EditById,M_BanCon.EditDate FROM dbo.M_BankContact M_BanCon INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = M_BanCon.BankId WHERE M_BanCon.BankId = {BankId} AND ContactId={ContactId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<BankContactViewModel>($"SELECT M_CusCon.BankId,M_CusCon.ContactId,M_CusCon.ContactName,M_CusCon.OtherName,M_CusCon.MobileNo,M_CusCon.OffNo,M_CusCon.FaxNo,M_CusCon.EmailAdd,M_CusCon.MessId,M_CusCon.ContactMessType,M_CusCon.IsDefault,M_CusCon.IsFinance,M_CusCon.IsSales,M_CusCon.IsActive,M_Bnk.BankCode,M_Bnk.BankName,M_CusCon.CreateById,M_CusCon.CreateDate,M_CusCon.EditById,M_CusCon.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_BankContact M_CusCon INNER JOIN dbo.M_Bank M_Cus ON M_Bnk.BankId = M_CusCon.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_CusCon.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_CusCon.EditById WHERE M_CusCon.BankId = {BankId} AND ContactId={ContactId}");
 
                 return result;
             }
@@ -751,5 +759,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
+
+        #endregion CONTACT
     }
 }

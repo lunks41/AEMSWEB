@@ -14,16 +14,18 @@ namespace AMESWEB.Areas.Master.Controllers
     public class BankController : BaseController
     {
         private readonly ILogger<BankController> _logger;
-        private readonly IBankService _customerService;
+        private readonly IBankService _bankService;
 
         public BankController(ILogger<BankController> logger,
             IBaseService baseService,
-            IBankService customerService)
+            IBankService bankService)
             : base(logger, baseService)
         {
             _logger = logger;
-            _customerService = customerService;
+            _bankService = bankService;
         }
+
+        #region Bank CRUD
 
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
@@ -53,8 +55,6 @@ namespace AMESWEB.Areas.Master.Controllers
             return View();
         }
 
-        #region Bank CRUD
-
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)
         {
@@ -66,21 +66,21 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetBankListAsync(companyIdShort, parsedUserId.Value,
+                var data = await _bankService.GetBankListAsync(companyIdShort, parsedUserId.Value,
                     pageSize, pageNumber, searchString ?? string.Empty);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer list");
+                _logger.LogError(ex, "Error fetching bank list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(int customerId, string companyId)
+        public async Task<JsonResult> GetById(int bankId, string companyId)
         {
-            if (customerId <= 0)
+            if (bankId <= 0)
                 return Json(new { success = false, message = "Invalid Bank ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -88,14 +88,14 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetBankByIdAsync(companyIdShort, parsedUserId.Value, customerId, "", "");
+                var data = await _bankService.GetBankByIdAsync(companyIdShort, parsedUserId.Value, bankId, "", "");
                 return data == null
                     ? Json(new { success = false, message = "Bank not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer by ID");
+                _logger.LogError(ex, "Error fetching bank by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -111,13 +111,20 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var customerToSave = new M_Bank
+                var bankToSave = new M_Bank
                 {
                     BankId = model.bank.BankId,
                     CompanyId = companyIdShort,
                     BankCode = model.bank.BankCode ?? string.Empty,
                     BankName = model.bank.BankName ?? string.Empty,
                     CurrencyId = model.bank.CurrencyId,
+                    GLId = model.bank.GLId,
+                    AccountNo = model.bank.AccountNo ?? string.Empty,
+                    SwiftCode = model.bank.SwiftCode ?? string.Empty,
+                    Remarks1 = model.bank.Remarks1 ?? string.Empty,
+                    Remarks2 = model.bank.Remarks2?.Trim() ?? string.Empty,
+                    Remarks3 = model.bank.Remarks3?.Trim() ?? string.Empty,
+                    IsOwnBank = model.bank.IsOwnBank,
                     IsActive = model.bank.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,
@@ -125,18 +132,26 @@ namespace AMESWEB.Areas.Master.Controllers
                     EditDate = DateTime.Now
                 };
 
-                var result = await _customerService.SaveBankAsync(companyIdShort, parsedUserId.Value, customerToSave);
-                return Json(new { success = true, message = "Bank saved successfully", data = result });
+                var sqlResponse = await _bankService.SaveBankAsync(companyIdShort, parsedUserId.Value, bankToSave);
+
+                if (sqlResponse.Result > 0)
+                {
+                    var bankModel = await _bankService.GetBankByIdAsync(companyIdShort, parsedUserId.Value, Convert.ToInt32(sqlResponse.Result), "", "");
+
+                    return Json(new { success = true, message = "Bank saved successfully", data = bankModel });
+                }
+
+                return Json(new { success = true, message = "Bank saved successfully", data = sqlResponse });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving customer");
+                _logger.LogError(ex, "Error saving bank");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(short BankId, string companyId)
+        public async Task<IActionResult> Delete(int BankId, string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -149,12 +164,12 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                await _customerService.DeleteBankAsync(companyIdShort, parsedUserId.Value, BankId);
+                await _bankService.DeleteBankAsync(companyIdShort, parsedUserId.Value, BankId);
                 return Json(new { success = true, message = "Bank deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting customer");
+                _logger.LogError(ex, "Error deleting bank");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -171,19 +186,19 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetBankContactByBankIdAsync(companyIdShort, parsedUserId.Value,
+                var data = await _bankService.GetBankContactByBankIdAsync(companyIdShort, parsedUserId.Value,
                    BankId);
                 return Json(new { data = data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer contact list");
+                _logger.LogError(ex, "Error fetching bank contact list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetContactById(int customerId, short contactId, string companyId)
+        public async Task<JsonResult> GetContactById(int bankId, short contactId, string companyId)
         {
             if (contactId <= 0)
                 return Json(new { success = false, message = "Invalid Contact ID" });
@@ -193,14 +208,14 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetBankContactByIdAsync(companyIdShort, parsedUserId.Value, customerId, contactId);
+                var data = await _bankService.GetBankContactByIdAsync(companyIdShort, parsedUserId.Value, bankId, contactId);
                 return data == null
                     ? Json(new { success = false, message = "Bank Contact not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer contact by ID");
+                _logger.LogError(ex, "Error fetching bank contact by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -238,12 +253,12 @@ namespace AMESWEB.Areas.Master.Controllers
                     EditDate = DateTime.Now
                 };
 
-                var result = await _customerService.SaveBankContactAsync(companyIdShort, parsedUserId.Value, contactToSave);
+                var result = await _bankService.SaveBankContactAsync(companyIdShort, parsedUserId.Value, contactToSave);
                 return Json(new { success = true, message = "Bank Contact saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving customer contact");
+                _logger.LogError(ex, "Error saving bank contact");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -265,12 +280,12 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                await _customerService.DeleteBankContactAsync(companyIdShort, parsedUserId.Value, BankId, contactId);
+                await _bankService.DeleteBankContactAsync(companyIdShort, parsedUserId.Value, BankId, contactId);
                 return Json(new { success = true, message = "Bank Contact deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting customer contact");
+                _logger.LogError(ex, "Error deleting bank contact");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -287,19 +302,19 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetBankAddressByBankIdAsync(companyIdShort, parsedUserId.Value,
+                var data = await _bankService.GetBankAddressByBankIdAsync(companyIdShort, parsedUserId.Value,
                     BankId);
                 return Json(new { data = data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer address list");
+                _logger.LogError(ex, "Error fetching bank address list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAddressById(int customerId, short addressId, short companyId)
+        public async Task<IActionResult> GetAddressById(int bankId, short addressId, short companyId)
         {
             if (addressId <= 0)
                 return Json(new { success = false, message = "Invalid Address ID" });
@@ -309,14 +324,14 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetBankAddressByIdAsync(companyIdShort, parsedUserId.Value, customerId, addressId);
+                var data = await _bankService.GetBankAddressByIdAsync(companyIdShort, parsedUserId.Value, bankId, addressId);
                 return data == null
                     ? Json(new { success = false, message = "Bank Address not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer address by ID");
+                _logger.LogError(ex, "Error fetching bank address by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -357,12 +372,12 @@ namespace AMESWEB.Areas.Master.Controllers
                     EditDate = DateTime.Now
                 };
 
-                var result = await _customerService.SaveBankAddressAsync(companyIdShort, parsedUserId.Value, addressToSave);
+                var result = await _bankService.SaveBankAddressAsync(companyIdShort, parsedUserId.Value, addressToSave);
                 return Json(new { success = true, message = "Bank Address saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving customer address");
+                _logger.LogError(ex, "Error saving bank address");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -384,12 +399,12 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                await _customerService.DeleteBankAddressAsync(companyIdShort, parsedUserId.Value, BankId, contactId);
+                await _bankService.DeleteBankAddressAsync(companyIdShort, parsedUserId.Value, BankId, contactId);
                 return Json(new { success = true, message = "Bank Address deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting customer contact");
+                _logger.LogError(ex, "Error deleting bank contact");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }

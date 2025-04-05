@@ -3,7 +3,6 @@ using AMESWEB.Controllers;
 using AMESWEB.Entities.Masters;
 using AMESWEB.Enums;
 using AMESWEB.IServices;
-using AMESWEB.Models;
 using AMESWEB.Models.Masters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -148,7 +147,7 @@ namespace AMESWEB.Areas.Master.Controllers
                     return Json(new { success = true, message = "Customer saved successfully", data = customerModel });
                 }
 
-                return Json(new { success = true, message = "Customer saved successfully", data = sqlResponse });
+                return Json(new { success = false, message = sqlResponse.Message });
             }
             catch (Exception ex)
             {

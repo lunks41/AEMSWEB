@@ -68,15 +68,7 @@ namespace AMESWEB.Controllers
             return Json(data);
         }
 
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerCodeLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetCustomerCodeLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
+        
 
         [HttpGet]
         public async Task<JsonResult> GetTaskLookup(string companyId)
@@ -454,6 +446,36 @@ namespace AMESWEB.Controllers
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetJobOrderLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerCodeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerCodeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetBankCodeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetBankCodeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSupplierCodeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetSupplierCodeLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
     }

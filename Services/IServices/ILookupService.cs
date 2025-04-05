@@ -45,7 +45,7 @@ namespace AMESWEB.IServices
 
         public Task<IEnumerable<CurrencyLookupModel>> GetCurrencyLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<CustomerCodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId);
+        
 
         public Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId);
 
@@ -121,5 +121,11 @@ namespace AMESWEB.IServices
         public Task<IEnumerable<DocumentTypeLookupModel>> GetDocumentTypeLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
 
         public Task<IEnumerable<JobOrderLookupModel>> GetJobOrderLookupAsync(Int16 CompanyId, Int16 UserId);
+
+        public Task<IEnumerable<CodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId);
+
+        public Task<IEnumerable<CodeLookupModel>> GetSupplierCodeLookupAsync(Int16 CompanyId, Int16 UserId);
+
+        public Task<IEnumerable<CodeLookupModel>> GetBankCodeLookupAsync(Int16 CompanyId, Int16 UserId);
     }
 }

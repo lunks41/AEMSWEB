@@ -15,7 +15,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label class="form-label">Bank Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="bankCode" required>
+                                <input id="bankCode" required onblur="convertToUpperCase(this)">
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -50,25 +50,25 @@
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <select id="cmd_currency" style="width: 100%"></select>
+                                <input id="cmd_currency" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_creditTerm" class="form-label">Credit Term <span class="text-danger">*</span></label>
-                                <select id="cmd_creditTerm" style="width: 100%"></select>
+                                <input id="cmd_creditTerm" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
-                                <select id="cmd_accSetup" style="width: 100%"></select>
+                                <input id="cmd_accSetup" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_bank" class="form-label">Bank <span class="text-danger">*</span></label>
-                                <select id="cmd_bank" style="width: 100%"></select>
+                                <input id="cmd_bank" />
                             </div>
                         </div>
                     </div>
@@ -117,33 +117,38 @@
                     </div>
 
                     <!-- Address & Contact Tabs -->
-                    <ul class="nav nav-pills mt-4" id="bankTabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
-                        </li>
-                    </ul>
+                    <!-- Tab Row with Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <!-- Tabs Navigation -->
+                        <ul class="nav nav-pills" id="bankTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
+                            </li>
+                        </ul>
 
+                        <!-- Action Buttons -->
+                        <div>
+                            <button type="button" class="btn btn-primary me-2" id="openChildAddressModal">
+                                <i class="mdi mdi-plus"></i> Add Address
+                            </button>
+                            <button type="button" class="btn btn-primary" id="openChildContactModal">
+                                <i class="mdi mdi-plus"></i> Add Contact
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content -->
                     <div class="tab-content mt-3" id="bankSubTabs">
                         <!-- Addresses Tab -->
                         <div class="tab-pane fade show active" id="addresses">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" id="openChildAddressModal">
-                                    <i class="mdi mdi-plus"></i> Add Address
-                                </button>
-                            </div>
                             <div id="gridaddress"></div>
                         </div>
 
                         <!-- Contacts Tab -->
                         <div class="tab-pane fade" id="contacts">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" id="openChildContactModal">
-                                    <i class="mdi mdi-plus"></i> Add Contact
-                                </button>
-                            </div>
                             <div id="gridcontact"></div>
                         </div>
                     </div>
@@ -197,7 +202,6 @@
 
     function initializeBankForm() {
         clearBankForm();
-        $('#isActive').prop('checked', true);
     }
 
     function clearBankForm() {
@@ -216,7 +220,7 @@
         $('#isVendor').prop('checked', false);
         $('#isTrader').prop('checked', false);
         $('#isSupplier').prop('checked', false);
-        $('#isActive').prop('checked', false);
+        $('#isActive').prop('checked', true);
         $('#createBy').text('');
         $('#createDate').text('');
         $('#editBy').text('');
@@ -227,6 +231,8 @@
         $('#btnBankEdit').hide();
         $('#bankTabs').hide();
         $('#bankSubTabs').hide();
+        $('#openChildAddressModal').hide();
+        $('#openChildContactModal').hide();
         // Check if grids exist before clearing
         const addressGrid = $("#gridaddress").data("kendoGrid");
         if (addressGrid) {
@@ -270,19 +276,22 @@
             { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
         ];
 
-        initializeKendoGrid("gridbank", url, { searchString, companyId }, columns);
+        let grid = $("#gridbank").data("kendoGrid");
+        if (grid) {
+
+            grid.dataSource.read({ searchString: searchString, companyId: companyId });
+        } else {
+            initializeKendoGrid("gridbank", url, { searchString, companyId }, columns);
+        }
     }
 
     function openBankModal(id, mode) {
         $.get('@Url.Action("GetById", "Bank", new { area = "Master" })', { bankId: id, companyId })
             .done(function (response) {
                 if (response.success) {
-
                     populateBankFields(response.data);
                     setBankMode(mode);
-
                     $('#addBankModal').modal('show');
-
                 }
             });
     }
@@ -310,13 +319,15 @@
         $('#editBy').text(data.editBy || "N/A");
         $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-        // Destroy existing grids if they exist
-        if ($("#gridaddress").data("kendoGrid")) {
-            $("#gridaddress").data("kendoGrid").destroy();
+        // Before initializing grids, destroy existing ones
+        const addressGrid = $("#gridaddress").data("kendoGrid");
+        if (addressGrid) {
+            addressGrid.destroy();
             $("#gridaddress").empty();
         }
-        if ($("#gridcontact").data("kendoGrid")) {
-            $("#gridcontact").data("kendoGrid").destroy();
+        const contactGrid = $("#gridcontact").data("kendoGrid");
+        if (contactGrid) {
+            contactGrid.destroy();
             $("#gridcontact").empty();
         }
 
@@ -339,11 +350,13 @@
         $('#btnBankClear').hide();
         $('#bankTabs').show();
         $('#bankSubTabs').show();
+        $('#openChildAddressModal').show();
+        $('#openChildContactModal').show();
     }
 
     function deleteBank(id) {
         if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
+            toastr.info('You do not have permission to delete records.');
             return;
         }
 
@@ -362,25 +375,87 @@
         });
     }
 
+    function validateMandatoryFields() {
+        debugger;
+        const bankCode = document.getElementById('bankCode').value.trim();
+        const bankName = document.getElementById('bankName').value.trim();
+        const currency = $('#cmd_currency').data('kendoComboBox').value();
+        const creditTerm = $('#cmd_creditTerm').data('kendoComboBox').value();
+        const accountSetup = $('#cmd_accSetup').data('kendoComboBox').value();
+        const bank = $('#cmd_bank').data('kendoComboBox').value();
+
+        let isValid = true;
+
+        if (!bankCode) {
+            toastr.error('Bank Code is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!bankName) {
+            toastr.error('Bank Name is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!currency) {
+            toastr.error('Currency is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!creditTerm) {
+            toastr.error('Credit Term is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!accountSetup) {
+            toastr.error('Account Setup is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!bank) {
+            toastr.error('Bank is required', 'Missing Field');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
     function saveBank() {
+
         const bankData = {
-            BankId: $('#bankId').val() || 0,
-            BankCode: $('#bankCode').val().trim(),
+            BankId: parseInt($('#bankId').val()) || 0,
+            BankCode: $('#bankCode').val().trim().toUpperCase(),
             BankName: $('#bankName').val().trim(),
-            // Add other fields
+            BankOtherName: $('#bankOtherName').val(),
+            BankShortName: $('#bankShortName').val(),
+            BankRegNo: $('#bankRegNo').val(),
+            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
+            CreditTermId: parseInt($('#cmd_creditTerm').data("kendoComboBox").value()) || 0,
+            AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
+            BankId: parseInt($('#cmd_bank').data("kendoComboBox").value()) || 0,
+            Remarks: $('#remarks').val(),
+            IsBank: $('#isBank').prop('checked'),
+            IsVendor: $('#isVendor').prop('checked'),
+            IsTrader: $('#isTrader').prop('checked'),
+            IsSupplier: $('#isSupplier').prop('checked'),
+            IsActive: $('#isActive').prop('checked'),
+            ParentBankId: 0,
         };
-        $.ajax({
-            url: '@Url.Action("Save", "Bank", new { area = "Master" })',
-            type: "POST",
-            data: JSON.stringify({ bank: bankData, companyId }),
-            contentType: "application/json",
-            success: function (response) {
-                if (response.success) {
-                    $('#addBankModal').modal('hide');
-                    loadBankGrid();
-                    clearForm();
+
+        if (validateMandatoryFields()) {
+            $.ajax({
+                url: '@Url.Action("Save", "Bank", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ bank: bankData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        populateBankFields(response.data);
+                        setBankMode('edit');
+                        loadBankGrid();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 </script>

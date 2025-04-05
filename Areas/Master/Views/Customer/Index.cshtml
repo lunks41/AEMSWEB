@@ -109,7 +109,7 @@
 
         function Refresh() {
              const customerCodeUrl = `@Url.Action("GetCustomerCodeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
-            bindAutoComplete(customerCodeUrl, "customerCode", "customerCode");
+            bindAutoComplete(customerCodeUrl, "customerCode", "code");
 
             const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             bindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
@@ -133,21 +133,24 @@
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
         document.getElementById('openChildAddressModal').addEventListener('click', function () {
+            debugger;
+            initializeCustomerAddressForm();
             var customerId = document.getElementById('customerId').value;
             document.getElementById('address_customerId').value = customerId;
             var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
             addressModal.show();
-            initializeCustomerAddressForm();
+            
         });
 
         document.getElementById('openChildContactModal').addEventListener('click', function () {
+            initializeCustomerAddressForm();
             var customerId = document.getElementById('customerId').value;
             document.getElementById('contact_customerId').value = customerId;
             clearCustomerContactForm(); // Ensure form is reset
             setCustomerContactMode('add'); // Explicitly set mode to 'add'
             var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
             contactModal.show();
-            initializeCustomerAddressForm();
+            
         });
     </script>
 }

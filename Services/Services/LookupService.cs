@@ -647,35 +647,7 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerCodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId)
-        {
-            try
-            {
-                var result = await _repository.GetQueryAsync<CustomerCodeLookupModel>($"SELECT CustomerId,CustomerCode FROM M_Customer WHERE CustomerId<>0 And IsActive=1 And CompanyId ={CompanyId} order by CustomerCode desc");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                var errorLog = new AdmErrorLog
-                {
-                    CompanyId = CompanyId,
-                    ModuleId = (short)E_Modules.Master,
-                    TransactionId = (short)E_Master.Currency,
-                    DocumentId = 0,
-                    DocumentNo = "",
-                    TblName = "M_Currency",
-                    ModeId = (short)E_Mode.Lookup,
-                    Remarks = ex.Message + ex.InnerException?.Message,
-                    CreateById = UserId
-                };
-
-                _context.Add(errorLog);
-                _context.SaveChanges();
-
-                throw new Exception(ex.ToString());
-            }
-        }
+        
 
         public async Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId)
         {
@@ -1815,6 +1787,96 @@ namespace AMESWEB.Services.Masters
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_AccountType",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<CodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<CodeLookupModel>($"SELECT CustomerCode as Code FROM M_Customer WHERE CustomerId<>0 And IsActive=1 And CompanyId ={CompanyId} order by CustomerCode desc");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Currency,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_Currency",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<CodeLookupModel>> GetSupplierCodeLookupAsync(Int16 CompanyId, Int16 UserId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<CodeLookupModel>($"SELECT SupplierCode as Code FROM M_Supplier WHERE SupplierId<>0 And IsActive=1 And CompanyId ={CompanyId} order by SupplierCode desc");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Currency,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_Currency",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<CodeLookupModel>> GetBankCodeLookupAsync(Int16 CompanyId, Int16 UserId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<CodeLookupModel>($"SELECT BankCode as Code FROM M_Bank WHERE BankId<>0 And IsActive=1 And CompanyId ={CompanyId} order by BankCode desc");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Currency,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_Currency",
                     ModeId = (short)E_Mode.Lookup,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Banks";
+    ViewData["Title"] = "Bank";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -24,10 +24,10 @@
                         <div style="width: 150px;">
                             <input type="text" id="txtsearch" class="form-control" placeholder="Search..." onkeydown="handleEnterKey(event)">
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="loadGrid();">
+                        <button type="button" class="btn btn-primary" onclick="loadBankGrid();">
                             <i class="mdi mdi-magnify"></i> Search
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearch();">
+                        <button type="button" class="btn btn-secondary" onclick="clearBankSearch();">
                             <i class="mdi mdi-close"></i> Clear
                         </button>
                     </div>
@@ -98,7 +98,19 @@
             });
         });
 
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') loadBankGrid();
+        }
+
+        function clearBankSearch() {
+            $('#txtsearch').val('');
+            loadBankGrid();
+        }
+
         function Refresh() {
+             const bankCodeUrl = `@Url.Action("GetBankCodeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+            bindAutoComplete(bankCodeUrl, "bankCode", "code");
+
             const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             bindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
 
@@ -121,17 +133,23 @@
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
         document.getElementById('openChildAddressModal').addEventListener('click', function () {
+            initializeBankAddressForm();
             var bankId = document.getElementById('bankId').value;
             document.getElementById('address_bankId').value = bankId;
             var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
             addressModal.show();
+           
         });
 
         document.getElementById('openChildContactModal').addEventListener('click', function () {
+            initializeBankAddressForm();
             var bankId = document.getElementById('bankId').value;
             document.getElementById('contact_bankId').value = bankId;
+            clearBankContactForm(); // Ensure form is reset
+            setBankContactMode('add'); // Explicitly set mode to 'add'
             var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
             contactModal.show();
+           
         });
     </script>
 }

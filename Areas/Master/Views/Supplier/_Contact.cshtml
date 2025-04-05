@@ -78,7 +78,6 @@
 
     function initializeSupplierContactForm() {
         clearSupplierContactForm();
-        $('#isActiveCont').prop('checked', true);
     }
 
     function clearSupplierContactForm() {
@@ -95,7 +94,11 @@
         $('#isDefaultCont').prop('checked', false);
         $('#isFinanceCont').prop('checked', false);
         $('#isSalesCont').prop('checked', false);
-        $('#isActiveCont').prop('checked', false);
+        $('#isActiveCont').prop('checked', true);
+        $('#btnSupplierContactSave').prop('disabled', false);
+        $('#btnSupplierContactSave').show();
+        $('#btnSupplierContactClear').show();
+        $('#btnSupplierContactEdit').hide();
     }
 
     function loadsupplierContactGrid(contact_supplierId) {
@@ -138,13 +141,13 @@
         if (grid) {
             grid.dataSource.read({ supplierId: contact_supplierId, companyId: companyId });
         } else {
-            initializeKendoGrid("gridcontact", url, { supplierId:contact_supplierId, companyId }, columns);
+            initializeKendoGridWithoutPaging("gridcontact", url, { supplierId:contact_supplierId, companyId }, columns);
         }
     }
 
     function openSupplierContactModal(contact_supplierId, contactId, mode) {
-       
-        event.preventDefault();
+
+        event.preventDefault();// Add for prevent the form
         $.get('@Url.Action("GetContactById", "Supplier", new { area = "Master" })', { supplierId: contact_supplierId, contactId, companyId })
             .done(function (response) {
                 console.log("Response:", response); // Debug response structure
@@ -169,7 +172,7 @@
     }
 
     function populateSupplierContactFields(data) {
-       
+
         $('#contact_supplierId').val(data.supplierId);
         $('#contactId').val(data.contactId);
 
@@ -204,18 +207,16 @@
 
     function setSupplierContactMode(mode) {
         const isView = mode === 'view';
-        const canEdit = permissions.canEdit && !isView;
+        const isAdd = mode === 'add';
+        const canEdit = (permissions.canEdit && !isView) || isAdd;
 
-        $('#contactName, #otherName,  #mobileNo,#offNocont, #faxNocont,  #emailAddcont, #messId,  #contactMessType').prop('readonly', !canEdit);
-        $('#isDefaultCont').prop('disabled', !canEdit);
-        $('#isFinanceCont').prop('disabled', !canEdit);
-        $('#isSalesCont').prop('disabled', !canEdit);
-        $('#isActiveCont').prop('disabled', !canEdit);
+        // Enable/disable fields
+        $('#contactName, #otherName, #mobileNo, #emailAddcont, #offNocont, #faxNocont, #messId,  #contactMessType').prop('readonly', !canEdit);
+        $('#isDefaultCont, #isFinanceCont, #isSalesCont, #isActiveCont').prop('disabled', !canEdit);
 
         $('#btnSupplierContactSave').toggle(canEdit);
         $('#btnSupplierContactEdit').toggle(isView && permissions.canEdit);
-        $('#btnSupplierContactClose').show();
-        $('#btnSupplierContactClear').hide();
+        $('#btnSupplierContactClear').toggle(isAdd);
     }
 
     function deleteSupplierContact(contact_supplierId, contactId) {
@@ -223,7 +224,7 @@
             $.ajax({
                 url: '@Url.Action("DeleteContact", "Supplier", new { area = "Master" })',
                 type: "DELETE",
-                data: { supplierId: id, contactId: contactId, companyId: companyId },
+                data: { supplierId: contact_supplierId, contactId: contactId, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
                         loadsupplierContactGrid(contact_supplierId);
@@ -234,7 +235,31 @@
         });
     }
 
+    // Add validation function
+    function validateContactFields() {
+        let isValid = true;
+        const contactName = $('#contactName').val().trim();
+        const mobileNo = $('#mobileNo').val().trim();
+        const email = $('#emailAddcont').val().trim();
+
+        if (!contactName) {
+            toastr.error('Contact Name is required', 'Validation Error');
+            isValid = false;
+        }
+        if (!mobileNo) {
+            toastr.error('Mobile Number is required', 'Validation Error');
+            isValid = false;
+        }
+        if (!email) {
+            toastr.error('Email is required', 'Validation Error');
+            isValid = false;
+        }
+        return isValid;
+    }
+
     function saveSupplierContact() {
+        if (!validateContactFields()) return; // Exit if validation fails
+
         let successSupplierId = parseInt($('#contact_supplierId').val()) || 0;
         const supplierContactData = {
             SupplierId: parseInt( $('#contact_supplierId').val()) || 0,

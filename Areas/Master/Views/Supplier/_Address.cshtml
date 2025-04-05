@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" id="emailAddadd">
+                            <input type="email" class="form-control" id="emailAdd">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Website</label>
@@ -90,7 +90,6 @@
 
     function initializeSupplierAddressForm() {
         clearSupplierAddressForm();
-        $('#isActiveAdd').prop('checked', true);
     }
 
     function clearSupplierAddressForm() {
@@ -104,13 +103,13 @@
         $('#cmd_country').data("kendoComboBox").value('');
         $('#phoneNoAdd').val('');
         $('#faxNoAdd').val('');
-        $('#emailAddadd').val('');
+        $('#emailAdd').val('');
         $('#webUrl').val('');
         $('#isDefaultAdd').prop('checked', false);
         $('#isDeliveryAdd').prop('checked', false);
         $('#isFinAdd').prop('checked', false);
         $('#isSalesAdd').prop('checked', false);
-        $('#isActiveAdd').prop('checked', false);
+        $('#isActiveAdd').prop('checked', true);
         $('#btnSupplierAddressSave').prop('disabled', false);
         $('#btnSupplierAddressSave').show();
         $('#btnSupplierAddressClear').show();
@@ -161,12 +160,12 @@
         if (grid) {
             grid.dataSource.read({ supplierId: address_supplierId, companyId: companyId });
         } else {
-            initializeKendoGrid("gridaddress", url, { supplierId: address_supplierId, companyId }, columns);
+            initializeKendoGridWithoutPaging("gridaddress", url, { supplierId: address_supplierId, companyId }, columns);
         }
     }
 
     function openSupplierAddressModal(id, addressId, mode) {
-       
+
         event.preventDefault();
         $.get('@Url.Action("GetAddressById", "Supplier", new { area = "Master" })', { supplierId: id, addressId, companyId })
             .done(function (response) {
@@ -186,8 +185,7 @@
                 }
             })
             .fail(function (xhr, status, error) {
-                console.error("Error: ", error);
-                alert("An error occurred while fetching supplier address.");
+                toastr.error('Failed to load address: ' + error);
             });
     }
 
@@ -203,7 +201,7 @@
         $('#cmd_country').data("kendoComboBox").value(data.countryId > 0 ? data.countryId : '');
         $('#phoneNoAdd').val(data.phoneNo);
         $('#faxNoAdd').val(data.faxNo);
-        $('#emailAddadd').val(data.emailAdd);
+        $('#emailAdd').val(data.emailAdd);
         $('#webUrl').val(data.webUrl);
         $('#isDefaultAdd').prop('checked', data.isDefaultAdd);
         $('#isDeliveryAdd').prop('checked', data.isDeliveryAdd);
@@ -223,7 +221,7 @@
         const canEdit = permissions.canEdit && !isView;
 
         // Enable/disable fields in address modal
-        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNoAdd, #faxNoAdd, #emailAddadd, #webUrl')
+        $('#address1, #address2, #address3, #address4, #pinCode, #phoneNoAdd, #faxNoAdd, #emailAdd, #webUrl')
             .prop('readonly', !canEdit);
         $('#isDefaultAdd, #isDeliveryAdd, #isFinAdd, #isSalesAdd, #isActiveAdd').prop('disabled', !canEdit);
 
@@ -253,9 +251,26 @@
         });
     }
 
-    function saveSupplierAddress() {
+    // Add validation function
+    function validateAddressFields() {
+        let isValid = true;
+        const address1 = $('#address1').val().trim();
+        const country = $('#cmd_country').data("kendoComboBox").value();
 
-       
+        if (!address1) {
+            toastr.error('Address Line 1 is required', 'Validation Error');
+            isValid = false;
+        }
+        if (!country) {
+            toastr.error('Country is required', 'Validation Error');
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    function saveSupplierAddress() {
+        if (!validateAddressFields()) return;
+
         let successSupplierId = parseInt($('#address_supplierId').val()) || 0;
         const supplieraddressData = {
             SupplierId: parseInt($('#address_supplierId').val()) || 0,
@@ -268,7 +283,7 @@
             CountryId: $('#cmd_country').data("kendoComboBox").value(),
             PhoneNo: $('#phoneNoAdd').val(),
             FaxNo: $('#faxNoAdd').val(),
-            EmailAdd: $('#emailAddadd').val(),
+            EmailAdd: $('#emailAdd').val(),
             webUrl: $('#webUrl').val(),
             IsDeliveryAdd: $('#isDeliveryAdd').prop('checked'),
             IsDefaultAdd: $('#isDefaultAdd').prop('checked'),

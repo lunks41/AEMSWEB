@@ -14,15 +14,15 @@ namespace AMESWEB.Areas.Master.Controllers
     public class SupplierController : BaseController
     {
         private readonly ILogger<SupplierController> _logger;
-        private readonly ISupplierService _customerService;
+        private readonly ISupplierService _supplierService;
 
         public SupplierController(ILogger<SupplierController> logger,
             IBaseService baseService,
-            ISupplierService customerService)
+            ISupplierService supplierService)
             : base(logger, baseService)
         {
             _logger = logger;
-            _customerService = customerService;
+            _supplierService = supplierService;
         }
 
         #region Supplier CRUD
@@ -66,21 +66,21 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetSupplierListAsync(companyIdShort, parsedUserId.Value,
+                var data = await _supplierService.GetSupplierListAsync(companyIdShort, parsedUserId.Value,
                     pageSize, pageNumber, searchString ?? string.Empty);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer list");
+                _logger.LogError(ex, "Error fetching supplier list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetById(int customerId, string companyId)
+        public async Task<JsonResult> GetById(int supplierId, string companyId)
         {
-            if (customerId <= 0)
+            if (supplierId <= 0)
                 return Json(new { success = false, message = "Invalid Supplier ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -88,14 +88,14 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetSupplierByIdAsync(companyIdShort, parsedUserId.Value, customerId, "", "");
+                var data = await _supplierService.GetSupplierByIdAsync(companyIdShort, parsedUserId.Value, supplierId, "", "");
                 return data == null
                     ? Json(new { success = false, message = "Supplier not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer by ID");
+                _logger.LogError(ex, "Error fetching supplier by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -111,37 +111,47 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var customerToSave = new M_Supplier
+                var supplierToSave = new M_Supplier
                 {
-                    SupplierId = model.customer.SupplierId,
+                    SupplierId = model.supplier.SupplierId,
                     CompanyId = companyIdShort,
-                    SupplierCode = model.customer.SupplierCode ?? string.Empty,
-                    SupplierName = model.customer.SupplierName ?? string.Empty,
-                    SupplierOtherName = model.customer.SupplierOtherName ?? string.Empty,
-                    SupplierShortName = model.customer.SupplierShortName ?? string.Empty,
-                    SupplierRegNo = model.customer.SupplierRegNo ?? string.Empty,
-                    CurrencyId = model.customer.CurrencyId,
-                    CreditTermId = model.customer.CreditTermId,
-                    ParentSupplierId = model.customer.ParentSupplierId,
-                    AccSetupId = model.customer.AccSetupId,
-                    CustomerId = model.customer.CustomerId,
-                    IsSupplier = model.customer.IsSupplier,
-                    IsVendor = model.customer.IsVendor,
-                    IsTrader = model.customer.IsTrader,
-                    Remarks = model.customer.Remarks?.Trim() ?? string.Empty,
-                    IsActive = model.customer.IsActive,
+                    SupplierCode = model.supplier.SupplierCode ?? string.Empty,
+                    SupplierName = model.supplier.SupplierName ?? string.Empty,
+                    SupplierOtherName = model.supplier.SupplierOtherName ?? string.Empty,
+                    SupplierShortName = model.supplier.SupplierShortName ?? string.Empty,
+                    SupplierRegNo = model.supplier.SupplierRegNo ?? string.Empty,
+                    CurrencyId = model.supplier.CurrencyId,
+                    CreditTermId = model.supplier.CreditTermId,
+                    ParentSupplierId = model.supplier.ParentSupplierId,
+                    AccSetupId = model.supplier.AccSetupId,
+                    CustomerId = model.supplier.CustomerId,
+                    BankId = model.supplier.BankId,
+                    IsCustomer = model.supplier.IsCustomer,
+                    IsVendor = model.supplier.IsVendor,
+                    IsTrader = model.supplier.IsTrader,
+                    IsSupplier = model.supplier.IsSupplier,
+                    Remarks = model.supplier.Remarks?.Trim() ?? string.Empty,
+                    IsActive = model.supplier.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
                     EditDate = DateTime.Now
                 };
 
-                var result = await _customerService.SaveSupplierAsync(companyIdShort, parsedUserId.Value, customerToSave);
-                return Json(new { success = true, message = "Supplier saved successfully", data = result });
+                var sqlResponse = await _supplierService.SaveSupplierAsync(companyIdShort, parsedUserId.Value, supplierToSave);
+
+                if (sqlResponse.Result > 0)
+                {
+                    var supplierModel = await _supplierService.GetSupplierByIdAsync(companyIdShort, parsedUserId.Value, Convert.ToInt32(sqlResponse.Result), "", "");
+
+                    return Json(new { success = true, message = "Supplier saved successfully", data = supplierModel });
+                }
+
+                return Json(new { success = false, message = sqlResponse.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving customer");
+                _logger.LogError(ex, "Error saving supplier");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -160,12 +170,12 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                await _customerService.DeleteSupplierAsync(companyIdShort, parsedUserId.Value, SupplierId);
+                await _supplierService.DeleteSupplierAsync(companyIdShort, parsedUserId.Value, SupplierId);
                 return Json(new { success = true, message = "Supplier deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting customer");
+                _logger.LogError(ex, "Error deleting supplier");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -182,19 +192,19 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetSupplierContactBySupplierIdAsync(companyIdShort, parsedUserId.Value,
+                var data = await _supplierService.GetSupplierContactBySupplierIdAsync(companyIdShort, parsedUserId.Value,
                    SupplierId);
                 return Json(new { data = data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer contact list");
+                _logger.LogError(ex, "Error fetching supplier contact list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetContactById(int customerId, short contactId, string companyId)
+        public async Task<JsonResult> GetContactById(int supplierId, short contactId, string companyId)
         {
             if (contactId <= 0)
                 return Json(new { success = false, message = "Invalid Contact ID" });
@@ -204,14 +214,14 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetSupplierContactByIdAsync(companyIdShort, parsedUserId.Value, customerId, contactId);
+                var data = await _supplierService.GetSupplierContactByIdAsync(companyIdShort, parsedUserId.Value, supplierId, contactId);
                 return data == null
                     ? Json(new { success = false, message = "Supplier Contact not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer contact by ID");
+                _logger.LogError(ex, "Error fetching supplier contact by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -229,32 +239,32 @@ namespace AMESWEB.Areas.Master.Controllers
             {
                 var contactToSave = new M_SupplierContact
                 {
-                    ContactId = model.customerContact.ContactId,
-                    SupplierId = model.customerContact.SupplierId,
-                    ContactName = model.customerContact.ContactName ?? string.Empty,
-                    OtherName = model.customerContact.OtherName ?? string.Empty,
-                    MobileNo = model.customerContact.MobileNo ?? string.Empty,
-                    OffNo = model.customerContact.OffNo ?? string.Empty,
-                    FaxNo = model.customerContact.FaxNo ?? string.Empty,
-                    EmailAdd = model.customerContact.EmailAdd ?? string.Empty,
-                    MessId = model.customerContact.MessId ?? string.Empty,
-                    ContactMessType = model.customerContact.ContactMessType ?? string.Empty,
-                    IsDefault = model.customerContact.IsDefault,
-                    IsFinance = model.customerContact.IsFinance,
-                    IsSales = model.customerContact.IsSales,
-                    IsActive = model.customerContact.IsActive,
+                    ContactId = model.supplierContact.ContactId,
+                    SupplierId = model.supplierContact.SupplierId,
+                    ContactName = model.supplierContact.ContactName ?? string.Empty,
+                    OtherName = model.supplierContact.OtherName ?? string.Empty,
+                    MobileNo = model.supplierContact.MobileNo ?? string.Empty,
+                    OffNo = model.supplierContact.OffNo ?? string.Empty,
+                    FaxNo = model.supplierContact.FaxNo ?? string.Empty,
+                    EmailAdd = model.supplierContact.EmailAdd ?? string.Empty,
+                    MessId = model.supplierContact.MessId ?? string.Empty,
+                    ContactMessType = model.supplierContact.ContactMessType ?? string.Empty,
+                    IsDefault = model.supplierContact.IsDefault,
+                    IsFinance = model.supplierContact.IsFinance,
+                    IsSales = model.supplierContact.IsSales,
+                    IsActive = model.supplierContact.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
                     EditDate = DateTime.Now
                 };
 
-                var result = await _customerService.SaveSupplierContactAsync(companyIdShort, parsedUserId.Value, contactToSave);
+                var result = await _supplierService.SaveSupplierContactAsync(companyIdShort, parsedUserId.Value, contactToSave);
                 return Json(new { success = true, message = "Supplier Contact saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving customer contact");
+                _logger.LogError(ex, "Error saving supplier contact");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -276,12 +286,12 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                await _customerService.DeleteSupplierContactAsync(companyIdShort, parsedUserId.Value, SupplierId, contactId);
+                await _supplierService.DeleteSupplierContactAsync(companyIdShort, parsedUserId.Value, SupplierId, contactId);
                 return Json(new { success = true, message = "Supplier Contact deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting customer contact");
+                _logger.LogError(ex, "Error deleting supplier contact");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -298,19 +308,19 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetSupplierAddressBySupplierIdAsync(companyIdShort, parsedUserId.Value,
+                var data = await _supplierService.GetSupplierAddressBySupplierIdAsync(companyIdShort, parsedUserId.Value,
                     SupplierId);
                 return Json(new { data = data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer address list");
+                _logger.LogError(ex, "Error fetching supplier address list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAddressById(int customerId, short addressId, short companyId)
+        public async Task<IActionResult> GetAddressById(int supplierId, short addressId, short companyId)
         {
             if (addressId <= 0)
                 return Json(new { success = false, message = "Invalid Address ID" });
@@ -320,14 +330,14 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                var data = await _customerService.GetSupplierAddressByIdAsync(companyIdShort, parsedUserId.Value, customerId, addressId);
+                var data = await _supplierService.GetSupplierAddressByIdAsync(companyIdShort, parsedUserId.Value, supplierId, addressId);
                 return data == null
                     ? Json(new { success = false, message = "Supplier Address not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching customer address by ID");
+                _logger.LogError(ex, "Error fetching supplier address by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -345,35 +355,35 @@ namespace AMESWEB.Areas.Master.Controllers
             {
                 var addressToSave = new M_SupplierAddress
                 {
-                    AddressId = model.customerAddress.AddressId,
-                    SupplierId = model.customerAddress.SupplierId,
-                    Address1 = model.customerAddress.Address1 ?? string.Empty,
-                    Address2 = model.customerAddress.Address2 ?? string.Empty,
-                    Address3 = model.customerAddress.Address3 ?? string.Empty,
-                    Address4 = model.customerAddress.Address4 ?? string.Empty,
-                    PinCode = model.customerAddress.PinCode ?? string.Empty,
-                    CountryId = model.customerAddress.CountryId,
-                    PhoneNo = model.customerAddress.PhoneNo ?? string.Empty,
-                    FaxNo = model.customerAddress.FaxNo ?? string.Empty,
-                    EmailAdd = model.customerAddress.EmailAdd ?? string.Empty,
-                    WebUrl = model.customerAddress.WebUrl ?? string.Empty,
-                    IsDefaultAdd = model.customerAddress.IsDefaultAdd,
-                    IsDeliveryAdd = model.customerAddress.IsDeliveryAdd,
-                    IsFinAdd = model.customerAddress.IsFinAdd,
-                    IsSalesAdd = model.customerAddress.IsSalesAdd,
-                    IsActive = model.customerAddress.IsActive,
+                    AddressId = model.supplierAddress.AddressId,
+                    SupplierId = model.supplierAddress.SupplierId,
+                    Address1 = model.supplierAddress.Address1 ?? string.Empty,
+                    Address2 = model.supplierAddress.Address2 ?? string.Empty,
+                    Address3 = model.supplierAddress.Address3 ?? string.Empty,
+                    Address4 = model.supplierAddress.Address4 ?? string.Empty,
+                    PinCode = model.supplierAddress.PinCode ?? string.Empty,
+                    CountryId = model.supplierAddress.CountryId,
+                    PhoneNo = model.supplierAddress.PhoneNo ?? string.Empty,
+                    FaxNo = model.supplierAddress.FaxNo ?? string.Empty,
+                    EmailAdd = model.supplierAddress.EmailAdd ?? string.Empty,
+                    WebUrl = model.supplierAddress.WebUrl ?? string.Empty,
+                    IsDefaultAdd = model.supplierAddress.IsDefaultAdd,
+                    IsDeliveryAdd = model.supplierAddress.IsDeliveryAdd,
+                    IsFinAdd = model.supplierAddress.IsFinAdd,
+                    IsSalesAdd = model.supplierAddress.IsSalesAdd,
+                    IsActive = model.supplierAddress.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
                     EditDate = DateTime.Now
                 };
 
-                var result = await _customerService.SaveSupplierAddressAsync(companyIdShort, parsedUserId.Value, addressToSave);
+                var result = await _supplierService.SaveSupplierAddressAsync(companyIdShort, parsedUserId.Value, addressToSave);
                 return Json(new { success = true, message = "Supplier Address saved successfully", data = result });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving customer address");
+                _logger.LogError(ex, "Error saving supplier address");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -395,12 +405,12 @@ namespace AMESWEB.Areas.Master.Controllers
 
             try
             {
-                await _customerService.DeleteSupplierAddressAsync(companyIdShort, parsedUserId.Value, SupplierId, contactId);
+                await _supplierService.DeleteSupplierAddressAsync(companyIdShort, parsedUserId.Value, SupplierId, contactId);
                 return Json(new { success = true, message = "Supplier Address deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting customer contact");
+                _logger.LogError(ex, "Error deleting supplier contact");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }

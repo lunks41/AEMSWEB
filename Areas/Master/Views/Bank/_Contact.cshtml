@@ -78,7 +78,6 @@
 
     function initializeBankContactForm() {
         clearBankContactForm();
-        $('#isActiveCont').prop('checked', true);
     }
 
     function clearBankContactForm() {
@@ -95,7 +94,11 @@
         $('#isDefaultCont').prop('checked', false);
         $('#isFinanceCont').prop('checked', false);
         $('#isSalesCont').prop('checked', false);
-        $('#isActiveCont').prop('checked', false);
+        $('#isActiveCont').prop('checked', true);
+        $('#btnBankContactSave').prop('disabled', false);
+        $('#btnBankContactSave').show();
+        $('#btnBankContactClear').show();
+        $('#btnBankContactEdit').hide();
     }
 
     function loadbankContactGrid(contact_bankId) {
@@ -138,13 +141,13 @@
         if (grid) {
             grid.dataSource.read({ bankId: contact_bankId, companyId: companyId });
         } else {
-            initializeKendoGrid("gridcontact", url, { bankId:contact_bankId, companyId }, columns);
+            initializeKendoGridWithoutPaging("gridcontact", url, { bankId:contact_bankId, companyId }, columns);
         }
     }
 
     function openBankContactModal(contact_bankId, contactId, mode) {
-       
-        event.preventDefault();
+
+        event.preventDefault();// Add for prevent the form
         $.get('@Url.Action("GetContactById", "Bank", new { area = "Master" })', { bankId: contact_bankId, contactId, companyId })
             .done(function (response) {
                 console.log("Response:", response); // Debug response structure
@@ -169,7 +172,7 @@
     }
 
     function populateBankContactFields(data) {
-       
+
         $('#contact_bankId').val(data.bankId);
         $('#contactId').val(data.contactId);
 
@@ -204,18 +207,16 @@
 
     function setBankContactMode(mode) {
         const isView = mode === 'view';
-        const canEdit = permissions.canEdit && !isView;
+        const isAdd = mode === 'add';
+        const canEdit = (permissions.canEdit && !isView) || isAdd;
 
-        $('#contactName, #otherName,  #mobileNo,#offNocont, #faxNocont,  #emailAddcont, #messId,  #contactMessType').prop('readonly', !canEdit);
-        $('#isDefaultCont').prop('disabled', !canEdit);
-        $('#isFinanceCont').prop('disabled', !canEdit);
-        $('#isSalesCont').prop('disabled', !canEdit);
-        $('#isActiveCont').prop('disabled', !canEdit);
+        // Enable/disable fields
+        $('#contactName, #otherName, #mobileNo, #emailAddcont, #offNocont, #faxNocont, #messId,  #contactMessType').prop('readonly', !canEdit);
+        $('#isDefaultCont, #isFinanceCont, #isSalesCont, #isActiveCont').prop('disabled', !canEdit);
 
         $('#btnBankContactSave').toggle(canEdit);
         $('#btnBankContactEdit').toggle(isView && permissions.canEdit);
-        $('#btnBankContactClose').show();
-        $('#btnBankContactClear').hide();
+        $('#btnBankContactClear').toggle(isAdd);
     }
 
     function deleteBankContact(contact_bankId, contactId) {
@@ -223,7 +224,7 @@
             $.ajax({
                 url: '@Url.Action("DeleteContact", "Bank", new { area = "Master" })',
                 type: "DELETE",
-                data: { bankId: id, contactId: contactId, companyId: companyId },
+                data: { bankId: contact_bankId, contactId: contactId, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
                         loadbankContactGrid(contact_bankId);
@@ -234,7 +235,31 @@
         });
     }
 
+    // Add validation function
+    function validateContactFields() {
+        let isValid = true;
+        const contactName = $('#contactName').val().trim();
+        const mobileNo = $('#mobileNo').val().trim();
+        const email = $('#emailAddcont').val().trim();
+
+        if (!contactName) {
+            toastr.error('Contact Name is required', 'Validation Error');
+            isValid = false;
+        }
+        if (!mobileNo) {
+            toastr.error('Mobile Number is required', 'Validation Error');
+            isValid = false;
+        }
+        if (!email) {
+            toastr.error('Email is required', 'Validation Error');
+            isValid = false;
+        }
+        return isValid;
+    }
+
     function saveBankContact() {
+        if (!validateContactFields()) return; // Exit if validation fails
+
         let successBankId = parseInt($('#contact_bankId').val()) || 0;
         const bankContactData = {
             BankId: parseInt( $('#contact_bankId').val()) || 0,

@@ -15,7 +15,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label class="form-label">Supplier Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="supplierCode" required>
+                                <input id="supplierCode" required onblur="convertToUpperCase(this)">
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -50,25 +50,25 @@
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <select id="cmd_currency" style="width: 100%"></select>
+                                <input id="cmd_currency" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_creditTerm" class="form-label">Credit Term <span class="text-danger">*</span></label>
-                                <select id="cmd_creditTerm" style="width: 100%"></select>
+                                <input id="cmd_creditTerm" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
-                                <select id="cmd_accSetup" style="width: 100%"></select>
+                                <input id="cmd_accSetup" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label for="cmd_bank" class="form-label">Bank <span class="text-danger">*</span></label>
-                                <select id="cmd_bank" style="width: 100%"></select>
+                                <input id="cmd_bank" />
                             </div>
                         </div>
                     </div>
@@ -117,33 +117,38 @@
                     </div>
 
                     <!-- Address & Contact Tabs -->
-                    <ul class="nav nav-pills mt-4" id="supplierTabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
-                        </li>
-                    </ul>
+                    <!-- Tab Row with Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <!-- Tabs Navigation -->
+                        <ul class="nav nav-pills" id="supplierTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="pill" href="#addresses">Addresses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="pill" href="#contacts">Contacts</a>
+                            </li>
+                        </ul>
 
+                        <!-- Action Buttons -->
+                        <div>
+                            <button type="button" class="btn btn-primary me-2" id="openChildAddressModal">
+                                <i class="mdi mdi-plus"></i> Add Address
+                            </button>
+                            <button type="button" class="btn btn-primary" id="openChildContactModal">
+                                <i class="mdi mdi-plus"></i> Add Contact
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content -->
                     <div class="tab-content mt-3" id="supplierSubTabs">
                         <!-- Addresses Tab -->
                         <div class="tab-pane fade show active" id="addresses">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" id="openChildAddressModal">
-                                    <i class="mdi mdi-plus"></i> Add Address
-                                </button>
-                            </div>
                             <div id="gridaddress"></div>
                         </div>
 
                         <!-- Contacts Tab -->
                         <div class="tab-pane fade" id="contacts">
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" id="openChildContactModal">
-                                    <i class="mdi mdi-plus"></i> Add Contact
-                                </button>
-                            </div>
                             <div id="gridcontact"></div>
                         </div>
                     </div>
@@ -197,7 +202,6 @@
 
     function initializeSupplierForm() {
         clearSupplierForm();
-        $('#isActive').prop('checked', true);
     }
 
     function clearSupplierForm() {
@@ -216,7 +220,7 @@
         $('#isVendor').prop('checked', false);
         $('#isTrader').prop('checked', false);
         $('#isSupplier').prop('checked', false);
-        $('#isActive').prop('checked', false);
+        $('#isActive').prop('checked', true);
         $('#createBy').text('');
         $('#createDate').text('');
         $('#editBy').text('');
@@ -227,6 +231,8 @@
         $('#btnSupplierEdit').hide();
         $('#supplierTabs').hide();
         $('#supplierSubTabs').hide();
+        $('#openChildAddressModal').hide();
+        $('#openChildContactModal').hide();
         // Check if grids exist before clearing
         const addressGrid = $("#gridaddress").data("kendoGrid");
         if (addressGrid) {
@@ -270,24 +276,28 @@
             { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
         ];
 
-        initializeKendoGrid("gridsupplier", url, { searchString, companyId }, columns);
+        let grid = $("#gridsupplier").data("kendoGrid");
+        if (grid) {
+
+            grid.dataSource.read({ searchString: searchString, companyId: companyId });
+        } else {
+            initializeKendoGrid("gridsupplier", url, { searchString, companyId }, columns);
+        }
     }
 
     function openSupplierModal(id, mode) {
         $.get('@Url.Action("GetById", "Supplier", new { area = "Master" })', { supplierId: id, companyId })
             .done(function (response) {
                 if (response.success) {
-
                     populateSupplierFields(response.data);
                     setSupplierMode(mode);
-
                     $('#addSupplierModal').modal('show');
-
                 }
             });
     }
 
     function populateSupplierFields(data) {
+        debugger;
         $('#supplierId').val(data.supplierId);
         $('#supplierCode').val(data.supplierCode);
         $('#supplierName').val(data.supplierName);
@@ -310,13 +320,15 @@
         $('#editBy').text(data.editBy || "N/A");
         $('#editDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
-        // Destroy existing grids if they exist
-        if ($("#gridaddress").data("kendoGrid")) {
-            $("#gridaddress").data("kendoGrid").destroy();
+        // Before initializing grids, destroy existing ones
+        const addressGrid = $("#gridaddress").data("kendoGrid");
+        if (addressGrid) {
+            addressGrid.destroy();
             $("#gridaddress").empty();
         }
-        if ($("#gridcontact").data("kendoGrid")) {
-            $("#gridcontact").data("kendoGrid").destroy();
+        const contactGrid = $("#gridcontact").data("kendoGrid");
+        if (contactGrid) {
+            contactGrid.destroy();
             $("#gridcontact").empty();
         }
 
@@ -339,11 +351,13 @@
         $('#btnSupplierClear').hide();
         $('#supplierTabs').show();
         $('#supplierSubTabs').show();
+        $('#openChildAddressModal').show();
+        $('#openChildContactModal').show();
     }
 
     function deleteSupplier(id) {
         if (!permissions.canDelete) {
-            alert('You do not have permission to delete records.');
+            toastr.info('You do not have permission to delete records.');
             return;
         }
 
@@ -362,25 +376,89 @@
         });
     }
 
+    function validateMandatoryFields() {
+        debugger;
+        const supplierCode = document.getElementById('supplierCode').value.trim();
+        const supplierName = document.getElementById('supplierName').value.trim();
+        const currency = $('#cmd_currency').data('kendoComboBox').value();
+        const creditTerm = $('#cmd_creditTerm').data('kendoComboBox').value();
+        const accountSetup = $('#cmd_accSetup').data('kendoComboBox').value();
+        const bank = $('#cmd_bank').data('kendoComboBox').value();
+
+        let isValid = true;
+
+        if (!supplierCode) {
+            toastr.error('Supplier Code is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!supplierName) {
+            toastr.error('Supplier Name is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!currency) {
+            toastr.error('Currency is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!creditTerm) {
+            toastr.error('Credit Term is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!accountSetup) {
+            toastr.error('Account Setup is required', 'Missing Field');
+            isValid = false;
+        }
+
+        if (!bank) {
+            toastr.error('Bank is required', 'Missing Field');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
     function saveSupplier() {
+        debugger;
+        console.log($('#supplierId').val());
         const supplierData = {
-            SupplierId: $('#supplierId').val() || 0,
-            SupplierCode: $('#supplierCode').val().trim(),
+            SupplierId: parseInt($('#supplierId').val()) || 0,
+            SupplierCode: $('#supplierCode').val().trim().toUpperCase(),
             SupplierName: $('#supplierName').val().trim(),
-            // Add other fields
+            SupplierOtherName: $('#supplierOtherName').val(),
+            SupplierShortName: $('#supplierShortName').val(),
+            SupplierRegNo: $('#supplierRegNo').val(),
+            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
+            CreditTermId: parseInt($('#cmd_creditTerm').data("kendoComboBox").value()) || 0,
+            AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
+            BankId: parseInt($('#cmd_bank').data("kendoComboBox").value()) || 0,
+            Remarks: $('#remarks').val(),
+            IsSupplier: $('#isSupplier').prop('checked'),
+            IsVendor: $('#isVendor').prop('checked'),
+            IsTrader: $('#isTrader').prop('checked'),
+            IsSupplier: $('#isSupplier').prop('checked'),
+            IsActive: $('#isActive').prop('checked'),
+            ParentSupplierId: 0,
+            CustomerId: 0
         };
-        $.ajax({
-            url: '@Url.Action("Save", "Supplier", new { area = "Master" })',
-            type: "POST",
-            data: JSON.stringify({ supplier: supplierData, companyId }),
-            contentType: "application/json",
-            success: function (response) {
-                if (response.success) {
-                    $('#addSupplierModal').modal('hide');
-                    loadSupplierGrid();
-                    clearForm();
+
+        if (validateMandatoryFields()) {
+            $.ajax({
+                url: '@Url.Action("Save", "Supplier", new { area = "Master" })',
+                type: "POST",
+                data: JSON.stringify({ supplier: supplierData, companyId }),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        populateSupplierFields(response.data);
+                        setSupplierMode('edit');
+                        loadSupplierGrid();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 </script>

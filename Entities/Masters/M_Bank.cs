@@ -16,6 +16,7 @@ namespace AMESWEB.Entities.Masters
         public string? SwiftCode { get; set; }
         public string? Remarks1 { get; set; }
         public string? Remarks2 { get; set; }
+        public string? Remarks3 { get; set; }
         public Int16 GLId { get; set; }
         public bool IsActive { get; set; }
         public bool IsOwnBank { get; set; }
