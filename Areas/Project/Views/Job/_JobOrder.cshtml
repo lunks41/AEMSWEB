@@ -1,12 +1,40 @@
-﻿<div class="modal fade" id="viewJobOrderModal" tabindex="-1" aria-labelledby="viewJobOrderModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-xl">
+﻿<style>
+    /* Custom modal width */
+    #viewJobOrderModal .modal-dialog {
+        max-width: 80vw; /* Use viewport width units */
+        width: 80%; /* Fallback */
+        margin: 0 auto; /* Center modal */
+    }
+
+    /* Make modal content full width */
+    #viewJobOrderModal .modal-content {
+        width: 100%;
+        min-height: 80vh; /* Optional: Set minimum height */
+    }
+
+    /* Remove horizontal padding in modal body */
+    #viewJobOrderModal .modal-body {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Make container full width */
+    #viewJobOrderModal .container {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+</style>
+
+<div class="modal fade" id="viewJobOrderModal" tabindex="-1" aria-labelledby="viewJobOrderModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewJobOrderModalLabel">Job Order</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="container mt-3">
+                <div class="container-fluid mt-3">
                     <input type="hidden" id="companyId" />
                     <input type="hidden" id="jobOrderId" />
                     <div class="row mb-3">
@@ -151,12 +179,8 @@
                         <div class="card-body">
                             <!-- Scrollable Tabs -->
                             <div class="position-relative">
-                                <button class="btn btn-sm btn-secondary scroll-left" onclick="scrollTabs(-100)">
-                                    &lt;
-                                </button>
-                                <button class="btn btn-sm btn-secondary scroll-right" onclick="scrollTabs(100)">
-                                    &gt;
-                                </button>
+                                <button class="btn btn-sm btn-secondary scroll-left" onclick="scrollTabs(-100)">&lt;</button>
+                                <button class="btn btn-sm btn-secondary scroll-right" onclick="scrollTabs(100)">&gt;</button>
                                 <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
                                     <!-- Main Service Tabs -->
                                     <li class="nav-item" role="presentation">
@@ -244,18 +268,18 @@
                                     <!-- Button Group for Port Expenses -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
                                         <button id="btnAddPortExpense" onclick="openChildModal('PortExpense')" class="btn btn-primary me-2">Add Port Expense</button>
-                                        <button id="btnCreateDebitNotePortExpense" onclick="openChildDebitNoteModal('PortExpense')" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardPortExpense" onclick="openChildTaskForwardModal('PortExpense',1)" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdatePortExpense" onclick="openChildBulkUpdateModal('PortExpense',1)" class="btn btn-warning me-2">Bulk Update</button>
+                                        <button id="btnCreateDebitNotePortExpense" onclick="openChildDebitNoteModal('PortExpense')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
+                                        <button id="btnTaskForwardPortExpense" onclick="openChildTaskForwardModal('PortExpense',1)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdatePortExpense" onclick="openChildBulkUpdateModal('PortExpense',1)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isPortExpenseDebitNoteNo" class="form-check-input">
-                                            <label for="isPortExpenseDebitNoteNo" class="form-check-label">Is Debit Note No.</label>
+                                            <input type="checkbox" id="isPortExpenseDebitNoteNo" class="form-check-input" disabled>
+                                            <label for="isPortExpenseDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
                                         </div>
 
                                         <!-- Input Box -->
-                                        <input type="text" id="portExpensedebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;">
+                                        <input type="text" id="portExpensedebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
 
                                     <!-- Grid for Port Expenses -->
@@ -453,6 +477,8 @@
 </div>
 
 <script>
+    let mulid = "";
+
     function scrollTabs(offset) {
         const tabs = document.getElementById('serviceTabs');
         tabs.scrollBy({ left: offset, behavior: 'smooth' });
@@ -461,12 +487,19 @@
     function openChildModal(serviceType) {
         const modalId = `#add${serviceType}Modal`;
         const modalElement = $(modalId);
+        // Add blur to parent modal
+        $('#viewJobOrderModal').addClass('modal-blur');
+
+        // Handle modal stacking
+        modalElement.addClass('child-modal');
+        $('.modal-backdrop').addClass('child-modal-backdrop');
+
         modalElement.modal('show');
 
         let jobOrderId = $('#jobOrderId').val();
-        let jobOrderNo = $('#jobOrderNo').val();
+        let jobOrderNo = $('#jobOrderNo').text();
         let companyId = $('#companyId').val();
-
+        debugger;
         const functionName = `open${serviceType}Modal`;
         if (typeof window[functionName] === 'function') {
             window[functionName](jobOrderId, jobOrderNo, 0, 'add');
@@ -474,22 +507,35 @@
     }
 
     function openChildDebitNoteModal(serviceType) {
-        const modalId = `#add${serviceType}Modal`;
+        const modalId = `#addDebitNoteModal`;
         const modalElement = $(modalId);
+
+        // Add blur to parent modal
+        $('#viewJobOrderModal').addClass('modal-blur');
+
+        // Handle modal stacking
+        modalElement.addClass('child-modal');
+        $('.modal-backdrop').addClass('child-modal-backdrop');
+
         modalElement.modal('show');
 
-        let jobOrderId = $('#jobOrderId').val();
-        let jobOrderNo = $('#jobOrderNo').val();
-        let companyId = $('#companyId').val();
+        //let jobOrderId = $('#jobOrderId').val();
+        //let jobOrderNo = $('#jobOrderNo').text();
+        //let companyId = $('#companyId').val();
 
-        const functionName = `open${serviceType}Modal`;
-        if (typeof window[functionName] === 'function') {
-            window[functionName](jobOrderId, jobOrderNo, 0, 'add');
-        }
+        //const functionName = `open${serviceType}Modal`;
+        //if (typeof window[functionName] === 'function') {
+        //    window[functionName](jobOrderId, jobOrderNo, 0, 'add');
+        //}
     }
 
     function openChildTaskForwardModal(serviceType, taskId) {
         debugger;
+        if (mulid != '') {
+
+        } else {
+            toastr.warning('Please select at least one row from table');
+        }
         //const modalId = `#addTaskForwardModal`;
         //const modalElement = $(modalId);
         //modalElement.modal('show');
@@ -576,7 +622,7 @@
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} onclick="updateSelected(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelected(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
                         let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
@@ -635,6 +681,62 @@
                 initializeKendoGridWithoutPaging("grid-PortExpense", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
+    }
+
+    function updateSelected(checkbox, jobOrderId, portExpenseId) {
+        debugger;
+        if (checkbox.checked) {
+            // Add the portExpenseId to mulid if checked
+            if (!mulid.includes(portExpenseId)) {
+                mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
+            }
+        } else {
+            // Remove the portExpenseId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== portExpenseId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonStates();
+    }
+
+    function toggleSelectAll(headerCheckbox) {
+        debugger;
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectDebitNote").forEach(function (checkbox) {
+            checkbox.checked = checked;
+            debugger;
+            // If checked, add all portExpenseIds to mulid
+            if (checked) {
+                let portExpenseId = checkbox.getAttribute("data-portExpenseId");
+                if (portExpenseId) {
+                    mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonStates();
+    }
+
+    function updateButtonStates() {
+        // Check if any .selectDebitNote checkbox is selected
+        let anySelected = document.querySelectorAll(".selectDebitNote:checked").length > 0;
+
+        // Check the state of the isPortExpenseDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isPortExpenseDebitNoteNo").checked;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        document.getElementById("btnCreateDebitNotePortExpense").disabled = !enableButtons;
+        document.getElementById("btnTaskForwardPortExpense").disabled = !enableButtons;
+        document.getElementById("btnBulkUpdatePortExpense").disabled = !enableButtons;
     }
 
     // ================== LAUNCH SERVICES GRID ================== //

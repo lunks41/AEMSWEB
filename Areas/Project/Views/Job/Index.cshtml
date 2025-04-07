@@ -124,6 +124,7 @@
     @await Html.PartialAsync("_AgencyRemuneration");
     @await Html.PartialAsync("_TaskForward");
     @await Html.PartialAsync("_BulkUpdate");
+    @await Html.PartialAsync("_DebitNote");
 }
 
 <style>
@@ -267,11 +268,11 @@
                     title: "Actions",
                     width: "150px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'view')">
              <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
                         if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}', 'edit')">
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'edit')">
              <i class="material-symbols-outlined text-warning">edit</i></button>`;
                         }
 
@@ -301,7 +302,7 @@
 
         }
 
-        function openJobOrderModal(id) {
+        function openJobOrderModal(id, jobOrderNo) {
             const $modal = $('#viewJobOrderModal');
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
             $.get('@Url.Action("GetJobOrderById", "Job", new { area = "Project" })', { jobOrderId: id, companyId })

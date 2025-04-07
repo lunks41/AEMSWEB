@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="portExpense_cmb_supplier" class="form-label">Supplier <span class="text-danger">*</span></label>
-                            <select id="portExpense_cmb_supplier" style="width: 100%"></select>
+                            <input  id="portExpense_cmb_supplier" />
                         </div>
                         <div class="col-md-4">
                             <label for="portExpense_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
@@ -201,20 +201,42 @@
         }, 100);
     }
 
-    function updateSelected(checkbox, jobOrderId, portExpenseId) {
+    //let mulid = ""; // Declare mulid as a global variable to store selected portExpenseId values
 
-        // Your logic to update selection for the debit note creation.
-        console.log("Row with Job Order ID", jobOrderId,'  id :', portExpenseId, "selected:", checkbox.checked);
-    }
+    //function updateSelected(checkbox, jobOrderId, portExpenseId) {
+    //    debugger;
+    //    if (checkbox.checked) {
+    //        // Add the portExpenseId to mulid if checked
+    //        if (!mulid.includes(portExpenseId)) {
+    //            mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
+    //        }
+    //    } else {
+    //        // Remove the portExpenseId from mulid if unchecked
+    //        let idsArray = mulid.split(",").filter(id => id !== portExpenseId);
+    //        mulid = idsArray.join(",");
+    //    }
+    //    console.log("Updated mulid:", mulid);
+    //}
 
-    function toggleSelectAll(headerCheckbox) {
+    //function toggleSelectAll(headerCheckbox) {
+    //    debugger;
+    //    let checked = headerCheckbox.checked;
+    //    mulid = ""; // Reset mulid when toggling "Select All"
 
-        let checked = headerCheckbox.checked;
-        document.querySelectorAll('.selectDebitNote').forEach(function (checkbox) {
-            checkbox.checked = checked;
-            // Optionally, you can call updateSelected here if you need to sync selection
-        });
-    }
+    //    document.querySelectorAll(".selectDebitNote").forEach(function (checkbox) {
+    //        checkbox.checked = checked;
+    //        debugger;
+    //        // If checked, add all portExpenseIds to mulid
+    //        if (checked) {
+    //            let portExpenseId = checkbox.getAttribute("data-portExpenseId");
+    //            if (portExpenseId) {
+    //                mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
+    //            }
+    //        }
+    //    });
+
+    //    console.log("Final mulid after toggleSelectAll:", mulid);
+    //}
 
     function openPortExpenseModal(jobOrderId, jobOrderNo, portExpenseId, mode) {
         debugger;
@@ -248,6 +270,8 @@
             refreshPortExpensesDropdown();
             clearPortExpenseForm();
             setDefaultDropdownValues();
+            $('#jobOrderId').val(jobOrderId);
+            $('#jobOrderNo').val(jobOrderNo);
             $('#addPortExpenseModal').modal('show');
         }
     }
@@ -354,13 +378,13 @@
         let portExpenseData = {
             PortExpenseId: parseInt($('#portExpenseId').val()) || 0,
             JobOrderId: parseInt($('#jobOrderId').val()) || 0,
-            JobOrderNo:$('#jobOrderNo').val() || '',
+            JobOrderNo: $('#jobOrderNo').val() || '',
             SupplierId: parseInt($('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value()) || 0,
             ChargeId: parseInt($('#portExpense_cmb_charge').data('kendoComboBox').value()) || 0,
             GLId: parseInt($('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
             Quantity: parseFloat($('#portExpense_quantity').val()) || 0,
             UomId: parseInt($('#portExpense_cmb_uom').data('kendoComboBox').value()) || 0,
-            DeliverDate: $('#portExpense_deliverDate').val() || 0,
+            DeliverDate: $('#portExpense_deliverDate').val() || '',
             StatusId: parseInt($('#portExpense_cmb_status').data('kendoComboBox').value()) || 0,
             Description: $('#portExpense_description').val(),
             Remarks: $('#portExpense_remarks').val(),

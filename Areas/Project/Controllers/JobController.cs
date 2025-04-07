@@ -245,7 +245,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     ChargeId = model.portExpense.ChargeId,
                     StatusId = model.portExpense.StatusId,
                     UomId = model.portExpense.UomId,
-                    DeliverDate = model.portExpense.DeliverDate,
+                    DeliverDate = model.portExpense.DeliverDate == "" ? null : Convert.ToDateTime(model.portExpense.DeliverDate),
                     Description = model.portExpense.Description?.Trim() ?? string.Empty,
                     GLId = model.portExpense.GLId,
                     DebitNoteId = model.portExpense.DebitNoteId,
