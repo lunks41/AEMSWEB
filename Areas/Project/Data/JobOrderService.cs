@@ -504,5 +504,35 @@ namespace AMESWEB.Areas.Project.Data.Services
         #endregion Port Expenses
 
         #endregion Task
+
+        public async Task<SqlResponse> SaveTaskForwardAsync(short companyId, short userId, Int64 jobOrderId, int taskId, string multipleId)
+        {
+            try
+            {
+                var result = await _repository.GetQuerySingleOrDefaultAsync<SqlResponse>($"exce {jobOrderId},{multipleId},{taskId}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = companyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_PortExpenses",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = userId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
     }
 }

@@ -1,135 +1,165 @@
-﻿  <!-- FreshWater Modal -->
-<div class="modal fade" id="addFreshWaterModal" tabindex="-1" aria-labelledby="addFreshWaterModalLabel" aria-hidden="true">
+﻿<!-- Bulk Update Modal -->
+<div class="modal fade" id="bulkUpdateModal" tabindex="-1" aria-labelledby="bulkUpdateModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addFreshWaterModalLabel">Fresh Water</h5>
+                <h5 class="modal-title" id="bulkUpdateModalLabel">Bulk Update</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="freshWaterForm">
-                    <input type="hidden" id="freshWater_jobOrderId" />
-                    <input type="hidden" id="freshWaterId" />
+                <div id="bulkUpdateContainer">
+                    <input type="hidden" id="bulkJobOrderId" />
+                    <input type="hidden" id="bulkJobOrderNo" />
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Fresh Water Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Charge Code</label>
-                            <select class="form-select" id="chargeId">
-                                <option value="">Select Charge</option>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="bulkUpdateField" class="form-label">Select Field to Update <span class="text-danger">*</span></label>
+                            <select id="bulkUpdateField" class="form-select" onchange="toggleBulkInputFields()">
+                                <option value="">-- Select Field --</option>
+                                <option value="status">Status</option>
+                                <option value="remark">Remark</option>
+                                <option value="description">Description</option>
+                                <option value="deliveryDate">Delivery Date</option>
+                                <option value="glCode">GL Code</option>
                             </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select class="form-select" id="glId" required>
-                                <option value="">Select GL</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Barge </label>
-                            <select class="form-select" id="chargeId">
-                                <option value="">Select Charge</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Supplier Barge</label>
-                            <input type="text" class="form-control" id="quantity">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Barge Operator</label>
-                            <input type="text" class="form-control" id="quantity">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Receipt No.</label>
-                            <input type="text" class="form-control" id="quantity">
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Distance to Vessel</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="weightOfCargoLanded" step="0.0001" value="0.00">
-                                    <span class="input-group-text">NM</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">UOM <span class="text-danger">*</span></label>
-                            <select class="form-select" id="glId" required>
-                                <option value="">Select UOM</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-1">
-                                <label class="form-label">Remark</label>
-                                <textarea class="form-control" id="remark" rows="2"></textarea>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Audit Fields -->
-                    <div class="accordion mt-3" id="auditAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#auditCollapse">
-                                    Audit Details
-                                </button>
-                            </h2>
-                            <div id="auditCollapse" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Dynamic Fields Container -->
+                    <div class="row mb-3" id="dynamicFields">
+                        <!-- Status Field -->
+                        <div class="col-12 bulk-field" id="statusField" style="display: none;">
+                            <label for="bulkStatus" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="bulkStatus" style="width: 100%;"></select>
+                        </div>
+
+                        <!-- Remark Field -->
+                        <div class="col-12 bulk-field" id="remarkField" style="display: none;">
+                            <label for="bulkRemark" class="form-label">Remark <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="bulkRemark" rows="3"></textarea>
+                        </div>
+
+                        <!-- Description Field -->
+                        <div class="col-12 bulk-field" id="descriptionField" style="display: none;">
+                            <label for="bulkDescription" class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="bulkDescription" rows="3"></textarea>
+                        </div>
+
+                        <!-- Delivery Date Field -->
+                        <div class="col-12 bulk-field" id="deliveryDateField" style="display: none;">
+                            <label for="bulkDeliveryDate" class="form-label">Delivery Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="bulkDeliveryDate">
+                        </div>
+
+                        <!-- GL Code Field -->
+                        <div class="col-12 bulk-field" id="glCodeField" style="display: none;">
+                            <label for="bulkGlCode" class="form-label">GL Code <span class="text-danger">*</span></label>
+                            <select id="bulkGlCode" style="width: 100%;"></select>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankFreshWaterClose" onclick="clearBankFreshWaterForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankFreshWaterEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankFreshWaterClear" onclick="clearBankFreshWaterForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankFreshWaterSave" onclick="saveBankFreshWater()">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="clearBulkForm()">Clear</button>
+                <button type="button" class="btn btn-primary" onclick="applyBulkUpdate()">Apply Update</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function toggleBulkInputFields() {
+    const selectedField = $('#bulkUpdateField').val();
+    $('.bulk-field').hide().find('input, select, textarea').prop('disabled', true);
+
+    switch(selectedField) {
+        case 'status':
+            $('#statusField').show().find('select').prop('disabled', false);
+            break;
+        case 'remark':
+            $('#remarkField').show().find('textarea').prop('disabled', false);
+            break;
+        case 'description':
+            $('#descriptionField').show().find('textarea').prop('disabled', false);
+            break;
+        case 'deliveryDate':
+            $('#deliveryDateField').show().find('input').prop('disabled', false);
+            break;
+        case 'glCode':
+            $('#glCodeField').show().find('select').prop('disabled', false);
+            break;
+    }
+}
+
+function initializeBulkDropdowns() {
+    // Initialize Status Dropdown
+    const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+    bindComboBox(statusUrl, "bulkStatus", "orderTypeName", "orderTypeId");
+
+    // Initialize GL Code Dropdown
+    const glUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+    const glColumns = [
+        { field: 'glCode', title: 'Code', width: 100 },
+        { field: 'glName', title: 'Name', width: 200 }
+    ];
+    bindMultiColumnComboBox(glUrl, "bulkGlCode", "glName", "glId", glColumns, ['glCode', 'glName']);
+}
+
+function openBulkUpdateModal(selectedRecords) {
+    $('#bulkUpdateModal').modal('show');
+    initializeBulkDropdowns();
+    // Store selected records in data attribute
+    $('#bulkUpdateModal').data('selectedRecords', selectedRecords);
+}
+
+function applyBulkUpdate() {
+    const selectedField = $('#bulkUpdateField').val();
+    const selectedRecords = $('#bulkUpdateModal').data('selectedRecords');
+    const updateData = {
+        field: selectedField,
+        value: null,
+        jobOrderIds: selectedRecords.map(r => r.jobOrderId)
+    };
+
+    switch(selectedField) {
+        case 'status':
+            updateData.value = $('#bulkStatus').val();
+            break;
+        case 'remark':
+            updateData.value = $('#bulkRemark').val();
+            break;
+        case 'description':
+            updateData.value = $('#bulkDescription').val();
+            break;
+        case 'deliveryDate':
+            updateData.value = $('#bulkDeliveryDate').val();
+            break;
+        case 'glCode':
+            updateData.value = $('#bulkGlCode').val();
+            break;
+    }
+
+    if (!updateData.value) {
+        alert('Please select a value for the chosen field');
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("BulkUpdateRecords", "Job")',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(updateData),
+        success: function(response) {
+            if (response.success) {
+                $('#bulkUpdateModal').modal('hide');
+                refreshPortExpenseGrid();
+            }
+        }
+    });
+}
+
+function clearBulkForm() {
+    $('#bulkUpdateField').val('');
+    $('.bulk-field').hide().find('input, select, textarea').val('').prop('disabled', true);
+}
+</script>

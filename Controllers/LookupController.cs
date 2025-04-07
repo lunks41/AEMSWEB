@@ -450,6 +450,16 @@ namespace AMESWEB.Controllers
         }
 
         [HttpGet]
+        public async Task<JsonResult> GetCustomerJobOrderLookup(string companyId,int customerId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerJobOrderLookupAsync(companyIdShort, parsedUserId.Value, customerId);
+            return Json(data);
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetCustomerCodeLookup(string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);

@@ -1799,6 +1799,36 @@ namespace AMESWEB.Services.Masters
             }
         }
 
+        public async Task<IEnumerable<JobOrderLookupModel>> GetCustomerJobOrderLookupAsync(Int16 CompanyId, Int16 UserId,int customerId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<JobOrderLookupModel>($"SELECT JobOrderId,JobOrderNo,PortId,VesselId FROM dbo.Ser_JobOrderHd WHERE JobOrderId<>0 AND CompanyId={CompanyId} and CustomerId={customerId} and JobOrderNo NOT LIKE '' ORDER BY JobOrderDate DESC");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.AccountType,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_AccountType",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
         public async Task<IEnumerable<CodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId)
         {
             try

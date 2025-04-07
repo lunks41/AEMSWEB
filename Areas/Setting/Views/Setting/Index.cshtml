@@ -93,6 +93,12 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
+        <button class="nav-link d-flex align-items-center gap-2" id="task-tab" data-bs-toggle="tab" data-bs-target="#task" type="button" role="tab" style="min-width: 120px;">
+            <span class="material-symbols-outlined" style="font-size: 1.2rem;">monetization_on</span>
+            <span>Task</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link d-flex align-items-center gap-2" id="mandatory-tab" data-bs-toggle="tab" data-bs-target="#mandatory" type="button" role="tab" style="min-width: 120px;">
             <span class="material-symbols-outlined" style="font-size: 1.2rem;">priority_high</span>
             <span>Mandatory</span>
@@ -127,6 +133,11 @@
     <!-- Finance Tab -->
     <div class="tab-pane fade" id="finance" role="tabpanel">
         @await Html.PartialAsync("_FinanceSettings")
+    </div>
+
+    <!-- Task Tab -->
+    <div class="tab-pane fade" id="Task" role="tabpanel">
+        @await Html.PartialAsync("_TaskSettings")
     </div>
 
     <!-- Mandatory Tab -->

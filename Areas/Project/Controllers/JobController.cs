@@ -368,5 +368,49 @@ namespace AMESWEB.Areas.Project.Controllers
         #region DebitNote
 
         #endregion DebitNote
+
+        #region Task Forward
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTaskForward(Int64 jobOrderId, int taskId, string multipleId, string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, taskId, multipleId);
+                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving account type");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion Task Forward
+
+        #region Bulk Update
+
+        [HttpPost]
+        public async Task<IActionResult> SaveBulkUpdate(Int64 jobOrderId, int taskId, string multipleId, string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, taskId, multipleId);
+                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving account type");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion Bulk Update
     }
 }

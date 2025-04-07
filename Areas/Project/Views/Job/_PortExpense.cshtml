@@ -11,6 +11,9 @@
                 <div id="portExpenseContainer">
                     <input type="hidden" id="companyId" />
                     <input type="hidden" id="jobOrderId" />
+                    <input type="hidden" id="jobOrderNo" />
+                    <input type="hidden" id="debitNoteId" />
+                    <input type="hidden" id="debitNoteNo" />
                     <input type="hidden" id="portExpenseId" />
                     <div class="row">
                         <div class="col-md-4">
@@ -27,7 +30,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
+                            <input type="number" class="form-control" id="portExpense_quantity" step="0.01" value="0.00" required>
                         </div>
                         <div class="col-md-3">
                             <label for="portExpense_cmb_uom" class="form-label">UOM  <span class="text-danger">*</span></label>
@@ -35,7 +38,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Delivery Date</label>
-                            <input type="date" class="form-control" id="deliverDate">
+                            <input type="date" class="form-control" id="portExpense_deliverDate">
                         </div>
                         <div class="col-md-3">
                             <label for="portExpense_cmb_status" class="form-label">Status  <span class="text-danger">*</span></label>
@@ -101,12 +104,8 @@
 
 <script>
 
-    //$('#addPortExpenseModal').on('shown.bs.modal', function () {
-    //    refreshPortExpensesDropdown();
-    //});
-
     function refreshPortExpensesDropdown() {
-
+        debugger;
         const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const suppliercolumnsProperties = [
             { field: 'supplierCode', title: 'Code', width: 100 },
@@ -131,6 +130,7 @@
 
         const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
         bindComboBox(statusUrl, "portExpense_cmb_status", "orderTypeName", "orderTypeId");
+
     }
 
     function SelectedDropdown(DrpdwnName) {
@@ -141,10 +141,12 @@
     }
 
     function clearPortExpenseForm() {
-
-        $('#portExpenseId').val(0);
-        $('#portExpense_description').val('');
-        $('#portExpense_remarks').val('');
+        debugger;
+        $('#portExpenseId').val('');
+        $('#jobOrderId').val('');
+        $('#jobOrderNo').val('');
+        $('#debitNoteId').val('');
+        $('#debitNoteNo').val('');
 
         $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value('');
         $('#portExpense_cmb_charge').data('kendoComboBox').value('');
@@ -152,13 +154,51 @@
         $('#portExpense_cmb_uom').data('kendoComboBox').value('');
         $('#portExpense_cmb_status').data('kendoComboBox').value('');
 
+        $('#portExpense_quantity').val('');
+        $('#portExpense_deliverDate').val('');
+        $('#isActive').prop('checked', true);
+        $('#portExpense_description').val('');
+        $('#portExpense_remarks').val('');
+
         $('#portexpensecreateBy').text('');
         $('#portexpensecreateDate').text('');
         $('#portexpenseeditBy').text('');
         $('#portexpenseeditDate').text('');
         $('#portexpenseeditVersion').text('');
 
-        $('#isActive').prop('checked', true);
+        $('#btnPortExpenseClear').show();
+    }
+
+    function setDefaultDropdownValues() {
+        // Set default GL Account
+        $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value(488);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#portExpense_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first UOM
+        setTimeout(() => {
+            const uomCombo = $('#portExpense_cmb_uom').data('kendoComboBox');
+            if (uomCombo.dataSource.view().length > 0) {
+                uomCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#portExpense_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
     }
 
     function updateSelected(checkbox, jobOrderId, portExpenseId) {
@@ -176,12 +216,24 @@
         });
     }
 
-    function openPortExpenseModal(jobOrderId, portExpenseId, mode) {
+    function openPortExpenseModal(jobOrderId, jobOrderNo, portExpenseId, mode) {
+        debugger;
+        const $modal = $('#addPortExpenseModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedPortExpenseId = parseInt(portExpenseId, 10);
 
-        if (jobOrderId > 0 && portExpenseId > 0) {
-            const $modal = $('#addPortExpenseModal');
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedPortExpenseId)) {
+            
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
-            $.get('@Url.Action("GetPortExpensesById", "Job", new { area = "Project" })', { jobOrderId, portExpenseId, companyId })
+
+            $.get('@Url.Action("GetPortExpensesById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                portExpenseId: parsedPortExpenseId,
+                companyId: $('#companyId').val()
+            })
                 .done(function (response) {
                     if (response.success) {
                         refreshPortExpensesDropdown();
@@ -192,64 +244,93 @@
                 })
                 .always(() => $modal.find('.modal-overlay').remove());
         } else {
+            // Add Mode: Clear form and set default values
             refreshPortExpensesDropdown();
             clearPortExpenseForm();
+            setDefaultDropdownValues();
             $('#addPortExpenseModal').modal('show');
         }
     }
 
     function populatePortExpenseModalFields(data) {
-
+        debugger;
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
         $('#portExpenseId').val(data.portExpenseId);
         $('#jobOrderId').val(data.jobOrderId);
-        $('#companyId').val(data.companyId);
+        $('#jobOrderNo').val(data.jobOrderNo);
+        $('#debitNoteId').val(data.debitNoteId);
+        $('#debitNoteNo').val(data.debitNoteNo);
 
-        $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value(data.supplierId > 0 ? data.supplierId : '');
-        $('#portExpense_cmb_charge').data('kendoComboBox').value(data.chargeId > 0 ? data.chargeId : '');
-        $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value(data.glId > 0 ? data.glId : '');
-        $('#portExpense_cmb_uom').data('kendoComboBox').value(data.uomId > 0 ? data.uomId : '');
-        $('#portExpense_cmb_status').data('kendoComboBox').value(data.statusId > 0 ? data.statusId : '');
+        // Set combobox values, ensuring they update after data is loaded
+        const supplierCombo = $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox');
+        supplierCombo.value(data.supplierId > 0 ? data.supplierId : '');
+        supplierCombo.one('dataBound', function () {
+            supplierCombo.value(data.supplierId > 0 ? data.supplierId : '');
+        });
 
-        $('#quantity').val(data.quantity);
+        const chargeCombo = $('#portExpense_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const uomCombo = $('#portExpense_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        const statusCombo = $('#portExpense_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        // Set other fields
+        $('#portExpense_quantity').val(data.quantity);
+        const formattedDate = new Date(data.deliverDate).toLocaleDateString('en-CA');
+        $('#portExpense_deliverDate').val(formattedDate);
+        $('#isActive').prop('checked', data.isActive);
         $('#portExpense_description').val(data.description);
         $('#portExpense_remarks').val(data.remarks);
 
-        const formattedDate = new Date(data.deliverDate).toLocaleDateString('en-CA');
-        $('#deliverDate').val(formattedDate);
-
-        $('#isActive').prop('checked', data.isActive);
-
+        // Set audit fields
         $('#portexpensecreateBy').text(data.createBy || "N/A");
         $('#portexpensecreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
         $('#portexpenseeditBy').text(data.editBy || "N/A");
         $('#portexpenseeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
-
         $('#portexpenseeditVersion').text(data.editVersion || "0");
+        debugger;
+        // Hide clear button in edit mode
+        $('#btnPortExpenseClear').hide();
 
+        // Enable/disable fields based on debitNoteId
         if (data.debitNoteId > 0) {
-            $('#portExpense_cmb_charge').data('kendoComboBox').enable(false);
-            $('#portExpense_cmb_uom').data('kendoComboBox').enable(false);
-            $('#portExpense_cmb_status').data('kendoComboBox').enable(false);
-            $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').enable(false);
-            $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').enable(false);
-
-            // Reset readonly and disabled states
-            $('#quantity, #deliverDate, #description, #portExpense_remarks').prop('readonly', true);
+            chargeCombo.enable(false);
+            uomCombo.enable(false);
+            statusCombo.enable(false);
+            supplierCombo.enable(false);
+            glCombo.enable(false);
+            $('#portExpense_quantity, #portExpense_deliverDate, #portExpense_description, #portExpense_remarks').prop('readonly', true);
             $('#isActive').prop('disabled', false);
             $('#btnPortExpenseSave').prop('disabled', false);
         } else {
-            $('#portExpense_cmb_charge').data('kendoComboBox').enable(true);
-            $('#portExpense_cmb_uom').data('kendoComboBox').enable(true);
-            $('#portExpense_cmb_status').data('kendoComboBox').enable(true);
-            $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').enable(true);
-            $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').enable(true);
-
-            // Reset readonly and disabled states
-            $('#quantity, #deliverDate, #description, #portExpense_remarks').prop('readonly', false);
+            chargeCombo.enable(true);
+            uomCombo.enable(true);
+            statusCombo.enable(true);
+            supplierCombo.enable(true);
+            glCombo.enable(true);
+            $('#portExpense_quantity, #portExpense_deliverDate, #portExpense_description, #portExpense_remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
             $('#btnPortExpenseSave').prop('disabled', false);
         }
-        $('#btnPortExpenseClear').hide();
     }
 
     function deletePortExpense(jobOrderId, portExpenseId) {
@@ -273,16 +354,19 @@
         let portExpenseData = {
             PortExpenseId: parseInt($('#portExpenseId').val()) || 0,
             JobOrderId: parseInt($('#jobOrderId').val()) || 0,
+            JobOrderNo:$('#jobOrderNo').val() || '',
             SupplierId: parseInt($('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value()) || 0,
             ChargeId: parseInt($('#portExpense_cmb_charge').data('kendoComboBox').value()) || 0,
             GLId: parseInt($('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
-            Quantity: parseFloat($('#quantity').val()) || 0,
+            Quantity: parseFloat($('#portExpense_quantity').val()) || 0,
             UomId: parseInt($('#portExpense_cmb_uom').data('kendoComboBox').value()) || 0,
-            DeliverDate: $('#deliverDate').val() || 0,
+            DeliverDate: $('#portExpense_deliverDate').val() || 0,
             StatusId: parseInt($('#portExpense_cmb_status').data('kendoComboBox').value()) || 0,
             Description: $('#portExpense_description').val(),
             Remarks: $('#portExpense_remarks').val(),
-            IsActive: 1
+            IsActive: 1,
+            DebitNoteId: parseInt($('#debitNoteId').val()) || 0,
+            DebitNoteNo: $('#debitNoteNo').val() || '',
         };
 
         console.log("PortExpense Data : " + portExpenseData);

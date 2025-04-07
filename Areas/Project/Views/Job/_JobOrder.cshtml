@@ -144,7 +144,6 @@
                             </div>
                         </div>
                     </div>
-                    <
 
                     <!-- Section 2: Task Tab with Grids -->
                     <div class="card mb-3">
@@ -245,9 +244,9 @@
                                     <!-- Button Group for Port Expenses -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
                                         <button id="btnAddPortExpense" onclick="openChildModal('PortExpense')" class="btn btn-primary me-2">Add Port Expense</button>
-                                        <button id="btnCreateDebitNotePortExpense" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardPortExpense" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdatePortExpense" class="btn btn-warning me-2">Bulk Update</button>
+                                        <button id="btnCreateDebitNotePortExpense" onclick="openChildDebitNoteModal('PortExpense')" class="btn btn-secondary me-2">Create DebitNote</button>
+                                        <button id="btnTaskForwardPortExpense" onclick="openChildTaskForwardModal('PortExpense',1)" class="btn btn-info me-2">Task Forward</button>
+                                        <button id="btnBulkUpdatePortExpense" onclick="openChildBulkUpdateModal('PortExpense',1)" class="btn btn-warning me-2">Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
@@ -465,12 +464,48 @@
         modalElement.modal('show');
 
         let jobOrderId = $('#jobOrderId').val();
+        let jobOrderNo = $('#jobOrderNo').val();
         let companyId = $('#companyId').val();
 
         const functionName = `open${serviceType}Modal`;
         if (typeof window[functionName] === 'function') {
-            window[functionName](jobOrderId, 0, 'add');
+            window[functionName](jobOrderId, jobOrderNo, 0, 'add');
         }
+    }
+
+    function openChildDebitNoteModal(serviceType) {
+        const modalId = `#add${serviceType}Modal`;
+        const modalElement = $(modalId);
+        modalElement.modal('show');
+
+        let jobOrderId = $('#jobOrderId').val();
+        let jobOrderNo = $('#jobOrderNo').val();
+        let companyId = $('#companyId').val();
+
+        const functionName = `open${serviceType}Modal`;
+        if (typeof window[functionName] === 'function') {
+            window[functionName](jobOrderId, jobOrderNo, 0, 'add');
+        }
+    }
+
+    function openChildTaskForwardModal(serviceType, taskId) {
+        debugger;
+        //const modalId = `#addTaskForwardModal`;
+        //const modalElement = $(modalId);
+        //modalElement.modal('show');
+
+        $('#addTaskForwardModal').modal('show');
+
+        //let companyId = $('#companyId').val();
+        //let customerId = $('#customerId').val();
+        //openTaskForwardModal(serviceType, taskId, customerId, 0);
+    }
+
+    function openChildBulkUpdateModal(serviceType, taskId) {
+        debugger;
+        const modalId = `#bulkUpdateModal`;
+        const modalElement = $(modalId);
+        modalElement.modal('show');
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -483,44 +518,44 @@
         });
     });
 
-      function loadStatusCounts() {
+    function loadStatusCounts() {
 
-      let customerId = getComboBoxValue('#cmb_customer', 0);
-      let portId = getComboBoxValue('#cmb_port', 0);
+        let customerId = getComboBoxValue('#cmb_customer', 0);
+        let portId = getComboBoxValue('#cmb_port', 0);
 
-      $.ajax({
-          url: '@Url.Action("GetTariffStatusCounts", "Tariff", new { area = "Project" })',
-          type: 'POST', // Use POST method
-          data: {
-              searchString: '',
-              companyId: companyId,
-              customerId: customerId,
-              portId: portId
-          },
-          success: function (counts) {
+        $.ajax({
+            url: '@Url.Action("GetTariffStatusCounts", "Tariff", new { area = "Project" })',
+            type: 'POST', // Use POST method
+            data: {
+                searchString: '',
+                companyId: companyId,
+                customerId: customerId,
+                portId: portId
+            },
+            success: function (counts) {
 
-              $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
-              $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
-              $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
-              $('#serviceTabs [data-status="CrewSignOn"] .badge').text(counts.crewSignOn);
-              $('#serviceTabs [data-status="CrewSignOff"] .badge').text(counts.crewSignOff);
-              $('#serviceTabs [data-status="CrewMiscellaneous"] .badge').text(counts.crewMiscellaneous);
-              $('#serviceTabs [data-status="MedicalAssistance"] .badge').text(counts.medicalAssistance);
-              $('#serviceTabs [data-status="ConsignmentImport"] .badge').text(counts.consignmentImport);
-              $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
-              $('#serviceTabs [data-status="ThirdPartySupply"] .badge').text(counts.thirdPartySupply);
-              $('#serviceTabs [data-status="FreshWaterSupply"] .badge').text(counts.freshWaterSupply);
-              $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
-              $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
-              $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
-              $('#serviceTabs [data-status="AgencyRemuneration"] .badge').text(counts.agencyRemuneration);
-              $('#serviceTabs [data-status="Visa"] .badge').text(counts.visa);
-          },
-          error: function (xhr, status, error) {
-              console.error('Error loading status counts:', error);
-          }
-      });
-  }
+                $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
+                $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
+                $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
+                $('#serviceTabs [data-status="CrewSignOn"] .badge').text(counts.crewSignOn);
+                $('#serviceTabs [data-status="CrewSignOff"] .badge').text(counts.crewSignOff);
+                $('#serviceTabs [data-status="CrewMiscellaneous"] .badge').text(counts.crewMiscellaneous);
+                $('#serviceTabs [data-status="MedicalAssistance"] .badge').text(counts.medicalAssistance);
+                $('#serviceTabs [data-status="ConsignmentImport"] .badge').text(counts.consignmentImport);
+                $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
+                $('#serviceTabs [data-status="ThirdPartySupply"] .badge').text(counts.thirdPartySupply);
+                $('#serviceTabs [data-status="FreshWaterSupply"] .badge').text(counts.freshWaterSupply);
+                $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
+                $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
+                $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
+                $('#serviceTabs [data-status="AgencyRemuneration"] .badge').text(counts.agencyRemuneration);
+                $('#serviceTabs [data-status="Visa"] .badge').text(counts.visa);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading status counts:', error);
+            }
+        });
+    }
 
     // ================== PORT EXPENSES GRID ================== //
     function initializePortExpenseGrid() {
@@ -544,15 +579,15 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} onclick="updateSelected(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
         <i class="material-symbols-outlined text-danger" >delete</i>
     </button>`;
 
@@ -560,7 +595,7 @@
         <i class="material-symbols-outlined" >universal_currency_alt</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="debitNoteExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
         <i class="material-symbols-outlined" >payments</i>
     </button>`;
 
@@ -616,13 +651,13 @@
                     title: "Actions",
                     width: "100px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
                         return buttons;

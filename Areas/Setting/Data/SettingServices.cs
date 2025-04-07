@@ -25,7 +25,7 @@ namespace AMESWEB.Areas.Setting.Data
             _context = context; _logService = logService;
         }
 
-        #region
+        #region Decimal Setting
 
         public async Task<DecimalSettingViewModel> GetDecSettingAsync(short CompanyId, short UserId)
         {
@@ -130,9 +130,9 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        #endregion
+        #endregion Decimal Setting
 
-        #region
+        #region Finance Setting
 
         public async Task<FinanceSettingViewModel> GetFinSettingAsync(short CompanyId, short UserId)
         {
@@ -237,7 +237,114 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        #endregion
+        #endregion Finance Setting
+
+        #region Task Setting
+
+        public async Task<TaskSettingViewModel> GetTaskSettingAsync(short CompanyId, short UserId)
+        {
+            try
+            {
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TaskSettingViewModel>($"SELECT CompanyId,TaskId,GlId,ChargeId,UomId,TypeId,VisaTypeId,StatusId,LocationId,ServiceTypeId,PassTypeId,CaluateId,BerthTypeId,S_Fin.CreateById,Usr.UserCode CreateBy, S_Fin.CreateDate, S_Fin.EditById,Usr1.UserCode EditBy,S_Fin.EditDate FROM dbo.S_TaskSettings S_Fin Left Join AdmUser Usr on Usr.UserId=S_Fin.CreatebyId Left Join AdmUser Usr1 on Usr1.UserId=S_Fin.CreatebyId WHERE CompanyId={CompanyId}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Admin,
+                    TransactionId = (short)E_Setting.TaskSetting,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "S_TaskSettings",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<SqlResponse> SaveTaskSettingAsync(short CompanyId, short UserId, S_TaskSettings s_TaskSettings)
+        {
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.S_FinSettings WHERE CompanyId = {s_TaskSettings.CompanyId}");
+
+                    if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
+                    {
+                        var entity = _context.Update(s_TaskSettings);
+                        entity.Property(b => b.CreateById).IsModified = false;
+                        entity.Property(b => b.CompanyId).IsModified = false;
+                    }
+                    else
+                    {
+                        s_TaskSettings.EditById = null;
+                        s_TaskSettings.EditDate = null;
+                        _context.Add(s_TaskSettings);
+                    }
+
+                    var FinSettingsToSave = _context.SaveChanges();
+
+                    #region Save AuditLog
+
+                    if (FinSettingsToSave > 0)
+                    {
+                        //Saving Audit log
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = CompanyId,
+                            ModuleId = (short)E_Modules.Admin,
+                            TransactionId = (short)E_Setting.TaskSetting,
+                            DocumentId = 0,
+                            DocumentNo = "",
+                            TblName = "S_TaskSettings",
+                            ModeId = (short)E_Mode.Create,
+                            Remarks = "Task Settings Save Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                    }
+
+                    #endregion Save AuditLog
+
+                    return new SqlResponse();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.TaskSetting, 0, "", "S_TaskSettings", E_Mode.Create, "SQL", UserId);
+                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+            }
+            catch (Exception ex)
+            {
+                await _logService.LogErrorAsync(ex, CompanyId, E_Modules.Setting, E_Setting.TaskSetting, 0, "", "S_TaskSettings", E_Mode.Create, "General", UserId);
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        #endregion Task Setting
 
         #region
 

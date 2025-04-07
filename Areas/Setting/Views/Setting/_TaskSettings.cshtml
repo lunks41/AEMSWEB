@@ -1,0 +1,181 @@
+﻿<div class="mx-auto" style="max-width: 1000px;">
+    <div class="card shadow-sm">
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Finance Settings</h5>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+            <form id="financeForm">
+                <!-- Currency Settings Section -->
+                <h6 class="border-bottom pb-2 mb-3">Currency Settings</h6>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Base Currency *</label>
+                        <select id="cmb_basecurrency"></select>
+                        <div class="invalid-feedback">Please select base currency</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Local Currency *</label>
+                        <select id="cmb_localcurrency"></select>
+                        <div class="invalid-feedback">Please select local currency</div>
+                    </div>
+                </div>
+
+                <!-- GL Accounts Section -->
+                <h6 class="border-bottom pb-2 my-3">GL Accounts Setting</h6>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Exchange Gain/Loss GL *</label>
+                        <select id="cmb_exhgainloss"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Bank Charges GL *</label>
+                        <select id="cmb_bankcharges"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Profit/Loss GL *</label>
+                        <select id="cmb_profitndloss"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Return Earning GL *</label>
+                        <select id="cmb_returneraing"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Sales GST GL *</label>
+                        <select id="cmb_salegst"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Purchase GST GL *</label>
+                        <select id="cmb_purchasegst"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Sales Define GL *</label>
+                        <select id="cmb_saledefine"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Purchase Define GL *</label>
+                        <select id="cmb_purchasedefine"></select>
+                        <div class="invalid-feedback">Required GL account</div>
+                    </div>
+                </div>
+                <!-- Audit Fields -->
+                <div class="accordion mt-3" id="auditAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                Audit Details
+                            </button>
+                        </h2>
+                        <div id="auditCollapse" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="fincreateBy" class="form-label">Created By</label>
+                                        <p id="fincreateBy" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="fincreateDate" class="form-label">Created Date</label>
+                                        <p id="fincreateDate" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="fineditBy" class="form-label">Modified By</label>
+                                        <p id="fineditBy" class="form-control-plaintext"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="fineditDate" class="form-label">Modified Date</label>
+                                        <p id="fineditDate" class="form-control-plaintext"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer">
+            <button class="btn btn-primary float-end" onclick="saveFinanceSetting()">
+                <i class="fas fa-save me-2"></i>Save Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        // Tab-specific JavaScript
+        const form = document.getElementById('financeForm');
+        // Validation logic
+    })();
+
+    function getfinancesetting() {
+
+        $.get('@Url.Action("GetFinSetting", "Setting", new { area = "Setting" })', { companyId })
+            .done(function (response) {
+                if (response.success) {
+
+                    if (response.data != null) {
+                        var data = response.data;
+                        $('#cmb_basecurrency').data("kendoComboBox").value(data.base_CurrencyId > 0 ? data.base_CurrencyId : '');
+                        $('#cmb_localcurrency').data("kendoComboBox").value(data.local_CurrencyId > 0 ? data.local_CurrencyId : '');
+                        $('#cmb_exhgainloss').data("kendoComboBox").value(data.exhGainLoss_GlId > 0 ? data.exhGainLoss_GlId : '');
+                        $('#cmb_bankcharges').data("kendoComboBox").value(data.bankCharge_GlId > 0 ? data.bankCharge_GlId : '');
+                        $('#cmb_profitndloss').data("kendoComboBox").value(data.profitLoss_GlId > 0 ? data.profitLoss_GlId : '');
+                        $('#cmb_returneraing').data("kendoComboBox").value(data.retEarning_GlId > 0 ? data.retEarning_GlId : '');
+                        $('#cmb_salegst').data("kendoComboBox").value(data.saleGst_GlId > 0 ? data.saleGst_GlId : '');
+                        $('#cmb_purchasegst').data("kendoComboBox").value(data.purGst_GlId > 0 ? data.purGst_GlId : '');
+                        $('#cmb_saledefine').data("kendoComboBox").value(data.saleDef_GlId > 0 ? data.saleDef_GlId : '');
+                        $('#cmb_purchasedefine').data("kendoComboBox").value(data.purDef_GlId > 0 ? data.purDef_GlId : '');
+
+                        $('#fincreateBy').text(data.createBy || "N/A");
+                        $('#fincreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+                        $('#fineditBy').text(data.editBy || "N/A");
+                        $('#fineditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+                    } else {
+                        alert("Error: there have no default data");
+                    }
+                }
+            });
+    }
+
+    function saveFinanceSetting() {
+
+        let data = {
+            Base_CurrencyId: parseInt($('#cmb_basecurrency').data('kendoComboBox').value()) || 0,
+            Local_CurrencyId: parseInt($('#cmb_localcurrency').data('kendoComboBox').value()) || 0,
+            ExhGainLoss_GlId: parseInt($('#cmb_exhgainloss').data('kendoComboBox').value()) || 0,
+            BankCharge_GlId: parseInt($('#cmb_bankcharges').data('kendoComboBox').value()) || 0,
+            ProfitLoss_GlId: parseInt($('#cmb_profitndloss').data('kendoComboBox').value()) || 0,
+            RetEarning_GlId: parseInt($('#cmb_returneraing').data('kendoComboBox').value()) || 0,
+            SaleGst_GlId: parseInt($('#cmb_salegst').data('kendoComboBox').value()) || 0,
+            PurGst_GlId: parseInt($('#cmb_purchasegst').data('kendoComboBox').value()) || 0,
+            SaleDef_GlId: parseInt($('#cmb_saledefine').data('kendoComboBox').value()) || 0,
+            PurDef_GlId: parseInt($('#cmb_purchasedefine').data('kendoComboBox').value()) || 0,
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveFinSetting", "Setting", new { area = "Setting" })',
+            type: "POST",
+            data: JSON.stringify({ FinanceSetting: data, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    alert("Success: Update done !!");
+                }
+            },
+            error: function (error) {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+</script>

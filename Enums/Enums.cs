@@ -25,6 +25,7 @@ namespace AMESWEB.Enums
         Admin = 100,
         Project = 5
     }
+
     public enum E_Project
     {
         Job = 1,
@@ -153,7 +154,8 @@ namespace AMESWEB.Enums
         VisibleFields = 6,
         DynamicLookup = 7,
         DocSeqNo = 8,
-        UserSetting = 9
+        UserSetting = 9,
+        TaskSetting = 10
     }
 
     public enum E_Task

@@ -6,31 +6,39 @@ namespace AMESWEB.Areas.Setting.Data
 {
     public interface ISettingService
     {
-        #region
+        #region Decimal Setting
 
         public Task<DecimalSettingViewModel> GetDecSettingAsync(short CompanyId, short UserId);
 
         public Task<SqlResponse> SaveDecSettingAsync(short CompanyId, short UserId, S_DecSettings s_DecSettings);
 
-        #endregion
+        #endregion Decimal Setting
 
-        #region
+        #region Finance Setting
 
         public Task<FinanceSettingViewModel> GetFinSettingAsync(short CompanyId, short UserId);
 
         public Task<SqlResponse> SaveFinSettingAsync(short CompanyId, short UserId, S_FinSettings s_FinSettings);
 
-        #endregion
+        #endregion Finance Setting
 
-        #region
+        #region Task Setting
+
+        public Task<TaskSettingViewModel> GetTaskSettingAsync(short CompanyId, short UserId);
+
+        public Task<SqlResponse> SaveTaskSettingAsync(short CompanyId, short UserId, S_TaskSettings s_TaskSettings);
+
+        #endregion Task Setting
+
+        #region Mandatory Fields
 
         public Task<IEnumerable<MandatoryFieldsViewModel>> GetMandatoryFieldsByIdAsync(short CompanyId, short UserId, Int16 ModuleId);
 
         public Task<SqlResponse> SaveMandatoryFieldsAsync(short CompanyId, short UserId, List<S_MandatoryFields> s_MandatoryFields);
 
-        #endregion
+        #endregion Mandatory Fields
 
-        #region
+        #region Visible Fields
 
         public Task<VisibleFieldsViewModel> GetVisibleFieldsByIdAsync(short CompanyId, short UserId, Int16 ModuleId, Int16 TransactionId);
 
@@ -38,9 +46,9 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<SqlResponse> SaveVisibleFieldsAsync(short CompanyId, short UserId, List<S_VisibleFields> s_VisibleFields);
 
-        #endregion
+        #endregion Visible Fields
 
-        #region
+        #region Number Format
 
         public Task<ModelNameViewModelCount> GetNumberFormatListAsync(short CompanyId, short UserId);
 
@@ -50,9 +58,9 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<SqlResponse> SaveNumberFormatAsync(short CompanyId, short UserId, S_NumberFormat s_NumberFormat);
 
-        #endregion
+        #endregion Number Format
 
-        #region
+        #region User Grid
 
         public Task<UserGridViewModelCount> GetUserGridAsync(short CompanyId, short UserId, Int16 ModuleId, Int16 TransactionId);
 
@@ -68,7 +76,7 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<SqlResponse> SaveUserSettingAsync(short CompanyId, short UserId, S_UserSettings S_UserSettings);
 
-        #endregion
+        #endregion User Grid
 
         public Task<decimal> GetExchangeRateAsync(short CompanyId, short UserId, Int16 CurrencyId, DateTime? TrnsDate);
 

@@ -242,6 +242,105 @@ namespace AMESWEB.Areas.Setting.Controllers
 
         #endregion Finance Setting
 
+        #region Task Setting
+
+        [HttpGet]
+        public async Task<JsonResult> GetTaskSetting(string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            {
+                return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
+            }
+
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "Setting not logged in or invalid user ID." });
+            }
+
+            try
+            {
+                var data = await _settingService.GetTaskSettingAsync(companyIdShort, parsedUserId);
+
+                if (data == null)
+                {
+                    return Json(new { success = false, message = "Finance Setting not found." });
+                }
+
+                return Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching account group by ID.");
+                return Json(new { success = false, message = "An error occurred", data = "" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTaskSetting([FromBody] SaveTaskSettingViewModel model)
+        {
+            if (model == null)
+            {
+                return Json(new { success = false, message = "Data operation failed due to null model." });
+            }
+
+            var taskSetting = model.taskSetting;
+            var companyId = model.CompanyId;
+
+            if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
+            {
+                return Json(new { success = false, message = "Invalid company ID." });
+            }
+
+            var userId = HttpContext.Session.GetString("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId) || !short.TryParse(userId, out short parsedUserId))
+            {
+                return Json(new { success = false, message = "Setting not logged in or invalid user ID." });
+            }
+
+            var taskSettingToSave = new S_TaskSettings
+            {
+                CompanyId = companyIdShort,
+                TaskId = taskSetting.TaskId,
+                GlId = taskSetting.GlId,
+                ChargeId = taskSetting.ChargeId,
+                UomId = taskSetting.UomId,
+                TypeId = taskSetting.TypeId,
+                VisaTypeId = taskSetting.VisaTypeId,
+                StatusId = taskSetting.StatusId,
+                LocationId = taskSetting.LocationId,
+                ServiceTypeId = taskSetting.ServiceTypeId,
+                PassTypeId = taskSetting.PassTypeId,
+                CaluateId = taskSetting.CaluateId,
+                BerthTypeId = taskSetting.BerthTypeId,
+                CreateById = parsedUserId,
+                CreateDate = DateTime.Now,
+                EditById = taskSetting.EditById ?? parsedUserId,
+                EditDate = DateTime.Now
+            };
+
+            try
+            {
+                var data = await _settingService.SaveTaskSettingAsync(companyIdShort, parsedUserId, taskSettingToSave);
+
+                if (data == null)
+                {
+                    return Json(new { success = false, message = "Failed to save account group." });
+                }
+
+                return Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving the account group.");
+                return Json(new { success = false, message = "An error occurred.", data = "" });
+            }
+        }
+
+        #endregion Task Setting
+
         #region Mandatory
 
         [HttpGet("setting/mandatoryfieldslist")]

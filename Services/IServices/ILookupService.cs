@@ -121,6 +121,7 @@ namespace AMESWEB.IServices
         public Task<IEnumerable<DocumentTypeLookupModel>> GetDocumentTypeLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
 
         public Task<IEnumerable<JobOrderLookupModel>> GetJobOrderLookupAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<JobOrderLookupModel>> GetCustomerJobOrderLookupAsync(Int16 CompanyId, Int16 UserId,int customerId);
 
         public Task<IEnumerable<CodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId);
 
