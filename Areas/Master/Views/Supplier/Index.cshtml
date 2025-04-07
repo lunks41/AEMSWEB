@@ -133,12 +133,13 @@
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
         document.getElementById('openChildAddressModal').addEventListener('click', function () {
-
-
+            debugger;
+            initializeSupplierAddressForm();
             var supplierId = document.getElementById('supplierId').value;
             document.getElementById('address_supplierId').value = supplierId;
             var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
-            addressModal.show(); initializeSupplierAddressForm();
+            addressModal.show();
+
         });
 
         document.getElementById('openChildContactModal').addEventListener('click', function () {
@@ -149,7 +150,7 @@
             setSupplierContactMode('add'); // Explicitly set mode to 'add'
             var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
             contactModal.show();
-            
         });
+
     </script>
 }

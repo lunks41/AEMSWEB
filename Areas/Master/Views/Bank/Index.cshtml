@@ -133,12 +133,13 @@
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
         document.getElementById('openChildAddressModal').addEventListener('click', function () {
+            debugger;
             initializeBankAddressForm();
             var bankId = document.getElementById('bankId').value;
             document.getElementById('address_bankId').value = bankId;
             var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
             addressModal.show();
-           
+
         });
 
         document.getElementById('openChildContactModal').addEventListener('click', function () {
@@ -149,7 +150,8 @@
             setBankContactMode('add'); // Explicitly set mode to 'add'
             var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
             contactModal.show();
-           
         });
+
+
     </script>
 }
