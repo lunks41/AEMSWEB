@@ -11,6 +11,8 @@ namespace AMESWEB.Entities.Masters
         public Int16 CompanyId { get; set; }
         public string? AccTypeCode { get; set; }
         public string? AccTypeName { get; set; }
+        public Int32 CodeStart { get; set; }
+        public Int32 CodeEnd { get; set; }
         public Int16 SeqNo { get; set; }
         public string? AccGroupName { get; set; }
         public string? Remarks { get; set; }

@@ -299,6 +299,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
                             ser_PortExpenses.PortExpenseId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_PortExpenses.EditById = null;
+                            ser_PortExpenses.EditDate = null;
                             _context.Add(ser_PortExpenses);
                         }
                         else

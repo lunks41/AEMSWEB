@@ -117,6 +117,8 @@ namespace AMESWEB.Areas.Master.Controllers
                     CompanyId = companyIdShort,
                     AccTypeCode = model.accountType.AccTypeCode ?? string.Empty,
                     AccTypeName = model.accountType.AccTypeName ?? string.Empty,
+                    CodeStart = model.accountType.CodeStart,
+                    CodeEnd = model.accountType.CodeEnd,
                     SeqNo = model.accountType.SeqNo,
                     AccGroupName = model.accountType.AccGroupName ?? string.Empty,
                     Remarks = model.accountType.Remarks?.Trim() ?? string.Empty,

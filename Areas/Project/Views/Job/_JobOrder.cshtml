@@ -30,130 +30,121 @@
                         </div>
                     </div>
                     <!-- Section 1: Customer Job Details -->
-                    <div class="accordion mt-3" id="jobOrderDetailsAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingJobOrderDetails">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJobOrderDetails">
-                                    Job Order Details
-                                </button>
-                            </h2>
-                            <div id="collapseJobOrderDetails" class="accordion-collapse collapse show">
-                                <div class="accordion-body">
-                                    <!-- Row 2 -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Vessel Name : </label>
-                                                <span id="vesselName"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">IMO No : </label>
-                                                <span id="imoNo"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">ETA : </label>
-                                                <span id="eta"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">ETD : </label>
-                                                <span id="etd"></span>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <!-- Row 3 -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Master's Name : </label>
-                                                <span id="mastersName"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Port of Call : </label>
-                                                <span id="portOfCall"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Next Port : </label>
-                                                <span id="nextportName"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Last Port : </label>
-                                                <span id="lastportName"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div>
+                        <!-- Row 2 -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Vessel Name : </label>
+                                    <span id="vesselName"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">IMO No : </label>
+                                    <span id="imoNo"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">ETA : </label>
+                                    <span id="eta"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">ETD : </label>
+                                    <span id="etd"></span>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <!-- Row 4 -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Nature of Call : </label>
-                                                <span id="natureOfCall"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">ISPS : </label>
-                                                <span id="isps"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Owners Master : </label>
-                                                <span id="ownersMaster"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Owners Agents : </label>
-                                                <span id="ownersAgents"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!-- Row 3 -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Master's Name : </label>
+                                    <span id="mastersName"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Port of Call : </label>
+                                    <span id="portOfCall"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Next Port : </label>
+                                    <span id="nextportName"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Last Port : </label>
+                                    <span id="lastportName"></span>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <!-- Row 5 -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Charters : </label>
-                                                <span id="charters"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Charters Agents : </label>
-                                                <span id="chartersAgents"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Status : </label>
-                                                <span id="status"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Remarks : </label>
-                                                <span id="remarks"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!-- Row 4 -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Nature of Call : </label>
+                                    <span id="natureOfCall"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">ISPS : </label>
+                                    <span id="isps"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Owners Master : </label>
+                                    <span id="ownersMaster"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Owners Agents : </label>
+                                    <span id="ownersAgents"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 5 -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Charters : </label>
+                                    <span id="charters"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Charters Agents : </label>
+                                    <span id="chartersAgents"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Status : </label>
+                                    <span id="status"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Remarks : </label>
+                                    <span id="remarks"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <
 
                     <!-- Section 2: Task Tab with Grids -->
                     <div class="card mb-3">

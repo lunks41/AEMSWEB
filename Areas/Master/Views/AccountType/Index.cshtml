@@ -80,6 +80,18 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label class="form-label" for="codeStart">Code Start</label>
+                                    <input type="number" class="form-control" id="codeStart" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="codeEnd">Code End</label>
+                                    <input type="number" class="form-control" id="codeEnd" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label class="form-label" for="seqNo">Sequence Number</label>
                                     <input type="number" class="form-control" id="seqNo" min="0" max="254" value="0">
                                     <div class="invalid-feedback">Value must be between 0 and 254</div>
@@ -164,7 +176,7 @@
                 canRead: @Json.Serialize(canRead),
             };
 
-            $('#accTypeCode, #accTypeName,#seqNo,#accGroupName,#remarks').on('input', checkAccountTypeMandatoryFields);
+            $('#accTypeCode, #accTypeName,#codeStart,#codeEnd,#seqNo,#accGroupName,#remarks').on('input', checkAccountTypeMandatoryFields);
             loadAccountTypeGrid();
             initializeAccountTypeForm();
             clearAccountTypeForm();
@@ -192,7 +204,7 @@
             $('#editDate').text('');
 
             // Reset readonly and disabled states
-            $('#accTypeCode, #accTypeName, #seqNo,#accGroupName, #remarks').prop('readonly', false);
+            $('#accTypeCode, #accTypeName,#codeStart,#codeEnd, #seqNo,#accGroupName, #remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
 
             $('#isActive').prop('checked', true);
@@ -245,6 +257,8 @@
                 { field: "accTypeCode", title: "Code" },
                 { field: "accTypeName", title: "Name" },
                 { field: "accGroupName", title: "Group Name" },
+                { field: "codeStart", title: "Code Start" },
+                { field: "codeEnd", title: "Code End" },
                 { field: "seqNo", title: "Sequence" },
                 { field: "remarks", title: "Remarks" },
                 { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
@@ -279,6 +293,8 @@
             $('#accTypeCode').val(data.accTypeCode);
             $('#accTypeName').val(data.accTypeName);
             $('#accGroupName').val(data.accGroupName);
+            $('#codeStart').val(data.codeStart);
+            $('#codeEnd').val(data.codeEnd);
             $('#seqNo').val(data.seqNo);
             $('#remarks').val(data.remarks);
             $('#isActive').prop('checked', data.isActive);
@@ -295,7 +311,7 @@
             const isView = mode === 'view';
             const canEdit = permissions.canEdit && !isView;
 
-            $('#accTypeCode, #accTypeName, #seqNo, #remarks').prop('readonly', !canEdit);
+            $('#accTypeCode, #accTypeName,#codeStart,#codeEnd, #seqNo, #remarks').prop('readonly', !canEdit);
             $('#isActive').prop('disabled', !canEdit);
             $('#btnAccountTypeSave').toggle(canEdit);
             $('#btnAccountTypeEdit').toggle(isView && permissions.canEdit);
@@ -326,6 +342,8 @@
                 AccTypeCode: $('#accTypeCode').val().trim(),
                 AccTypeName: $('#accTypeName').val().trim(),
                 AccGroupName: $('#accGroupName').val().trim(),
+                CodeStart: parseInt($('#codeStart').val()) || 0,
+                CodeEnd: parseInt($('#codeEnd').val()) || 0,
                 SeqNo: parseInt($('#seqNo').val()) || 0,
                 Remarks: $('#remarks').val(),
                 IsActive: $('#isActive').prop('checked')

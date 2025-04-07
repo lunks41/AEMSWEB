@@ -123,7 +123,7 @@
         const glfilterFields = ['glCode', 'glName'];
         bindMultiColumnComboBox(chartOfAccountUrl, "portExpense_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
 
-        const chargeUrl = '@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=' + companyId + '&taskId=1';
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=1`;
         bindComboBox(chargeUrl, "portExpense_cmb_charge", "chargeName", "chargeId");
 
         const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
@@ -269,7 +269,7 @@
     }
 
     function savePortExpense() {
-
+        debugger;
         let portExpenseData = {
             PortExpenseId: parseInt($('#portExpenseId').val()) || 0,
             JobOrderId: parseInt($('#jobOrderId').val()) || 0,
