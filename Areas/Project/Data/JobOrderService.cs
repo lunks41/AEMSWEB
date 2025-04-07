@@ -37,8 +37,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                 {
                     var statusExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
                         "SELECT TOP 1 OrderTypeId AS IsExist FROM dbo.M_OrderType " +
-                        "WHERE OrderTypeName LIKE '%' + @OrderTypeName + '%' AND OrderTypeCategoryId = 4",
-                        new { OrderTypeName = statusName }); // Using LIKE to support partial matches
+                        "WHERE OrderTypeCode LIKE '%' + @OrderTypeCode + '%' AND OrderTypeCategoryId = 4",
+                        new { OrderTypeCode = statusName }); // Using LIKE to support partial matches
 
                     if ((statusExist?.IsExist ?? 0) > 0)
                     {
@@ -138,11 +138,12 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                 // Aggregate counts for each status
                 int countAll = countsResult.Sum(c => c.CountId);
-                int countPending = countsResult.FirstOrDefault(c => c.StatusId == 401)?.CountId ?? 0;
-                int countConfirm = countsResult.FirstOrDefault(c => c.StatusId == 402)?.CountId ?? 0;
-                int countCompleted = countsResult.FirstOrDefault(c => c.StatusId == 400)?.CountId ?? 0;
-                int countCancel = countsResult.FirstOrDefault(c => c.StatusId == 403)?.CountId ?? 0;
-                int countPost = countsResult.FirstOrDefault(c => c.StatusId == 405)?.CountId ?? 0;
+                int countPending = countsResult.FirstOrDefault(c => c.StatusId == 400)?.CountId ?? 0;
+                int countConfirm = countsResult.FirstOrDefault(c => c.StatusId == 401)?.CountId ?? 0;
+                int countCompleted = countsResult.FirstOrDefault(c => c.StatusId == 405)?.CountId ?? 0;
+                int countCancel = countsResult.FirstOrDefault(c => c.StatusId == 402)?.CountId ?? 0;
+                int countPost = countsResult.FirstOrDefault(c => c.StatusId == 407)?.CountId ?? 0;
+                int countCancelwithservices = countsResult.FirstOrDefault(c => c.StatusId == 406)?.CountId ?? 0;
 
                 // Build and return result
                 return new StatusCountsViewModel
@@ -152,7 +153,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                     Confirm = countConfirm,
                     Completed = countCompleted,
                     Cancel = countCancel,
-                    Post = countPost
+                    Post = countPost,
+                    CancelWithService = countCancelwithservices
                 };
             }
             catch (Exception ex)

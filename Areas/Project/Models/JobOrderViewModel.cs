@@ -184,5 +184,6 @@ namespace AMESWEB.Areas.Project.Models
         public int Completed { get; set; }
         public int Cancel { get; set; }
         public int Post { get; set; }
+        public int CancelWithService { get; set; }
     }
 }
