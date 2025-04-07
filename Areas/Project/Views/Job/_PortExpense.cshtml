@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="portExpense_cmb_supplier" class="form-label">Supplier <span class="text-danger">*</span></label>
-                            <input  id="portExpense_cmb_supplier" />
+                            <input type="text" id="portExpense_cmb_supplier"/>
                         </div>
                         <div class="col-md-4">
                             <label for="portExpense_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
@@ -137,7 +137,6 @@
     }
 
     function OnSelectDropdown(dataItem, DrpdwnName) {
-
     }
 
     function clearPortExpenseForm() {
@@ -200,43 +199,6 @@
             }
         }, 100);
     }
-
-    //let mulid = ""; // Declare mulid as a global variable to store selected portExpenseId values
-
-    //function updateSelected(checkbox, jobOrderId, portExpenseId) {
-    //    debugger;
-    //    if (checkbox.checked) {
-    //        // Add the portExpenseId to mulid if checked
-    //        if (!mulid.includes(portExpenseId)) {
-    //            mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
-    //        }
-    //    } else {
-    //        // Remove the portExpenseId from mulid if unchecked
-    //        let idsArray = mulid.split(",").filter(id => id !== portExpenseId);
-    //        mulid = idsArray.join(",");
-    //    }
-    //    console.log("Updated mulid:", mulid);
-    //}
-
-    //function toggleSelectAll(headerCheckbox) {
-    //    debugger;
-    //    let checked = headerCheckbox.checked;
-    //    mulid = ""; // Reset mulid when toggling "Select All"
-
-    //    document.querySelectorAll(".selectDebitNote").forEach(function (checkbox) {
-    //        checkbox.checked = checked;
-    //        debugger;
-    //        // If checked, add all portExpenseIds to mulid
-    //        if (checked) {
-    //            let portExpenseId = checkbox.getAttribute("data-portExpenseId");
-    //            if (portExpenseId) {
-    //                mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
-    //            }
-    //        }
-    //    });
-
-    //    console.log("Final mulid after toggleSelectAll:", mulid);
-    //}
 
     function openPortExpenseModal(jobOrderId, jobOrderNo, portExpenseId, mode) {
         debugger;

@@ -1,144 +1,146 @@
-﻿<div class="modal fade" id="addJobOrderModal" tabindex="-1" aria-labelledby="addJobOrderModalLabel" aria-hidden="true">
+﻿<div class="modal fade" id="addJobOrderModal" tabindex="-1" aria-labelledby="addJobOrderModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addJobOrderModalLabel">Define Check List</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="ms-auto">
+                    <button type="button" class="btn btn-outline-secondary me-2" onclick="printJobOrder()">
+                        <i class="bi bi-printer"></i> Print
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
             <div class="modal-body">
                 <form id="jobOrderForm">
-
+                    <input type="hidden" id="companyId" />
+                    <input type="hidden" id="jobOrderId" />
+                    <input type="hidden" id="jobOrderNo" />
                     <!-- Section 1: Operation -->
                     <div class="card mb-3">
-                        <div class="card-header bg-primary text-white">Operation Details</div>
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            Operation Details
+                            <div>
+                                <button type="button" class="btn btn-sm btn-light" onclick="saveOperation()">
+                                    Save & New
+                                </button>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Date</label>
-                                        <input type="date" class="form-control" value="2025-03-27" readonly>
+                                        <input type="date" class="form-control" id="addjoborder_date" value="2025-03-27" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Part Of Call</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_port" class="form-label">Port Of Call <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_port" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Customer</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_customer" class="form-label">Customer <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_customer" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Question</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_quotation" class="form-label">Quotation <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_quotation" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Vessel Distance</label>
-                                        <input type="number" class="form-control">
+                                        <input type="number" class="form-control" id="addjoborder_vesseldistance">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Vessel</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_vessel" class="form-label">Vessel <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_vessel" style="width: 100%"></select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Vessel (IMO Number)</label>
-                                        <input type="text" class="form-control" placeholder="IMO Number">
+                                        <input type="text" class="form-control" id="addjoborder_imono" placeholder="IMO Number">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Voyage</label>
-                                        <input type="text" class="form-control" placeholder="Last Port">
+                                        <input type="text" class="form-control" id="addjoborder_voyage" placeholder="Last Port">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Last Port</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_lastport" class="form-label">Last Port <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_lastport" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Next Port/Final Destination</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_nextport" class="form-label">Next Port/Final Destination <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_nextport" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Nature Of Call</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_natureofcall">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">ISPS</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_isps">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">ETA Date</label>
-                                        <input type="datetime-local" class="form-control">
+                                        <input type="datetime-local" class="form-control" id="addjoborder_etadate">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">ETD Date</label>
-                                        <input type="datetime-local" class="form-control">
+                                        <input type="datetime-local" class="form-control" id="addjoborder_etddate">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Charters/Reg Agents</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_chartersreg">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Charters</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_charters">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Owners Agent</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_owneragent">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Owners Master</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_ownermaster">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Master Name</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_mastername">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -151,16 +153,52 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Operational Status</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_operationalstatus" class="form-label">Operational Status <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_operationalstatus" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-1">
                                         <label class="control-label">Remarks</label>
-                                        <textarea class="form-control" rows="2"></textarea>
+                                        <textarea class="form-control" rows="2" id="addjoborder_remarks"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Audit Fields -->
+                            <div class="accordion mt-3" id="auditAccordionoperation">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#auditCollapseoperation">
+                                            Operational Audit Details
+                                        </button>
+                                    </h2>
+                                    <div id="auditCollapseoperation" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Created By</label>
+                                                    <p id="addjoborder_operationcreateBy" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Created Date</label>
+                                                    <p id="addjoborder_operationcreateDate" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Modified By</label>
+                                                    <p id="addjoborder_operationeditBy" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Modified Date</label>
+                                                    <p id="addjoborder_operationeditDate" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Edit Version</label>
+                                                    <p id="addjoborder_operationeditVersion" class="form-control-plaintext"></p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +207,14 @@
 
                     <!-- Section 2: Accounts -->
                     <div class="card mb-3">
-                        <div class="card-header bg-primary text-white">Account Details</div>
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            Account Details
+                            <div>
+                                <button type="button" class="btn btn-sm btn-light" onclick="saveAndPostInvoice()">
+                                    Save/Invoice Post
+                                </button>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="row">
 
@@ -184,100 +229,96 @@
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Customer Ret. No.</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="addjoborder_customerregno">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Address</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_address" class="form-label">Address <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_address" style="width: 100%"></select>
+
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Contact</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_contact" class="form-label">Contact <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_contact" style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Proposed Invoice Date</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" id="addjoborder_invoicedate">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
                                         <label class="control-label">Invoice Series Date</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" id="addjoborder_invoiceseriesdate">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-1">
-                                        <label class="control-label">Account Status</label>
-                                        <select class="form-select">
-                                            <option>Select...</option>
-                                        </select>
+                                        <label for="addjoborder_cmb_accountstatus" class="form-label">Account Status <span class="text-danger">*</span></label>
+                                        <select id="addjoborder_cmb_accountstatus" style="width: 100%"></select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="mb-1">
                                         <label class="control-label">Remarks</label>
-                                        <textarea class="form-control" rows="2"></textarea>
+                                        <textarea class="form-control" rows="2" id="addjoborder_accountremarks"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Audit Fields -->
+                            <div class="accordion mt-3" id="auditAccordionaccount">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#auditCollapseaccount">
+                                            Account Audit Details
+                                        </button>
+                                    </h2>
+                                    <div id="auditCollapseaccount" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Created By</label>
+                                                    <p id="addjoborder_createBy" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Created Date</label>
+                                                    <p id="addjoborder_accountcreateDate" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Modified By</label>
+                                                    <p id="addjoborder_accounteditBy" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Modified Date</label>
+                                                    <p id="addjoborder_accounteditDate" class="form-control-plaintext"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Edit Version</label>
+                                                    <p id="addjoborder_accounteditVersion" class="form-control-plaintext"></p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Audit Fields -->
-                    <div class="accordion mt-3" id="auditAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#auditCollapse">
-                                    Audit Details
-                                </button>
-                            </h2>
-                            <div id="auditCollapse" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </form>
             </div>
             <!-- Action Buttons -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Clear</button>
-                <button type="button" class="btn btn-primary">Save & New</button>
-                <button type="submit" class="btn btn-success">Save & Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="saveAndClose()">Save & Close</button>
             </div>
         </div>
     </div>
@@ -296,3 +337,257 @@
         margin-bottom: 1rem;
     }
 </style>
+<script>
+
+    function refreshAddJobOrderDropdown() {
+        
+        const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const customercolumnsProperties = [
+            { field: 'customerCode', title: 'Code', width: 100 },
+            { field: 'customerName', title: 'Name', width: 200 }
+        ];
+        const customerfilterFields = ['customerCode', 'customerName'];
+        bindMultiColumnComboBox(customerUrl, "addjoborder_cmb_customer", "customerName", "customerId", customercolumnsProperties, customerfilterFields);
+
+        const portUrl = `@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(portUrl, "addjoborder_cmb_port", "portName", "portId");
+        bindComboBox(portUrl, "addjoborder_cmb_lastport", "portName", "portId");
+        bindComboBox(portUrl, "addjoborder_cmb_nextport", "portName", "portId");
+
+        @*const quotationUrl = `@Url.Action("GetQuotationLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(quotationUrl, "addjoborder_cmb_quotation", "quotationName", "quotationId");*@
+
+        const vesselUrl = `@Url.Action("GetVesselLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(vesselUrl, "addjoborder_cmb_vessel", "vesselName", "vesselId");
+
+        @*const contactUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(contactUrl, "addjoborder_cmb_contact", "contactName", "contactId");
+
+        const addressUrl = `@Url.Action("GetCustomerAddressLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(addressUrl, "addjoborder_cmb_address", "addressName", "addressId");*@
+
+        const operationalstatusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(operationalstatusUrl, "addjoborder_cmb_operationalstatus", "orderTypeName", "orderTypeId");
+        bindComboBox(operationalstatusUrl, "addjoborder_cmb_accountstatus", "orderTypeName", "orderTypeId");
+    }
+
+    function SelectedDropdown(DrpdwnName) {
+    }
+
+    function OnSelectDropdown(dataItem, DrpdwnName) {
+        if (DrpdwnName === 'addjoborder_cmb_customer') {
+            let selectedCustomerId = dataItem.customerId;
+            if (selectedCustomerId) {
+                loadCustomerDependentDropdown(selectedCustomerId);
+            }
+        }
+    }
+
+    function loadCustomerDependentDropdown(customerId) {
+
+        const addressUrl = `@Url.Action("GetCustomerAddressLookupFin", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${customerId}`
+        bindComboBox(addressUrl, "addjoborder_cmb_address", "address1", "addressId");
+
+        const contactUrl = `@Url.Action("GetCustomerContactLookupFin", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${customerId}`
+        bindComboBox(contactUrl, "addjoborder_cmb_contact", "contactName", "contactId");
+    }
+
+    function clearAddJobOrderForm() {
+        
+        $('#addjoborder_date').val('');
+        $('#addjoborder_vesseldistance').val('10');
+        $('#addjoborder_imono').val('');
+        $('#addjoborder_voyage').val('');
+        $('#addjoborder_natureofcall').val('');
+        $('#addjoborder_isps').val('');
+        $('#addjoborder_etadate').val('');
+        $('#addjoborder_etddate').val('');
+        $('#addjoborder_chartersreg').val('');
+        $('#addjoborder_charters').val('');
+        $('#addjoborder_owneragent').val('');
+        $('#addjoborder_ownermaster').val('');
+        $('#addjoborder_mastername').val('');
+        $('#addjoborder_remarks').val('');
+
+        $('#addjoborder_cmb_customer').data('kendoMultiColumnComboBox').value('');
+        $('#addjoborder_cmb_port').data('kendoComboBox').value('');
+        //$('#addjoborder_cmb_quotation').data('kendoComboBox').value('');
+        $('#addjoborder_cmb_vessel').data('kendoComboBox').value('');
+        $('#addjoborder_cmb_lastport').data('kendoComboBox').value('');
+        $('#addjoborder_cmb_nextport').data('kendoComboBox').value('');
+        $('#addjoborder_cmb_operationalstatus').data('kendoComboBox').value('');
+
+        $('#isActive').prop('checked', true);
+        $('#taxApplicable').prop('checked', true);
+
+        $('#addjoborder_customerregno').val('');
+        //$('#addjoborder_cmb_address').data('kendoComboBox').value('');
+        //$('#addjoborder_cmb_contact').data('kendoComboBox').value('');
+        $('#addjoborder_cmb_accountstatus').data('kendoComboBox').value('');
+        $('#addjoborder_invoicesdate').val('');
+        $('#addjoborder_invoiceseriesdate').val('');
+        $('#addjoborder_accountremarks').val('');
+    }
+
+    function setDefaultDropdownValues() {
+
+        // Set default status to "Pending"
+        setTimeout(() => {
+            const statusCombo = $('#addjoborder_cmb_accountstatus').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "pending"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+    }
+
+    function openAddJobOrderModal(jobOrderId, jobOrderNo, companyID) {
+        debugger;
+        const $modal = $('#addJobOrderModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetJobOrderById", "Job", new { area = "Project" })', { jobOrderId: parsedJobOrderId, companyId })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshAddJobOrderDropdown();
+                        clearAddJobOrderForm();
+                        populateAddJobOrderModalFields(response.data);
+                        $('#addAddJobOrderModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            debugger;
+            refreshAddJobOrderDropdown();
+            clearAddJobOrderForm();
+            $('#addAddJobOrderModal').modal('show');
+        }
+    }
+
+    function populateAddJobOrderModalFields(data) {
+        
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#jobOrderId').val(data.jobOrderId);
+        $('#jobOrderNo').val(data.jobOrderNo);
+        $('#addjoborder_date').val(data.jobOrderNo);
+        $('#addjoborder_vesseldistance').val(data.jobOrderNo);
+        $('#addjoborder_imono').val(data.jobOrderNo);
+        $('#addjoborder_voyage').val(data.jobOrderNo);
+        $('#addjoborder_natureofcall').val(data.jobOrderNo);
+        $('#addjoborder_isps').val(data.jobOrderNo);
+        $('#addjoborder_etadate').val(data.jobOrderNo);
+        $('#addjoborder_etddate').val(data.jobOrderNo);
+        $('#addjoborder_chartersreg').val(data.jobOrderNo);
+        $('#addjoborder_charters').val(data.jobOrderNo);
+        $('#addjoborder_owneragent').val(data.jobOrderNo);
+        $('#addjoborder_ownermaster').val(data.jobOrderNo);
+        $('#addjoborder_mastername').val(data.jobOrderNo);
+        $('#addjoborder_remarks').val(data.jobOrderNo);
+
+        // Set combobox values, ensuring they update after data is loaded
+        const customerCombo = $('#addjoborder_cmb_customer').data('kendoMultiColumnComboBox');
+        customerCombo.value(data.customerId > 0 ? data.customerId : '');
+        customerCombo.one('dataBound', function () {
+            customerCombo.value(data.customerId > 0 ? data.customerId : '');
+        });
+
+        const portCombo = $('#addjoborder_cmb_port').data('kendoComboBox');
+        portCombo.value(data.portId > 0 ? data.portId : '');
+        portCombo.one('dataBound', function () {
+            portCombo.value(data.portId > 0 ? data.portId : '');
+        });
+
+        const lastportCombo = $('#addjoborder_cmb_lastport').data('kendoComboBox');
+        lastportCombo.value(data.lastportId > 0 ? data.lastportId : '');
+        lastportCombo.one('dataBound', function () {
+            lastportCombo.value(data.lastportId > 0 ? data.lastportId : '');
+        });
+
+        const nextportCombo = $('#addjoborder_cmb_nextport').data('kendoComboBox');
+        nextportCombo.value(data.nextportId > 0 ? data.nextportId : '');
+        nextportCombo.one('dataBound', function () {
+            nextportCombo.value(data.nextportId > 0 ? data.nextportId : '');
+        });
+
+        //const quotationCombo = $('#addjoborder_cmb_quotation').data('kendoComboBox');
+        //quotationCombo.value(data.quotationId > 0 ? data.quotationId : '');
+        //quotationCombo.one('dataBound', function () {
+        //    quotationCombo.value(data.quotationId > 0 ? data.quotationId : '');
+        //});
+
+        //const operationalstatusCombo = $('#addjoborder_cmb_operationalstatus').data('kendoComboBox');
+        //operationalstatusCombo.value(data.operationalstatusId > 0 ? data.operationalstatusId : '');
+        //operationalstatusCombo.one('dataBound', function () {
+        //    operationalstatusCombo.value(data.operationalstatusId > 0 ? data.operationalstatusId : '');
+        //});
+
+        //const statusCombo = $('#addjoborder_cmb_status').data('kendoComboBox');
+        //statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        //statusCombo.one('dataBound', function () {
+        //    statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        //});
+
+        const formattedDate = new Date(data.deliverDate).toLocaleDateString('en-CA');
+        $('#addjoborder_deliverDate').val(formattedDate);
+        $('#isActive').prop('checked', data.isActive);
+
+        // Set audit fields
+        $('#addjoborder_operationcreateBy').text(data.createBy || "N/A");
+        $('#addjoborder_operationcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#addjoborder_operationeditBy').text(data.editBy || "N/A");
+        $('#addjoborder_operationeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#addjoborder_operationeditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnAddJobOrderClear').hide();
+
+
+    }
+
+    function saveOperation() {
+        // Validate operation section
+        if (!validateOperationSection()) return;
+
+        // Save logic for operation section
+        console.log('Saving operation section...');
+    }
+
+    function saveAndPostInvoice() {
+        // Validate account section
+        if (!validateAccountSection()) return;
+
+        // Save and post invoice logic
+        console.log('Saving and posting invoice...');
+    }
+
+    function saveAndClose() {
+        // Full form validation
+        if (!validateFullForm()) return;
+
+        // Save and close logic
+        console.log('Saving and closing...');
+        $('#addJobOrderModal').modal('hide');
+    }
+
+    // Add validation functions
+    function validateOperationSection() {
+        // Validation logic for operation fields
+        return true;
+    }
+
+    function validateAccountSection() {
+        // Validation logic for account fields
+        return true;
+    }
+
+    function validateFullForm() {
+        return validateOperationSection() && validateAccountSection();
+    }
+</script>

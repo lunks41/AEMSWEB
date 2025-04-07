@@ -20,7 +20,7 @@
                     <h4 class="mb-0">Job Management</h4>
                     <div>
                         <button class="btn btn-light btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Refresh</button>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal">Add</button>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addJobOrderModal" onclick="openJobOrderModal();">Add</button>
                     </div>
                 </div>
 
@@ -201,6 +201,14 @@
             });
         });
 
+        function openJobOrderModal() {
+            const modalId = `#addJobOrderModal`;
+            const modalElement = $(modalId);
+            modalElement.modal('show');
+
+            openAddJobOrderModal(0, '', companyId);
+        }
+
         function handleEnterKey(event) {
             if (event.key === 'Enter') loadJobOrderGrid();
         }
@@ -268,11 +276,11 @@
                     title: "Actions",
                     width: "150px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openViewJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'view')">
              <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
                         if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'edit')">
+                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openViewJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'edit')">
              <i class="material-symbols-outlined text-warning">edit</i></button>`;
                         }
 
@@ -302,7 +310,7 @@
 
         }
 
-        function openJobOrderModal(id, jobOrderNo) {
+        function openViewJobOrderModal(id, jobOrderNo) {
             const $modal = $('#viewJobOrderModal');
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
             $.get('@Url.Action("GetJobOrderById", "Job", new { area = "Project" })', { jobOrderId: id, companyId })

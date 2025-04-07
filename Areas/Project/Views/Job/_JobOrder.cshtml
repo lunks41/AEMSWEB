@@ -24,6 +24,19 @@
         padding-left: 1rem;
         padding-right: 1rem;
     }
+
+    .dropdown-menu {
+        min-width: 200px;
+    }
+
+    .dropdown-item {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .bi {
+        font-size: 0.9rem;
+    }
 </style>
 
 <div class="modal fade" id="viewJobOrderModal" tabindex="-1" aria-labelledby="viewJobOrderModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -31,7 +44,42 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewJobOrderModalLabel">Job Order</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="ms-auto d-flex align-items-center gap-2">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle btn-sm" type="button"
+                                id="printDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="bi bi-printer me-1"></i>Print
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="printDropdown">
+                            <li>
+                                <a class="dropdown-item" href="javascript:void(0)"
+                                   onclick="printDocument('checklist')">
+                                    <i class="bi bi-list-check me-2"></i>Check List
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="javascript:void(0)"
+                                   onclick="printDocument('purchaselist')">
+                                    <i class="bi bi-cart me-2"></i>Purchase List
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="javascript:void(0)"
+                                   onclick="printDocument('accountlist')">
+                                    <i class="bi bi-journal-bookmark me-2"></i>Account List
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-warning"
+                            id="openAddJobOrderModal"
+                            onclick="openChildViewJobOrderModal();">
+                        View
+                    </button>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="container-fluid mt-3">
@@ -484,6 +532,54 @@
         tabs.scrollBy({ left: offset, behavior: 'smooth' });
     }
 
+    function printDocument(type) {
+        // Add your print logic based on document type
+        switch (type) {
+            case 'checklist':
+                console.log('Printing Check List...');
+                break;
+            case 'purchaselist':
+                console.log('Printing Purchase List...');
+                break;
+            case 'accountlist':
+                console.log('Printing Account List...');
+                break;
+        }
+    }
+    function openChildViewJobOrderModal() {
+        const modalId = `#addJobOrderModal`;
+        const modalElement = $(modalId);
+
+        // Reset z-indexes first
+        $('.modal').css('z-index', '');
+        $('.modal-backdrop').css('z-index', '');
+
+        // Set new z-index values
+        $('#viewJobOrderModal').css('z-index', '1050');
+        modalElement.css('z-index', '1060');
+
+        // Create and position backdrop
+        $('<div class="modal-backdrop fade show"></div>')
+            .css('z-index', '1055')
+            .insertAfter(modalElement);
+
+        // Handle modal stacking
+        modalElement.addClass('child-modal');
+        modalElement.modal('show');
+
+        // Load data
+        let jobOrderId = $('#jobOrderId').val();
+        let jobOrderNo = $('#jobOrderNo').text();
+        let companyId = $('#companyId').val();
+        openAddJobOrderModal(jobOrderId, jobOrderNo, companyId);
+    }
+
+    // Add this cleanup code when closing modals
+    $('.modal').on('hidden.bs.modal', function () {
+        $('.modal-backdrop:not(:first)').remove();
+        $('.modal').css('z-index', '');
+    });
+
     function openChildModal(serviceType) {
         const modalId = `#add${serviceType}Modal`;
         const modalElement = $(modalId);
@@ -528,6 +624,8 @@
         //    window[functionName](jobOrderId, jobOrderNo, 0, 'add');
         //}
     }
+
+    
 
     function openChildTaskForwardModal(serviceType, taskId) {
         debugger;
@@ -641,7 +739,7 @@
         <i class="material-symbols-outlined" >universal_currency_alt</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
         <i class="material-symbols-outlined" >payments</i>
     </button>`;
 
@@ -680,6 +778,15 @@
                 // Initialize grid if it doesn’t exist
                 initializeKendoGridWithoutPaging("grid-PortExpense", url, { searchString, companyId, jobOrderId }, columns);
             }
+        }
+    }
+
+    function openDebitNoteModal(jobOrderId, debitNoteId) {
+        if (parseInt(jobOrderId) && parseInt(debitNoteId)) {
+            // Proceed with opening the modal
+            console.log("Valid IDs, opening modal...");
+        } else {
+            console.log("Invalid IDs, please check.");
         }
     }
 
