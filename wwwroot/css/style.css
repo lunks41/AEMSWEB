@@ -18781,10 +18781,10 @@ Swiper Slider Style
         }
 
     .left-header-content ul li .src-form .form-control {
-        height: 46px;
+        height: 30px;
         background-color: #f6f7f9;
         border-color: #f6f7f9;
-        padding: 10px 20px;
+        padding: 10px 10px;
         border-radius: 7px;
         width: 282px;
     }

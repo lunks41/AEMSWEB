@@ -399,7 +399,7 @@
         }
 
         function handleGstSelection(selectedDataItem) {
-            debugger;
+            
             try {
                 if (!selectedDataItem) {
                     throw new Error("Invalid Gst data");
@@ -418,7 +418,7 @@
                         companyId: companyId
                     },
                     success: function (response) {
-                        debugger;
+                        
                         if (response) {
                             $("#gstPercentageDt").val(response);
                             handleGstPercentageChange();
@@ -833,7 +833,7 @@
         }
 
         function openInvoiceDtModal(itemNo) {
-            debugger;
+            
             try {
                 const itemNoInt = parseInt(itemNo, 10);
 

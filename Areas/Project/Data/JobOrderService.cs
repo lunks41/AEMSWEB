@@ -8,8 +8,8 @@ using AMESWEB.Helpers;
 using AMESWEB.IServices;
 using AMESWEB.Models;
 using AMESWEB.Repository;
+using Microsoft.CodeAnalysis;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 
 namespace AMESWEB.Areas.Project.Data.Services
@@ -36,9 +36,9 @@ namespace AMESWEB.Areas.Project.Data.Services
                 if (statusName.ToLower() != "all")
                 {
                     var statusExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        "SELECT TOP 1 OrderTypeId AS IsExist FROM dbo.M_OrderType " +
-                        "WHERE OrderTypeCode LIKE '%' + @OrderTypeCode + '%' AND OrderTypeCategoryId = 4",
-                        new { OrderTypeCode = statusName }); // Using LIKE to support partial matches
+                 "SELECT TOP 1 OrderTypeId AS IsExist FROM dbo.M_OrderType " +
+                 "WHERE OrderTypeCode LIKE '%' + @OrderTypeCode + '%' AND OrderTypeCategoryId = 4",
+                 new { OrderTypeCode = statusName }); // Using LIKE to support partial matches
 
                     if ((statusExist?.IsExist ?? 0) > 0)
                     {
@@ -52,17 +52,17 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                 // Count query for total records with additional filters
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                        $"SELECT COUNT(*) AS CountId FROM dbo.Ser_JobOrderHd Hd " +
-                        $"LEFT JOIN dbo.M_Currency Cur ON Cur.CurrencyId = Hd.CurrencyId " +
-                        $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
-                        $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
-                        $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
-                        $"OR Hd.Remark1 LIKE '%{searchString}%') " +
-                        $"AND Hd.JobOrderId <> 0 " +
-                        $"AND Hd.CompanyId = {CompanyId} " +
-                        $"AND Hd.JobOrderDate BETWEEN '{fromDate:yyyy-MM-dd}' AND '{toDate:yyyy-MM-dd}' " +
-                        $"AND (Hd.CustomerId = {customerId} OR {customerId} = 0) " +
-                        $"AND (Hd.StatusId = {statusId}  OR {statusId} = 0) ");
+                 $"SELECT COUNT(*) AS CountId FROM dbo.Ser_JobOrderHd Hd " +
+                 $"LEFT JOIN dbo.M_Currency Cur ON Cur.CurrencyId = Hd.CurrencyId " +
+                 $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
+                 $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
+                 $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
+                 $"OR Hd.Remark1 LIKE '%{searchString}%') " +
+                 $"AND Hd.JobOrderId <> 0 " +
+                 $"AND Hd.CompanyId = {CompanyId} " +
+                 $"AND Hd.JobOrderDate BETWEEN '{fromDate:yyyy-MM-dd}' AND '{toDate:yyyy-MM-dd}' " +
+                 $"AND (Hd.CustomerId = {customerId} OR {customerId} = 0) " +
+                 $"AND (Hd.StatusId = {statusId}  OR {statusId} = 0) ");
 
                 // Query to fetch paginated data with the additional filters
                 var result = await _repository.GetQueryAsync<JobOrderHdViewModel>(
@@ -270,16 +270,16 @@ namespace AMESWEB.Areas.Project.Data.Services
 
         public async Task<SqlResponse> SavePortExpensesAsync(short CompanyId, short UserId, Ser_PortExpenses ser_PortExpenses)
         {
-            using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            bool IsEdit = ser_PortExpenses.PortExpenseId != 0;
+            try
             {
-                bool IsEdit = ser_PortExpenses.PortExpenseId != 0;
-                try
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     if (IsEdit)
                     {
                         var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                            $"SELECT 1 AS IsExist FROM dbo.Ser_PortExpenses WHERE PortExpenseId=@PortExpenseId",
-                            new { ser_PortExpenses.PortExpenseId });
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_PortExpenses WHERE PortExpenseId=@PortExpenseId",
+                     new { ser_PortExpenses.PortExpenseId });
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
@@ -296,7 +296,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     {
                         // Take the Next Id From SQL
                         var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
-                            "SELECT ISNULL((SELECT TOP 1 (PortExpenseId + 1) FROM dbo.Ser_PortExpenses WHERE (PortExpenseId + 1) NOT IN (SELECT PortExpenseId FROM dbo.Ser_PortExpenses)),1) AS NextId");
+                     "SELECT ISNULL((SELECT TOP 1 (PortExpenseId + 1) FROM dbo.Ser_PortExpenses WHERE (PortExpenseId + 1) NOT IN (SELECT PortExpenseId FROM dbo.Ser_PortExpenses)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -318,7 +318,19 @@ namespace AMESWEB.Areas.Project.Data.Services
                     if (saveChangeRecord > 0)
                     {
                         if (IsEdit)
+                        {
                             await _repository.UpsertExecuteScalarAsync($"update Ser_PortExpenses  set EditVersion=EditVersion+1 WHERE   PortExpenseId={ser_PortExpenses.PortExpenseId} AND CompanyId={CompanyId} ");
+                        }
+                        else
+                        {
+                            //Insert into Ser_JobOrderDt Table
+                            await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                            "DECLARE @ItemNo SMALLINT;   " +
+                            "DECLARE @TaskItemNo SMALLINT; " +
+                            $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_PortExpenses.JobOrderId} AND (ItemNo + 1) NOT IN     (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_PortExpenses.JobOrderId})), 1);  " +
+                            $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_PortExpenses.JobOrderId} AND TaskId = {ser_PortExpenses.TaskId} AND (TaskItemNo + 1) NOT IN     (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt      WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_PortExpenses.JobOrderId} AND TaskId = {ser_PortExpenses.TaskId})), 1);   " +
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId )   VALUES ({CompanyId},{ser_PortExpenses.JobOrderId},'{ser_PortExpenses.JobOrderNo}',@ItemNo,{ser_PortExpenses.TaskId},@TaskItemNo,{ser_PortExpenses.PortExpenseId});");
+                        }
 
                         var auditLog = new AdmAuditLog
                         {
@@ -352,55 +364,55 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                     return new SqlResponse();
                 }
-                catch (SqlException sqlEx)
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
                 {
-                    _context.ChangeTracker.Clear();
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_PortExpenses",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Project,
-                        TransactionId = (short)E_Project.Job,
-                        DocumentId = 0,
-                        DocumentNo = "",
-                        TblName = "Ser_PortExpenses",
-                        ModeId = (short)E_Mode.Delete,
-                        Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
-                        CreateById = UserId,
-                    };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
-
-                    return new SqlResponse
-                    {
-                        Result = -1,
-                        Message = errorMessage
-                    };
-                }
-                catch (Exception ex)
+                return new SqlResponse
                 {
-                    _context.ChangeTracker.Clear();
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
 
-                    var errorLog = new AdmErrorLog
-                    {
-                        CompanyId = CompanyId,
-                        ModuleId = (short)E_Modules.Project,
-                        TransactionId = (short)E_Project.Job,
-                        DocumentId = ser_PortExpenses.PortExpenseId,
-                        DocumentNo = "",
-                        TblName = "Ser_PortExpenses",
-                        ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                        Remarks = ex.Message + ex.InnerException?.Message,
-                        CreateById = UserId
-                    };
-                    _context.Add(errorLog);
-                    _context.SaveChanges();
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = ser_PortExpenses.PortExpenseId,
+                    DocumentNo = "",
+                    TblName = "Ser_PortExpenses",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+                _context.Add(errorLog);
+                _context.SaveChanges();
 
-                    throw;
-                }
+                throw;
             }
         }
 
@@ -412,11 +424,11 @@ namespace AMESWEB.Areas.Project.Data.Services
                 {
                     if (portExpenseId > 0)
                     {
-                        var accountTypeToRemove = _context.Ser_PortExpenses
-                            .Where(x => x.PortExpenseId == portExpenseId)
-                            .ExecuteDelete();
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND  ServiceId={portExpenseId} ");
 
-                        if (accountTypeToRemove > 0)
+                        var deleteportExpensesResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_PortExpenses WHERE CompanyId={CompanyId} AND PortExpenseId={portExpenseId}");
+
+                        if (deletejobOrderResult > 0 && deleteportExpensesResult > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
@@ -507,13 +519,60 @@ namespace AMESWEB.Areas.Project.Data.Services
 
         #endregion Task
 
-        public async Task<SqlResponse> SaveTaskForwardAsync(short companyId, short userId, Int64 jobOrderId, int taskId, string multipleId)
+        public async Task<SqlResponse> SaveTaskForwardAsync(short companyId, short userId, Int64 jobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string multipleId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<SqlResponse>($"exce {jobOrderId},{multipleId},{taskId}");
+                using (var tScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    // Build common query to update JobOrderId on Ser_JobOrderDt.
+                    string commonQuery = $@"UPDATE dbo.Ser_JobOrderDt SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ServiceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected;";
 
-                return result;
+                    int rowsAffected = await _repository.GetQuerySingleOrDefaultAsync<int>(commonQuery);
+
+                    if (rowsAffected == 0)
+                    {
+                        return new SqlResponse { Result = -1, Message = "Data Not there" };
+                    }
+
+                    // Build the task-specific query based on taskId.
+                    string specificQuery = taskId switch
+                    {
+                        1 => $"UPDATE dbo.Ser_PortExpenses SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND PortExpenseId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        2 => $"UPDATE dbo.Ser_LaunchServices SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND LaunchServiceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        3 => $"UPDATE dbo.Ser_EquipmentsUsed SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND EquipmentsUsedId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        4 => $"UPDATE dbo.Ser_CrewSignOn SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND CrewSignOnId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        5 => $"UPDATE dbo.Ser_CrewSignOff SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND CrewSignOffId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        6 => $"UPDATE dbo.Ser_CrewMiscellaneous SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND CrewMiscellaneousId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        7 => $"UPDATE dbo.Ser_MedicalAssistance SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND MedicalAssistanceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        8 => $"UPDATE dbo.Ser_ConsignmentImport SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ConsignmentImportId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        9 => $"UPDATE dbo.Ser_ConsignmentExport SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ConsignmentExporId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        10 => $"UPDATE dbo.Ser_ThirdPartySupply SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ThirdPartySupplyId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        11 => $"UPDATE dbo.Ser_FreshWater SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND FreshWaterId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        12 => $"UPDATE dbo.Ser_TechniciansSurveyors SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND TechniciansSurveyorsId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        13 => $"UPDATE dbo.Ser_LandingItems SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND LandingItemId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        14 => $"UPDATE dbo.Ser_OtherService SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND OtherServiceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        15 => $"UPDATE dbo.Ser_AgencyRemuneration SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND AgencyRemunerationId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        _ => null
+                    };
+
+                    if (string.IsNullOrEmpty(specificQuery))
+                    {
+                        return new SqlResponse { Result = -1, Message = "Invalid task specified." };
+                    }
+
+                    int rowsAffectedSpecific = await _repository.GetQuerySingleOrDefaultAsync<int>(specificQuery);
+
+                    if (rowsAffectedSpecific == 0)
+                    {
+                        return new SqlResponse { Result = -1, Message = "Data Not there" };
+                    }
+                    else
+                    {
+                        tScope.Complete();
+                        return new SqlResponse { Result = 1, Message = "Successfully task forward" };
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -526,15 +585,72 @@ namespace AMESWEB.Areas.Project.Data.Services
                     DocumentNo = "",
                     TblName = "Ser_PortExpenses",
                     ModeId = (short)E_Mode.View,
-                    Remarks = ex.Message + ex.InnerException?.Message,
+                    Remarks = ex.Message + (ex.InnerException?.Message ?? string.Empty),
                     CreateById = userId,
                 };
 
                 _context.Add(errorLog);
                 _context.SaveChanges();
 
-                throw new Exception(ex.ToString());
+                throw; // Rethrow the exception for upper layers to handle if needed.
             }
         }
+
+        #region Task Count
+
+        public async Task<TaskCountsViewModel> GetTaskJobOrderCountsAsync(short companyId, short userId, string searchString, Int64 jobOrderId)
+        {
+            try
+            {
+                var countsResult = await _repository.GetQueryAsync<TaskCountViewModel>(
+                    $"SELECT Ser_Jobdt.CompanyId,Ser_Jobdt.TaskId,COUNT(*) AS CountId FROM dbo.Ser_JobOrderDt Ser_Jobdt WHERE Ser_Jobdt.CompanyId={companyId} AND Ser_Jobdt.JobOrderId={jobOrderId} GROUP BY Ser_Jobdt.CompanyId,Ser_Jobdt.TaskId");
+
+                // Aggregate counts for each status
+                int countPortExpenses = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.PortExpenses)?.CountId ?? 0;
+                int countLaunchServices = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.LaunchServices)?.CountId ?? 0;
+                int countEquipmentsUsed = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.EquipmentsUsed)?.CountId ?? 0;
+                int countCrewSignOn = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.CrewSignOn)?.CountId ?? 0;
+                int countCrewSignOff = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.CrewSignOff)?.CountId ?? 0;
+                int countCrewMiscellaneous = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.CrewMiscellaneous)?.CountId ?? 0;
+                int countMedicalAssistance = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.MedicalAssistance)?.CountId ?? 0;
+                int countConsignmentImport = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ConsignmentImport)?.CountId ?? 0;
+                int countConsignmentExport = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ConsignmentExport)?.CountId ?? 0;
+                int countThirdPartySupply = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ThirdPartySupply)?.CountId ?? 0;
+                int countFreshWaterSupply = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.FreshWaterSupply)?.CountId ?? 0;
+                int countTechniciansSurveyors = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.TechniciansSurveyors)?.CountId ?? 0;
+                int countLandingItems = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.LandingItems)?.CountId ?? 0;
+                int countOtherService = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.OtherService)?.CountId ?? 0;
+                int countAgencyRemuneration = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.AgencyRemuneration)?.CountId ?? 0;
+                int countVisa = 0;
+
+                // Build and return result
+                return new TaskCountsViewModel
+                {
+                    PortExpense = countPortExpenses,
+                    LaunchServices = countLaunchServices,
+                    EquipmentsUsed = countEquipmentsUsed,
+                    CrewSignOn = countCrewSignOn,
+                    CrewSignOff = countCrewSignOff,
+                    CrewMiscellaneous = countCrewMiscellaneous,
+                    MedicalAssistance = countMedicalAssistance,
+                    ConsignmentImport = countConsignmentImport,
+                    ConsignmentExport = countConsignmentExport,
+                    ThirdPartySupply = countThirdPartySupply,
+                    FreshWaterSupply = countFreshWaterSupply,
+                    TechniciansSurveyors = countTechniciansSurveyors,
+                    LandingItems = countLandingItems,
+                    OtherService = countOtherService,
+                    AgencyRemuneration = countAgencyRemuneration,
+                    Visa = countVisa
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log exception (if applicable) before re-throwing
+                throw new Exception($"Error in GetTaskJobOrderCountsAsync: {ex.Message}", ex);
+            }
+        }
+
+        #endregion Task Count
     }
 }

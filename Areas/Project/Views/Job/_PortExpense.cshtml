@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="portExpense_cmb_supplier" class="form-label">Supplier <span class="text-danger">*</span></label>
-                            <input type="text" id="portExpense_cmb_supplier"/>
+                            <input type="text" id="portExpense_cmb_supplier" />
                         </div>
                         <div class="col-md-4">
                             <label for="portExpense_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
@@ -105,7 +105,7 @@
 <script>
 
     function refreshPortExpensesDropdown() {
-        debugger;
+        
         const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const suppliercolumnsProperties = [
             { field: 'supplierCode', title: 'Code', width: 100 },
@@ -140,7 +140,7 @@
     }
 
     function clearPortExpenseForm() {
-        debugger;
+        
         $('#portExpenseId').val('');
         $('#jobOrderId').val('');
         $('#jobOrderNo').val('');
@@ -201,7 +201,7 @@
     }
 
     function openPortExpenseModal(jobOrderId, jobOrderNo, portExpenseId, mode) {
-        debugger;
+        
         const $modal = $('#addPortExpenseModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
         const parsedPortExpenseId = parseInt(portExpenseId, 10);
@@ -210,7 +210,7 @@
 
         // Edit Mode: Fetch existing data and populate the form
         if (isValidId(parsedJobOrderId) && isValidId(parsedPortExpenseId)) {
-            
+
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
 
             $.get('@Url.Action("GetPortExpensesById", "Job", new { area = "Project" })', {
@@ -239,7 +239,7 @@
     }
 
     function populatePortExpenseModalFields(data) {
-        debugger;
+        
         // Set hidden fields
         $('#companyId').val(data.companyId);
         $('#portExpenseId').val(data.portExpenseId);
@@ -293,7 +293,7 @@
         $('#portexpenseeditBy').text(data.editBy || "N/A");
         $('#portexpenseeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#portexpenseeditVersion').text(data.editVersion || "0");
-        debugger;
+        
         // Hide clear button in edit mode
         $('#btnPortExpenseClear').hide();
 
@@ -336,7 +336,7 @@
     }
 
     function savePortExpense() {
-        debugger;
+        
         let portExpenseData = {
             PortExpenseId: parseInt($('#portExpenseId').val()) || 0,
             JobOrderId: parseInt($('#jobOrderId').val()) || 0,

@@ -92,6 +92,8 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         #endregion DebitNote
 
-        public Task<SqlResponse> SaveTaskForwardAsync(short CompanyId, short UserId, Int64 JobOrderId, int taskId, string MultipleId);
+        public Task<SqlResponse> SaveTaskForwardAsync(short CompanyId, short UserId, Int64 JobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string MultipleId);
+
+        public Task<TaskCountsViewModel> GetTaskJobOrderCountsAsync(short companyId, short userId, string searchString, Int64 jobOrderId);
     }
 }

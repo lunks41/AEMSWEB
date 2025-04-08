@@ -1,6 +1,4 @@
-﻿using System.Data.SqlTypes;
-
-namespace AMESWEB.Areas.Project.Models
+﻿namespace AMESWEB.Areas.Project.Models
 {
     public class SavePortExpensesViewModel
     {

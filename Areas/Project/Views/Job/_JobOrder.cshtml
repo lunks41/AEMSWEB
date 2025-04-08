@@ -85,6 +85,7 @@
                 <div class="container-fluid mt-3">
                     <input type="hidden" id="companyId" />
                     <input type="hidden" id="jobOrderId" />
+                    <input type="hidden" id="customerId" />
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -232,77 +233,77 @@
                                 <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
                                     <!-- Main Service Tabs -->
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button">
+                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#port-expenses" type="button" data-status="PortExpense">
                                             <span class="badge bg-secondary me-1">0</span> Port Expenses
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button" data-status="LaunchServices">
                                             <span class="badge bg-secondary me-1">0</span> Launch Services
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipments-used" type="button" data-status="EquipmentsUsed">
                                             <span class="badge bg-primary me-1">0</span> Equipments Used
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-on" type="button" data-status="CrewSignOn">
                                             <span class="badge bg-success me-1">0</span> Crew Sign On
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-sign-off" type="button" data-status="CrewSignOff">
                                             <span class="badge bg-danger me-1">0</span> Crew Sign Off
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#crew-miscellaneous" type="button" data-status="CrewMiscellaneous">
                                             <span class="badge bg-info me-1">0</span> Crew Miscellaneous
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-assistance" type="button" data-status="MedicalAssistance">
                                             <span class="badge bg-warning me-1">0</span> Medical Assistance
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-import" type="button" data-status="ConsignmentImport">
                                             <span class="badge bg-primary me-1">0</span> Consignment Import
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#consignment-export" type="button" data-status="ConsignmentExport">
                                             <span class="badge bg-success me-1">0</span> Consignment Export
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button" data-status="ThirdPartySupply">
                                             <span class="badge bg-danger me-1">0</span> Third Party Supply
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button" data-status="FreshWaterSupply">
                                             <span class="badge bg-info me-1">0</span> Fresh Water
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button" data-status="TechniciansSurveyors">
                                             <span class="badge bg-warning me-1">0</span> Technicians Surveyors
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#landing-items" type="button" data-status="LandingItems">
                                             <span class="badge bg-primary me-1">0</span> Landing Items
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other-service" type="button" data-status="OtherService">
                                             <span class="badge bg-success me-1">0</span> Other Service
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agency-remuneration" type="button" data-status="AgencyRemuneration">
                                             <span class="badge bg-danger me-1">0</span> Agency Remuneration
                                         </button>
                                     </li>
@@ -546,22 +547,48 @@
                 break;
         }
     }
+
+    function loadTaskJobOrderCounts(jobOrderId) {
+
+        //let jobOrderId = $('#jobOrderId').val();
+
+        $.ajax({
+            url: '@Url.Action("GetTaskJobOrderCounts", "Job", new { area = "Project" })',
+            type: 'POST',
+            data: {
+                searchString: '',
+                companyId: companyId,
+                jobOrderId: jobOrderId
+            },
+            success: function (counts) {
+
+                $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
+                $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
+                $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
+                $('#serviceTabs [data-status="CrewSignOn"] .badge').text(counts.crewSignOn);
+                $('#serviceTabs [data-status="CrewSignOff"] .badge').text(counts.crewSignOff);
+                $('#serviceTabs [data-status="CrewMiscellaneous"] .badge').text(counts.crewMiscellaneous);
+                $('#serviceTabs [data-status="MedicalAssistance"] .badge').text(counts.medicalAssistance);
+                $('#serviceTabs [data-status="ConsignmentImport"] .badge').text(counts.consignmentImport);
+                $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
+                $('#serviceTabs [data-status="ThirdPartySupply"] .badge').text(counts.thirdPartySupply);
+                $('#serviceTabs [data-status="FreshWaterSupply"] .badge').text(counts.freshWaterSupply);
+                $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
+                $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
+                $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
+                $('#serviceTabs [data-status="AgencyRemuneration"] .badge').text(counts.agencyRemuneration);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading status counts:', error);
+            }
+        });
+    }
+
     function openChildViewJobOrderModal() {
         const modalId = `#addJobOrderModal`;
         const modalElement = $(modalId);
 
-        // Reset z-indexes first
-        $('.modal').css('z-index', '');
-        $('.modal-backdrop').css('z-index', '');
-
-        // Set new z-index values
-        $('#viewJobOrderModal').css('z-index', '1050');
-        modalElement.css('z-index', '1060');
-
-        // Create and position backdrop
-        $('<div class="modal-backdrop fade show"></div>')
-            .css('z-index', '1055')
-            .insertAfter(modalElement);
+        $('#viewJobOrderModal').addClass('modal-blur');
 
         // Handle modal stacking
         modalElement.addClass('child-modal');
@@ -573,12 +600,6 @@
         let companyId = $('#companyId').val();
         openAddJobOrderModal(jobOrderId, jobOrderNo, companyId);
     }
-
-    // Add this cleanup code when closing modals
-    $('.modal').on('hidden.bs.modal', function () {
-        $('.modal-backdrop:not(:first)').remove();
-        $('.modal').css('z-index', '');
-    });
 
     function openChildModal(serviceType) {
         const modalId = `#add${serviceType}Modal`;
@@ -595,7 +616,7 @@
         let jobOrderId = $('#jobOrderId').val();
         let jobOrderNo = $('#jobOrderNo').text();
         let companyId = $('#companyId').val();
-        debugger;
+
         const functionName = `open${serviceType}Modal`;
         if (typeof window[functionName] === 'function') {
             window[functionName](jobOrderId, jobOrderNo, 0, 'add');
@@ -625,28 +646,31 @@
         //}
     }
 
-    
-
     function openChildTaskForwardModal(serviceType, taskId) {
-        debugger;
+
+        const modalId = `#addTaskForwardModal`;
+        const modalElement = $(modalId);
+
         if (mulid != '') {
+
+            $('#viewJobOrderModal').addClass('modal-blur');
+            modalElement.addClass('child-modal');
+            $('.modal-backdrop').addClass('child-modal-backdrop');
+            modalElement.modal('show');
+            debugger;
+            let companyId = $('#companyId').val();
+            let customerId = $('#customerId').val();
+            let jobOrderId = $('#jobOrderId').val();
+
+            openTaskForwardModal(serviceType, taskId, customerId, jobOrderId, mulid);
 
         } else {
             toastr.warning('Please select at least one row from table');
         }
-        //const modalId = `#addTaskForwardModal`;
-        //const modalElement = $(modalId);
-        //modalElement.modal('show');
-
-        $('#addTaskForwardModal').modal('show');
-
-        //let companyId = $('#companyId').val();
-        //let customerId = $('#customerId').val();
-        //openTaskForwardModal(serviceType, taskId, customerId, 0);
     }
 
     function openChildBulkUpdateModal(serviceType, taskId) {
-        debugger;
+
         const modalId = `#bulkUpdateModal`;
         const modalElement = $(modalId);
         modalElement.modal('show');
@@ -661,45 +685,6 @@
             debitNoteNoInput.style.display = this.checked ? 'block' : 'none';
         });
     });
-
-    function loadStatusCounts() {
-
-        let customerId = getComboBoxValue('#cmb_customer', 0);
-        let portId = getComboBoxValue('#cmb_port', 0);
-
-        $.ajax({
-            url: '@Url.Action("GetTariffStatusCounts", "Tariff", new { area = "Project" })',
-            type: 'POST', // Use POST method
-            data: {
-                searchString: '',
-                companyId: companyId,
-                customerId: customerId,
-                portId: portId
-            },
-            success: function (counts) {
-
-                $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
-                $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
-                $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
-                $('#serviceTabs [data-status="CrewSignOn"] .badge').text(counts.crewSignOn);
-                $('#serviceTabs [data-status="CrewSignOff"] .badge').text(counts.crewSignOff);
-                $('#serviceTabs [data-status="CrewMiscellaneous"] .badge').text(counts.crewMiscellaneous);
-                $('#serviceTabs [data-status="MedicalAssistance"] .badge').text(counts.medicalAssistance);
-                $('#serviceTabs [data-status="ConsignmentImport"] .badge').text(counts.consignmentImport);
-                $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
-                $('#serviceTabs [data-status="ThirdPartySupply"] .badge').text(counts.thirdPartySupply);
-                $('#serviceTabs [data-status="FreshWaterSupply"] .badge').text(counts.freshWaterSupply);
-                $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
-                $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
-                $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
-                $('#serviceTabs [data-status="AgencyRemuneration"] .badge').text(counts.agencyRemuneration);
-                $('#serviceTabs [data-status="Visa"] .badge').text(counts.visa);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error loading status counts:', error);
-            }
-        });
-    }
 
     // ================== PORT EXPENSES GRID ================== //
     function initializePortExpenseGrid() {
@@ -778,6 +763,8 @@
                 // Initialize grid if it doesn’t exist
                 initializeKendoGridWithoutPaging("grid-PortExpense", url, { searchString, companyId, jobOrderId }, columns);
             }
+
+            loadTaskJobOrderCounts(jobOrderId);
         }
     }
 
@@ -791,7 +778,7 @@
     }
 
     function updateSelected(checkbox, jobOrderId, portExpenseId) {
-        debugger;
+
         if (checkbox.checked) {
             // Add the portExpenseId to mulid if checked
             if (!mulid.includes(portExpenseId)) {
@@ -809,13 +796,13 @@
     }
 
     function toggleSelectAll(headerCheckbox) {
-        debugger;
+
         let checked = headerCheckbox.checked;
         mulid = ""; // Reset mulid when toggling "Select All"
 
         document.querySelectorAll(".selectDebitNote").forEach(function (checkbox) {
             checkbox.checked = checked;
-            debugger;
+
             // If checked, add all portExpenseIds to mulid
             if (checked) {
                 let portExpenseId = checkbox.getAttribute("data-portExpenseId");

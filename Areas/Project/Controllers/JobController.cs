@@ -372,14 +372,20 @@ namespace AMESWEB.Areas.Project.Controllers
         #region Task Forward
 
         [HttpPost]
-        public async Task<IActionResult> SaveTaskForward(Int64 jobOrderId, int taskId, string multipleId, string companyId)
+        public async Task<IActionResult> SaveTaskForward(Int64 jobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string multipleId, string companyId)
         {
+            if (multipleId == null || multipleId == "")
+            {
+                _logger.LogWarning($"Save failed: Invalid multiple ID {multipleId}.");
+                return Json(new { success = false, message = "Invalid selected ID." });
+            }
+
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, taskId, multipleId);
+                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, jobOrderNo, prevJobOrderId, taskId, multipleId);
                 return Json(new { success = true, message = "Account Type saved successfully", data = result });
             }
             catch (Exception ex)
@@ -394,14 +400,14 @@ namespace AMESWEB.Areas.Project.Controllers
         #region Bulk Update
 
         [HttpPost]
-        public async Task<IActionResult> SaveBulkUpdate(Int64 jobOrderId, int taskId, string multipleId, string companyId)
+        public async Task<IActionResult> SaveBulkUpdate(Int64 jobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string multipleId, string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, taskId, multipleId);
+                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, jobOrderNo, prevJobOrderId, taskId, multipleId);
                 return Json(new { success = true, message = "Account Type saved successfully", data = result });
             }
             catch (Exception ex)
@@ -412,5 +418,25 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         #endregion Bulk Update
+
+        [HttpPost]
+        public async Task<JsonResult> GetTaskJobOrderCounts(string searchString, string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+                return validationResult;
+
+            try
+            {
+                var counts = await _jobOrderService.GetTaskJobOrderCountsAsync(
+                    companyIdShort, parsedUserId.Value, searchString, jobOrderId);
+                return Json(counts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching job status counts");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
     }
 }

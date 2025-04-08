@@ -1,5 +1,4 @@
-﻿
-<div class="modal fade" id="addTaskForwardModal" tabindex="-1" aria-labelledby="addTaskForwardModalLabel" aria-hidden="true" data-bs-backdrop="static">
+﻿<div class="modal fade" id="addTaskForwardModal" tabindex="-1" aria-labelledby="addTaskForwardModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,6 +8,7 @@
             <div class="modal-body">
                 <input type="hidden" id="companyId" />
                 <input type="hidden" id="multipleId" />
+                <input type="hidden" id="jobOrderId" />
                 <input type="hidden" id="taskId" />
                 <input type="hidden" id="serviceType" />
                 <div class="row mb-3 d-flex justify-content-center align-items-center">
@@ -29,21 +29,21 @@
 
 <script>
 
-    function openTaskForwardModal(serviceType, taskId, customerId, multipleId ) {
+    function openTaskForwardModal(serviceType, taskId, customerId, jobOrderId, multipleId ) {
         debugger;
         $('#multipleId').val(multipleId);
         $('#taskId').val(taskId);
         $('#serviceType').val(serviceType);
+        $('#jobOrderId').val(jobOrderId);
         const $modal = $('#addTaskForwardModal');
         const parsedCustomerId = parseInt(customerId, 10);
         let parsedcompanyId = $('#companyId').val();
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
 
         if (isValidId(parsedCustomerId)) {
-
-            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
-
-            const uomUrl = `@Url.Action("GetCustomerJobOrderLookup", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${parsedcompanyId}`;
-            bindComboBox(uomUrl, "portExpense_cmb_uom", "uomName", "uomId");
+            debugger;
+            const customerjobOrderUrl = `@Url.Action("GetCustomerJobOrderLookup", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${parsedCustomerId}`;
+            bindComboBox(customerjobOrderUrl, "taskForward_cmb_jobOrder", "jobOrderNo", "jobOrderId");
 
             $('#addTaskForwardModal').modal('show');
         }
@@ -57,23 +57,23 @@
 
     function saveTaskForward() {
         debugger;
-
         let inJobOrderId = parseInt($('#taskForward_cmb_jobOrder').data('kendoComboBox').value()) || 0;
+        let inJobOrderNo = $('#taskForward_cmb_jobOrder').data('kendoComboBox').text() || '';
+        let inPrvJobOrderId = parseInt($('#jobOrderId').val()) || 0;
         let inMultipleId = $('#multipleId').val();
-        let inTaskId = $('#taskId').val();
-
-        console.log("TaskForwardData Data : " + taskForwardData);
+        let inTaskId = parseInt($('#taskId').val())||0;
+        let inCompanyId = $('#companyId').val();
 
         $.ajax({
             url: '@Url.Action("SaveTaskForward", "Job", new { area = "Project" })',
             type: "POST",
             data: {
-                jobOrderId: inJobOrderId, taskId: inTaskId, multipleId: inMultipleId, companyId: companyId
+                jobOrderId: inJobOrderId, jobOrderNo: inJobOrderNo, prevJobOrderId: inPrvJobOrderId, taskId: inTaskId, multipleId: inMultipleId, companyId: inCompanyId
             },
-            contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    debugger;
+                    toastr.success(response.message || "Task Forward saved successfully.");
+                   
                     const serviceType = $('#serviceType').val();
                     const functionName = `initialize${serviceType}Grid`;
                     if (typeof window[functionName] === 'function') {
@@ -82,9 +82,9 @@
                         console.error(`Function ${functionName} does not exist.`);
                     }
 
-                    $('#addPortExpenseModal').modal('hide');
+                    $('#addTaskForwardModal').modal('hide');
                 } else {
-                    alert(response.message || "Failed to save port expense.");
+                    toastr.error(response.message || "Failed to save task forward.");
                 }
             },
             error: function (xhr) {

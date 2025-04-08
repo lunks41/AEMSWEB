@@ -1803,7 +1803,7 @@ namespace AMESWEB.Services.Masters
         {
             try
             {
-                var result = await _repository.GetQueryAsync<JobOrderLookupModel>($"SELECT JobOrderId,JobOrderNo,PortId,VesselId FROM dbo.Ser_JobOrderHd WHERE JobOrderId<>0 AND CompanyId={CompanyId} and CustomerId={customerId} and JobOrderNo NOT LIKE '' ORDER BY JobOrderDate DESC");
+                var result = await _repository.GetQueryAsync<JobOrderLookupModel>($"SELECT JobOrderId,JobOrderNo,PortId,VesselId FROM dbo.Ser_JobOrderHd WHERE JobOrderId<>0 AND  CompanyId={CompanyId} AND CustomerId={customerId} ORDER BY JobOrderDate DESC");
 
                 return result;
             }

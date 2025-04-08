@@ -297,7 +297,7 @@
     }
 
     function populateSupplierFields(data) {
-        debugger;
+        
         $('#supplierId').val(data.supplierId);
         $('#supplierCode').val(data.supplierCode);
         $('#supplierName').val(data.supplierName);
@@ -377,7 +377,7 @@
     }
 
     function validateMandatoryFields() {
-        debugger;
+        
         const supplierCode = document.getElementById('supplierCode').value.trim();
         const supplierName = document.getElementById('supplierName').value.trim();
         const currency = $('#cmd_currency').data('kendoComboBox').value();
@@ -421,7 +421,7 @@
     }
 
     function saveSupplier() {
-        debugger;
+        
         console.log($('#supplierId').val());
         const supplierData = {
             SupplierId: parseInt($('#supplierId').val()) || 0,

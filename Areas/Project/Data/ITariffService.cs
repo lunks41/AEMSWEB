@@ -43,6 +43,7 @@ namespace AMESWEB.Areas.Project.Data.IServices
         public Task<SqlResponse> SaveTariffAsync(short CompanyId, short UserId, Ser_Tariff ser_Tariff);
 
         public Task<SqlResponse> DeleteTariffAsync(short CompanyId, short UserId, int tariffId, int taskId, int customerId, int portId, int chargeId);
+
         public Task<SqlResponse> CopyCustomerTariffAsync(short CompanyId, short UserId, int fromCustomerId, int fromPortId, int fromTaskId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting);
 
         public Task<SqlResponse> CopyCompanyToCustomerTariffAsync(short CompanyId, short UserId, int fromCompanyId, int fromCustomerId, int fromPortId, int fromTaskId, int toCompanyId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting);

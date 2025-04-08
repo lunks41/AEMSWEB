@@ -236,7 +236,6 @@
                                     <div class="mb-1">
                                         <label for="addjoborder_cmb_address" class="form-label">Address <span class="text-danger">*</span></label>
                                         <select id="addjoborder_cmb_address" style="width: 100%"></select>
-
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -311,8 +310,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </form>
             </div>
             <!-- Action Buttons -->
@@ -340,7 +337,7 @@
 <script>
 
     function refreshAddJobOrderDropdown() {
-        
+
         const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const customercolumnsProperties = [
             { field: 'customerCode', title: 'Code', width: 100 },
@@ -393,7 +390,7 @@
     }
 
     function clearAddJobOrderForm() {
-        
+
         $('#addjoborder_date').val('');
         $('#addjoborder_vesseldistance').val('10');
         $('#addjoborder_imono').val('');
@@ -444,7 +441,7 @@
     }
 
     function openAddJobOrderModal(jobOrderId, jobOrderNo, companyID) {
-        debugger;
+        
         const $modal = $('#addJobOrderModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
         const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
@@ -463,7 +460,7 @@
                 })
                 .always(() => $modal.find('.modal-overlay').remove());
         } else {
-            debugger;
+            
             refreshAddJobOrderDropdown();
             clearAddJobOrderForm();
             $('#addAddJobOrderModal').modal('show');
@@ -471,7 +468,7 @@
     }
 
     function populateAddJobOrderModalFields(data) {
-        
+
         // Set hidden fields
         $('#companyId').val(data.companyId);
         $('#jobOrderId').val(data.jobOrderId);
@@ -544,10 +541,9 @@
         $('#addjoborder_operationeditBy').text(data.editBy || "N/A");
         $('#addjoborder_operationeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#addjoborder_operationeditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnAddJobOrderClear').hide();
-
 
     }
 
