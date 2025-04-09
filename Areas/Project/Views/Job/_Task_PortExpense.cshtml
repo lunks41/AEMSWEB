@@ -10,10 +10,10 @@
                 <!-- Container replacing form tag -->
                 <div id="portExpenseContainer">
                     <input type="hidden" id="companyId" />
-                    <input type="hidden" id="jobOrderId" />
-                    <input type="hidden" id="jobOrderNo" />
-                    <input type="hidden" id="debitNoteId" />
-                    <input type="hidden" id="debitNoteNo" />
+                    <input type="hidden" id="portExpense_jobOrderId" />
+                    <input type="hidden" id="portExpense_jobOrderNo" />
+                    <input type="hidden" id="portExpense_debitNoteId" />
+                    <input type="hidden" id="portExpense_debitNoteNo" />
                     <input type="hidden" id="portExpenseId" />
                     <div class="row">
                         <div class="col-md-4">
@@ -138,14 +138,15 @@
     function clearPortExpenseForm() {
         
         $('#portExpenseId').val('');
-        $('#jobOrderId').val('');
-        $('#jobOrderNo').val('');
-        $('#debitNoteId').val('');
-        $('#debitNoteNo').val('');
+        $('#portExpense_jobOrderId').val('');
+        $('#portExpense_jobOrderNo').val('');
+        $('#portExpense_debitNoteId').val('');
+        $('#portExpense_debitNoteNo').val('');
 
         $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value('');
-        $('#portExpense_cmb_charge').data('kendoComboBox').value('');
         $('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value('');
+
+        $('#portExpense_cmb_charge').data('kendoComboBox').value('');
         $('#portExpense_cmb_uom').data('kendoComboBox').value('');
         $('#portExpense_cmb_status').data('kendoComboBox').value('');
 
@@ -200,6 +201,8 @@
         const $modal = $('#addPortExpenseModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
         const parsedPortExpenseId = parseInt(portExpenseId, 10);
+        $('#portExpense_jobOrderId').val(jobOrderId);
+        $('#portExpense_jobOrderNo').val(jobOrderNo);
 
         const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
 
@@ -227,8 +230,7 @@
             refreshPortExpensesDropdown();
             clearPortExpenseForm();
             setDefaultDropdownValues();
-            $('#jobOrderId').val(jobOrderId);
-            $('#jobOrderNo').val(jobOrderNo);
+           
             $('#addPortExpenseModal').modal('show');
         }
     }
@@ -238,10 +240,10 @@
         // Set hidden fields
         $('#companyId').val(data.companyId);
         $('#portExpenseId').val(data.portExpenseId);
-        $('#jobOrderId').val(data.jobOrderId);
-        $('#jobOrderNo').val(data.jobOrderNo);
-        $('#debitNoteId').val(data.debitNoteId);
-        $('#debitNoteNo').val(data.debitNoteNo);
+        $('#portExpense_jobOrderId').val(data.jobOrderId);
+        $('#portExpense_jobOrderNo').val(data.jobOrderNo);
+        $('#portExpense_debitNoteId').val(data.debitNoteId);
+        $('#portExpense_debitNoteNo').val(data.debitNoteNo);
 
         // Set combobox values, ensuring they update after data is loaded
         const supplierCombo = $('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox');
@@ -333,8 +335,8 @@
         
         let portExpenseData = {
             PortExpenseId: parseInt($('#portExpenseId').val()) || 0,
-            JobOrderId: parseInt($('#jobOrderId').val()) || 0,
-            JobOrderNo: $('#jobOrderNo').val() || '',
+            JobOrderId: parseInt($('#portExpense_jobOrderId').val()) || 0,
+            JobOrderNo: $('#portExpense_jobOrderNo').val() || '',
             SupplierId: parseInt($('#portExpense_cmb_supplier').data('kendoMultiColumnComboBox').value()) || 0,
             ChargeId: parseInt($('#portExpense_cmb_charge').data('kendoComboBox').value()) || 0,
             GLId: parseInt($('#portExpense_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
@@ -344,8 +346,8 @@
             StatusId: parseInt($('#portExpense_cmb_status').data('kendoComboBox').value()) || 0,
             Remarks: $('#portExpense_remarks').val(),
             IsActive: 1,
-            DebitNoteId: parseInt($('#debitNoteId').val()) || 0,
-            DebitNoteNo: $('#debitNoteNo').val() || '',
+            DebitNoteId: parseInt($('#portExpense_debitNoteId').val()) || 0,
+            DebitNoteNo: $('#portExpense_debitNoteNo').val() || '',
         };
 
         console.log("PortExpense Data : " + portExpenseData);

@@ -195,6 +195,7 @@ function bindAutoComplete(url, dropdownId, textField) {
 }
 function bindComboBox(url, dropdownId, textField, valueField) {
     try {
+        debugger;
         // Cleanup previous instances
         if ($("#" + dropdownId).data("kendoComboBox")) {
             $("#" + dropdownId).data("kendoComboBox").destroy();
@@ -203,15 +204,15 @@ function bindComboBox(url, dropdownId, textField, valueField) {
 
         $.ajax({
             url: url,
-            async: !1,
+            async: false,
             type: "GET",
-            cache: !1,
+            cache: false,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
                 try {
+                    debugger;
                     const data = typeof response === "string" ? JSON.parse(response) : response;
-
                     // Initialize Kendo ComboBox
                     $("#" + dropdownId).kendoComboBox({
                         dataTextField: textField,

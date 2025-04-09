@@ -185,21 +185,23 @@
 @section externalhtml {
     @await Html.PartialAsync("_AddJobOrder");
     @await Html.PartialAsync("_JobOrder");
-    @await Html.PartialAsync("_PortExpense");
-    @await Html.PartialAsync("_ThirdPartySupply");
-    @await Html.PartialAsync("_TechniciansSurveyors");
-    @await Html.PartialAsync("_OtherService");
-    @await Html.PartialAsync("_MedicalAssistance");
-    @await Html.PartialAsync("_LaunchServices");
-    @await Html.PartialAsync("_LandingItems");
-    @await Html.PartialAsync("_FreshWater");
-    @await Html.PartialAsync("_EquipmentsUsed");
-    @await Html.PartialAsync("_CrewSignOn");
-    @await Html.PartialAsync("_CrewSignOff");
-    @await Html.PartialAsync("_CrewMiscellaneous");
-    @await Html.PartialAsync("_ConsignmentImport");
-    @await Html.PartialAsync("_ConsignmentExport");
-    @await Html.PartialAsync("_AgencyRemuneration");
+
+    @await Html.PartialAsync("_Task_PortExpense");
+    @await Html.PartialAsync("_Task_LaunchServices");
+    @await Html.PartialAsync("_Task_EquipmentsUsed");
+    @await Html.PartialAsync("_Task_CrewSignOn");
+    @await Html.PartialAsync("_Task_CrewSignOff");
+    @await Html.PartialAsync("_Task_CrewMiscellaneous");
+    @await Html.PartialAsync("_Task_MedicalAssistance");
+    @await Html.PartialAsync("_Task_ConsignmentImport");
+    @await Html.PartialAsync("_Task_ConsignmentExport");
+    @await Html.PartialAsync("_Task_ThirdPartySupply");
+    @await Html.PartialAsync("_Task_FreshWater");
+    @await Html.PartialAsync("_Task_TechniciansSurveyors");
+    @await Html.PartialAsync("_Task_LandingItems");
+    @await Html.PartialAsync("_Task_OtherService");
+    @await Html.PartialAsync("_Task_AgencyRemuneration");
+
     @await Html.PartialAsync("_TaskForward");
     @await Html.PartialAsync("_BulkUpdate");
     @await Html.PartialAsync("_DebitNote");

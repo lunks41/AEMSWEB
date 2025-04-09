@@ -853,43 +853,77 @@
         let companyId = $('#companyId').val();
 
         if (jobOrderId > 0) {
-            let url = '@Url.Action("LaunchServiceList", "Job", new { area = "Project" })';
+            let url = '@Url.Action("PortExpensesList", "Job", new { area = "Project" })';
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
+                    headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAll(this)" />',
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelected(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
+     <i class="material-symbols-outlined text-primary">visibility</i>
+ </button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'edit')">
+     <i class="material-symbols-outlined text-warning" >edit</i>
+ </button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
+     <i class="material-symbols-outlined text-danger" >delete</i>
+ </button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.taskId}')">
+     <i class="material-symbols-outlined" >universal_currency_alt</i>
+ </button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+     <i class="material-symbols-outlined" >payments</i>
+ </button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
                 { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
+                {
+                    field: "deliverDate",
+                    title: "Deliver Date",
+                    width: "120px",
+                    template: function (dataItem) {
+                        var date = new Date(dataItem.deliverDate);
+                        return kendo.toString(date, "dd/MM/yyyy");
+                    }
+                },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
                 { field: "description", title: "Description", width: "250px" },
                 { field: "remarks", title: "Remarks", width: "200px" },
-                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+                {
+                    field: "isActive",
+                    title: "Active",
+                    width: "80px",
+                    template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />'
+                }
             ];
 
-            let grid = $("#grid-LaunchService").data("kendoGrid");
+            let grid = $("#grid-PortExpense").data("kendoGrid");
             if (grid) {
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGridWithoutPaging("grid-LaunchService", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-PortExpense", url, { searchString, companyId, jobOrderId }, columns);
             }
+
+            loadTaskJobOrderCounts(jobOrderId);
         }
     }
 
