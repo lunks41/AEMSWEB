@@ -1,12 +1,19 @@
-﻿namespace AMESWEB.Entities.Project
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AMESWEB.Entities.Project
 {
     public class Ser_JobOrderDt
-
     {
         public byte CompanyId { get; set; } = 0;
+
+        [Key]
         public long JobOrderId { get; set; } = 0;
+
         public string JobOrderNo { get; set; } = "(\"\")";
+
+        [Key]
         public byte ItemNo { get; set; } = 0;
+
         public byte TaskId { get; set; } = 0;
         public byte TaskItemNo { get; set; } = 0;
         public long ServiceId { get; set; } = 0;

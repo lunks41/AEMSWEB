@@ -87,42 +87,6 @@ namespace AMESWEB.Areas.Project.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<JsonResult> JobOrderList(int pageNumber, int pageSize, string searchString, string companyId, string customerId, string fromDate, string toDate, string status)
-        //{
-        //    if (pageNumber < 1 || pageSize < 1)
-        //        return Json(new { success = false, message = "Invalid page parameters" });
-
-        //    var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-        //    if (validationResult != null)
-        //        return validationResult;
-
-        //    // Parse the date filters if provided
-        //    DateTime? fromDateParsed = null, toDateParsed = null;
-        //    if (!string.IsNullOrEmpty(fromDate) && DateTime.TryParse(fromDate, out DateTime dtFrom))
-        //    {
-        //        fromDateParsed = dtFrom;
-        //    }
-        //    if (!string.IsNullOrEmpty(toDate) && DateTime.TryParse(toDate, out DateTime dtTo))
-        //    {
-        //        toDateParsed = dtTo;
-        //    }
-
-        //    try
-        //    {
-        //        // Updated the service call to include the new parameters.
-        //        var data = await _jobOrderService.GetJobOrderListAsyncV1(
-        //            companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, fromDateParsed, toDateParsed, status
-        //        );
-        //        return Json(new { data = data.data, total = data.totalRecords });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error fetching job list");
-        //        return Json(new { success = false, message = "An error occurred" });
-        //    }
-        //}
-
         [HttpGet]
         public async Task<JsonResult> GetJobOrderById(Int64 jobOrderId, string companyId)
         {
@@ -246,7 +210,6 @@ namespace AMESWEB.Areas.Project.Controllers
                     StatusId = model.portExpense.StatusId,
                     UomId = model.portExpense.UomId,
                     DeliverDate = model.portExpense.DeliverDate == "" ? null : Convert.ToDateTime(model.portExpense.DeliverDate),
-                    Description = model.portExpense.Description?.Trim() ?? string.Empty,
                     GLId = model.portExpense.GLId,
                     DebitNoteId = model.portExpense.DebitNoteId,
                     DebitNoteNo = model.portExpense.DebitNoteNo?.Trim(),
@@ -419,7 +382,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
         #endregion Bulk Update
 
-        [HttpPost]
+        [HttpGet]
         public async Task<JsonResult> GetTaskJobOrderCounts(string searchString, string companyId, Int64 jobOrderId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -438,5 +401,49 @@ namespace AMESWEB.Areas.Project.Controllers
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
+
+        #region Purchase
+
+        [HttpPost]
+        public async Task<JsonResult> GetPurchaseJobOrder(string searchString, string companyId, Int64 jobOrderId,int taskId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+                return validationResult;
+
+            try
+            {
+                var data = await _jobOrderService.GetPurchaseJobOrderAsync(companyIdShort, parsedUserId.Value, jobOrderId,taskId);
+                return Json(new { data = data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching job status counts");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+        [HttpPost]
+        public async Task<JsonResult> SavePurchaseJobOrder(string searchString, string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+                return validationResult;
+
+            try
+            {
+                var counts = await _jobOrderService.GetTaskJobOrderCountsAsync(
+                    companyIdShort, parsedUserId.Value, searchString, jobOrderId);
+                return Json(counts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching job status counts");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        #endregion
+
+
     }
 }

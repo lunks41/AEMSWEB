@@ -46,10 +46,6 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" id="portExpense_description" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-6">
                             <label class="form-label">Remark</label>
                             <textarea class="form-control" id="portExpense_remarks" rows="2"></textarea>
                         </div>
@@ -156,7 +152,6 @@
         $('#portExpense_quantity').val('');
         $('#portExpense_deliverDate').val('');
         $('#isActive').prop('checked', true);
-        $('#portExpense_description').val('');
         $('#portExpense_remarks').val('');
 
         $('#portexpensecreateBy').text('');
@@ -284,7 +279,6 @@
         const formattedDate = new Date(data.deliverDate).toLocaleDateString('en-CA');
         $('#portExpense_deliverDate').val(formattedDate);
         $('#isActive').prop('checked', data.isActive);
-        $('#portExpense_description').val(data.description);
         $('#portExpense_remarks').val(data.remarks);
 
         // Set audit fields
@@ -304,7 +298,7 @@
             statusCombo.enable(false);
             supplierCombo.enable(false);
             glCombo.enable(false);
-            $('#portExpense_quantity, #portExpense_deliverDate, #portExpense_description, #portExpense_remarks').prop('readonly', true);
+            $('#portExpense_quantity, #portExpense_deliverDate,  #portExpense_remarks').prop('readonly', true);
             $('#isActive').prop('disabled', false);
             $('#btnPortExpenseSave').prop('disabled', false);
         } else {
@@ -313,7 +307,7 @@
             statusCombo.enable(true);
             supplierCombo.enable(true);
             glCombo.enable(true);
-            $('#portExpense_quantity, #portExpense_deliverDate, #portExpense_description, #portExpense_remarks').prop('readonly', false);
+            $('#portExpense_quantity, #portExpense_deliverDate,  #portExpense_remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
             $('#btnPortExpenseSave').prop('disabled', false);
         }
@@ -348,7 +342,6 @@
             UomId: parseInt($('#portExpense_cmb_uom').data('kendoComboBox').value()) || 0,
             DeliverDate: $('#portExpense_deliverDate').val() || '',
             StatusId: parseInt($('#portExpense_cmb_status').data('kendoComboBox').value()) || 0,
-            Description: $('#portExpense_description').val(),
             Remarks: $('#portExpense_remarks').val(),
             IsActive: 1,
             DebitNoteId: parseInt($('#debitNoteId').val()) || 0,

@@ -10,6 +10,84 @@
     bool canRead = ViewBag.IsRead ?? false;
     int companyId = ViewBag.CompanyId;
 }
+<style>
+
+    .filter-section {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+
+    .status-tabs .nav-link {
+        border-radius: 20px;
+        padding: 8px 20px;
+        margin-right: 8px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+        .status-tabs .nav-link.active {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+    .grid-wrapper {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    /*grid capsule*/
+    .status-pill {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .completed {
+        background-color: #e6f4ea;
+        color: #137333;
+    }
+
+    .confirm {
+        background-color: #e8f0fe;
+        color: #1967d2;
+    }
+
+    .pending {
+        background-color: #fef7e0;
+        color: #f9ab00;
+    }
+
+    .cancel {
+        background-color: #fce8e6;
+        color: #c5221f;
+    }
+
+    .cancel-with-services {
+        background-color: #f3e8fd;
+        color: #7622d7;
+    }
+
+    .default-status {
+        background-color: #f1f3f4;
+        color: #5f6368;
+    }
+</style>
 
 <div class="row">
     <div class="col-lg-12">
@@ -125,44 +203,10 @@
     @await Html.PartialAsync("_TaskForward");
     @await Html.PartialAsync("_BulkUpdate");
     @await Html.PartialAsync("_DebitNote");
+    @await Html.PartialAsync("_Purchase");
 }
 
 <style>
-    .filter-section {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-    }
-
-    .status-tabs .nav-link {
-        border-radius: 20px;
-        padding: 8px 20px;
-        margin-right: 8px;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-    }
-
-        .status-tabs .nav-link.active {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-    .grid-wrapper {
-        overflow: hidden;
-        position: relative;
-    }
-
-    .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255,255,255,0.8);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
 </style>
 
 @section Scripts {
@@ -274,15 +318,10 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "150px",
+                    width: "60px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openViewJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'view')">
              <i class="material-symbols-outlined text-primary">visibility</i></button>`;
-
-                        if (permissions.canEdit) {
-                            buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openViewJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'edit')">
-             <i class="material-symbols-outlined text-warning">edit</i></button>`;
-                        }
 
                         if (permissions.canDelete) {
                             buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deleteJobOrder('${dataItem.jobOrderId}')">
@@ -291,14 +330,53 @@
                         return buttons;
                     }
                 },
-                { field: "jobOrderNo", title: "Job Order No", type: "string" }, // String type
-                { field: "jobOrderDate", title: "Job Order Date", type: "date", format: "{0:yyyy-MM-dd}" }, // Date type with formatting
-                { field: "customerName", title: "Customer Name", type: "string" }, // String type
-                { field: "currencyName", title: "Currency Name", type: "string" }, // String type
-                { field: "iMONo", title: "IMO No", type: "string" }, // String type
-                { field: "totalAmt", title: "Total Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
-                { field: "totalLocalAmt", title: "Total Local Amount", type: "number", format: "{0:n2}" }, // Number type with 2 decimal places
-                { field: "remarks", title: "Remarks", type: "string" } // String type
+               /* { field: "statusName", title: "Status", type: "string", width: "80px" },*/
+                { field: "jobOrderNo", title: "Job Order No", type: "string", width: "180px" },
+                { field: "jobOrderDate", title: "Job Order Date", type: "date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                { field: "customerName", title: "Customer Name", type: "string", width: "200px" },
+                { field: "currencyName", title: "Currency Name", type: "string", width: "100px" },
+                { field: "vesselName", title: "Vessel", type: "string", width: "150px" },
+                {
+                    field: "statusName",
+                    title: "Status",
+                    width: "120px",
+                    template: function (dataItem) {
+                        const status = dataItem.statusName.toLowerCase();
+                        let colorClass = '';
+
+                        switch (status) {
+                            case 'completed':
+                                colorClass = 'completed';
+                                break;
+                            case 'confirm':
+                                colorClass = 'confirm';
+                                break;
+                            case 'pending':
+                                colorClass = 'pending';
+                                break;
+                            case 'cancel':
+                                colorClass = 'cancel';
+                                break;
+                            case 'cancelwithservices':
+                                colorClass = 'cancel-with-services';
+                                break;
+                            default:
+                                colorClass = 'default-status';
+                        }
+
+                        return `<span class="status-pill ${colorClass}">${dataItem.statusName}</span>`;
+                    }
+                },
+                { field: "etadate", title: "ETA", type: "date", format: "{0:yyyy-MM-dd HH:mm}", width: "180px" },
+                { field: "etddate", title: "ETD", type: "date", format: "{0:yyyy-MM-dd HH:mm}", width: "180px" },
+                { field: "vesselDistance", title: "Dist. IN NM", type: "string", width: "120px" },
+                { field: "portName", title: "Port", type: "string", width: "150px" },
+                { field: "totalAmt", title: "Total Amount", type: "number", format: "{0:n2}", width: "150px" },
+                { field: "totalLocalAmt", title: "Total Local Amount", type: "number", format: "{0:n2}", width: "150px" },
+                { field: "remarks", title: "Remarks", type: "string", width: "200px" },
+                { field: "remarks", title: "Remarks", type: "string", width: "200px" },
+                { field: "remarks", title: "Remarks", type: "string", width: "200px" },
+
             ];
 
             let grid = $("#gridJobOrder").data("kendoGrid");
@@ -327,38 +405,38 @@
         function populateJobOrderModalFields(data) {
 
             $('#companyId').val(data.companyId);
-            $('#jobOrderId').val(data.jobOrderId);
-            $('#jobOrderNo').text(data.jobOrderNo);
-            $('#jobOrderDate').text(data.jobOrderDate ? new Date(data.jobOrderDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "N/A");
-            $('#customerId').val(data.customerId);
-            $('#customerName').text(data.customerName);
-            $('#currencyId').val(data.currencyId);
-            $('#currencyName').text(data.currencyName);
-            $('#exhRate').text(data.exhRate);
-            $('#vesselId').val(data.vesselId);
-            $('#vesselName').text(data.vesselName);
-            $('#imoNo').text(data.imoNo);
-            $('#vesselDistance').text(data.vesselDistance);
-            $('#portId').val(data.portId);
-            $('#portName').text(data.portName);
-            $('#lastportId').val(data.lastportId);
-            $('#nextportId').val(data.nextportId);
-            $('#lastportName').text(data.lastportName);
-            $('#nextportName').text(data.nextportName);
-            $('#voyageId').val(data.voyageId);
-            $('#voyageNo').text(data.voyageNo);
-            $('#natureOfCall').text(data.NatureOfCall);
-            $('#isps').text(data.iSPS);
-            $('#eta').text(data.etaDate ? new Date(data.etaDate).toLocaleString('en-GB', { hourCycle: 'h23' }) : "N/A");
-            $('#etd').text(data.etdDate ? new Date(data.etdDate).toLocaleString('en-GB', { hourCycle: 'h23' }) : "N/A");
-
-            $('#ownersMaster').text(data.ownerName);
-            $('#ownersAgents').text(data.ownerAgent);
-            $('#mastersName').text(data.masterName);
-            $('#charters').text(data.charters);
-            $('#chartersAgents').text(data.chartersAgent);
-            $('#remarks').text(data.remarks);
-            $('#isTaxable').prop('checked', data.isTaxable);
+            $('#view_jobOrderId').val(data.jobOrderId);
+            $('#view_jobOrderNo').text(data.jobOrderNo);
+            $('#view_jobOrderDate').text(data.jobOrderDate ? new Date(data.jobOrderDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "N/A");
+            $('#view_customerId').val(data.customerId);
+            $('#view_customerName').text(data.customerName);
+            $('#view_currencyId').val(data.currencyId);
+            $('#view_currencyName').text(data.currencyName);
+            $('#view_exhRate').text(data.exhRate);
+            $('#view_vesselId').val(data.vesselId);
+            $('#view_vesselName').text(data.vesselName);
+            $('#view_imoNo').text(data.imoNo);
+            $('#view_vesselDistance').text(data.vesselDistance);
+            $('#view_portId').val(data.portId);
+            $('#view_portName').text(data.portName);
+            $('#view_lastportId').val(data.lastPortId);
+            $('#view_nextportId').val(data.nextPortId);
+            $('#view_lastportName').text(data.lastPortName);
+            $('#view_nextportName').text(data.nextPortName);
+            $('#view_voyageId').val(data.voyageId);
+            $('#view_voyageNo').text(data.voyageNo);
+            $('#view_natureOfCall').text(data.natureOfCall);
+            $('#view_isps').text(data.isps);
+            $('#view_eta').text(data.etaDate ? new Date(data.etaDate).toLocaleString('en-GB', { hourCycle: 'h23' }) : "N/A");
+            $('#view_etd').text(data.etdDate ? new Date(data.etdDate).toLocaleString('en-GB', { hourCycle: 'h23' }) : "N/A");
+            $('#view_statusName').text(data.statusName);
+            $('#view_ownersMaster').text(data.ownerName);
+            $('#view_ownersAgents').text(data.ownerAgent);
+            $('#view_mastersName').text(data.masterName);
+            $('#view_charters').text(data.charters);
+            $('#view_chartersAgents').text(data.chartersAgent);
+            $('#view_remark1').text(data.remarks);
+            $('#view_isTaxable').prop('checked', data.isTaxable);
 
             initializePortExpenseGrid();
             loadTaskJobOrderCounts(data.jobOrderId);

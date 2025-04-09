@@ -95,5 +95,7 @@ namespace AMESWEB.Areas.Project.Data.IServices
         public Task<SqlResponse> SaveTaskForwardAsync(short CompanyId, short UserId, Int64 JobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string MultipleId);
 
         public Task<TaskCountsViewModel> GetTaskJobOrderCountsAsync(short companyId, short userId, string searchString, Int64 jobOrderId);
+
+        public Task<IEnumerable<dynamic>> GetPurchaseJobOrderAsync(short companyId, short userId, Int64 jobOrderId,int taskId);
     }
 }

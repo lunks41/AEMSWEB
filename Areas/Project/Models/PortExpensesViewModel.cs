@@ -32,7 +32,6 @@
         public short UomId { get; set; }
         public string? UomName { get; set; } = string.Empty;
         public string? DeliverDate { get; set; }
-        public string? Description { get; set; } = string.Empty;
         public short GLId { get; set; }
         public string? GlName { get; set; } = string.Empty;
         public long? DebitNoteId { get; set; }

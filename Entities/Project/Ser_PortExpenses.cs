@@ -17,7 +17,6 @@ namespace AMESWEB.Entities.Project
         public short StatusId { get; set; }
         public short UomId { get; set; }
         public DateTime? DeliverDate { get; set; }
-        public string Description { get; set; } = string.Empty;
         public short GLId { get; set; }
         public long? DebitNoteId { get; set; }
         public string? DebitNoteNo { get; set; }

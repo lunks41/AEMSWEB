@@ -43,7 +43,7 @@
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewJobOrderModalLabel">Job Order</h5>
+                <h5 class="modal-title" id="viewJobOrderModalLabel">Job Order </h5>
                 <div class="ms-auto d-flex align-items-center gap-2">
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle btn-sm" type="button"
@@ -77,32 +77,31 @@
                             onclick="openChildViewJobOrderModal();">
                         View
                     </button>
-                    <button type="button" class="btn-close"
-                            data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close"                            data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
             <div class="modal-body">
                 <div class="container-fluid mt-3">
                     <input type="hidden" id="companyId" />
-                    <input type="hidden" id="jobOrderId" />
-                    <input type="hidden" id="customerId" />
+                    <input type="hidden" id="view_jobOrderId" />
+                    <input type="hidden" id="view_customerId" />
                     <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label text-dark">JobOrder No :</label>
+                                <b><span id="view_jobOrderNo" class="text-dark"></span></b>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">Customer Name : </label>
-                                <b><span id="customerName"></span></b>
+                                <label class="control-label text-dark">Customer Name : </label>
+                                <b><span id="view_customerName" class="text-dark"></span></b>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label class="control-label">JobOrder No :</label>
-                                <b><span id="jobOrderNo"></span></b>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="control-label">JobOrder Date :</label>
-                                <b><span id="jobOrderDate"></span></b>
+                                <label class="control-label text-dark">JobOrder Date :</label>
+                                <b><span id="view_jobOrderDate" class="text-dark"></span></b>
                             </div>
                         </div>
                     </div>
@@ -114,25 +113,25 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Vessel Name : </label>
-                                    <span id="vesselName"></span>
+                                    <b><span id="view_vesselName" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">IMO No : </label>
-                                    <span id="imoNo"></span>
+                                    <b><span id="view_imoNo" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">ETA : </label>
-                                    <span id="eta"></span>
+                                    <b><span id="view_eta" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">ETD : </label>
-                                    <span id="etd"></span>
+                                    <b><span id="view_etd" class="text-dark"></span></b>
                                 </div>
                             </div>
                         </div>
@@ -142,25 +141,25 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Master's Name : </label>
-                                    <span id="mastersName"></span>
+                                    <b><span id="view_mastersName" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Port of Call : </label>
-                                    <span id="portOfCall"></span>
+                                    <b><span id="view_portName" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Next Port : </label>
-                                    <span id="nextportName"></span>
+                                    <b><span id="view_nextportName" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Last Port : </label>
-                                    <span id="lastportName"></span>
+                                    <b><span id="view_lastportName" class="text-dark"></span></b>
                                 </div>
                             </div>
                         </div>
@@ -170,25 +169,25 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Nature of Call : </label>
-                                    <span id="natureOfCall"></span>
+                                    <b><span id="view_natureOfCall" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">ISPS : </label>
-                                    <span id="isps"></span>
+                                    <b><span id="view_isps" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Owners Master : </label>
-                                    <span id="ownersMaster"></span>
+                                    <b><span id="view_ownersMaster" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Owners Agents : </label>
-                                    <span id="ownersAgents"></span>
+                                    <b><span id="view_ownersAgents" class="text-dark"></span></b>
                                 </div>
                             </div>
                         </div>
@@ -198,25 +197,25 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Charters : </label>
-                                    <span id="charters"></span>
+                                    <b><span id="view_charters" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Charters Agents : </label>
-                                    <span id="chartersAgents"></span>
+                                    <b><span id="view_chartersAgents" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Status : </label>
-                                    <span id="status"></span>
+                                    <b><span id="view_statusName" class="text-dark"></span></b>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Remarks : </label>
-                                    <span id="remarks"></span>
+                                    <b><span id="view_remarks" class="text-dark"></span></b>
                                 </div>
                             </div>
                         </div>
@@ -550,11 +549,11 @@
 
     function loadTaskJobOrderCounts(jobOrderId) {
 
-        //let jobOrderId = $('#jobOrderId').val();
+        //let jobOrderId = $('#view_jobOrderId').val();
 
         $.ajax({
             url: '@Url.Action("GetTaskJobOrderCounts", "Job", new { area = "Project" })',
-            type: 'POST',
+            type: 'GET',
             data: {
                 searchString: '',
                 companyId: companyId,
@@ -595,9 +594,9 @@
         modalElement.modal('show');
 
         // Load data
-        let jobOrderId = $('#jobOrderId').val();
-        let jobOrderNo = $('#jobOrderNo').text();
-        let companyId = $('#companyId').val();
+        let jobOrderId = $('#view_jobOrderId').val();
+        let jobOrderNo = $('#view_jobOrderNo').text();
+        let companyId = $('#view_companyId').val();
         openAddJobOrderModal(jobOrderId, jobOrderNo, companyId);
     }
 
@@ -613,8 +612,8 @@
 
         modalElement.modal('show');
 
-        let jobOrderId = $('#jobOrderId').val();
-        let jobOrderNo = $('#jobOrderNo').text();
+        let jobOrderId = $('#view_jobOrderId').val();
+        let jobOrderNo = $('#view_jobOrderNo').text();
         let companyId = $('#companyId').val();
 
         const functionName = `open${serviceType}Modal`;
@@ -636,8 +635,8 @@
 
         modalElement.modal('show');
 
-        //let jobOrderId = $('#jobOrderId').val();
-        //let jobOrderNo = $('#jobOrderNo').text();
+        //let jobOrderId = $('#view_jobOrderId').val();
+        //let jobOrderNo = $('#view_jobOrderNo').text();
         //let companyId = $('#companyId').val();
 
         //const functionName = `open${serviceType}Modal`;
@@ -657,10 +656,10 @@
             modalElement.addClass('child-modal');
             $('.modal-backdrop').addClass('child-modal-backdrop');
             modalElement.modal('show');
-            debugger;
+
             let companyId = $('#companyId').val();
             let customerId = $('#customerId').val();
-            let jobOrderId = $('#jobOrderId').val();
+            let jobOrderId = $('#view_jobOrderId').val();
 
             openTaskForwardModal(serviceType, taskId, customerId, jobOrderId, mulid);
 
@@ -690,7 +689,7 @@
     function initializePortExpenseGrid() {
 
         let searchString = "";
-        let jobOrderId = $('#jobOrderId').val();
+        let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
 
         if (jobOrderId > 0) {
@@ -720,7 +719,7 @@
         <i class="material-symbols-outlined text-danger" >delete</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="purchaseExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.taskId}')">
         <i class="material-symbols-outlined" >universal_currency_alt</i>
     </button>`;
 
@@ -771,6 +770,19 @@
     function openDebitNoteModal(jobOrderId, debitNoteId) {
         if (parseInt(jobOrderId) && parseInt(debitNoteId)) {
             // Proceed with opening the modal
+            console.log("Valid IDs, opening modal...");
+        } else {
+            console.log("Invalid IDs, please check.");
+        }
+    }
+
+    function openpurchaseExpenseModal(jobOrderId, jobOrderNo, portExpenseId, taskId) {
+        debugger;
+        if (parseInt(jobOrderId) && parseInt(portExpenseId)) {
+            const modalId = `#viewPurchaseModal`;
+            const modalElement = $(modalId);
+            modalElement.modal('show');
+
             console.log("Valid IDs, opening modal...");
         } else {
             console.log("Invalid IDs, please check.");
@@ -837,7 +849,7 @@
     function initializeLaunchServiceGrid() {
 
         let searchString = "";
-        let jobOrderId = $('#jobOrderId').val();
+        let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
 
         if (jobOrderId > 0) {
@@ -885,7 +897,7 @@
     function initializeEquipmentUsedGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -933,7 +945,7 @@ if (jobOrderId > 0) {
     function initializeCrewSignOnGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -981,7 +993,7 @@ if (jobOrderId > 0) {
     function initializeCrewSignOffGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1029,7 +1041,7 @@ if (jobOrderId > 0) {
     function initializeCrewMiscGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1077,7 +1089,7 @@ if (jobOrderId > 0) {
     function initializeMedicalAssistanceGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1125,7 +1137,7 @@ if (jobOrderId > 0) {
     function initializeConsignmentImportGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1173,7 +1185,7 @@ if (jobOrderId > 0) {
     function initializeConsignmentExportGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1221,7 +1233,7 @@ if (jobOrderId > 0) {
     function initializeThirdPartySupplyGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1269,7 +1281,7 @@ if (jobOrderId > 0) {
     function initializeFreshWaterGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1317,7 +1329,7 @@ if (jobOrderId > 0) {
     function initializeTechnicianSurveyorGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1365,7 +1377,7 @@ if (jobOrderId > 0) {
     function initializeLandingItemGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1413,7 +1425,7 @@ if (jobOrderId > 0) {
     function initializeOtherServiceGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {
@@ -1461,7 +1473,7 @@ if (jobOrderId > 0) {
     function initializeAgencyRemunerationGrid() {
 
 let searchString = "";
-let jobOrderId = $('#jobOrderId').val();
+let jobOrderId = $('#view_jobOrderId').val();
 let companyId = $('#companyId').val();
 
 if (jobOrderId > 0) {

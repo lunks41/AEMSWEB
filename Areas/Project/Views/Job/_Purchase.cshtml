@@ -1,0 +1,192 @@
+﻿<!-- Purchase Modal -->
+<div class="modal fade" id="viewPurchaseModal" tabindex="-1" aria-labelledby="viewPurchaseModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewPurchaseModalLabel">
+                    <i class="mdi mdi-file-document-edit me-2"></i> Purchase Mapping - <span class="text-primary" id="headerJobOrderNo"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="purchase_jobOrderId" />
+                <input type="hidden" id="purchase_jobOrderNo" />
+                <input type="hidden" id="taskId" />
+
+                <ul class="nav nav-pills nav-pills-bordered mb-4" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="accSetup-tab" data-bs-toggle="pill"
+                                data-bs-target="#accSetup" type="button" role="tab" aria-controls="accSetup" aria-selected="true">
+                            <i class="mdi mdi-view-list me-1"></i> Map Purchases
+                            <span class="badge bg-primary ms-2" id="mapCount">0</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="accSetupDt-tab" data-bs-toggle="pill"
+                                data-bs-target="#accSetupDt" type="button" role="tab" aria-controls="accSetupDt" aria-selected="false">
+                            <i class="mdi mdi-shape-outline me-1"></i>  Unmap Purchases
+                            <span class="badge bg-danger ms-2" id="unmapCount">0</span>
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="accSetup" role="tabpanel" aria-labelledby="accSetup-tab">
+                        <div id="grid_map"></div>
+                    </div>
+                    <div class="tab-pane fade" id="accSetupDt" role="tabpanel" aria-labelledby="accSetupDt-tab">
+                        <div id="grid_unmap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        initMapGrid();
+        initUnMapGrid();
+    });
+
+    function initMapGrid() {
+        $("#grid_map").kendoGrid({
+            dataSource: {
+                data: [], // start with empty data; you can load real data here
+                schema: {
+                    model: {
+                        fields: {
+                            PurchaseId: { type: "number" },
+                            PurchaseNo: { type: "string" },
+                            SupplierNo: { type: "string" },
+                            TotalAmt: { type: "number" },
+                            GstAmt: { type: "number" },
+                            Totaftgstamt: { type: "number" },
+                            DebitnoteNo: { type: "string" },
+                            CreatedBy: { type: "string" },
+                            CreatedDate: { type: "date" }
+                        }
+                    }
+                }
+            },
+            pageable: false,
+            height: 500,
+            selectable: "multiple, row", // Enables checkbox selection
+            columns: [
+                {
+                    template: '<input type="checkbox" class="checkbox" />',
+                    headerTemplate: '<input type="checkbox" class="check-all" onclick="checkAll(this)" />',
+                    width: 50
+                },
+                { field: "PurchaseId", title: "ID", width: 80 },
+                { field: "PurchaseNo", title: "Purchase No", width: 120 },
+                { field: "SupplierNo", title: "Supplier No", width: 120 },
+                {
+                    field: "TotalAmt",
+                    title: "Total",
+                    format: "{0:c}",
+                    width: 120
+                },
+                {
+                    field: "GstAmt",
+                    title: "GST",
+                    format: "{0:c}",
+                    width: 100
+                },
+                {
+                    field: "Totaftgstamt",
+                    title: "Total + GST",
+                    format: "{0:c}",
+                    width: 120
+                },
+                {
+                    field: "DebitnoteNo",
+                    title: "Debit Note",
+                    width: 150
+                },
+                {
+                    title: "Status",
+                    template: "#= DebitnoteNo ? '' : '<span class=\"badge bg-success\">Attach Available</span>' #",
+                    width: 150
+                },
+                {
+                    field: "CreatedDate",
+                    title: "Date",
+                    format: "{0:MM/dd/yyyy}",
+                    width: 120
+                }
+            ],
+        });
+    }
+
+    function initUnMapGrid() {
+        $("#grid_unmap").kendoGrid({
+            dataSource: {
+                data: [], // start with empty data; you can load real data here
+                schema: {
+                    model: {
+                        fields: {
+                            PurchaseId: { type: "number" },
+                            PurchaseNo: { type: "string" },
+                            SupplierNo: { type: "string" },
+                            TotalAmt: { type: "number" },
+                            GstAmt: { type: "number" },
+                            Totaftgstamt: { type: "number" },
+                            DebitnoteNo: { type: "string" },
+                            CreatedBy: { type: "string" },
+                            CreatedDate: { type: "date" }
+                        }
+                    }
+                }
+            },
+            pageable: false, // Disable paging
+            selectable: "multiple, row", // Enables checkbox selection
+            height: 500,
+            columns: [
+                {
+                    template: '<input type="checkbox" class="checkbox" />',
+                    headerTemplate: '<input type="checkbox" class="check-all" onclick="checkAll(this)" />',
+                    width: 50
+                },
+                { field: "PurchaseId", title: "ID", width: 80 },
+                { field: "PurchaseNo", title: "Purchase No", width: 120 },
+                { field: "SupplierNo", title: "Supplier No", width: 120 },
+                {
+                    field: "TotalAmt",
+                    title: "Total",
+                    format: "{0:c}",
+                    width: 120
+                },
+                {
+                    field: "GstAmt",
+                    title: "GST",
+                    format: "{0:c}",
+                    width: 100
+                },
+                {
+                    field: "Totaftgstamt",
+                    title: "Total + GST",
+                    format: "{0:c}",
+                    width: 120
+                },
+                {
+                    field: "DebitnoteNo",
+                    title: "Debit Note",
+                    width: 150
+                },
+                {
+                    title: "Status",
+                    template: "#= DebitnoteNo ? '' : '<span class=\"badge bg-success\">Attach Available</span>' #",
+                    width: 150
+                },
+                {
+                    field: "CreatedDate",
+                    title: "Date",
+                    format: "{0:MM/dd/yyyy}",
+                    width: 120
+                }
+            ],
+        });
+    }
+</script>

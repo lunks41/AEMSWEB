@@ -66,16 +66,14 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                 // Query to fetch paginated data with the additional filters
                 var result = await _repository.GetQueryAsync<JobOrderHdViewModel>(
-                    $"SELECT Hd.JobOrderId, Hd.CompanyId, Hd.JobOrderNo, Hd.JobOrderDate, Hd.CustomerId, Cur.CurrencyId, Cut.CustomerCode, Cut.CustomerName, Hd.IMONo, " +
-                    $"Cur.CurrencyName, Cur.CurrencyCode, Hd.TotalAmt, Hd.TotalLocalAmt, Hd.Remark1, Hd.IsActive, Hd.IsClose, " +
-                    $"Usr.UserName AS CreateBy, Usr1.UserName AS EditBy, " +
-                    $"Ord.OrderTypeName AS Status " + // Added OrderTypeName as Status
+                    $"SELECT Hd.JobOrderId, Hd.CompanyId, Hd.JobOrderNo, Hd.JobOrderDate, Hd.CustomerId,Cur.CurrencyId, Cut.CustomerCode, Cut.CustomerName, Hd.IMONo,Cur.CurrencyName,Cur.CurrencyCode,Hd.EtaDate,Hd.EtdDate,Hd.VesselDistance,Hd.PortId,M_Po.PortName,Hd.StatusId,Hd.TotalAmt, Hd.TotalLocalAmt, Hd.Remark1, Hd.IsActive, Hd.IsClose, Usr.UserName AS CreateBy, Usr1.UserName AS EditBy,Ord.OrderTypeName AS StatusName " +
                     $"FROM dbo.Ser_JobOrderHd Hd " +
                     $"INNER JOIN dbo.M_Customer Cut ON Cut.CustomerId = Hd.CustomerId " +
                     $"INNER JOIN dbo.M_Currency Cur ON Cur.CurrencyId = Hd.CurrencyId " +
+                    $"INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Hd.PortId " +
                     $"LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Hd.CreateById " +
                     $"LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Hd.EditById " +
-                    $"LEFT JOIN dbo.M_OrderType Ord ON Ord.OrderTypeId = Hd.StatusId " + // Join for OrderType
+                    $"LEFT JOIN dbo.M_OrderType Ord ON Ord.OrderTypeId = Hd.StatusId " +
                     $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
                     $"OR Cur.CurrencyCode LIKE '%{searchString}%' " +
                     $"OR Hd.JobOrderNo LIKE '%{searchString}%' " +
@@ -168,7 +166,7 @@ namespace AMESWEB.Areas.Project.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<JobOrderHdViewModel>($"SELECT Hd.CompanyId,Hd.JobOrderId,Hd.JobOrderNo,Hd.JobOrderDate,Hd.CustomerId,M_Cus.CustomerName,Hd.CurrencyId,M_Cur.CurrencyName,Hd.ExhRate,Hd.VesselId,M_Ves.VesselName,Hd.IMONo,Hd.VesselDistance,Hd.PortId,M_Pot.PortName,Hd.LastPortId,M_Pot1.PortName AS LastPortName,Hd.NextPortId,M_Pot2.PortName AS NextPortName,Hd.VoyageId,M_Voy.VoyageNo,Hd.NatureOfCall,Hd.ISPS,Hd.EtaDate,Hd.EtdDate,Hd.OwnerName,Hd.OwnerAgent,Hd.MasterName,Hd.Charters,Hd.ChartersAgent,Hd.IsTaxable FROM dbo.Ser_JobOrderHd Hd  INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Hd.CustomerId  INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_Cus.CurrencyId  INNER JOIN dbo.M_Vessel M_Ves ON M_Ves.VesselId = Hd.VesselId  INNER JOIN dbo.M_Port M_Pot ON M_Pot.PortId = Hd.PortId  INNER JOIN dbo.M_Port M_Pot1 ON M_Pot1.PortId = Hd.PortId  INNER JOIN dbo.M_Port M_Pot2 ON M_Pot2.PortId = Hd.PortId  INNER JOIN dbo.M_Voyage M_Voy ON M_Voy.VoyageId = Hd.VoyageId  WHERE Hd.JobOrderId={JobOrderId} AND Hd.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<JobOrderHdViewModel>($"SELECT Hd.CompanyId,Hd.JobOrderId,Hd.JobOrderNo,Hd.JobOrderDate,Hd.CustomerId,M_Cus.CustomerName,Hd.CurrencyId,M_Cur.CurrencyName,Hd.ExhRate,Hd.VesselId,M_Ves.VesselName,Hd.IMONo,Hd.VesselDistance,Hd.PortId,M_Pot.PortName,Hd.LastPortId,M_Pot1.PortName AS LastPortName,Hd.NextPortId,M_Pot2.PortName AS NextPortName,Hd.VoyageId,M_Voy.VoyageNo,Hd.NatureOfCall,Hd.ISPS,Hd.EtaDate,Hd.EtdDate,Hd.OwnerName,Hd.OwnerAgent,Hd.MasterName,Hd.Charters,Hd.ChartersAgent,Hd.IsTaxable,Hd.Remark1,Hd.Remark2,Hd.StatusId,M_Or.OrderTypeName AS StatusName,Hd.CreateById,Hd.CreateDate,Hd.EditById,Hd.EditDate,Hd.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_JobOrderHd Hd  INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Hd.CustomerId  INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_Cus.CurrencyId  INNER JOIN dbo.M_Vessel M_Ves ON M_Ves.VesselId = Hd.VesselId  INNER JOIN dbo.M_Port M_Pot ON M_Pot.PortId = Hd.PortId  INNER JOIN dbo.M_Port M_Pot1 ON M_Pot1.PortId = Hd.PortId  INNER JOIN dbo.M_Port M_Pot2 ON M_Pot2.PortId = Hd.PortId  INNER JOIN dbo.M_Voyage M_Voy ON M_Voy.VoyageId = Hd.VoyageId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Hd.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Hd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Hd.EditById  WHERE Hd.JobOrderId={JobOrderId} AND Hd.CompanyId={CompanyId}");
 
                 return result;
             }
@@ -207,7 +205,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             {
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId  FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.CompanyId={CompanyId}");
 
-                var result = await _repository.GetQueryAsync<PortExpensesViewModel>($"SELECT Ser_Port.PortExpenseId,Ser_Port.CompanyId,Ser_Port.JobOrderId,Ser_Port.JobOrderNo,Ser_Port.TaskId,Ser_Port.Quantity,Ser_Port.SupplierId,M_Ser.SupplierName,Ser_Port.ChargeId,M_Chr.ChargeName,Ser_Port.StatusId,M_Or.OrderTypeName As StatusName,Ser_Port.UomId,M_Uo.UomName,Ser_Port.DeliverDate,Ser_Port.Description,Ser_Port.GLId,Ser_Port.DebitNoteId,Ser_Port.DebitNoteNo,Ser_Port.Remarks,Ser_Port.CreateById,Ser_Port.CreateDate,Ser_Port.EditById,Ser_Port.EditDate,Ser_Port.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.CompanyId={CompanyId}");
+                var result = await _repository.GetQueryAsync<PortExpensesViewModel>($"SELECT Ser_Port.PortExpenseId,Ser_Port.CompanyId,Ser_Port.JobOrderId,Ser_Port.JobOrderNo,Ser_Port.TaskId,Ser_Port.Quantity,Ser_Port.SupplierId,M_Ser.SupplierName,Ser_Port.ChargeId,M_Chr.ChargeName,Ser_Port.StatusId,M_Or.OrderTypeName As StatusName,Ser_Port.UomId,M_Uo.UomName,Ser_Port.DeliverDate,Ser_Port.GLId,Ser_Port.DebitNoteId,Ser_Port.DebitNoteNo,Ser_Port.Remarks,Ser_Port.CreateById,Ser_Port.CreateDate,Ser_Port.EditById,Ser_Port.EditDate,Ser_Port.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.CompanyId={CompanyId}");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -242,7 +240,7 @@ namespace AMESWEB.Areas.Project.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<PortExpensesViewModel>($"SELECT Ser_Port.PortExpenseId,Ser_Port.CompanyId,Ser_Port.JobOrderId,Ser_Port.JobOrderNo,Ser_Port.TaskId,Ser_Port.Quantity,Ser_Port.SupplierId,M_Ser.SupplierName,Ser_Port.ChargeId,M_Chr.ChargeName,Ser_Port.StatusId,M_Or.OrderTypeName As StatusName,Ser_Port.UomId,M_Uo.UomName,Ser_Port.DeliverDate,Ser_Port.Description,Ser_Port.GLId,Ser_Port.DebitNoteId,Ser_Port.DebitNoteNo,Ser_Port.Remarks,Ser_Port.CreateById,Ser_Port.CreateDate,Ser_Port.EditById,Ser_Port.EditDate,Ser_Port.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.PortExpenseId={PortExpenseId} AND Ser_Port.CompanyId={CompanyId} ");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<PortExpensesViewModel>($"SELECT Ser_Port.PortExpenseId,Ser_Port.CompanyId,Ser_Port.JobOrderId,Ser_Port.JobOrderNo,Ser_Port.TaskId,Ser_Port.Quantity,Ser_Port.SupplierId,M_Ser.SupplierName,Ser_Port.ChargeId,M_Chr.ChargeName,Ser_Port.StatusId,M_Or.OrderTypeName As StatusName,Ser_Port.UomId,M_Uo.UomName,Ser_Port.DeliverDate,Ser_Port.GLId,Ser_Port.DebitNoteId,Ser_Port.DebitNoteNo,Ser_Port.Remarks,Ser_Port.CreateById,Ser_Port.CreateDate,Ser_Port.EditById,Ser_Port.EditDate,Ser_Port.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.PortExpenseId={PortExpenseId} AND Ser_Port.CompanyId={CompanyId} ");
 
                 return result;
             }
@@ -652,5 +650,37 @@ namespace AMESWEB.Areas.Project.Data.Services
         }
 
         #endregion Task Count
+
+        #region
+
+        public async Task<IEnumerable<dynamic>> GetPurchaseJobOrderAsync(short companyId, short userId, Int64 jobOrderId, int taskId)
+        {
+            try
+            {
+                return await _repository.GetQueryAsync<dynamic>($"SELECT  InvoiceId,InvoiceNo,ItemNo,TotAmt,GstAmt,(TotAmt+GstAmt) TotAftGstAmt ,Remarks  FROM dbo.ArInvoiceDt WHERE InvoiceId IN (138202504000021,138202504000019,138202504000012,138202504000011,138202503000099) AND ItemNo IN (1,2)");
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = companyId,
+                    ModuleId = (short)E_Modules.AR,
+                    TransactionId = (short)E_AR.Invoice,
+                    DocumentId = jobOrderId,
+                    DocumentNo = "",
+                    TblName = "jobOderPurchase",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = userId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        #endregion
     }
 }
