@@ -77,7 +77,7 @@
                             onclick="openChildViewJobOrderModal();">
                         View
                     </button>
-                    <button type="button" class="btn-close"                            data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
             <div class="modal-body">
@@ -337,11 +337,20 @@
                                 <!-- Launch Services Tab -->
                                 <div class="tab-pane fade" id="launch-services">
                                     <!-- Button Group for Launch Services (adjust as needed) -->
-                                    <div class="mb-3">
-                                        <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add Launch Service</button>
-                                        <button id="btnCreateDebitNoteLaunch" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardLaunch" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateLaunch" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add Port Expense</button>
+                                        <button id="btnCreateDebitNoteLaunchService" onclick="openChildDebitNoteModal('LaunchService')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
+                                        <button id="btnTaskForwardLaunchService" onclick="openChildTaskForwardModal('LaunchService',2)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateLaunchService" onclick="openChildBulkUpdateModal('LaunchService',2)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isLaunchServiceDebitNoteNo" class="form-check-input" disabled>
+                                            <label for="isLaunchServiceDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="portExpensedebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Launch Services -->
                                     <div id="grid-LaunchService" class="kendo-grid"></div>
@@ -350,11 +359,20 @@
                                 <!-- Equipments Used Tab -->
                                 <div class="tab-pane fade" id="equipments-used">
                                     <!-- Button Group for Equipments Used -->
-                                    <div class="mb-3">
-                                        <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentUsed')" class="btn btn-primary me-2">Add Equipment</button>
-                                        <button id="btnCreateDebitNoteEquipment" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardEquipment" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateEquipment" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentUsed')" class="btn btn-primary me-2">Add Port Expense</button>
+                                        <button id="btnCreateDebitNoteEquipmentUsed" onclick="openChildDebitNoteModal('EquipmentUsed')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
+                                        <button id="btnTaskForwardEquipmentUsed" onclick="openChildTaskForwardModal('EquipmentUsed',3)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateEquipmentUsed" onclick="openChildBulkUpdateModal('EquipmentUsed',3)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isEquipmentUsedDebitNoteNo" class="form-check-input" disabled>
+                                            <label for="isEquipmentUsedDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="portExpensedebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Equipments Used -->
                                     <div id="grid-EquipmentUsed" class="kendo-grid"></div>
@@ -685,6 +703,28 @@
         });
     });
 
+    function openDebitNoteModal(jobOrderId, debitNoteId) {
+        if (parseInt(jobOrderId) && parseInt(debitNoteId)) {
+            // Proceed with opening the modal
+            console.log("Valid IDs, opening modal...");
+        } else {
+            console.log("Invalid IDs, please check.");
+        }
+    }
+
+    function openpurchaseExpenseModal(jobOrderId, jobOrderNo, portExpenseId, taskId) {
+        debugger;
+        if (parseInt(jobOrderId) && parseInt(portExpenseId)) {
+            const modalId = `#viewPurchaseModal`;
+            const modalElement = $(modalId);
+            modalElement.modal('show');
+
+            console.log("Valid IDs, opening modal...");
+        } else {
+            console.log("Invalid IDs, please check.");
+        }
+    }
+
     // ================== PORT EXPENSES GRID ================== //
     function initializePortExpenseGrid() {
 
@@ -698,13 +738,13 @@
                 {
                     title: "Actions",
                     width: "200px",
-                    headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAll(this)" />',
+                    headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAllPortExpense(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelected(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelectedPortExpense(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
                         let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
@@ -745,7 +785,7 @@
                 },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-                { field: "description", title: "Description", width: "250px" },
+               
                 { field: "remarks", title: "Remarks", width: "200px" },
                 {
                     field: "isActive",
@@ -767,29 +807,7 @@
         }
     }
 
-    function openDebitNoteModal(jobOrderId, debitNoteId) {
-        if (parseInt(jobOrderId) && parseInt(debitNoteId)) {
-            // Proceed with opening the modal
-            console.log("Valid IDs, opening modal...");
-        } else {
-            console.log("Invalid IDs, please check.");
-        }
-    }
-
-    function openpurchaseExpenseModal(jobOrderId, jobOrderNo, portExpenseId, taskId) {
-        debugger;
-        if (parseInt(jobOrderId) && parseInt(portExpenseId)) {
-            const modalId = `#viewPurchaseModal`;
-            const modalElement = $(modalId);
-            modalElement.modal('show');
-
-            console.log("Valid IDs, opening modal...");
-        } else {
-            console.log("Invalid IDs, please check.");
-        }
-    }
-
-    function updateSelected(checkbox, jobOrderId, portExpenseId) {
+    function updateSelectedPortExpense(checkbox, jobOrderId, portExpenseId) {
 
         if (checkbox.checked) {
             // Add the portExpenseId to mulid if checked
@@ -807,7 +825,7 @@
         updateButtonStates();
     }
 
-    function toggleSelectAll(headerCheckbox) {
+    function toggleSelectAllPortExpense(headerCheckbox) {
 
         let checked = headerCheckbox.checked;
         mulid = ""; // Reset mulid when toggling "Select All"
@@ -846,36 +864,36 @@
     }
 
     // ================== LAUNCH SERVICES GRID ================== //
-    function initializeLaunchServiceGrid() {
-
+    function initializeLaunchServicesGrid() {
+        debugger;
         let searchString = "";
         let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
 
         if (jobOrderId > 0) {
-            let url = '@Url.Action("PortExpensesList", "Job", new { area = "Project" })';
+            let url = '@Url.Action("LaunchServicesList", "Job", new { area = "Project" })';
             let columns = [
                 {
                     title: "Actions",
                     width: "200px",
-                    headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAll(this)" />',
+                    headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAllLaunchServices(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelected(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelectedLaunchServices(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
      <i class="material-symbols-outlined text-primary">visibility</i>
  </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'edit')">
      <i class="material-symbols-outlined text-warning" >edit</i>
  </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteLaunchServices('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
      <i class="material-symbols-outlined text-danger" >delete</i>
  </button>`;
 
@@ -891,21 +909,19 @@
                     }
                 },
                 { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 {
-                    field: "deliverDate",
-                    title: "Deliver Date",
+                    field: "launchServiceDate",
+                    title: "Launch Service Date",
                     width: "120px",
                     template: function (dataItem) {
-                        var date = new Date(dataItem.deliverDate);
+                        var date = new Date(dataItem.launchServiceDate);
                         return kendo.toString(date, "dd/MM/yyyy");
                     }
                 },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-                { field: "description", title: "Description", width: "250px" },
                 { field: "remarks", title: "Remarks", width: "200px" },
                 {
                     field: "isActive",
@@ -915,640 +931,696 @@
                 }
             ];
 
-            let grid = $("#grid-PortExpense").data("kendoGrid");
+            let grid = $("#grid-LaunchService").data("kendoGrid");
             if (grid) {
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGridWithoutPaging("grid-PortExpense", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-LaunchService", url, { searchString, companyId, jobOrderId }, columns);
             }
 
             loadTaskJobOrderCounts(jobOrderId);
         }
     }
 
+    function updateSelectedLaunchServices(checkbox, jobOrderId, portExpenseId) {
+
+        if (checkbox.checked) {
+            // Add the portExpenseId to mulid if checked
+            if (!mulid.includes(portExpenseId)) {
+                mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
+            }
+        } else {
+            // Remove the portExpenseId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== portExpenseId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonStates();
+    }
+
+    function toggleSelectAllLaunchServices(headerCheckbox) {
+
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectDebitNote").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all portExpenseIds to mulid
+            if (checked) {
+                let portExpenseId = checkbox.getAttribute("data-portExpenseId");
+                if (portExpenseId) {
+                    mulid += mulid.length > 0 ? `,${portExpenseId}` : portExpenseId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonStates();
+    }
+
+    function updateButtonStates() {
+        // Check if any .selectDebitNote checkbox is selected
+        let anySelected = document.querySelectorAll(".selectDebitNote:checked").length > 0;
+
+        // Check the state of the isLaunchServicesDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isLaunchServicesDebitNoteNo").checked;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        document.getElementById("btnCreateDebitNoteLaunchServices").disabled = !enableButtons;
+        document.getElementById("btnTaskForwardLaunchServices").disabled = !enableButtons;
+        document.getElementById("btnBulkUpdateLaunchServices").disabled = !enableButtons;
+    }
+
     // ================== EQUIPMENT USED GRID ================== //
     function initializeEquipmentUsedGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("EquipmentUsedList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("EquipmentUsedList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-EquipmentUsed").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-EquipmentUsed", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-EquipmentUsed", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== CREW SIGN-ON GRID ================== //
     function initializeCrewSignOnGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("CrewSignOnList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("CrewSignOnList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-CrewSignOn").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-CrewSignOn", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-CrewSignOn", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== CREW SIGN-OFF GRID ================== //
     function initializeCrewSignOffGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("CrewSignOffList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("CrewSignOffList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-CrewSignOff").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-CrewSignOff", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-CrewSignOff", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== CRE MISCELLANEOUS GRID ================== //
     function initializeCrewMiscGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("CrewMiscList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("CrewMiscList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-CrewMisc").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-CrewMisc", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-CrewMisc", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== MEDICAL ASSISTANCE GRID ================== //
     function initializeMedicalAssistanceGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("MedicalAssistanceList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("MedicalAssistanceList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-MedicalAssistance").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-MedicalAssistance", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-MedicalAssistance", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== CONSIGNMENT IMPORT GRID ================== //
     function initializeConsignmentImportGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("ConsignmentImportList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("ConsignmentImportList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-ConsignmentImport").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-ConsignmentImport", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-ConsignmentImport", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== CONSIGNMENT EXPORT GRID ================== //
     function initializeConsignmentExportGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("ConsignmentExportList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("ConsignmentExportList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-ConsignmentExport").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-ConsignmentExport", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-ConsignmentExport", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== THIRD PARTY SUPPLY GRID ================== //
     function initializeThirdPartySupplyGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("ThirdPartySupplyList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("ThirdPartySupplyList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-ThirdPartySupply").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-ThirdPartySupply", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-ThirdPartySupply", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== FRESH WATER GRID ================== //
     function initializeFreshWaterGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("FreshWaterList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("FreshWaterList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-FreshWater").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-FreshWater", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-FreshWater", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== TECHNICIAN SURVEYOR GRID ================== //
     function initializeTechnicianSurveyorGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("TechnicianSurveyorList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("TechnicianSurveyorList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-TechnicianSurveyor").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-TechnicianSurveyor", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-TechnicianSurveyor", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== LANDING ITEM GRID ================== //
     function initializeLandingItemGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("LandingItemList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("LandingItemList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-LandingItem").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-LandingItem", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-LandingItem", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== OTHER SERVICE GRID ================== //
     function initializeOtherServiceGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("OtherServiceList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("OtherServiceList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-OtherService").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-OtherService", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-OtherService", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 
     // ================== AGENCY REMUNERATION GRID ================== //
     function initializeAgencyRemunerationGrid() {
 
-let searchString = "";
-let jobOrderId = $('#view_jobOrderId').val();
-let companyId = $('#companyId').val();
+        let searchString = "";
+        let jobOrderId = $('#view_jobOrderId').val();
+        let companyId = $('#companyId').val();
 
-if (jobOrderId > 0) {
-    let url = '@Url.Action("AgencyRemunerationList", "Job", new { area = "Project" })';
-    let columns = [
-        {
-            title: "Actions",
-            width: "100px",
-            template: function (dataItem) {
-                let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
+        if (jobOrderId > 0) {
+            let url = '@Url.Action("AgencyRemunerationList", "Job", new { area = "Project" })';
+            let columns = [
+                {
+                    title: "Actions",
+                    width: "100px",
+                    template: function (dataItem) {
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
     <i class="material-symbols-outlined text-warning">edit</i></button>`;
 
-                buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
     <i class="material-symbols-outlined text-danger">delete</i></button>`;
 
-                return buttons;
-            }
-        },
-        { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-        { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-        { field: "supplierName", title: "Supplier Name", width: "200px" },
-        { field: "chargeName", title: "Charge Name", width: "150px" },
-        { field: "statusName", title: "Status Name", width: "150px" },
-        { field: "uomName", title: "Uom Name", width: "120px" },
-        { field: "quantity", title: "Quantity", width: "100px" },
-        { field: "description", title: "Description", width: "250px" },
-        { field: "remarks", title: "Remarks", width: "200px" },
-        { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-    ];
+                        return buttons;
+                    }
+                },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "statusName", title: "Status Name", width: "150px" },
+                { field: "uomName", title: "Uom Name", width: "120px" },
+                { field: "quantity", title: "Quantity", width: "100px" },
+               
+                { field: "remarks", title: "Remarks", width: "200px" },
+                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            ];
 
             let grid = $("#grid-AgencyRemuneration").data("kendoGrid");
-    if (grid) {
-        grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-    } else {
-        // Initialize grid if it doesn’t exist
-        initializeKendoGrid("grid-AgencyRemuneration", url, { searchString, companyId, jobOrderId }, columns);
-    }
-}
+            if (grid) {
+                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
+            } else {
+                // Initialize grid if it doesn’t exist
+                initializeKendoGrid("grid-AgencyRemuneration", url, { searchString, companyId, jobOrderId }, columns);
+            }
+        }
     }
 </script>
 

@@ -125,6 +125,7 @@ public static class InfraServices
         #region Project
 
         services.AddScoped<IJobOrderService, JoborderService>();
+        services.AddScoped<IJobTaskService, JobTaskService>();
         services.AddScoped<ITariffService, TariffService>();
 
         #endregion Project

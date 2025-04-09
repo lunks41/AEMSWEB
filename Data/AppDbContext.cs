@@ -223,6 +223,7 @@ namespace AMESWEB.Data
         public DbSet<Ser_Tariff> Ser_Tariff { get; set; }
 
         public DbSet<Ser_PortExpenses> Ser_PortExpenses { get; set; }
+        //public DbSet<Ser_LaunchServices> Ser_LaunchServices { get; set; }
 
         #endregion Project
 

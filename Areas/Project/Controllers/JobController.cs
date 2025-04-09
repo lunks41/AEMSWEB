@@ -15,14 +15,17 @@ namespace AMESWEB.Areas.Project.Controllers
     {
         private readonly ILogger<JobController> _logger;
         private readonly IJobOrderService _jobOrderService;
+        private readonly IJobTaskService _jobTaskService;
 
         public JobController(ILogger<JobController> logger,
             IBaseService baseService,
-            IJobOrderService jobOrderService)
+            IJobOrderService jobOrderService,
+            IJobTaskService jobTaskService)
             : base(logger, baseService)
         {
             _logger = logger;
             _jobOrderService = jobOrderService;
+            _jobTaskService = jobTaskService;
         }
 
         [Authorize]
@@ -153,7 +156,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _jobOrderService.GetPortExpensesListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                var data = await _jobTaskService.GetPortExpensesListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
@@ -174,7 +177,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _jobOrderService.GetPortExpensesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, portExpenseId);
+                var data = await _jobTaskService.GetPortExpensesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, portExpenseId);
                 return data == null
                     ? Json(new { success = false, message = "Account Type not found" })
                     : Json(new { success = true, data });
@@ -224,7 +227,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobOrderService.SavePortExpensesAsync(companyIdShort, parsedUserId.Value, portExpenseToSave);
+                var result = await _jobTaskService.SavePortExpensesAsync(companyIdShort, parsedUserId.Value, portExpenseToSave);
                 return Json(new { success = true, message = "Account Type saved successfully", data = result });
             }
             catch (Exception ex)
@@ -258,7 +261,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                await _jobOrderService.DeletePortExpensesAsync(companyIdShort, parsedUserId.Value, jobOrderId, portExpenseId);
+                await _jobTaskService.DeletePortExpensesAsync(companyIdShort, parsedUserId.Value, jobOrderId, portExpenseId);
                 return Json(new { success = true, message = "Account Type deleted successfully." });
             }
             catch (Exception ex)
@@ -271,6 +274,152 @@ namespace AMESWEB.Areas.Project.Controllers
         #endregion Port Expenses
 
         #region Launch Services
+
+        [HttpGet]
+        public async Task<JsonResult> LaunchServicesList(string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetLaunchServicesListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching account type list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetLaunchServicesById(Int64 jobOrderId, Int64 launchServiceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+                return Json(new { success = false, message = "Invalid Account Type ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetLaunchServicesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
+                return data == null
+                    ? Json(new { success = false, message = "Account Type not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching account type by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveLaunchServices([FromBody] SaveLaunchServicesViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var launchServiceToSave = new Ser_LaunchServices
+                {
+                    LaunchServiceId = model.launchService.LaunchServiceId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.launchService.JobOrderId,
+                    JobOrderNo = model.launchService.JobOrderNo?.Trim() ?? string.Empty,
+
+                    TaskId = model.launchService.TaskId,
+                    GLId = model.launchService.GLId,
+                    ChargeId = model.launchService.ChargeId,
+                    StatusId = model.launchService.StatusId,
+                    UomId = model.launchService.UomId,
+
+                    // Date-related fields, handling potential empty strings and null values
+                    LaunchServiceDate = Convert.ToDateTime(model.launchService.LaunchServiceDate),
+
+                    LoadingTime = string.IsNullOrWhiteSpace(model.launchService.LoadingTime)
+        ? (DateTime?)null
+        : Convert.ToDateTime(model.launchService.LoadingTime),
+                    LeftJetty = string.IsNullOrWhiteSpace(model.launchService.LeftJetty)
+        ? (DateTime?)null
+        : Convert.ToDateTime(model.launchService.LeftJetty),
+
+                    DebitNoteId = model.launchService.DebitNoteId,
+                    DebitNoteNo = model.launchService.DebitNoteNo?.Trim(),
+
+                    // Handling financial amounts
+                    TotAmt = model.launchService.TotAmt,
+                    GstAmt = model.launchService.GstAmt,
+                    TotAmtAftGst = model.launchService.TotAmtAftGst,
+
+                    // String properties with trimming and defaults
+                    Remarks = model.launchService.Remarks?.Trim() ?? string.Empty,
+                    BoatOperator = model.launchService.BoatOperator?.Trim(),
+                    InvoiceNo = model.launchService.InvoiceNo?.Trim(),
+                    Annexure = model.launchService.Annexure?.Trim(),
+
+                    // Handling nullable decimal values
+                    DistanceFromJetty = model.launchService.DistanceFromJetty,
+                    DistanceFromJettyToVessel = model.launchService.DistanceFromJettyToVessel,
+                    WeightOfCargoDelivered = model.launchService.WeightOfCargoDelivered,
+                    WeightOfCargoLanded = model.launchService.WeightOfCargoLanded,
+
+                    // User and system details
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.Now,
+                };
+
+                var result = await _jobTaskService.SaveLaunchServicesAsync(companyIdShort, parsedUserId.Value, launchServiceToSave);
+                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving account type");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteLaunchServices(Int64 jobOrderId, Int64 launchServiceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+            {
+                _logger.LogWarning("Delete failed: Invalid Account Type ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Account Type ID." });
+            }
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
+            if (permissions == null || !permissions.IsDelete)
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this account group." });
+            }
+
+            try
+            {
+                await _jobTaskService.DeleteLaunchServicesAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
+                return Json(new { success = true, message = "Account Type deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Account Type. Account Type ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
+            }
+        }
 
         #endregion Launch Services
 
@@ -405,7 +554,7 @@ namespace AMESWEB.Areas.Project.Controllers
         #region Purchase
 
         [HttpPost]
-        public async Task<JsonResult> GetPurchaseJobOrder(string searchString, string companyId, Int64 jobOrderId,int taskId)
+        public async Task<JsonResult> GetPurchaseJobOrder(string searchString, string companyId, Int64 jobOrderId, int taskId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null)
@@ -413,7 +562,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _jobOrderService.GetPurchaseJobOrderAsync(companyIdShort, parsedUserId.Value, jobOrderId,taskId);
+                var data = await _jobOrderService.GetPurchaseJobOrderAsync(companyIdShort, parsedUserId.Value, jobOrderId, taskId);
                 return Json(new { data = data });
             }
             catch (Exception ex)
@@ -422,6 +571,7 @@ namespace AMESWEB.Areas.Project.Controllers
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
+
         [HttpPost]
         public async Task<JsonResult> SavePurchaseJobOrder(string searchString, string companyId, Int64 jobOrderId)
         {
@@ -442,8 +592,6 @@ namespace AMESWEB.Areas.Project.Controllers
             }
         }
 
-        #endregion
-
-
+        #endregion Purchase
     }
 }

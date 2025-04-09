@@ -515,8 +515,6 @@ namespace AMESWEB.Areas.Project.Data.Services
 
         #endregion Port Expenses
 
-
-
         #endregion Task
 
         public async Task<SqlResponse> SaveTaskForwardAsync(short companyId, short userId, Int64 jobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string multipleId)
