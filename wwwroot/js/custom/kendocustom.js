@@ -152,6 +152,14 @@ function initializeKendoTreeList(treeListId, url, params, columns, height = 600)
     });
 }
 function bindAutoComplete(url, dropdownId, textField) {
+
+    if ($("#" + dropdownId).data("kendoAutoComplete")) {
+        debugger;
+        $("#" + dropdownId).siblings(".k-clear-value").remove();
+        $("#" + dropdownId).data("kendoAutoComplete").destroy();
+    }
+    $("#" + dropdownId).empty();
+
     $.ajax({
         url: url,
         async: false, // Synchronous request (deprecated - consider using async/await)
@@ -198,6 +206,8 @@ function bindComboBox(url, dropdownId, textField, valueField) {
         debugger;
         // Cleanup previous instances
         if ($("#" + dropdownId).data("kendoComboBox")) {
+            debugger;
+            $("#" + dropdownId).siblings(".k-clear-value").remove();
             $("#" + dropdownId).data("kendoComboBox").destroy();
         }
         $("#" + dropdownId).empty();
@@ -274,11 +284,22 @@ function bindComboBox(url, dropdownId, textField, valueField) {
                 });
             }
         });
+
+        
+
     } catch (e) {
         console.error("Unexpected error:", e);
     }
 }
 function bindMultiColumnComboBox(url, dropdownId, textField, valueField, columnsProperties, filterFields) {
+
+    if ($("#" + dropdownId).data("kendoMultiColumnComboBox")) {
+        debugger;
+        $("#" + dropdownId).siblings(".k-clear-value").remove();
+        $("#" + dropdownId).data("kendoMultiColumnComboBox").destroy();
+    }
+    $("#" + dropdownId).empty();
+
     $.ajax({
         url: url,
         async: false, // Synchronous request (not recommended for modern apps)
