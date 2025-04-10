@@ -13,159 +13,167 @@ This files table contents are outlined below>>>>>
 
 :root,
 [data-bs-theme="light"] {
-    /* Base Colors */
-    --bs-blue: #0078D4;
-    --bs-indigo: #3A10E5;
-    --bs-purple: #5C2E91;
-    --bs-pink: #E3008C;
-    --bs-red: #A4262C;
-    --bs-orange: #CA5010;
-    --bs-yellow: #F2C811;
-    --bs-green: #107C10;
-    --bs-teal: #008272;
-    --bs-cyan: #038387;
-    --bs-black: #000000;
-    --bs-white: #FFFFFF;
-    --bs-gray: #605E5C;
-    /* Theme Colors */
-    --bs-primary: #0078D4;
-    --bs-secondary: #666666;
-    --bs-success: #107C10;
-    --bs-info: #038387;
-    --bs-warning: #F2C811;
-    --bs-danger: #A4262C;
-    --bs-light: #F3F2F1;
-    --bs-dark: #201F1E;
-    /* Extended Palette */
-    --bs-primary-div: #DEECF9;
-    --bs-primary-div-50: #C7E0F4;
-    --bs-primary-50: #106EBE;
-    --bs-danger-50: #D13438;
-    --bs-success-50: #0B6A0B;
-    --bs-success-60: #0C5C0C;
-    --bs-body-bg: #FFFFFF;
-    --bs-danger-div: #FDE7E9;
-    --bs-rating-color: #F2C811;
-    --bs-card-bg-c: #F3F2F1;
-    --bs-card-text-c: #201F1E;
-    --bs-gary-light: #FAF9F8;
-    --bs-border-color: #EDEBE9;
-    /* RGB Values */
-    --bs-primary-rgb: 0, 120, 212;
-    --bs-secondary-rgb: 102, 102, 102;
-    --bs-success-rgb: 16, 124, 16;
-    --bs-info-rgb: 3, 131, 135;
-    --bs-warning-rgb: 242, 200, 17;
-    --bs-danger-rgb: 164, 38, 44;
-    --bs-light-rgb: 243, 242, 241;
-    --bs-dark-rgb: 32, 31, 30;
-    /* Text & Background */
-    --bs-body-color: #201F1E;
-    --bs-body-bg: #FFFFFF;
-    --bs-emphasis-color: #000000;
-    --bs-link-color: #0078D4;
-    --bs-link-hover-color: #106EBE;
-    --bs-border-color: #EDEBE9;
-    /* Typography */
-    --bs-body-font-family: 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
-    --bs-body-font-size: 0.875rem;
-    --bs-body-line-height: 1.5;
-    /* Shadows */
-    --bs-box-shadow: 0 1.6px 3.6px rgba(0, 0, 0, 0.13), 0 0.3px 0.9px rgba(0, 0, 0, 0.11);
-    --bs-box-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --bs-box-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.14);
-    /* Border Radius */
-    --bs-border-radius: 4px;
-    --bs-border-radius-sm: 2px;
-    --bs-border-radius-lg: 8px;
+    /* 
+     * LIGHT THEME
+     * Warm, eye-friendly color palette with reduced blue light
+     */
+    /* Base Colors - Warmer Tones */
+    --bs-blue: #5B8FB9; /* Less harsh blue */
+    --bs-indigo: #7D6E83; /* Muted indigo */
+    --bs-purple: #8B6E95; /* Softer purple */
+    --bs-pink: #D68EA0; /* Dusty rose */
+    --bs-red: #B95C50; /* Terracotta red */
+    --bs-orange: #E09F3E; /* Amber orange */
+    --bs-yellow: #F2CC8F; /* Soft golden */
+    --bs-green: #618B4A; /* Olive green */
+    --bs-teal: #40916C; /* Forest teal */
+    --bs-cyan: #4A8B8A; /* Muted teal */
+    --bs-black: #2D2D2A; /* Soft black */
+    --bs-white: #FFFCF7; /* Cream white */
+    --bs-gray: #7A7A77; /* Warm gray */
+    /* Theme Colors - Warmer Alternatives */
+    --bs-primary: #87A7B3; /* Muted blue-gray */
+    --bs-secondary: #A59E8C; /* Taupe */
+    --bs-success: #618B4A; /* Olive green */
+    --bs-info: #4A8B8A; /* Muted teal */
+    --bs-warning: #F2CC8F; /* Soft golden */
+    --bs-danger: #B95C50; /* Terracotta red */
+    --bs-light: #F5F2EB; /* Off-white */
+    --bs-dark: #3C3C38; /* Charcoal */
+    /* Extended Palette - Warmer Variants */
+    --bs-primary-div: #E8EEF1; /* Very light blue-gray */
+    --bs-primary-div-50: #D0DBE0; /* Light blue-gray */
+    --bs-primary-50: #6B8A94; /* Darker blue-gray */
+    --bs-danger-50: #C97565; /* Lighter terracotta */
+    --bs-success-50: #52763E; /* Darker olive */
+    --bs-success-60: #465E35; /* Even darker olive */
+    --bs-body-bg: #FFFCF7; /* Cream white background */
+    --bs-danger-div: #F7E9E7; /* Very light terracotta */
+    --bs-rating-color: #E09F3E; /* Amber for ratings */
+    --bs-card-bg-c: #F5F2EB; /* Off-white for cards */
+    --bs-card-text-c: #3C3C38; /* Charcoal for card text */
+    --bs-gary-light: #FAF8F3; /* Very light warm gray */
+    --bs-border-color: #E8E5DE; /* Warm border color */
+    /* RGB Values - Updated for New Colors */
+    --bs-primary-rgb: 135, 167, 179;
+    --bs-secondary-rgb: 165, 158, 140;
+    --bs-success-rgb: 97, 139, 74;
+    --bs-info-rgb: 74, 139, 138;
+    --bs-warning-rgb: 242, 204, 143;
+    --bs-danger-rgb: 185, 92, 80;
+    --bs-light-rgb: 245, 242, 235;
+    --bs-dark-rgb: 60, 60, 56;
+    /* Text & Background - Warmer Options */
+    --bs-body-color: #3C3C38; /* Charcoal text */
+    --bs-body-bg: #FFFCF7; /* Cream white background */
+    --bs-emphasis-color: #2D2D2A; /* Soft black for emphasis */
+    --bs-link-color: #6B8A94; /* Darker blue-gray for links */
+    --bs-link-hover-color: #5B7A84; /* Even darker for hover */
+    --bs-border-color: #E8E5DE; /* Warm border color */
+    /* Typography - Improved for Readability */
+    --bs-body-font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    --bs-body-font-size: 1rem; /* Slightly larger for better readability */
+    --bs-body-line-height: 1.6; /* Increased for better readability */
+    /* Shadows - Softened */
+    --bs-box-shadow: 0 1.6px 3.6px rgba(79, 79, 74, 0.12), 0 0.3px 0.9px rgba(79, 79, 74, 0.10);
+    --bs-box-shadow-sm: 0 1px 3px rgba(79, 79, 74, 0.11);
+    --bs-box-shadow-lg: 0 4px 8px rgba(79, 79, 74, 0.13);
+    /* Border Radius - Slightly More Rounded */
+    --bs-border-radius: 6px;
+    --bs-border-radius-sm: 3px;
+    --bs-border-radius-lg: 10px;
     /* Form Elements */
-    --bs-focus-ring-color: rgba(0, 120, 212, 0.3);
-    --bs-form-valid-color: #107C10;
-    --bs-form-invalid-color: #A4262C;
+    --bs-focus-ring-color: rgba(135, 167, 179, 0.3);
+    --bs-form-valid-color: #618B4A;
+    --bs-form-invalid-color: #B95C50;
     /* Fluent-specific Variables */
-    --p-color-text-brand: #0078D4;
-    --p-color-nav-bg-surface-active: #F3F2F1;
+    --p-color-text-brand: #6B8A94;
+    --p-color-nav-bg-surface-active: #F5F2EB;
     --p-space-200: 8px;
-    --p-motion-duration-150: 0.15s;
+    --p-motion-duration-150: 0.2s; /* Slightly slower for smoother feel */
     --p-motion-ease-out: cubic-bezier(0.33, 0, 0.67, 1);
 }
 
 [data-bs-theme="dark"] {
     color-scheme: dark;
-    /* Base Colors */
-    --bs-blue: #2899F5;
-    --bs-indigo: #3A96DD;
-    --bs-purple: #B146C2;
-    --bs-pink: #E959D9;
-    --bs-red: #D13438;
-    --bs-orange: #F7630C;
-    --bs-yellow: #F8D22A;
-    --bs-green: #107C10;
-    --bs-teal: #00B7C3;
-    --bs-cyan: #00B7C3;
-    --bs-black: #000000;
-    --bs-white: #FFFFFF;
-    --bs-gray: #8A8886;
-    /* Theme Colors */
-    --bs-primary: #2899F5;
-    --bs-secondary: #616161;
-    --bs-success: #107C10;
-    --bs-info: #00B7C3;
-    --bs-warning: #F8D22A;
-    --bs-danger: #D13438;
-    --bs-light: #F3F2F1;
-    --bs-dark: #1B1A19;
-    /* Extended Palette */
-    --bs-primary-div: #004377;
-    --bs-primary-div-50: #005A9E;
-    --bs-primary-50: #0078D4;
-    --bs-danger-50: #A4262C;
-    --bs-success-50: #0B6A0B;
-    --bs-success-60: #0C5C0C;
-    --bs-body-bg: #1B1A19;
-    --bs-danger-div: #4F0B0F;
-    --bs-rating-color: #F8D22A;
-    --bs-card-bg-c: #252423;
-    --bs-card-text-c: #FFFFFF;
-    --bs-gary-light: #323130;
-    --bs-border-color: #3B3A39;
-    /* RGB Values */
-    --bs-primary-rgb: 40, 153, 245;
-    --bs-secondary-rgb: 97, 97, 97;
-    --bs-success-rgb: 16, 124, 16;
-    --bs-info-rgb: 0, 183, 195;
-    --bs-warning-rgb: 248, 210, 42;
-    --bs-danger-rgb: 209, 52, 56;
-    --bs-light-rgb: 243, 242, 241;
-    --bs-dark-rgb: 27, 26, 25;
-    /* Text & Background */
-    --bs-body-color: #FFFFFF;
-    --bs-body-bg: #1B1A19;
-    --bs-emphasis-color: #FFFFFF;
-    --bs-link-color: #2899F5;
-    --bs-link-hover-color: #4CB0F6;
-    --bs-border-color: #3B3A39;
-    /* Typography */
-    --bs-body-font-family: 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
-    --bs-body-font-size: 0.875rem;
-    --bs-body-line-height: 1.5;
-    /* Shadows */
-    --bs-box-shadow: 0 3.2px 7.2px rgba(0, 0, 0, 0.3), 0 0.6px 1.8px rgba(0, 0, 0, 0.2);
-    --bs-box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-    --bs-box-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
-    /* Border Radius */
-    --bs-border-radius: 4px;
-    --bs-border-radius-sm: 2px;
-    --bs-border-radius-lg: 8px;
+    /* 
+     * DARK THEME
+     * Warm, low blue-light emission colors for reduced eye strain
+     */
+    /* Base Colors - Warmer Dark Tones */
+    --bs-blue: #7EAAC7; /* Desaturated blue */
+    --bs-indigo: #8B8BB2; /* Muted indigo */
+    --bs-purple: #A98AAD; /* Softer purple */
+    --bs-pink: #D99BA3; /* Dusty rose */
+    --bs-red: #C97565; /* Warm red */
+    --bs-orange: #E0A356; /* Amber orange */
+    --bs-yellow: #E6C78A; /* Warm gold */
+    --bs-green: #76A662; /* Olive green */
+    --bs-teal: #65A89A; /* Muted teal */
+    --bs-cyan: #65A8A7; /* Desaturated cyan */
+    --bs-black: #191914; /* Warm black */
+    --bs-white: #F5F2EB; /* Off-white */
+    --bs-gray: #9E9E98; /* Warm gray */
+    /* Theme Colors - Warmer Alternatives */
+    --bs-primary: #7EAAC7; /* Desaturated blue */
+    --bs-secondary: #9A9487; /* Taupe */
+    --bs-success: #76A662; /* Olive green */
+    --bs-info: #65A8A7; /* Desaturated cyan */
+    --bs-warning: #E6C78A; /* Warm gold */
+    --bs-danger: #C97565; /* Warm red */
+    --bs-light: #E8E5DE; /* Light warm gray */
+    --bs-dark: #24241F; /* Warm charcoal */
+    /* Extended Palette - Warmer Variants */
+    --bs-primary-div: #2E4655; /* Deep blue-gray */
+    --bs-primary-div-50: #3D5C70; /* Medium blue-gray */
+    --bs-primary-50: #5B8FB9; /* Original blue reference */
+    --bs-danger-50: #B95C50; /* Original red reference */
+    --bs-success-50: #618B4A; /* Original green reference */
+    --bs-success-60: #52763E; /* Darker olive */
+    --bs-body-bg: #24241F; /* Warm charcoal background */
+    --bs-danger-div: #4D2D28; /* Deep warm red */
+    --bs-rating-color: #E6C78A; /* Warm gold for ratings */
+    --bs-card-bg-c: #32322C; /* Slightly lighter charcoal */
+    --bs-card-text-c: #E8E5DE; /* Light warm gray text */
+    --bs-gary-light: #3E3E38; /* Medium warm gray */
+    --bs-border-color: #4A4A44; /* Warm border color */
+    /* RGB Values - Updated for New Colors */
+    --bs-primary-rgb: 126, 170, 199;
+    --bs-secondary-rgb: 154, 148, 135;
+    --bs-success-rgb: 118, 166, 98;
+    --bs-info-rgb: 101, 168, 167;
+    --bs-warning-rgb: 230, 199, 138;
+    --bs-danger-rgb: 201, 117, 101;
+    --bs-light-rgb: 232, 229, 222;
+    --bs-dark-rgb: 36, 36, 31;
+    /* Text & Background - Warmer Options */
+    --bs-body-color: #E8E5DE; /* Light warm gray text */
+    --bs-body-bg: #24241F; /* Warm charcoal background */
+    --bs-emphasis-color: #F5F2EB; /* Off-white for emphasis */
+    --bs-link-color: #7EAAC7; /* Desaturated blue links */
+    --bs-link-hover-color: #9ABDD5; /* Lighter blue hover */
+    --bs-border-color: #4A4A44; /* Warm border color */
+    /* Typography - Improved for Dark Mode Readability */
+    --bs-body-font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    --bs-body-font-size: 1rem; /* Slightly larger for better readability */
+    --bs-body-line-height: 1.6; /* Increased for better readability */
+    /* Shadows - Adjusted for Dark Mode */
+    --bs-box-shadow: 0 3.2px 7.2px rgba(0, 0, 0, 0.25), 0 0.6px 1.8px rgba(0, 0, 0, 0.15);
+    --bs-box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
+    --bs-box-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.25);
+    /* Border Radius - Slightly More Rounded */
+    --bs-border-radius: 6px;
+    --bs-border-radius-sm: 3px;
+    --bs-border-radius-lg: 10px;
     /* Form Elements */
-    --bs-focus-ring-color: rgba(40, 153, 245, 0.3);
-    --bs-form-valid-color: #107C10;
-    --bs-form-invalid-color: #D13438;
+    --bs-focus-ring-color: rgba(126, 170, 199, 0.3);
+    --bs-form-valid-color: #76A662;
+    --bs-form-invalid-color: #C97565;
     /* Fluent-specific Variables */
-    --p-color-text-brand: #2899F5;
-    --p-color-nav-bg-surface-active: #252423;
+    --p-color-text-brand: #7EAAC7;
+    --p-color-nav-bg-surface-active: #32322C;
     --p-space-200: 8px;
-    --p-motion-duration-150: 0.15s;
+    --p-motion-duration-150: 0.2s; /* Slightly slower for smoother feel */
     --p-motion-ease-out: cubic-bezier(0.33, 0, 0.67, 1);
 }
 
