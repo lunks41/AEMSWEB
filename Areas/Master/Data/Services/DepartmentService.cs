@@ -31,7 +31,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             DepartmentViewModelCount countViewModel = new DepartmentViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Department M_Dep WHERE (M_Dep.DepartmentName LIKE '%{searchString}%' OR M_Dep.DepartmentCode LIKE '%{searchString}%' OR M_Dep.Remarks LIKE '%{searchString}%') AND M_Dep.DepartmentId<>0 AND M_Dep.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Department}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Department M_Dep WHERE (M_Dep.DepartmentName LIKE '%{searchString}%' OR M_Dep.DepartmentCode LIKE '%{searchString}%' OR M_Dep.Remarks LIKE '%{searchString}%') AND M_Dep.DepartmentId<>0 AND M_Dep.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Department}))");
 
                 var result = await _repository.GetQueryAsync<DepartmentViewModel>($"SELECT M_Dep.DepartmentId,M_Dep.DepartmentCode,M_Dep.DepartmentName,M_Dep.CompanyId,M_Dep.Remarks,M_Dep.IsActive,M_Dep.CreateById,M_Dep.CreateDate,M_Dep.EditById,M_Dep.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Department M_Dep LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Dep.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Dep.EditById WHERE (M_Dep.DepartmentName LIKE '%{searchString}%' OR M_Dep.DepartmentCode LIKE '%{searchString}%' OR M_Dep.Remarks LIKE '%{searchString}%') AND M_Dep.DepartmentId<>0 AND M_Dep.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Department})) ORDER BY M_Dep.DepartmentName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -94,28 +94,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveDepartmentAsync(short CompanyId, short UserId, M_Department m_Department)
+        public async Task<SqlResponce> SaveDepartmentAsync(short CompanyId, short UserId, M_Department m_Department)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_Department.DepartmentId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Department WHERE DepartmentId<>@DepartmentId AND DepartmentCode=@DepartmentCode",
                         new { m_Department.DepartmentId, m_Department.DepartmentCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Department Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "Department Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Department WHERE DepartmentId<>@DepartmentId AND DepartmentName=@DepartmentName",
                         new { m_Department.DepartmentId, m_Department.DepartmentName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Department Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "Department Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_Department WHERE DepartmentId=@DepartmentId",
                             new { m_Department.DepartmentId });
 
@@ -127,13 +127,13 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Department Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Department Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (DepartmentId + 1) FROM dbo.M_Department WHERE (DepartmentId + 1) NOT IN (SELECT DepartmentId FROM dbo.M_Department)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -143,7 +143,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -173,17 +173,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -209,7 +209,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteDepartmentAsync(short CompanyId, short UserId, short departmentId)
+        public async Task<SqlResponce> DeleteDepartmentAsync(short CompanyId, short UserId, short departmentId)
         {
             string departmentNo = string.Empty;
             try
@@ -244,19 +244,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "DepartmentId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "DepartmentId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -281,7 +281,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

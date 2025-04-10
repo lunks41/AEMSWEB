@@ -31,7 +31,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             ChartOfAccountViewModelCount countViewModel = new ChartOfAccountViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_ChartOfAccount M_ChtAcc INNER JOIN dbo.M_AccountType M_AccTy ON M_AccTy.AccTypeId = M_ChtAcc.AccTypeId INNER JOIN dbo.M_AccountGroup M_AccGrp ON M_AccGrp.AccGroupId = M_ChtAcc.AccGroupId LEFT JOIN dbo.M_COACategory1 M_Coa1 ON M_Coa1.COACategoryId = M_ChtAcc.COACategoryId1 LEFT JOIN dbo.M_COACategory2 M_Coa2 ON M_Coa2.COACategoryId = M_ChtAcc.COACategoryId2 LEFT JOIN dbo.M_COACategory3 M_Coa3 ON M_Coa3.COACategoryId = M_ChtAcc.COACategoryId3 WHERE (M_ChtAcc.GLName LIKE '%{searchString}%' OR M_ChtAcc.GLCode LIKE '%{searchString}%' OR M_ChtAcc.Remarks LIKE '%{searchString}%' OR M_AccTy.AccTypeCode LIKE '%{searchString}%'OR M_AccTy.AccTypeName LIKE '%{searchString}%' OR M_AccGrp.AccGroupCode LIKE '%{searchString}%'OR M_AccGrp.AccGroupName LIKE '%{searchString}%' OR M_Coa1.COACategoryName LIKE '%{searchString}%' OR M_Coa2.COACategoryCode LIKE '%{searchString}%' OR M_Coa2.COACategoryName LIKE '%{searchString}%' OR M_Coa3.COACategoryCode LIKE '%{searchString}%' OR M_Coa3.COACategoryName LIKE '%{searchString}%') AND M_ChtAcc.GLId<>0 AND M_ChtAcc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.ChartOfAccount}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_ChartOfAccount M_ChtAcc INNER JOIN dbo.M_AccountType M_AccTy ON M_AccTy.AccTypeId = M_ChtAcc.AccTypeId INNER JOIN dbo.M_AccountGroup M_AccGrp ON M_AccGrp.AccGroupId = M_ChtAcc.AccGroupId LEFT JOIN dbo.M_COACategory1 M_Coa1 ON M_Coa1.COACategoryId = M_ChtAcc.COACategoryId1 LEFT JOIN dbo.M_COACategory2 M_Coa2 ON M_Coa2.COACategoryId = M_ChtAcc.COACategoryId2 LEFT JOIN dbo.M_COACategory3 M_Coa3 ON M_Coa3.COACategoryId = M_ChtAcc.COACategoryId3 WHERE (M_ChtAcc.GLName LIKE '%{searchString}%' OR M_ChtAcc.GLCode LIKE '%{searchString}%' OR M_ChtAcc.Remarks LIKE '%{searchString}%' OR M_AccTy.AccTypeCode LIKE '%{searchString}%'OR M_AccTy.AccTypeName LIKE '%{searchString}%' OR M_AccGrp.AccGroupCode LIKE '%{searchString}%'OR M_AccGrp.AccGroupName LIKE '%{searchString}%' OR M_Coa1.COACategoryName LIKE '%{searchString}%' OR M_Coa2.COACategoryCode LIKE '%{searchString}%' OR M_Coa2.COACategoryName LIKE '%{searchString}%' OR M_Coa3.COACategoryCode LIKE '%{searchString}%' OR M_Coa3.COACategoryName LIKE '%{searchString}%') AND M_ChtAcc.GLId<>0 AND M_ChtAcc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.ChartOfAccount}))");
 
                 var result = await _repository.GetQueryAsync<ChartOfAccountViewModel>($"SELECT M_ChtAcc.GLId,M_ChtAcc.CompanyId,M_ChtAcc.GLCode,M_ChtAcc.GLName,M_ChtAcc.AccTypeId,M_AccTy.AccTypeCode,M_AccTy.AccTypeName,M_ChtAcc.AccGroupId,M_AccGrp.AccGroupCode,M_AccGrp.AccGroupName,M_ChtAcc.COACategoryId1,M_Coa1.COACategoryCode AS COACategoryCode1,M_Coa1.COACategoryName AS COACategoryName1,M_ChtAcc.COACategoryId2,M_Coa2.COACategoryCode AS COACategoryCode2,M_Coa2.COACategoryName AS COACategoryName2,M_ChtAcc.COACategoryId3,M_Coa3.COACategoryCode AS COACategoryCode3,M_Coa3.COACategoryName AS COACategoryName3,M_ChtAcc.IsSysControl,M_ChtAcc.seqNo,M_ChtAcc.Remarks,M_ChtAcc.IsActive,M_ChtAcc.CreateById,M_ChtAcc.CreateDate,M_ChtAcc.EditById,M_ChtAcc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_ChartOfAccount M_ChtAcc INNER JOIN dbo.M_AccountType M_AccTy ON M_AccTy.AccTypeId = M_ChtAcc.AccTypeId INNER JOIN dbo.M_AccountGroup M_AccGrp ON M_AccGrp.AccGroupId = M_ChtAcc.AccGroupId LEFT JOIN dbo.M_COACategory1 M_Coa1 ON M_Coa1.COACategoryId = M_ChtAcc.COACategoryId1 LEFT JOIN dbo.M_COACategory2 M_Coa2 ON M_Coa2.COACategoryId = M_ChtAcc.COACategoryId2 LEFT JOIN dbo.M_COACategory3 M_Coa3 ON M_Coa3.COACategoryId = M_ChtAcc.COACategoryId3 LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ChtAcc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ChtAcc.EditById WHERE (M_ChtAcc.GLName LIKE '%{searchString}%' OR M_ChtAcc.GLCode LIKE '%{searchString}%' OR M_ChtAcc.Remarks LIKE '%{searchString}%' OR M_AccTy.AccTypeCode LIKE '%{searchString}%'OR M_AccTy.AccTypeName LIKE '%{searchString}%' OR M_AccGrp.AccGroupCode LIKE '%{searchString}%'OR M_AccGrp.AccGroupName LIKE '%{searchString}%' OR M_Coa1.COACategoryName LIKE '%{searchString}%' OR M_Coa2.COACategoryCode LIKE '%{searchString}%' OR M_Coa2.COACategoryName LIKE '%{searchString}%' OR M_Coa3.COACategoryCode LIKE '%{searchString}%' OR M_Coa3.COACategoryName LIKE '%{searchString}%') AND M_ChtAcc.GLId<>0 AND M_ChtAcc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.ChartOfAccount})) ORDER BY M_ChtAcc.GLName ");
 
@@ -94,28 +94,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveChartOfAccountAsync(short CompanyId, short UserId, M_ChartOfAccount m_ChartOfAccount)
+        public async Task<SqlResponce> SaveChartOfAccountAsync(short CompanyId, short UserId, M_ChartOfAccount m_ChartOfAccount)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_ChartOfAccount.GLId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT TOP (1) 1 AS IsExist FROM dbo.M_ChartOfAccount WHERE GLId<>@GLId AND GLCode=@GLCode AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
                         new { m_ChartOfAccount.GLId, m_ChartOfAccount.GLCode, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.ChartOfAccount });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "GL Code exists." };
+                        return new SqlResponce { Result = -1, Message = "GL Code exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT TOP (1) 1 AS IsExist FROM dbo.M_ChartOfAccount WHERE GLId<>@GLId AND GLName=@GLName AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
                         new { m_ChartOfAccount.GLId, m_ChartOfAccount.GLName, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.ChartOfAccount });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "GL Name exists." };
+                        return new SqlResponce { Result = -1, Message = "GL Name exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT TOP (1) 1 AS IsExist FROM dbo.M_ChartOfAccount WHERE GLId=@GLId AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
                             new { m_ChartOfAccount.GLId, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.ChartOfAccount });
 
@@ -127,13 +127,13 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "GL Not Found" };
+                            return new SqlResponce { Result = -1, Message = "GL Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (GLId + 1) FROM dbo.M_ChartOfAccount WHERE (GLId + 1) NOT IN (SELECT GLId FROM dbo.M_ChartOfAccount)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -143,7 +143,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -177,17 +177,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                                 new { m_ChartOfAccount.GLId, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.ChartOfAccount });
 
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully", Data = dataExist };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully", Data = dataExist };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -211,7 +211,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -241,7 +241,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteChartOfAccountAsync(short CompanyId, short UserId, short glIdId)
+        public async Task<SqlResponce> DeleteChartOfAccountAsync(short CompanyId, short UserId, short glIdId)
         {
             string glIdNo = string.Empty;
             try
@@ -276,19 +276,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "ChartOfAccountId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "ChartOfAccountId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -313,7 +313,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

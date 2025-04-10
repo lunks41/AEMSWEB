@@ -35,7 +35,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             {
                 if (statusName.ToLower() != "all")
                 {
-                    var statusExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var statusExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                  "SELECT TOP 1 OrderTypeId AS IsExist FROM dbo.M_OrderType " +
                  "WHERE OrderTypeCode LIKE '%' + @OrderTypeCode + '%' AND OrderTypeCategoryId = 4",
                  new { OrderTypeCode = statusName }); // Using LIKE to support partial matches
@@ -51,7 +51,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                 }
 
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                  $"SELECT COUNT(*) AS CountId FROM dbo.Ser_JobOrderHd Hd " +
                  $"LEFT JOIN dbo.M_Currency Cur ON Cur.CurrencyId = Hd.CurrencyId " +
                  $"WHERE (Cur.CurrencyName LIKE '%{searchString}%' " +
@@ -203,7 +203,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             PortExpensesViewModelCount countViewModel = new PortExpensesViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId  FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId  FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.CompanyId={CompanyId}");
 
                 var result = await _repository.GetQueryAsync<PortExpensesViewModel>($"SELECT Ser_Port.PortExpenseId,Ser_Port.CompanyId,Ser_Port.JobOrderId,Ser_Port.JobOrderNo,Ser_Port.TaskId,Ser_Port.Quantity,Ser_Port.SupplierId,M_Ser.SupplierName,Ser_Port.ChargeId,M_Chr.ChargeName,Ser_Port.StatusId,M_Or.OrderTypeName As StatusName,Ser_Port.UomId,M_Uo.UomName,Ser_Port.DeliverDate,Ser_Port.GLId,Ser_Port.DebitNoteId,Ser_Port.DebitNoteNo,Ser_Port.Remarks,Ser_Port.CreateById,Ser_Port.CreateDate,Ser_Port.EditById,Ser_Port.EditDate,Ser_Port.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_PortExpenses Ser_Port INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_Port.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Port.ChargeId AND M_Chr.TaskId = Ser_Port.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Port.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Port.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Port.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Port.EditById WHERE Ser_Port.JobOrderId={JobOrderId} AND Ser_Port.CompanyId={CompanyId}");
 
@@ -266,7 +266,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SavePortExpensesAsync(short CompanyId, short UserId, Ser_PortExpenses ser_PortExpenses)
+        public async Task<SqlResponce> SavePortExpensesAsync(short CompanyId, short UserId, Ser_PortExpenses ser_PortExpenses)
         {
             bool IsEdit = ser_PortExpenses.PortExpenseId != 0;
             try
@@ -275,7 +275,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                 {
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                      $"SELECT 1 AS IsExist FROM dbo.Ser_PortExpenses WHERE PortExpenseId=@PortExpenseId",
                      new { ser_PortExpenses.PortExpenseId });
 
@@ -287,13 +287,13 @@ namespace AMESWEB.Areas.Project.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "PortExpenses Not Found" };
+                            return new SqlResponce { Result = -1, Message = "PortExpenses Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                      "SELECT ISNULL((SELECT TOP 1 (PortExpenseId + 1) FROM dbo.Ser_PortExpenses WHERE (PortExpenseId + 1) NOT IN (SELECT PortExpenseId FROM dbo.Ser_PortExpenses)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -305,7 +305,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -322,7 +322,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                         else
                         {
                             //Insert into Ser_JobOrderDt Table
-                            await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                            await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "DECLARE @ItemNo SMALLINT;   " +
                             "DECLARE @TaskItemNo SMALLINT; " +
                             $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_PortExpenses.JobOrderId} AND (ItemNo + 1) NOT IN     (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_PortExpenses.JobOrderId})), 1);  " +
@@ -350,17 +350,17 @@ namespace AMESWEB.Areas.Project.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -385,7 +385,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -414,7 +414,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeletePortExpensesAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 portExpenseId)
+        public async Task<SqlResponce> DeletePortExpensesAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 portExpenseId)
         {
             try
             {
@@ -446,19 +446,19 @@ namespace AMESWEB.Areas.Project.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "PortExpenseId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "PortExpenseId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -483,7 +483,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -517,7 +517,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
         #endregion Task
 
-        public async Task<SqlResponse> SaveTaskForwardAsync(short companyId, short userId, Int64 jobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string multipleId)
+        public async Task<SqlResponce> SaveTaskForwardAsync(short companyId, short userId, Int64 jobOrderId, string jobOrderNo, Int64 prevJobOrderId, int taskId, string multipleId)
         {
             try
             {
@@ -530,7 +530,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                     if (rowsAffected == 0)
                     {
-                        return new SqlResponse { Result = -1, Message = "Data Not there" };
+                        return new SqlResponce { Result = -1, Message = "Data Not there" };
                     }
 
                     // Build the task-specific query based on taskId.
@@ -556,19 +556,19 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                     if (string.IsNullOrEmpty(specificQuery))
                     {
-                        return new SqlResponse { Result = -1, Message = "Invalid task specified." };
+                        return new SqlResponce { Result = -1, Message = "Invalid task specified." };
                     }
 
                     int rowsAffectedSpecific = await _repository.GetQuerySingleOrDefaultAsync<int>(specificQuery);
 
                     if (rowsAffectedSpecific == 0)
                     {
-                        return new SqlResponse { Result = -1, Message = "Data Not there" };
+                        return new SqlResponce { Result = -1, Message = "Data Not there" };
                     }
                     else
                     {
                         tScope.Complete();
-                        return new SqlResponse { Result = 1, Message = "Successfully task forward" };
+                        return new SqlResponce { Result = 1, Message = "Successfully task forward" };
                     }
                 }
             }

@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<DepartmentViewModel> GetDepartmentByIdAsync(short CompanyId, short UserId, short departmentId);
 
-        public Task<SqlResponse> SaveDepartmentAsync(short CompanyId, short UserId, M_Department M_Department);
+        public Task<SqlResponce> SaveDepartmentAsync(short CompanyId, short UserId, M_Department M_Department);
 
-        public Task<SqlResponse> DeleteDepartmentAsync(short CompanyId, short UserId, short departmentId);
+        public Task<SqlResponce> DeleteDepartmentAsync(short CompanyId, short UserId, short departmentId);
     }
 }

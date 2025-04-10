@@ -9,8 +9,8 @@ namespace AMESWEB.Areas.Admin.Data
 
         public Task<CompanyViewModel> GetCompanyByIdAsync(short CompanyId);
 
-        public Task<SqlResponse> SaveCompanyAsync(short UserId, AdmCompany m_Company);
+        public Task<SqlResponce> SaveCompanyAsync(short UserId, AdmCompany m_Company);
 
-        //public Task<SqlResponse> DeleteCompanyAsync(short UserId, CompanyViewModel m_Company);
+        //public Task<SqlResponce> DeleteCompanyAsync(short UserId, CompanyViewModel m_Company);
     }
 }

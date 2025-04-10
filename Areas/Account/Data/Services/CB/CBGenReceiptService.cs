@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
             CBGenReceiptViewModel countViewModel = new CBGenReceiptViewModel();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.CBGenReceiptHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.M_PaymentType M_Pay ON M_Pay.PaymentTypeId = Invhd.PaymentTypeId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ReceiptNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.CBGenReceiptHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.M_PaymentType M_Pay ON M_Pay.PaymentTypeId = Invhd.PaymentTypeId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ReceiptNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
                 var result = await _repository.GetQueryAsync<CBGenReceiptHdViewModel>($"SELECT Invhd.CompanyId,Invhd.ReceiptId,Invhd.ReceiptNo,Invhd.ReferenceNo,Invhd.TrnDate,Invhd.AccountDate,Invhd.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyCode,Invhd.ExhRate,Invhd.CtyExhRate,Invhd.BankId,M_Ban.BankCode,M_Ban.BankName,Invhd.PaymentTypeId,M_Pay.PaymentTypeCode,M_Pay.PaymentTypeName,Invhd.ChequeNo,Invhd.ChequeDate,Invhd.BankChgAmt,Invhd.BankChgLocalAmt,Invhd.TotAmt,Invhd.TotLocalAmt,Invhd.TotCtyAmt,Invhd.GstClaimDate,Invhd.GstAmt,Invhd.GstLocalAmt,Invhd.GstCtyAmt,Invhd.TotAmtAftGst,Invhd.TotLocalAmtAftGst,Invhd.TotCtyAmtAftGst,Invhd.Remarks,Invhd.PayeeTo,Invhd.ModuleFrom,Invhd.CreateById,Invhd.CreateDate,Invhd.EditById,Invhd.EditDate,Invhd.IsCancel,Invhd.CancelById,Invhd.CancelDate,Invhd.CancelRemarks,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy,Usr2.UserName AS CancelBy,Invhd.EditVersion FROM dbo.CBGenReceiptHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.M_PaymentType M_Pay ON M_Pay.PaymentTypeId = Invhd.PaymentTypeId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ReceiptNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId} ORDER BY Invhd.AccountDate Desc,Invhd.ReceiptNo Desc OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
@@ -102,7 +102,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
             }
         }
 
-        public async Task<SqlResponse> SaveCBGenReceiptAsync(short CompanyId, CBGenReceiptHd CBGenReceiptHd, List<CBGenReceiptDt> CBGenReceiptDt, short UserId)
+        public async Task<SqlResponce> SaveCBGenReceiptAsync(short CompanyId, CBGenReceiptHd CBGenReceiptHd, List<CBGenReceiptDt> CBGenReceiptDt, short UserId)
         {
             bool IsEdit = false;
             string accountDate = CBGenReceiptHd.AccountDate.ToString("dd/MMM/yyyy");
@@ -116,15 +116,15 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.CBGenReceiptHd WHERE IsCancel=0 And CompanyId={CompanyId} And ReceiptId={CBGenReceiptHd.ReceiptId}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.CBGenReceiptHd WHERE IsCancel=0 And CompanyId={CompanyId} And ReceiptId={CBGenReceiptHd.ReceiptId}");
 
                         if (dataExist.Count() == 0)
-                            return new SqlResponse { Result = -1, Message = "Receipt Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "Receipt Not Exist" };
                     }
 
                     if (!IsEdit)
                     {
-                        var documentIdNo = await _repository.GetQueryAsync<SqlResponseIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.CB},{(short)E_CB.CBReceipt},'{accountDate}'");
+                        var documentIdNo = await _repository.GetQueryAsync<SqlResponceIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.CB},{(short)E_CB.CBReceipt},'{accountDate}'");
 
                         if (documentIdNo.ToList()[0].DocumentId > 0 && documentIdNo.ToList()[0].DocumentNo != string.Empty)
                         {
@@ -132,11 +132,11 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                             CBGenReceiptHd.ReceiptNo = documentIdNo.ToList()[0].DocumentNo;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Receipt Number can't generate" };
+                            return new SqlResponce { Result = -1, Message = "Receipt Number can't generate" };
                     }
                     else
                     {
-                        await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_CreateHistoryRec {CompanyId},{UserId},{CBGenReceiptHd.ReceiptId},{(short)E_CB.CBReceipt}");
+                        await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_CreateHistoryRec {CompanyId},{UserId},{CBGenReceiptHd.ReceiptId},{(short)E_CB.CBReceipt}");
                     }
 
                     //Saving Header
@@ -182,7 +182,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                         if (SaveDetails > 0)
                         {
                             //Inserting the records into AR CreateStatement
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_PosttoGL {CompanyId},{(short)E_CB.CBReceipt},{CBGenReceiptHd.ReceiptId},{UserId}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_PosttoGL {CompanyId},{(short)E_CB.CBReceipt},{CBGenReceiptHd.ReceiptId},{UserId}");
 
                             //Saving Audit log
                             var auditLog = new AdmAuditLog
@@ -209,25 +209,25 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                                     await _repository.UpsertExecuteScalarAsync($"update CBGenReceiptHd set EditVersion=EditVersion+1 where ReceiptId={CBGenReceiptHd.ReceiptId}; Update CBGenReceiptDt set EditVersion=(SELECT TOP 1 EditVersion FROM dbo.CBGenReceiptHd where ReceiptId={CBGenReceiptHd.ReceiptId}) where ReceiptId={CBGenReceiptHd.ReceiptId}");
 
                                 //Create / Update Ar Statement
-                                await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_PosttoGL {CompanyId},{(short)E_CB.CBReceipt},{CBGenReceiptHd.ReceiptId},{UserId}");
+                                await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_PosttoGL {CompanyId},{(short)E_CB.CBReceipt},{CBGenReceiptHd.ReceiptId},{UserId}");
 
                                 TScope.Complete();
-                                return new SqlResponse { Result = CBGenReceiptHd.ReceiptId, Message = "Save Successfully" };
+                                return new SqlResponce { Result = CBGenReceiptHd.ReceiptId, Message = "Save Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
 
                         #endregion Save AuditLog
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -251,7 +251,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
             }
         }
 
-        public async Task<SqlResponse> DeleteCBGenReceiptAsync(short CompanyId, long ReceiptId, string CanacelRemarks, short UserId)
+        public async Task<SqlResponce> DeleteCBGenReceiptAsync(short CompanyId, long ReceiptId, string CanacelRemarks, short UserId)
         {
             string ReceiptNo = string.Empty;
             try
@@ -269,7 +269,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                         if (CBGenReceiptToRemove > 0)
                         {
                             //Cancel the Ar Transactions.
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{ReceiptId},{(short)E_CB.CBReceipt}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{ReceiptId},{(short)E_CB.CBReceipt}");
 
                             var auditLog = new AdmAuditLog
                             {
@@ -289,19 +289,19 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Receipt Not exists" };
+                        return new SqlResponce { Result = -1, Message = "Receipt Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)

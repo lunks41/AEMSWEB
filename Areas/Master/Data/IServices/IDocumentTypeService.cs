@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<DocumentTypeViewModel> GetDocumentTypeByIdAsync(short CompanyId, short UserId, short DocTypeId);
 
-        public Task<SqlResponse> SaveDocumentTypeAsync(short CompanyId, short UserId, M_DocumentType m_DocumentType);
+        public Task<SqlResponce> SaveDocumentTypeAsync(short CompanyId, short UserId, M_DocumentType m_DocumentType);
 
-        public Task<SqlResponse> DeleteDocumentTypeAsync(short CompanyId, short UserId, DocumentTypeViewModel documentTypeViewModel);
+        public Task<SqlResponce> DeleteDocumentTypeAsync(short CompanyId, short UserId, DocumentTypeViewModel documentTypeViewModel);
     }
 }

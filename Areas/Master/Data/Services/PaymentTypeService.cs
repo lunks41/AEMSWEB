@@ -30,7 +30,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             PaymentTypeViewModelCount countViewModel = new PaymentTypeViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_PaymentType M_Pay WHERE (M_Pay.PaymentTypeName LIKE '%{searchString}%' OR M_Pay.PaymentTypeCode LIKE '%{searchString}%' OR M_Pay.Remarks LIKE '%{searchString}%') AND M_Pay.PaymentTypeId<>0 AND M_Pay.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.PaymentType}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_PaymentType M_Pay WHERE (M_Pay.PaymentTypeName LIKE '%{searchString}%' OR M_Pay.PaymentTypeCode LIKE '%{searchString}%' OR M_Pay.Remarks LIKE '%{searchString}%') AND M_Pay.PaymentTypeId<>0 AND M_Pay.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.PaymentType}))");
 
                 var result = await _repository.GetQueryAsync<PaymentTypeViewModel>($"SELECT M_Pay.PaymentTypeId,M_Pay.CompanyId,M_Pay.PaymentTypeCode,M_Pay.PaymentTypeName,M_Pay.Remarks,M_Pay.IsActive,M_Pay.CreateById,M_Pay.CreateDate,M_Pay.EditById,M_Pay.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_PaymentType M_Pay LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Pay.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Pay.EditById WHERE (M_Pay.PaymentTypeName LIKE '%{searchString}%' OR M_Pay.PaymentTypeCode LIKE '%{searchString}%' OR M_Pay.Remarks LIKE '%{searchString}%') AND M_Pay.PaymentTypeId<>0 AND M_Pay.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.PaymentType})) ORDER BY M_Pay.PaymentTypeName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -93,28 +93,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SavePaymentTypeAsync(short CompanyId, short UserId, M_PaymentType m_PaymentType)
+        public async Task<SqlResponce> SavePaymentTypeAsync(short CompanyId, short UserId, M_PaymentType m_PaymentType)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_PaymentType.PaymentTypeId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_PaymentType WHERE PaymentTypeId<>@PaymentTypeId AND PaymentTypeCode=@PaymentTypeCode",
                         new { m_PaymentType.PaymentTypeId, m_PaymentType.PaymentTypeCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "PaymentType Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "PaymentType Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_PaymentType WHERE PaymentTypeId<>@PaymentTypeId AND PaymentTypeName=@PaymentTypeName",
                         new { m_PaymentType.PaymentTypeId, m_PaymentType.PaymentTypeName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "PaymentType Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "PaymentType Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_PaymentType WHERE PaymentTypeId=@PaymentTypeId",
                             new { m_PaymentType.PaymentTypeId });
 
@@ -126,13 +126,13 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "PaymentType Not Found" };
+                            return new SqlResponce { Result = -1, Message = "PaymentType Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (PaymentTypeId + 1) FROM dbo.M_PaymentType WHERE (PaymentTypeId + 1) NOT IN (SELECT PaymentTypeId FROM dbo.M_PaymentType)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -142,7 +142,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -172,17 +172,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -208,7 +208,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeletePaymentTypeAsync(short CompanyId, short UserId, short paymentTypeId)
+        public async Task<SqlResponce> DeletePaymentTypeAsync(short CompanyId, short UserId, short paymentTypeId)
         {
             string paymentTypeNo = string.Empty;
             try
@@ -243,19 +243,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "PaymentTypeId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "PaymentTypeId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -280,7 +280,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

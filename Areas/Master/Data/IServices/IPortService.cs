@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<PortViewModel> GetPortByIdAsync(short CompanyId, short UserId, short PortId);
 
-        public Task<SqlResponse> SavePortAsync(short CompanyId, short UserId, M_Port m_Port);
+        public Task<SqlResponce> SavePortAsync(short CompanyId, short UserId, M_Port m_Port);
 
-        public Task<SqlResponse> DeletePortAsync(short CompanyId, short UserId, short portId);
+        public Task<SqlResponce> DeletePortAsync(short CompanyId, short UserId, short portId);
     }
 }

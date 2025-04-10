@@ -1,6 +1,6 @@
 ﻿namespace AMESWEB.Models
 {
-    public class SqlResponseIds
+    public class SqlResponceIds
     {
         public Int64 NextId { get; set; }//NextId
         public Int64 CountId { get; set; }

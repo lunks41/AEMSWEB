@@ -53,7 +53,7 @@ namespace AMESWEB.Areas.Admin.Data
             UserLogViewModelCount countViewModel = new UserLogViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUserLog A_UsrLog INNER JOIN dbo.AdmUser A_Usr ON A_Usr.UserId = A_UsrLog.UserId WHERE (A_Usr.UserCode LIKE '%{searchString}%' OR A_Usr.UserName LIKE '%{searchString}%' OR A_UsrLog.Remarks LIKE '%{searchString}%')");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUserLog A_UsrLog INNER JOIN dbo.AdmUser A_Usr ON A_Usr.UserId = A_UsrLog.UserId WHERE (A_Usr.UserCode LIKE '%{searchString}%' OR A_Usr.UserName LIKE '%{searchString}%' OR A_UsrLog.Remarks LIKE '%{searchString}%')");
 
                 var result = await _repository.GetQueryAsync<UserLogViewModel>($"SELECT A_UsrLog.UserId,A_Usr.UserCode,A_Usr.UserName,A_UsrLog.IsLogin,A_UsrLog.LoginDate,A_UsrLog.Remarks FROM dbo.AdmUserLog A_UsrLog INNER JOIN dbo.AdmUser A_Usr ON A_Usr.UserId = A_UsrLog.UserId WHERE (A_Usr.UserCode LIKE '%{searchString}%' OR A_Usr.UserName LIKE '%{searchString}%' OR A_UsrLog.Remarks LIKE '%{searchString}%') ORDER BY A_Usr.UserName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -86,7 +86,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> SaveUserLog(short CompanyId, AdmUserLog admUserLog, short UserId)
+        public async Task<SqlResponce> SaveUserLog(short CompanyId, AdmUserLog admUserLog, short UserId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -122,19 +122,19 @@ namespace AMESWEB.Areas.Admin.Data
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Upset Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Upset Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Upset Failed" };
+                            return new SqlResponce { Result = -1, Message = "Upset Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "UserLogRights Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "UserLogRights Should not be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {

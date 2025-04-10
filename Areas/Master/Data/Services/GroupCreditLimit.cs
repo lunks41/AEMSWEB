@@ -28,7 +28,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             GroupCreditLimitViewModelCount countViewModel = new GroupCreditLimitViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_GroupCreditLimit M_Grp WHERE (M_Grp.GroupCreditLimitName LIKE '%{searchString}%' OR M_Grp.Remarks LIKE '%{searchString}%') AND M_Grp.GroupCreditLimitId<>0 AND M_Grp.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GroupCreditLimit}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_GroupCreditLimit M_Grp WHERE (M_Grp.GroupCreditLimitName LIKE '%{searchString}%' OR M_Grp.Remarks LIKE '%{searchString}%') AND M_Grp.GroupCreditLimitId<>0 AND M_Grp.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GroupCreditLimit}))");
 
                 var result = await _repository.GetQueryAsync<GroupCreditLimitViewModel>($"SELECT M_Grp.GroupCreditLimitId,M_Grp.GroupCreditLimitCode,M_Grp.GroupCreditLimitName,M_Grp.CompanyId,M_Grp.Remarks,M_Grp.IsActive,M_Grp.CreateById,M_Grp.CreateDate,M_Grp.EditById,M_Grp.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_GroupCreditLimit M_Grp LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Grp.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Grp.EditById WHERE (M_Grp.GroupCreditLimitName LIKE '%{searchString}%' OR M_Grp.Remarks LIKE '%{searchString}%') AND M_Grp.GroupCreditLimitId<>0 AND M_Grp.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GroupCreditLimit})) ORDER BY M_Grp.GroupCreditLimitName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -91,28 +91,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveGroupCreditLimitAsync(short CompanyId, short UserId, M_GroupCreditLimit m_GroupCreditLimit)
+        public async Task<SqlResponce> SaveGroupCreditLimitAsync(short CompanyId, short UserId, M_GroupCreditLimit m_GroupCreditLimit)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_GroupCreditLimit.GroupCreditLimitId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_GroupCreditLimit WHERE GroupCreditLimitId<>@GroupCreditLimitId AND GroupCreditLimitCode=@GroupCreditLimitCode",
                         new { m_GroupCreditLimit.GroupCreditLimitId, m_GroupCreditLimit.GroupCreditLimitCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "GroupCreditLimit Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "GroupCreditLimit Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_GroupCreditLimit WHERE GroupCreditLimitId<>@GroupCreditLimitId AND GroupCreditLimitName=@GroupCreditLimitName",
                         new { m_GroupCreditLimit.GroupCreditLimitId, m_GroupCreditLimit.GroupCreditLimitName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "GroupCreditLimit Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "GroupCreditLimit Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_GroupCreditLimit WHERE GroupCreditLimitId=@GroupCreditLimitId",
                             new { m_GroupCreditLimit.GroupCreditLimitId });
 
@@ -124,13 +124,13 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "GroupCreditLimit Not Found" };
+                            return new SqlResponce { Result = -1, Message = "GroupCreditLimit Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (GroupCreditLimitId + 1) FROM dbo.M_GroupCreditLimit WHERE (GroupCreditLimitId + 1) NOT IN (SELECT GroupCreditLimitId FROM dbo.M_GroupCreditLimit)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -140,7 +140,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -170,17 +170,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -206,7 +206,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteGroupCreditLimitAsync(short CompanyId, short UserId, M_GroupCreditLimit GroupCreditLimit)
+        public async Task<SqlResponce> DeleteGroupCreditLimitAsync(short CompanyId, short UserId, M_GroupCreditLimit GroupCreditLimit)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -235,19 +235,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "GroupCreditLimitId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "GroupCreditLimitId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {

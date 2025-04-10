@@ -31,7 +31,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             VoyageViewModelCount countViewModel = new VoyageViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Voyage M_Voy INNER JOIN dbo.M_Vessel M_Ves ON M_Ves.VesselId = M_Voy.VesselId INNER JOIN dbo.M_Barge M_Bar ON M_Bar.BargeId = M_Voy.BargeId WHERE (M_Voy.ReferenceNo LIKE '%{searchString}%' OR M_Voy.VoyageNo LIKE '%{searchString}%' OR M_Voy.Remarks LIKE '%{searchString}%' OR M_Ves.VesselName LIKE '%{searchString}%' OR M_Ves.VesselCode LIKE '%{searchString}%' OR M_Bar.BargeName LIKE '%{searchString}%' OR M_Bar.BargeCode LIKE '%{searchString}%') AND M_Voy.VoyageId<>0 AND M_Voy.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Voyage}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Voyage M_Voy INNER JOIN dbo.M_Vessel M_Ves ON M_Ves.VesselId = M_Voy.VesselId INNER JOIN dbo.M_Barge M_Bar ON M_Bar.BargeId = M_Voy.BargeId WHERE (M_Voy.ReferenceNo LIKE '%{searchString}%' OR M_Voy.VoyageNo LIKE '%{searchString}%' OR M_Voy.Remarks LIKE '%{searchString}%' OR M_Ves.VesselName LIKE '%{searchString}%' OR M_Ves.VesselCode LIKE '%{searchString}%' OR M_Bar.BargeName LIKE '%{searchString}%' OR M_Bar.BargeCode LIKE '%{searchString}%') AND M_Voy.VoyageId<>0 AND M_Voy.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Voyage}))");
 
                 var result = await _repository.GetQueryAsync<VoyageViewModel>($"SELECT M_Voy.CompanyId,M_Voy.VoyageId,M_Voy.VoyageNo,M_Voy.ReferenceNo,M_Voy.VesselId,M_Ves.VesselCode,M_Ves.VesselName,M_Voy.BargeId,M_Bar.BargeName,M_Bar.BargeCode,M_Voy.Remarks,M_Voy.IsActive,M_Voy.CreateById,M_Voy.CreateDate,M_Voy.EditById,M_Voy.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Voyage M_Voy INNER JOIN dbo.M_Vessel M_Ves ON M_Ves.VesselId = M_Voy.VesselId INNER JOIN dbo.M_Barge M_Bar ON M_Bar.BargeId = M_Voy.BargeId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Voy.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Voy.EditById WHERE (M_Voy.ReferenceNo LIKE '%{searchString}%' OR M_Voy.VoyageNo LIKE '%{searchString}%' OR M_Voy.Remarks LIKE '%{searchString}%' OR M_Ves.VesselName LIKE '%{searchString}%' OR M_Ves.VesselCode LIKE '%{searchString}%' OR M_Bar.BargeName LIKE '%{searchString}%' OR M_Bar.BargeCode LIKE '%{searchString}%') AND M_Voy.VoyageId<>0 AND M_Voy.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Voyage})) ORDER BY M_Voy.VoyageNo OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -94,20 +94,20 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveVoyageAsync(short CompanyId, short UserId, M_Voyage m_Voyage)
+        public async Task<SqlResponce> SaveVoyageAsync(short CompanyId, short UserId, M_Voyage m_Voyage)
         {
             bool IsEdit = false;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_Voyage WHERE VoyageId<>@VoyageId AND VoyageNo=@VoyageNo", new { m_Voyage.VoyageId, m_Voyage.VoyageNo });
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_Voyage WHERE VoyageId<>@VoyageId AND VoyageNo=@VoyageNo", new { m_Voyage.VoyageId, m_Voyage.VoyageNo });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Voyage No. already exists." };
+                        return new SqlResponce { Result = -1, Message = "Voyage No. already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_Voyage WHERE VoyageId<>@VoyageId AND ReferenceNo=@ReferenceNo", new { m_Voyage.VoyageId, m_Voyage.ReferenceNo });
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_Voyage WHERE VoyageId<>@VoyageId AND ReferenceNo=@ReferenceNo", new { m_Voyage.VoyageId, m_Voyage.ReferenceNo });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Reference No. already exists." };
+                        return new SqlResponce { Result = -1, Message = "Reference No. already exists." };
 
                     if (m_Voyage.VoyageId != 0)
                     {
@@ -115,7 +115,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_Voyage WHERE VoyageId<>0 AND VoyageId={m_Voyage.VoyageId} ");
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_Voyage WHERE VoyageId<>0 AND VoyageId={m_Voyage.VoyageId} ");
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
@@ -124,11 +124,11 @@ namespace AMESWEB.Areas.Master.Data.Services
                             entityHead.Property(b => b.CompanyId).IsModified = false;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Voyage Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Voyage Not Found" };
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>("SELECT ISNULL((SELECT TOP 1 (VoyageId + 1) FROM dbo.M_Voyage WHERE (VoyageId + 1) NOT IN (SELECT VoyageId FROM dbo.M_Voyage)),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>("SELECT ISNULL((SELECT TOP 1 (VoyageId + 1) FROM dbo.M_Voyage WHERE (VoyageId + 1) NOT IN (SELECT VoyageId FROM dbo.M_Voyage)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -136,7 +136,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                             _context.Add(m_Voyage);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                     }
 
                     var saveChangeRecord = _context.SaveChanges();
@@ -166,23 +166,23 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Voyage, m_Voyage.VoyageId, m_Voyage.VoyageNo, "M_Voyage", IsEdit ? E_Mode.Update : E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -191,7 +191,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteVoyageAsync(short CompanyId, short UserId, short voyageId)
+        public async Task<SqlResponce> DeleteVoyageAsync(short CompanyId, short UserId, short voyageId)
         {
             string voyageNo = string.Empty;
             try
@@ -226,19 +226,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "VoyageId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "VoyageId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -263,7 +263,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

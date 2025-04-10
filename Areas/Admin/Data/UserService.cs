@@ -30,7 +30,7 @@ namespace AMESWEB.Areas.Admin.Data
             UserViewModelCount countViewModel = new UserViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUser A_Usr INNER JOIN dbo.AdmUserGroup A_UsrG ON A_UsrG.UserGroupId = A_Usr.UserGroupId WHERE A_Usr.UserId<>0 AND (A_Usr.UserName LIKE '%{searchString}%' OR A_Usr.UserCode LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%' OR A_UsrG.UserGroupName LIKE '%{searchString}%')");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUser A_Usr INNER JOIN dbo.AdmUserGroup A_UsrG ON A_UsrG.UserGroupId = A_Usr.UserGroupId WHERE A_Usr.UserId<>0 AND (A_Usr.UserName LIKE '%{searchString}%' OR A_Usr.UserCode LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%' OR A_UsrG.UserGroupName LIKE '%{searchString}%')");
 
                 var result = await _repository.GetQueryAsync<UserViewModel>($"SELECT A_Usr.UserId,A_Usr.UserCode,A_Usr.FullName,A_Usr.UserName,A_Usr.UserEmail,A_Usr.Remarks,A_Usr.IsActive,A_Usr.UserGroupId,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_Usr.CreateById,A_Usr.CreateDate,A_Usr.EditById,A_Usr.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUser A_Usr INNER JOIN dbo.AdmUserGroup A_UsrG ON A_UsrG.UserGroupId = A_Usr.UserGroupId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_Usr.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_Usr.EditById WHERE A_Usr.UserId<>0 AND (A_Usr.UserName LIKE '%{searchString}%' OR A_Usr.UserCode LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%' OR A_UsrG.UserGroupName LIKE '%{searchString}%') ORDER BY A_Usr.UserName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -93,7 +93,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> SaveUserAsync(short UserId, AdmUser admUser, string password)
+        public async Task<SqlResponce> SaveUserAsync(short UserId, AdmUser admUser, string password)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -107,7 +107,7 @@ namespace AMESWEB.Areas.Admin.Data
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.AdmUser WHERE Id<>0 AND UserId={admUser.Id} ");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.AdmUser WHERE Id<>0 AND UserId={admUser.Id} ");
 
                         if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                         {
@@ -115,12 +115,12 @@ namespace AMESWEB.Areas.Admin.Data
                             entityHead.Property(b => b.CreateById).IsModified = false;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "User Not Found" };
+                            return new SqlResponce { Result = -1, Message = "User Not Found" };
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>("SELECT ISNULL((SELECT TOP 1 (Id + 1) FROM dbo.AdmUser WHERE (Id + 1) NOT IN (SELECT Id FROM dbo.AdmUser)),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>("SELECT ISNULL((SELECT TOP 1 (Id + 1) FROM dbo.AdmUser WHERE (Id + 1) NOT IN (SELECT Id FROM dbo.AdmUser)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -137,7 +137,7 @@ namespace AMESWEB.Areas.Admin.Data
                             _context.Add(admUser);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                     }
 
                     var saveChangeRecord = _context.SaveChanges();
@@ -167,17 +167,17 @@ namespace AMESWEB.Areas.Admin.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -203,7 +203,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> DeleteUserAsync(short CompanyId, short UserId, UserViewModel admUser)
+        public async Task<SqlResponce> DeleteUserAsync(short CompanyId, short UserId, UserViewModel admUser)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -232,19 +232,19 @@ namespace AMESWEB.Areas.Admin.Data
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -285,7 +285,7 @@ namespace AMESWEB.Areas.Admin.Data
             UserGroupViewModelCount countViewModel = new UserGroupViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUserGroup A_UsrG WHERE (A_UsrG.UserGroupName LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%') AND A_UsrG.UserGroupId<>0");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmUserGroup A_UsrG WHERE (A_UsrG.UserGroupName LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%') AND A_UsrG.UserGroupId<>0");
 
                 var result = await _repository.GetQueryAsync<UserGroupViewModel>($"SELECT A_UsrG.UserGroupId,A_UsrG.UserGroupCode,A_UsrG.UserGroupName,A_UsrG.Remarks,A_UsrG.IsActive,A_UsrG.CreateById,A_UsrG.CreateDate,A_UsrG.EditById,A_UsrG.EditDate ,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmUserGroup A_UsrG LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = A_UsrG.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = A_UsrG.EditById WHERE (A_UsrG.UserGroupName LIKE '%{searchString}%' OR A_UsrG.UserGroupCode LIKE '%{searchString}%') AND A_UsrG.UserGroupId<>0 ORDER BY A_UsrG.UserGroupName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -348,7 +348,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> SaveUserGroupAsync(short UserId, AdmUserGroup admUserGroup)
+        public async Task<SqlResponce> SaveUserGroupAsync(short UserId, AdmUserGroup admUserGroup)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -361,7 +361,7 @@ namespace AMESWEB.Areas.Admin.Data
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.AdmUserGroup WHERE Id<>0 AND UserId={admUserGroup.Id} ");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.AdmUserGroup WHERE Id<>0 AND UserId={admUserGroup.Id} ");
 
                         if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                         {
@@ -369,12 +369,12 @@ namespace AMESWEB.Areas.Admin.Data
                             entityHead.Property(b => b.CreateById).IsModified = false;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "UserGroup Not Found" };
+                            return new SqlResponce { Result = -1, Message = "UserGroup Not Found" };
                     }
                     else
                     {
                         //Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>("SELECT ISNULL((SELECT TOP 1 (Id + 1) FROM dbo.AdmUserGroup WHERE (Id + 1) NOT IN (SELECT Id FROM dbo.AdmUserGroup)),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>("SELECT ISNULL((SELECT TOP 1 (Id + 1) FROM dbo.AdmUserGroup WHERE (Id + 1) NOT IN (SELECT Id FROM dbo.AdmUserGroup)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -384,7 +384,7 @@ namespace AMESWEB.Areas.Admin.Data
                             _context.Add(admUserGroup);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                     }
 
                     var saveChangeRecord = _context.SaveChanges();
@@ -414,17 +414,17 @@ namespace AMESWEB.Areas.Admin.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -450,7 +450,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> DeleteUserGroupAsync(short CompanyId, short UserId, UserGroupViewModel UserGroup)
+        public async Task<SqlResponce> DeleteUserGroupAsync(short CompanyId, short UserId, UserGroupViewModel UserGroup)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -479,19 +479,19 @@ namespace AMESWEB.Areas.Admin.Data
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -552,7 +552,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> SaveUserRightsAsync(short CompanyId, short UserId, List<AdmUserRights> admUserRights, short SelectedUserId)
+        public async Task<SqlResponce> SaveUserRightsAsync(short CompanyId, short UserId, List<AdmUserRights> admUserRights, short SelectedUserId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -565,7 +565,7 @@ namespace AMESWEB.Areas.Admin.Data
                         entry.State = EntityState.Detached;
                     }
 
-                    await _repository.GetQueryAsync<SqlResponseIds>($"DELETE FROM dbo.AdmUserRights WHERE UserId = {SelectedUserId}");
+                    await _repository.GetQueryAsync<SqlResponceIds>($"DELETE FROM dbo.AdmUserRights WHERE UserId = {SelectedUserId}");
 
                     // Add filtered entities
                     _context.AdmUserRights.AddRange(admUserRights);
@@ -591,12 +591,12 @@ namespace AMESWEB.Areas.Admin.Data
                         await _context.SaveChangesAsync();
 
                         TScope.Complete();
-                        return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        return new SqlResponce { Result = 1, Message = "Save Successfully" };
                     }
 
                     #endregion Audit Log
 
-                    return new SqlResponse { Result = -1, Message = "Save Failed" };
+                    return new SqlResponce { Result = -1, Message = "Save Failed" };
                 }
                 catch (Exception ex)
                 {
@@ -656,7 +656,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> SaveUserGroupRightsAsync(short CompanyId, short UserId, List<AdmUserGroupRights> admUserGroupRights, short UserGroupId)
+        public async Task<SqlResponce> SaveUserGroupRightsAsync(short CompanyId, short UserId, List<AdmUserGroupRights> admUserGroupRights, short UserGroupId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -668,7 +668,7 @@ namespace AMESWEB.Areas.Admin.Data
                         entry.State = EntityState.Detached;
                     }
 
-                    await _repository.GetQueryAsync<SqlResponseIds>($"DELETE FROM dbo.AdmUserGroupRights WHERE  UserGroupUserId={UserGroupId}");
+                    await _repository.GetQueryAsync<SqlResponceIds>($"DELETE FROM dbo.AdmUserGroupRights WHERE  UserGroupUserId={UserGroupId}");
 
                     _context.AdmUserGroupRights.AddRange(admUserGroupRights);
                     var saveResult = await _context.SaveChangesAsync();
@@ -693,12 +693,12 @@ namespace AMESWEB.Areas.Admin.Data
                         await _context.SaveChangesAsync();
 
                         TScope.Complete();
-                        return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        return new SqlResponce { Result = 1, Message = "Save Successfully" };
                     }
 
                     #endregion Audit Log
 
-                    return new SqlResponse { Result = 0, Message = "Save Failed" };
+                    return new SqlResponce { Result = 0, Message = "Save Failed" };
                 }
                 catch (Exception ex)
                 {

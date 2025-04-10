@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<ChartOfAccountViewModel> GetChartOfAccountByIdAsync(short CompanyId, short UserId, short GlId);
 
-        public Task<SqlResponse> SaveChartOfAccountAsync(short CompanyId, short UserId, M_ChartOfAccount M_ChartOfAccount);
+        public Task<SqlResponce> SaveChartOfAccountAsync(short CompanyId, short UserId, M_ChartOfAccount M_ChartOfAccount);
 
-        public Task<SqlResponse> DeleteChartOfAccountAsync(short CompanyId, short UserId, short GlId);
+        public Task<SqlResponce> DeleteChartOfAccountAsync(short CompanyId, short UserId, short GlId);
     }
 }

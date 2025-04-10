@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.AR
 
         public Task<ARDocSetOffViewModel> GetARDocSetOffByIdAsync(short CompanyId, long SetoffId, string SetoffNo, short UserId);
 
-        public Task<SqlResponse> SaveARDocSetOffAsync(short CompanyId, ArDocSetOffHd ARDocSetOffHd, List<ArDocSetOffDt> ARDocSetOffDt, short UserId);
+        public Task<SqlResponce> SaveARDocSetOffAsync(short CompanyId, ArDocSetOffHd ARDocSetOffHd, List<ArDocSetOffDt> ARDocSetOffDt, short UserId);
 
-        public Task<SqlResponse> DeleteARDocSetOffAsync(short CompanyId, long SetoffId, string SetoffNo, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteARDocSetOffAsync(short CompanyId, long SetoffId, string SetoffNo, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<ARDocSetOffViewModel>> GetHistoryARDocSetOffByIdAsync(short CompanyId, long SetoffId, string SetoffNo, short UserId);
     }

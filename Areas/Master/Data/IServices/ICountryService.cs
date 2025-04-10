@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<CountryViewModel> GetCountryByIdAsync(short CompanyId, short UserId, short CountryId);
 
-        public Task<SqlResponse> SaveCountryAsync(short CompanyId, short UserId, M_Country M_Country);
+        public Task<SqlResponce> SaveCountryAsync(short CompanyId, short UserId, M_Country M_Country);
 
-        public Task<SqlResponse> DeleteCountryAsync(short CompanyId, short UserId, short CountryId);
+        public Task<SqlResponce> DeleteCountryAsync(short CompanyId, short UserId, short CountryId);
     }
 }

@@ -30,7 +30,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             DocumentTypeViewModelCount countViewModel = new DocumentTypeViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_DocumentType M_Doc WHERE (M_Doc.DocTypeName LIKE '%{searchString}%' OR M_Doc.DocTypeCode LIKE '%{searchString}%' OR M_Doc.Remarks LIKE '%{searchString}%' ) AND M_Doc.DocTypeId<>0 AND M_Doc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.DocumentType}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_DocumentType M_Doc WHERE (M_Doc.DocTypeName LIKE '%{searchString}%' OR M_Doc.DocTypeCode LIKE '%{searchString}%' OR M_Doc.Remarks LIKE '%{searchString}%' ) AND M_Doc.DocTypeId<>0 AND M_Doc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.DocumentType}))");
 
                 var result = await _repository.GetQueryAsync<DocumentTypeViewModel>($"SELECT M_Doc.DocTypeId,M_Doc.DocTypeCode,M_Doc.DocTypeName,M_Doc.CompanyId,M_Doc.Remarks,M_Doc.IsActive,M_Doc.CreateById,M_Doc.CreateDate,M_Doc.EditById,M_Doc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_DocumentType M_Doc  LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Doc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Doc.EditById WHERE (M_Doc.DocTypeName LIKE '%{searchString}%' OR M_Doc.DocTypeCode LIKE '%{searchString}%' OR M_Doc.Remarks LIKE '%{searchString}%') AND M_Doc.DocTypeId<>0 AND M_Doc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.DocumentType})) ORDER BY M_Doc.DocTypeName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -63,27 +63,27 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveDocumentTypeAsync(short CompanyId, short UserId, M_DocumentType DocumentType)
+        public async Task<SqlResponce> SaveDocumentTypeAsync(short CompanyId, short UserId, M_DocumentType DocumentType)
         {
             bool IsEdit = DocumentType.DocTypeId != 0;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_DocumentType WHERE CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId)) AND DocTypeCode=@DocTypeCode",
                         new { CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.DocumentType, DocumentType.DocTypeCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "DocumentType Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "DocumentType Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_DocumentType WHERE CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId)) AND DocTypeName=@DocTypeName",
                         new { CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.DocumentType, DocumentType.DocTypeName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -2, Message = "DocumentType Name already exists." };
+                        return new SqlResponce { Result = -2, Message = "DocumentType Name already exists." };
 
                     // Take the Next Id From SQL
-                    var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         "SELECT ISNULL((SELECT TOP 1 (DocTypeId + 1) FROM dbo.M_DocumentType WHERE (DocTypeId + 1) NOT IN (SELECT DocTypeId FROM dbo.M_DocumentType)),1) AS NextId");
                     if (sqlMissingResponse != null)
                     {
@@ -98,23 +98,23 @@ namespace AMESWEB.Areas.Master.Data.Services
                         {
                             await _logService.SaveAuditLogAsync(CompanyId, E_Modules.Master, E_Master.DocumentType, DocumentType.DocTypeId, DocumentType.DocTypeCode, "M_DocumentType", IsEdit ? E_Mode.Update : E_Mode.Create, "DocumentType Save Successfully", UserId);
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "DocTypeId Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "DocTypeId Should not be zero" };
                     }
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.DocumentType, DocumentType.DocTypeId, DocumentType.DocTypeCode, "M_DocumentType", IsEdit ? E_Mode.Update : E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -123,7 +123,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteDocumentTypeAsync(short CompanyId, short UserId, DocumentTypeViewModel documentTypeViewModel)
+        public async Task<SqlResponce> DeleteDocumentTypeAsync(short CompanyId, short UserId, DocumentTypeViewModel documentTypeViewModel)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -135,17 +135,17 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                         await _logService.SaveAuditLogAsync(CompanyId, E_Modules.Master, E_Master.DocumentType, documentTypeViewModel.DocTypeId, documentTypeViewModel.DocTypeCode, "M_DocumentType", E_Mode.Delete, "DocumentType Delete Successfully", UserId);
                         TScope.Complete();
-                        return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                        return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "DocTypeId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "DocTypeId Should be zero" };
                     }
                 }
                 catch (SqlException sqlEx)
                 {
                     await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.DocumentType, documentTypeViewModel.DocTypeId, documentTypeViewModel.DocTypeCode, "M_DocumentType", E_Mode.Delete, "SQL", UserId);
-                    return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                    return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
                 }
                 catch (Exception ex)
                 {

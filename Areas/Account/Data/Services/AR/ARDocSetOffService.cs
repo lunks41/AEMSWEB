@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
             ARDocSetOffViewModelCount countViewModel = new ARDocSetOffViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.ArDocSetOffHd Dochd INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Dochd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Dochd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Dochd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Dochd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Dochd.CancelById WHERE (Dochd.SetoffNo LIKE '%{searchString}%' OR Dochd.ReferenceNo LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND TrnDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.ArDocSetOffHd Dochd INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Dochd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Dochd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Dochd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Dochd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Dochd.CancelById WHERE (Dochd.SetoffNo LIKE '%{searchString}%' OR Dochd.ReferenceNo LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND TrnDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
 
                 var result = await _repository.GetQueryAsync<ARDocSetOffViewModel>($"SELECT Dochd.CompanyId,Dochd.SetoffId,Dochd.SetoffNo,Dochd.ReferenceNo,Dochd.TrnDate,Dochd.AccountDate,Dochd.CustomerId,M_Cus.CustomerCode,M_Cus.CustomerName,Dochd.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyCode,Dochd.ExhRate,Dochd.BalanceAmt,Dochd.AllocAmt,Dochd.Remarks,Dochd.UnAllocAmt,Dochd.ExhGainLoss,Dochd.ModuleFrom,Dochd.CreateById,Dochd.CreateDate,Dochd.EditById,Dochd.EditDate,Dochd.CancelById,Dochd.CancelDate,Dochd.CancelRemarks,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy,Usr2.UserName AS CancelBy,Dochd.EditVersion FROM dbo.ArDocSetOffHd Dochd INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Dochd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Dochd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Dochd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Dochd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Dochd.CancelById WHERE (Dochd.SetoffNo LIKE '%{searchString}%' OR Dochd.ReferenceNo LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND Dochd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId} ORDER BY Dochd.SetoffNo,Dochd.AccountDate OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -103,7 +103,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
             }
         }
 
-        public async Task<SqlResponse> SaveARDocSetOffAsync(short CompanyId, ArDocSetOffHd arDocSetOffHd, List<ArDocSetOffDt> arDocSetOffDts, short UserId)
+        public async Task<SqlResponce> SaveARDocSetOffAsync(short CompanyId, ArDocSetOffHd arDocSetOffHd, List<ArDocSetOffDt> arDocSetOffDts, short UserId)
         {
             bool IsEdit = false;
             string accountDate = arDocSetOffHd.AccountDate.ToString("dd/MMM/yyyy");
@@ -121,15 +121,15 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.ArDocSetOffHd WHERE IsCancel=0 And CompanyId={CompanyId} And SetoffId={arDocSetOffHd.SetoffId}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.ArDocSetOffHd WHERE IsCancel=0 And CompanyId={CompanyId} And SetoffId={arDocSetOffHd.SetoffId}");
 
                         if (dataExist.Count() == 0)
-                            return new SqlResponse { Result = -1, Message = "DocSetOff Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "DocSetOff Not Exist" };
                     }
 
                     if (!IsEdit)
                     {
-                        var documentIdNo = await _repository.GetQueryAsync<SqlResponseIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.AR},{(short)E_AR.DocSetoff},'{accountDate}'");
+                        var documentIdNo = await _repository.GetQueryAsync<SqlResponceIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.AR},{(short)E_AR.DocSetoff},'{accountDate}'");
 
                         if (documentIdNo.ToList()[0].DocumentId > 0 && documentIdNo.ToList()[0].DocumentNo != string.Empty)
                         {
@@ -137,12 +137,12 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                             arDocSetOffHd.SetoffNo = documentIdNo.ToList()[0].DocumentNo;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Invoice Number can't generate" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Number can't generate" };
                     }
                     else
                     {
                         //Insert the previous ARDocSetOff record to ARDocSetOff history table as well as editversion also.
-                        await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_CreateHistoryRec {CompanyId},{UserId},{arDocSetOffHd.SetoffId},{(short)E_AR.DocSetoff}");
+                        await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_CreateHistoryRec {CompanyId},{UserId},{arDocSetOffHd.SetoffId},{(short)E_AR.DocSetoff}");
                     }
 
                     //Saving Header
@@ -189,7 +189,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                         if (SaveDetails > 0)
                         {
                             //Inserting the records into AR CreateStatement
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arDocSetOffHd.SetoffId},{(short)E_AR.DocSetoff}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arDocSetOffHd.SetoffId},{(short)E_AR.DocSetoff}");
 
                             //Saving Audit log
                             var auditLog = new AdmAuditLog
@@ -216,29 +216,29 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                                     await _repository.UpsertExecuteScalarAsync($"update ArDocSetOffHd set EditVersion=EditVersion+1 where SetoffId={arDocSetOffHd.SetoffId}; Update ArDocSetOffDt set EditVersion=(SELECT TOP 1 EditVersion FROM dbo.ArDocSetOffHd where SetoffId={arDocSetOffHd.SetoffId}) where SetoffId={arDocSetOffHd.SetoffId}");
 
                                 //Create / Update Ar Statement
-                                await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arDocSetOffHd.SetoffId},{(short)E_AR.DocSetoff}");
+                                await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arDocSetOffHd.SetoffId},{(short)E_AR.DocSetoff}");
 
                                 TScope.Complete();
-                                return new SqlResponse { Result = arDocSetOffHd.SetoffId, Message = "Save Successfully" };
+                                return new SqlResponce { Result = arDocSetOffHd.SetoffId, Message = "Save Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
 
                         #endregion Save AuditLog
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
                     //}
                     //else
                     //{
-                    //    return new SqlResponse { Result = -1, Message = "Period Closed" };
+                    //    return new SqlResponce { Result = -1, Message = "Period Closed" };
                     //}
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -262,7 +262,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
             }
         }
 
-        public async Task<SqlResponse> DeleteARDocSetOffAsync(short CompanyId, long SetoffId, string SetoffNo, string CanacelRemarks, short UserId)
+        public async Task<SqlResponce> DeleteARDocSetOffAsync(short CompanyId, long SetoffId, string SetoffNo, string CanacelRemarks, short UserId)
         {
             try
             {
@@ -275,7 +275,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                         if (ARDocSetOffToRemove > 0)
                         {
                             //Cancel the Ar Transactions.
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_DeleteStatement {CompanyId},{UserId},{SetoffId},{(short)E_AR.DocSetoff}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_DeleteStatement {CompanyId},{UserId},{SetoffId},{(short)E_AR.DocSetoff}");
 
                             var auditLog = new AdmAuditLog
                             {
@@ -295,19 +295,19 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "DocSetOff Not exists" };
+                        return new SqlResponce { Result = -1, Message = "DocSetOff Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)

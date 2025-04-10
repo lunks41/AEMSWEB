@@ -29,7 +29,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             CustomerCreditLimitViewModelCount countViewModel = new CustomerCreditLimitViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_CustomerCreditLimit M_Cusc INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = M_Cusc.CustomerId WHERE (M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%') AND M_Cusc.CustomerId<>0 AND M_Cusc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CustomerCreditLimit}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_CustomerCreditLimit M_Cusc INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = M_Cusc.CustomerId WHERE (M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%') AND M_Cusc.CustomerId<>0 AND M_Cusc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CustomerCreditLimit}))");
 
                 var result = await _repository.GetQueryAsync<CustomerCreditLimitViewModel>($"SELECT M_Cusc.CustomerId,M_Cus.CustomerCode,M_Cus.CustomerName,M_Cusc.EffectFrom,M_Cusc.EffectUntil,M_Cusc.IsExpires,M_Cusc.Remarks,M_Cusc.CreditLimitAmt,M_Cusc.CreateById,M_Cusc.CreateDate,M_Cusc.EditById,M_Cusc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_CustomerCreditLimit M_Cusc INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = M_Cusc.CustomerId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Cusc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Cusc.EditById WHERE (M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%') AND M_Cusc.CustomerId<>0 AND M_Cusc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CustomerCreditLimit})) ORDER BY M_Cus.CustomerName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -92,7 +92,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        //public async Task<SqlResponse> SaveCustomerCreditLimitAsync( Int16 CompanyId, M_CustomerCreditLimit m_CustomerCreditLimit, Int16 UserId)
+        //public async Task<SqlResponce> SaveCustomerCreditLimitAsync( Int16 CompanyId, M_CustomerCreditLimit m_CustomerCreditLimit, Int16 UserId)
         //{
         //    using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         //    {
@@ -105,7 +105,7 @@ namespace AMESWEB.Areas.Master.Data.Services
         //            }
         //            if (IsEdit)
         //            {
-        //                var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>( $"SELECT 1 AS IsExist FROM dbo.M_CustomerCreditLimit WHERE CustomerId<>0 AND CustomerId={m_CustomerCreditLimit.CustomerId} ");
+        //                var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>( $"SELECT 1 AS IsExist FROM dbo.M_CustomerCreditLimit WHERE CustomerId<>0 AND CustomerId={m_CustomerCreditLimit.CustomerId} ");
 
         //                if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
         //                {
@@ -114,17 +114,17 @@ namespace AMESWEB.Areas.Master.Data.Services
         //                    entityHead.Property(b => b.CompanyId).IsModified = false;
         //                }
         //                else
-        //                    return new SqlResponse { Result = -1, Message = "User Not Found" };
+        //                    return new SqlResponce { Result = -1, Message = "User Not Found" };
         //            }
         //            else
         //            {
-        //                var codeExist = await _repository.GetQueryAsync<SqlResponseIds>( $"SELECT 1 AS IsExist FROM dbo.M_CustomerCreditLimit WHERE GroupCreditLimitId<>0 AND GroupCreditLimitCode={m_CustomerCreditLimit.GroupCreditLimitCode} AND GroupCreditLimitName={m_CustomerCreditLimit.GroupCreditLimitName} ");
+        //                var codeExist = await _repository.GetQueryAsync<SqlResponceIds>( $"SELECT 1 AS IsExist FROM dbo.M_CustomerCreditLimit WHERE GroupCreditLimitId<>0 AND GroupCreditLimitCode={m_CustomerCreditLimit.GroupCreditLimitCode} AND GroupCreditLimitName={m_CustomerCreditLimit.GroupCreditLimitName} ");
 
         //                if (codeExist.Count() > 0 && codeExist.ToList()[0].IsExist == 1)
-        //                    return new SqlResponse { Result = -1, Message = "GroupCreditLimit Code already exists. " };
+        //                    return new SqlResponce { Result = -1, Message = "GroupCreditLimit Code already exists. " };
 
         //                //Take the Next Id From SQL
-        //                var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>( "SELECT ISNULL((SELECT TOP 1 (GroupCreditLimitId + 1) FROM dbo.M_CustomerCreditLimit WHERE (GroupCreditLimitId + 1) NOT IN (SELECT GroupCreditLimitId FROM dbo.M_CustomerCreditLimit)),1) AS NextId");
+        //                var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>( "SELECT ISNULL((SELECT TOP 1 (GroupCreditLimitId + 1) FROM dbo.M_CustomerCreditLimit WHERE (GroupCreditLimitId + 1) NOT IN (SELECT GroupCreditLimitId FROM dbo.M_CustomerCreditLimit)),1) AS NextId");
 
         //                if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
         //                {
@@ -132,7 +132,7 @@ namespace AMESWEB.Areas.Master.Data.Services
         //                    _context.Add(m_CustomerCreditLimit);
         //                }
         //                else
-        //                    return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+        //                    return new SqlResponce { Result = -1, Message = "Internal Server Error" };
         //            }
 
         //            var saveChangeRecord = _context.SaveChanges();
@@ -162,17 +162,17 @@ namespace AMESWEB.Areas.Master.Data.Services
         //                if (auditLogSave > 0)
         //                {
         //                    TScope.Complete();
-        //                    return new SqlResponse { Result = 1, Message = "Save Successfully" };
+        //                    return new SqlResponce { Result = 1, Message = "Save Successfully" };
         //                }
         //            }
         //            else
         //            {
-        //                return new SqlResponse { Result = 1, Message = "Save Failed" };
+        //                return new SqlResponce { Result = 1, Message = "Save Failed" };
         //            }
 
         //            #endregion Save AuditLog
 
-        //            return new SqlResponse();
+        //            return new SqlResponce();
         //        }
         //        catch (Exception ex)
         //        {
@@ -198,7 +198,7 @@ namespace AMESWEB.Areas.Master.Data.Services
         //    }
         //}
 
-        public async Task<SqlResponse> DeleteCustomerCreditLimitAsync(short CompanyId, short UserId, M_CustomerCreditLimit CustomerCreditLimit)
+        public async Task<SqlResponce> DeleteCustomerCreditLimitAsync(short CompanyId, short UserId, M_CustomerCreditLimit CustomerCreditLimit)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -227,19 +227,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CustomerId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "CustomerId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {

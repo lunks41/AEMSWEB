@@ -53,7 +53,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             }
         }
 
-        public async Task<SqlResponse> SaveGLOpeningBalanceAsync(short CompanyId, GLOpeningBalanceViewModel gLOpeningBalanceViewModel, short UserId)
+        public async Task<SqlResponce> SaveGLOpeningBalanceAsync(short CompanyId, GLOpeningBalanceViewModel gLOpeningBalanceViewModel, short UserId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -66,10 +66,10 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.GLOpeningBalance WHERE CompanyId IN {CompanyId} AND DocumentId={gLOpeningBalanceViewModel.DocumentId} AND ItemNo={gLOpeningBalanceViewModel.ItemNo}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.GLOpeningBalance WHERE CompanyId IN {CompanyId} AND DocumentId={gLOpeningBalanceViewModel.DocumentId} AND ItemNo={gLOpeningBalanceViewModel.ItemNo}");
 
                         if (dataExist.Count() > 0 && (dataExist.ToList()[0].IsExist == 1 || dataExist.ToList()[0].IsExist == 2))
-                            return new SqlResponse { Result = -1, Message = "ItemNo Exist" };
+                            return new SqlResponce { Result = -1, Message = "ItemNo Exist" };
                     }
                     if (IsEdit)
                     {
@@ -79,7 +79,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT ISNULL((SELECT TOP 1 (ItemNo + 1) FROM dbo.GLOpeningBalance WHERE (ItemNo + 1) NOT IN (SELECT ItemNo FROM dbo.GLOpeningBalance) AND DocumentId={gLOpeningBalanceViewModel.DocumentId} AND CompanyId={CompanyId}),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT ISNULL((SELECT TOP 1 (ItemNo + 1) FROM dbo.GLOpeningBalance WHERE (ItemNo + 1) NOT IN (SELECT ItemNo FROM dbo.GLOpeningBalance) AND DocumentId={gLOpeningBalanceViewModel.DocumentId} AND CompanyId={CompanyId}),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -89,7 +89,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                             _context.Add(gLOpeningBalanceViewModel);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "ItemNo Should not be zero" };
+                            return new SqlResponce { Result = -1, Message = "ItemNo Should not be zero" };
                     }
 
                     var SupplierToSave = _context.SaveChanges();
@@ -119,17 +119,17 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {

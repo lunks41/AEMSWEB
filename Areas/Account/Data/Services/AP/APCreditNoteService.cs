@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
             APCreditNoteViewModelCount countViewModel = new APCreditNoteViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.ApCreditNoteHd Invhd INNER JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Invhd.SupplierId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = Invhd.CreditTermId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.M_Country M_Cun ON M_Cun.CountryId = Invhd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.CreditNoteNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Sup.SupplierCode LIKE '%{searchString}%' OR M_Sup.SupplierName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.CompanyId= {CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.ApCreditNoteHd Invhd INNER JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Invhd.SupplierId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = Invhd.CreditTermId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.M_Country M_Cun ON M_Cun.CountryId = Invhd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.CreditNoteNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Sup.SupplierCode LIKE '%{searchString}%' OR M_Sup.SupplierName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.CompanyId= {CompanyId}");
                 var result = await _repository.GetQueryAsync<APCreditNoteViewModel>($"SELECT Invhd.CompanyId,Invhd.CreditNoteId,Invhd.CreditNoteNo,Invhd.ReferenceNo,Invhd.TrnDate,Invhd.AccountDate,Invhd.DeliveryDate,Invhd.DueDate,Invhd.SupplierId,M_Sup.SupplierCode,M_Sup.SupplierName,Invhd.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyCode,Invhd.ExhRate,Invhd.CtyExhRate,Invhd.CreditTermId,M_Crd.CreditTermCode,M_Crd.CreditTermName,Invhd.BankId,M_Ban.BankCode,M_Ban.BankName,Invhd.InvoiceId,Invhd.InvoiceNo,Invhd.TotAmt,Invhd.TotLocalAmt,Invhd.TotCtyAmt,Invhd.GstClaimDate,Invhd.GstAmt,Invhd.GstLocalAmt,Invhd.GstCtyAmt,Invhd.TotAmtAftGst,Invhd.TotLocalAmtAftGst,Invhd.TotCtyAmtAftGst,Invhd.BalAmt,Invhd.BalLocalAmt,Invhd.PayAmt,Invhd.PayLocalAmt,Invhd.ExGainLoss,Invhd.PurchaseOrderId,Invhd.PurchaseOrderNo,Invhd.OperationId,Invhd.OperationNo,Invhd.Remarks,Invhd.Address1,Invhd.Address2,Invhd.Address3,Invhd.Address4,Invhd.PinCode,Invhd.CountryId,M_Cun.CountryCode,M_Cun.CountryName,Invhd.PhoneNo,Invhd.FaxNo,Invhd.ContactName,Invhd.MobileNo,Invhd.EmailAdd,Invhd.ModuleFrom,Invhd.CustomerName,Invhd.SuppCreditNoteNo,Invhd.ArCreditNoteId,Invhd.ArCreditNoteNo,Invhd.CreateById,Invhd.CreateDate,Invhd.EditById,Invhd.EditDate,Invhd.IsCancel,Invhd.CancelById,Invhd.CancelDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy,Usr2.UserName AS CancelBy,Invhd.EditVersion FROM dbo.ApCreditNoteHd Invhd INNER JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Invhd.SupplierId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = Invhd.CreditTermId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.M_Country M_Cun ON M_Cun.CountryId = Invhd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.CreditNoteNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Sup.SupplierCode LIKE '%{searchString}%' OR M_Sup.SupplierName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId} ORDER BY Invhd.AccountDate Desc,Invhd.CreditNoteNo Desc OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
@@ -102,7 +102,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
             }
         }
 
-        public async Task<SqlResponse> SaveAPCreditNoteAsync(short CompanyId, ApCreditNoteHd arCreditNoteHd, List<ApCreditNoteDt> arCreditNoteDt, short UserId)
+        public async Task<SqlResponce> SaveAPCreditNoteAsync(short CompanyId, ApCreditNoteHd arCreditNoteHd, List<ApCreditNoteDt> arCreditNoteDt, short UserId)
         {
             bool IsEdit = false;
             string accountDate = arCreditNoteHd.AccountDate.ToString("dd/MMM/yyyy");
@@ -116,15 +116,15 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.ApCreditNoteHd WHERE IsCancel=0 And CompanyId={CompanyId} And CreditNoteId={arCreditNoteHd.CreditNoteId}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.ApCreditNoteHd WHERE IsCancel=0 And CompanyId={CompanyId} And CreditNoteId={arCreditNoteHd.CreditNoteId}");
 
                         if (dataExist.Count() == 0)
-                            return new SqlResponse { Result = -1, Message = "CreditNote Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "CreditNote Not Exist" };
                     }
 
                     if (!IsEdit)
                     {
-                        var documentIdNo = await _repository.GetQueryAsync<SqlResponseIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.AP},{(short)E_AP.CreditNote},'{accountDate}'");
+                        var documentIdNo = await _repository.GetQueryAsync<SqlResponceIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.AP},{(short)E_AP.CreditNote},'{accountDate}'");
 
                         if (documentIdNo.ToList()[0].DocumentId > 0 && documentIdNo.ToList()[0].DocumentNo != string.Empty)
                         {
@@ -132,12 +132,12 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
                             arCreditNoteHd.CreditNoteNo = documentIdNo.ToList()[0].DocumentNo;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "CreditNote Number can't generate" };
+                            return new SqlResponce { Result = -1, Message = "CreditNote Number can't generate" };
                     }
                     else
                     {
                         //Insert the previous arCreditNote record to arCreditNote history table as well as editversion also.
-                        await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AP_CreateHistoryRec {CompanyId},{UserId},{arCreditNoteHd.CreditNoteId},{(short)E_AP.CreditNote}");
+                        await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AP_CreateHistoryRec {CompanyId},{UserId},{arCreditNoteHd.CreditNoteId},{(short)E_AP.CreditNote}");
                     }
 
                     //Saving Header
@@ -188,7 +188,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
                         if (SaveDetails > 0)
                         {
                             //Inserting the records into AP CreateStatement
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AP_CreateStatement {CompanyId},{UserId},{arCreditNoteHd.CreditNoteId},{(short)E_AP.CreditNote}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AP_CreateStatement {CompanyId},{UserId},{arCreditNoteHd.CreditNoteId},{(short)E_AP.CreditNote}");
 
                             //Saving Audit log
                             var auditLog = new AdmAuditLog
@@ -215,25 +215,25 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
                                     await _repository.UpsertExecuteScalarAsync($"update ApCreditNoteHd set EditVersion=EditVersion+1 where CreditNoteId={arCreditNoteHd.CreditNoteId}; Update ApCreditNoteDt set EditVersion=(SELECT TOP 1 EditVersion FROM dbo.ApCreditNoteHd where CreditNoteId={arCreditNoteHd.CreditNoteId}) where CreditNoteId={arCreditNoteHd.CreditNoteId}");
 
                                 //Create / Update Ar Statement
-                                await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AP_CreateStatement {CompanyId},{UserId},{arCreditNoteHd.CreditNoteId},{(short)E_AP.CreditNote}");
+                                await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AP_CreateStatement {CompanyId},{UserId},{arCreditNoteHd.CreditNoteId},{(short)E_AP.CreditNote}");
 
                                 TScope.Complete();
-                                return new SqlResponse { Result = arCreditNoteHd.CreditNoteId, Message = "Save Successfully" };
+                                return new SqlResponce { Result = arCreditNoteHd.CreditNoteId, Message = "Save Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
 
                         #endregion Save AuditLog
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -257,7 +257,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
             }
         }
 
-        public async Task<SqlResponse> DeleteAPCreditNoteAsync(short CompanyId, long CreditNoteId, string CanacelRemarks, short UserId)
+        public async Task<SqlResponce> DeleteAPCreditNoteAsync(short CompanyId, long CreditNoteId, string CanacelRemarks, short UserId)
         {
             string CreditNoteNo = string.Empty;
             try
@@ -275,7 +275,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
                         if (APCreditNoteToRemove > 0)
                         {
                             //Cancel the Ar Transactions.
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AP_DeleteStatement {CompanyId},{UserId},{CreditNoteId},{(short)E_AP.CreditNote}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AP_DeleteStatement {CompanyId},{UserId},{CreditNoteId},{(short)E_AP.CreditNote}");
 
                             var auditLog = new AdmAuditLog
                             {
@@ -295,19 +295,19 @@ namespace AMESWEB.Areas.Account.Data.Services.AP
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CreditNote Not exists" };
+                        return new SqlResponce { Result = -1, Message = "CreditNote Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)

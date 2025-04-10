@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<PaymentTypeViewModel> GetPaymentTypeByIdAsync(short CompanyId, short UserId, short PaymentTypeId);
 
-        public Task<SqlResponse> SavePaymentTypeAsync(short CompanyId, short UserId, M_PaymentType m_PaymentType);
+        public Task<SqlResponce> SavePaymentTypeAsync(short CompanyId, short UserId, M_PaymentType m_PaymentType);
 
-        public Task<SqlResponse> DeletePaymentTypeAsync(short CompanyId, short UserId, short PaymentTypeId);
+        public Task<SqlResponce> DeletePaymentTypeAsync(short CompanyId, short UserId, short PaymentTypeId);
     }
 }

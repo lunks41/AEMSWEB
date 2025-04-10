@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.PortExpenses} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -75,7 +75,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar  INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Tar.SlabUomId INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.LaunchServices} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -118,7 +118,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.EquipmentsUsed} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -161,7 +161,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.CrewSignOn} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -204,7 +204,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.CrewSignOff} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -247,7 +247,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.CrewMiscellaneous} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -290,7 +290,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.MedicalAssistance} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -333,7 +333,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.ConsignmentImport} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -376,7 +376,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.ConsignmentExport} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -419,7 +419,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.ThirdPartySupply} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -462,7 +462,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId INNER JOIN dbo.M_OrderType M_Or1 ON M_Or1.OrderTypeId = Ser_Tar.FromPlace INNER JOIN dbo.M_OrderType M_Or2 ON M_Or2.OrderTypeId = Ser_Tar.ToPlace INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.FreshWaterSupply} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -505,7 +505,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.TechniciansSurveyors} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -548,7 +548,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.LandingItems} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -591,7 +591,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.OtherService} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -634,7 +634,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             try
             {
                 // Count query for total records with additional filters
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.AgencyRemuneration} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
@@ -756,7 +756,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveTariffAsync(short CompanyId, short UserId, Ser_Tariff ser_Tariff)
+        public async Task<SqlResponce> SaveTariffAsync(short CompanyId, short UserId, Ser_Tariff ser_Tariff)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -765,7 +765,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                 {
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.Ser_Tariff WHERE TariffId=@TariffId",
                             new { ser_Tariff.TariffId });
 
@@ -777,13 +777,13 @@ namespace AMESWEB.Areas.Project.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Tariff Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Tariff Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (TariffId + 1) FROM dbo.Ser_Tariff WHERE (TariffId + 1) NOT IN (SELECT TariffId FROM dbo.Ser_Tariff)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -793,7 +793,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -826,17 +826,17 @@ namespace AMESWEB.Areas.Project.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -860,7 +860,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -890,7 +890,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteTariffAsync(short CompanyId, short UserId, int tariffId, int taskId, int customerId, int portId, int chargeId)
+        public async Task<SqlResponce> DeleteTariffAsync(short CompanyId, short UserId, int tariffId, int taskId, int customerId, int portId, int chargeId)
         {
             string accTypeNo = string.Empty;
             //try
@@ -925,19 +925,19 @@ namespace AMESWEB.Areas.Project.Data.Services
             //                if (auditLogSave > 0)
             //                {
             //                    TScope.Complete();
-            //                    return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+            //                    return new SqlResponce { Result = 1, Message = "Delete Successfully" };
             //                }
             //            }
             //            else
             //            {
-            //                return new SqlResponse { Result = -1, Message = "Delete Failed" };
+            //                return new SqlResponce { Result = -1, Message = "Delete Failed" };
             //            }
             //        }
             //        else
             //        {
-            //            return new SqlResponse { Result = -1, Message = "TariffId Should be zero" };
+            //            return new SqlResponce { Result = -1, Message = "TariffId Should be zero" };
             //        }
-            //        return new SqlResponse();
+            //        return new SqlResponce();
             //    }
             //}
             //catch (SqlException sqlEx)
@@ -962,7 +962,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
             //    string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-            //    return new SqlResponse
+            //    return new SqlResponce
             //    {
             //        Result = -1,
             //        Message = errorMessage
@@ -991,21 +991,21 @@ namespace AMESWEB.Areas.Project.Data.Services
             //    throw new Exception(ex.ToString());
             //}
 
-            return new SqlResponse();
+            return new SqlResponce();
         }
 
-        public async Task<SqlResponse> CopyCustomerTariffAsync(short CompanyId, short UserId, int fromCustomerId, int fromPortId, int fromTaskId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
+        public async Task<SqlResponce> CopyCustomerTariffAsync(short CompanyId, short UserId, int fromCustomerId, int fromPortId, int fromTaskId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
         {
-            return new SqlResponse
+            return new SqlResponce
             {
                 Result = -1,
                 Message = ""
             };
         }
 
-        public async Task<SqlResponse> CopyCompanyToCustomerTariffAsync(short CompanyId, short UserId, int fromCompanyId, int fromCustomerId, int fromPortId, int fromTaskId, int toCompanyId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
+        public async Task<SqlResponce> CopyCompanyToCustomerTariffAsync(short CompanyId, short UserId, int fromCompanyId, int fromCustomerId, int fromPortId, int fromTaskId, int toCompanyId, int toCustomerId, int toPortId, int toTaskId, bool overwriteExisting, bool deleteExisting)
         {
-            return new SqlResponse
+            return new SqlResponce
             {
                 Result = -1,
                 Message = ""

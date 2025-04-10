@@ -10,16 +10,16 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<CategoryViewModel> GetCategoryByIdAsync(short CompanyId, short UserId, short categoryId);
 
-        public Task<SqlResponse> SaveCategoryAsync(short CompanyId, short UserId, M_Category M_Category);
+        public Task<SqlResponce> SaveCategoryAsync(short CompanyId, short UserId, M_Category M_Category);
 
-        public Task<SqlResponse> DeleteCategoryAsync(short CompanyId, short UserId, short categoryId);
+        public Task<SqlResponce> DeleteCategoryAsync(short CompanyId, short UserId, short categoryId);
 
         public Task<SubCategoryViewModelCount> GetSubCategoryListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString);
 
         public Task<SubCategoryViewModel> GetSubCategoryByIdAsync(short CompanyId, short UserId, short SubCategoryId);
 
-        public Task<SqlResponse> SaveSubCategoryAsync(short CompanyId, short UserId, M_SubCategory m_SubCategory);
+        public Task<SqlResponce> SaveSubCategoryAsync(short CompanyId, short UserId, M_SubCategory m_SubCategory);
 
-        public Task<SqlResponse> DeleteSubCategoryAsync(short CompanyId, short UserId, short SubCategoryId);
+        public Task<SqlResponce> DeleteSubCategoryAsync(short CompanyId, short UserId, short SubCategoryId);
     }
 }

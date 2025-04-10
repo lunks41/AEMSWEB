@@ -48,7 +48,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> SaveDocumentAsync(short CompanyId, AdmDocuments admDocuments, short UserId)
+        public async Task<SqlResponce> SaveDocumentAsync(short CompanyId, AdmDocuments admDocuments, short UserId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -70,7 +70,7 @@ namespace AMESWEB.Areas.Admin.Data
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT ISNULL((SELECT TOP 1(ItemNo + 1) FROM dbo.AdmDocuments WHERE CompanyId={admDocuments.CompanyId} AND ModuleId={admDocuments.ModuleId} AND TransactionId={admDocuments.TransactionId} AND DocumentId={admDocuments.DocumentId} AND (ItemNo + 1) NOT IN(SELECT ItemNo FROM dbo.AdmDocuments where CompanyId={admDocuments.CompanyId} AND ModuleId={admDocuments.ModuleId} AND TransactionId={admDocuments.TransactionId} AND DocumentId={admDocuments.DocumentId})),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT ISNULL((SELECT TOP 1(ItemNo + 1) FROM dbo.AdmDocuments WHERE CompanyId={admDocuments.CompanyId} AND ModuleId={admDocuments.ModuleId} AND TransactionId={admDocuments.TransactionId} AND DocumentId={admDocuments.DocumentId} AND (ItemNo + 1) NOT IN(SELECT ItemNo FROM dbo.AdmDocuments where CompanyId={admDocuments.CompanyId} AND ModuleId={admDocuments.ModuleId} AND TransactionId={admDocuments.TransactionId} AND DocumentId={admDocuments.DocumentId})),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -80,7 +80,7 @@ namespace AMESWEB.Areas.Admin.Data
                             _context.Add(admDocuments);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "ItemNo Should not be zero" };
+                            return new SqlResponce { Result = -1, Message = "ItemNo Should not be zero" };
                     }
 
                     var DocumentToSave = _context.SaveChanges();
@@ -110,17 +110,17 @@ namespace AMESWEB.Areas.Admin.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -146,7 +146,7 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> DeleteDocumentAsync(short CompanyId, short ModuleId, short TransactionId, long DocumentId, int ItemNo, short UserId)
+        public async Task<SqlResponce> DeleteDocumentAsync(short CompanyId, short ModuleId, short TransactionId, long DocumentId, int ItemNo, short UserId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -155,15 +155,15 @@ namespace AMESWEB.Areas.Admin.Data
                 try
                 {
                     if (IsResultExist == null)
-                        return new SqlResponse { Result = -1, Message = "Record Not Found" };
+                        return new SqlResponce { Result = -1, Message = "Record Not Found" };
 
                     if (DocumentId <= 0 && ItemNo <= 0)
-                        return new SqlResponse { Result = -1, Message = "DocTypeId Should be greater than zero" };
+                        return new SqlResponce { Result = -1, Message = "DocTypeId Should be greater than zero" };
 
                     var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.AdmDocuments WHERE CompanyId={CompanyId} AND ModuleId={ModuleId} AND TransactionId={TransactionId} AND DocumentId={DocumentId} AND ItemNo={ItemNo}");
 
                     if (deleteResult == 0)
-                        return new SqlResponse { Result = -1, Message = "No records delete" };
+                        return new SqlResponce { Result = -1, Message = "No records delete" };
                     else
                     {
                         var auditLog = new AdmAuditLog
@@ -184,10 +184,10 @@ namespace AMESWEB.Areas.Admin.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                         }
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {

@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
             CBBankReconViewModel countViewModel = new CBBankReconViewModel();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.CBBankReconHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId  INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ReconNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.CBBankReconHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId  INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ReconNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
                 var result = await _repository.GetQueryAsync<CBBankReconHdViewModel>($"SELECT Invhd.CompanyId,Invhd.ReconId,Invhd.ReconNo,Invhd.PrevReconId,Invhd.PrevReconNo,Invhd.ReferenceNo,Invhd.TrnDate,Invhd.AccountDate,Invhd.BankId,M_Ban.BankCode,M_Ban.BankName,Invhd.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyCode,Invhd.FromDate,Invhd.ToDate,Invhd.Remarks,Invhd.TotAmt,Invhd.OPBalAmt,Invhd.CLBalAmt,Invhd.Version,Invhd.CreateById,Invhd.CreateDate,Invhd.EditById,Invhd.EditDate,Invhd.IsCancel,Invhd.CancelById,Invhd.CancelDate,Invhd.CancelRemarks,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy,Usr2.UserName AS CancelBy,Invhd.EditVersion FROM dbo.CBBankReconHd Invhd  INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId  INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ReconNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId} ORDER BY Invhd.AccountDate Desc,Invhd.ReconNo Desc OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
@@ -102,7 +102,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
             }
         }
 
-        public async Task<SqlResponse> SaveCBBankReconAsync(short CompanyId, CBBankReconHd CBBankReconHd, List<CBBankReconDt> CBBankReconDt, short UserId)
+        public async Task<SqlResponce> SaveCBBankReconAsync(short CompanyId, CBBankReconHd CBBankReconHd, List<CBBankReconDt> CBBankReconDt, short UserId)
         {
             bool IsEdit = false;
             string accountDate = CBBankReconHd.AccountDate.ToString("dd/MMM/yyyy");
@@ -116,15 +116,15 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.CBBankReconHd WHERE IsCancel=0 And CompanyId={CompanyId} And ReconId={CBBankReconHd.ReconId}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.CBBankReconHd WHERE IsCancel=0 And CompanyId={CompanyId} And ReconId={CBBankReconHd.ReconId}");
 
                         if (dataExist.Count() == 0)
-                            return new SqlResponse { Result = -1, Message = "Invoice Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Not Exist" };
                     }
 
                     if (!IsEdit)
                     {
-                        var documentIdNo = await _repository.GetQueryAsync<SqlResponseIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.CB},{(short)E_CB.CBBankRecon},'{accountDate}'");
+                        var documentIdNo = await _repository.GetQueryAsync<SqlResponceIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.CB},{(short)E_CB.CBBankRecon},'{accountDate}'");
 
                         if (documentIdNo.ToList()[0].DocumentId > 0 && documentIdNo.ToList()[0].DocumentNo != string.Empty)
                         {
@@ -132,11 +132,11 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                             CBBankReconHd.ReconNo = documentIdNo.ToList()[0].DocumentNo;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Invoice Number can't generate" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Number can't generate" };
                     }
                     else
                     {
-                        await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_CreateHistoryRec {CompanyId},{UserId},{CBBankReconHd.ReconId},{(short)E_CB.CBBankRecon}");
+                        await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_CreateHistoryRec {CompanyId},{UserId},{CBBankReconHd.ReconId},{(short)E_CB.CBBankRecon}");
                     }
 
                     //Saving Header
@@ -182,7 +182,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                         if (SaveDetails > 0)
                         {
                             //Inserting the records into AR CreateStatement
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_CreateStatement {CompanyId},{UserId},{CBBankReconHd.ReconId},{(short)E_CB.CBBankRecon}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_CreateStatement {CompanyId},{UserId},{CBBankReconHd.ReconId},{(short)E_CB.CBBankRecon}");
 
                             //Saving Audit log
                             var auditLog = new AdmAuditLog
@@ -209,25 +209,25 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                                     await _repository.UpsertExecuteScalarAsync($"update CBBankReconHd set EditVersion=EditVersion+1 where ReconId={CBBankReconHd.ReconId}; Update CBBankReconDt set EditVersion=(SELECT TOP 1 EditVersion FROM dbo.CBBankReconHd where ReconId={CBBankReconHd.ReconId}) where ReconId={CBBankReconHd.ReconId}");
 
                                 //Create / Update Ar Statement
-                                await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_CreateStatement {CompanyId},{UserId},{CBBankReconHd.ReconId},{(short)E_CB.CBBankRecon}");
+                                await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_CreateStatement {CompanyId},{UserId},{CBBankReconHd.ReconId},{(short)E_CB.CBBankRecon}");
 
                                 TScope.Complete();
-                                return new SqlResponse { Result = CBBankReconHd.ReconId, Message = "Save Successfully" };
+                                return new SqlResponce { Result = CBBankReconHd.ReconId, Message = "Save Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
 
                         #endregion Save AuditLog
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -251,7 +251,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
             }
         }
 
-        public async Task<SqlResponse> DeleteCBBankReconAsync(short CompanyId, long ReconId, string CanacelRemarks, short UserId)
+        public async Task<SqlResponce> DeleteCBBankReconAsync(short CompanyId, long ReconId, string CanacelRemarks, short UserId)
         {
             string ReconNo = string.Empty;
             try
@@ -269,7 +269,7 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                         if (CBBankReconToRemove > 0)
                         {
                             //Cancel the Ar Transactions.
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{ReconId},{(short)E_CB.CBBankRecon}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{ReconId},{(short)E_CB.CBBankRecon}");
 
                             var auditLog = new AdmAuditLog
                             {
@@ -289,19 +289,19 @@ namespace AMESWEB.Areas.Account.Data.Services.CB
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Invoice Not exists" };
+                        return new SqlResponce { Result = -1, Message = "Invoice Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)

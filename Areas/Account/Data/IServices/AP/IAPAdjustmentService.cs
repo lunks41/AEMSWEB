@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.AP
 
         public Task<APAdjustmentViewModel> GetAPAdjustmentByIdAsync(short CompanyId, long InvoiceId, string InvoiceNo, short UserId);
 
-        public Task<SqlResponse> SaveAPAdjustmentAsync(short CompanyId, ApAdjustmentHd APAdjustmentHd, List<ApAdjustmentDt> APAdjustmentDt, short UserId);
+        public Task<SqlResponce> SaveAPAdjustmentAsync(short CompanyId, ApAdjustmentHd APAdjustmentHd, List<ApAdjustmentDt> APAdjustmentDt, short UserId);
 
-        public Task<SqlResponse> DeleteAPAdjustmentAsync(short CompanyId, long InvoiceId, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteAPAdjustmentAsync(short CompanyId, long InvoiceId, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<APAdjustmentViewModel>> GetHistoryAPAdjustmentByIdAsync(short CompanyId, long AdjustmentId, string AdjustmentNo, short UserId);
     }

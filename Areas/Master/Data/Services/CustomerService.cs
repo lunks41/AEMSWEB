@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             CustomerViewModelCount countViewModel = new CustomerViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Customer M_Cus INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_Cus.CreditTermId INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Cus.CurrencyId WHERE (M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cus.CustomerRegNo LIKE '%{searchString}%' OR M_Cus.CustomerOtherName LIKE '%{searchString}%' OR M_Cus.CustomerShortName LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.Remarks LIKE '%{searchString}%') AND M_Cus.CustomerId<>0 AND M_Cus.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Customer M_Cus INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_Cus.CreditTermId INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Cus.CurrencyId WHERE (M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cus.CustomerRegNo LIKE '%{searchString}%' OR M_Cus.CustomerOtherName LIKE '%{searchString}%' OR M_Cus.CustomerShortName LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.Remarks LIKE '%{searchString}%') AND M_Cus.CustomerId<>0 AND M_Cus.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
 
                 var result = await _repository.GetQueryAsync<CustomerViewModel>($"SELECT M_Cus.CustomerId,M_Cus.CompanyId,M_Cus.CustomerCode,M_Cus.CustomerName,M_Cus.CustomerOtherName,M_Cus.CustomerShortName,M_Cus.CustomerRegNo,M_Cus.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Cus.CreditTermId,M_Crd.CreditTermCode,M_Crd.CreditTermName,M_Cus.ParentCustomerId,M_Cus.AccSetupId,M_Set.AccSetupCode,M_Set.AccSetupName,M_Cus.SupplierId,M_Sup.SupplierCode,M_Sup.SupplierName,M_Cus.BankId,M_Bak.BankCode,M_Bak.BankName,M_Cus.IsCustomer,M_Cus.IsVendor,M_Cus.IsTrader,M_Cus.IsSupplier,M_Cus.Remarks,M_Cus.IsActive,M_Cus.CreateById,M_Cus.CreateDate,M_Cus.EditById,M_Cus.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Customer M_Cus LEFT JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = M_Cus.SupplierId LEFT JOIN dbo.M_AccountSetup M_Set ON M_Set.AccSetupId = M_Cus.AccSetupId LEFT JOIN dbo.M_Bank M_Bak ON M_Bak.BankId = M_Cus.BankId INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_Cus.CreditTermId INNER JOIN M_Currency M_Cur ON M_Cur.CurrencyId = M_Cus.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Cus.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Cus.EditById WHERE (M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cus.CustomerRegNo LIKE '%{searchString}%' OR M_Cus.CustomerOtherName LIKE '%{searchString}%' OR M_Cus.CustomerShortName LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.Remarks LIKE '%{searchString}%') AND M_Cus.CustomerId<>0 AND M_Cus.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer})) ORDER BY M_Cus.CustomerName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -95,26 +95,26 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCustomerAsync(short CompanyId, short UserId, M_Customer m_Customer)
+        public async Task<SqlResponce> SaveCustomerAsync(short CompanyId, short UserId, M_Customer m_Customer)
         {
             bool IsEdit = m_Customer.CustomerId != 0;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Customer WHERE CustomerId <>{m_Customer.CustomerId} AND CustomerCode='{m_Customer.CustomerCode}' AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Customer WHERE CustomerId <>{m_Customer.CustomerId} AND CustomerCode='{m_Customer.CustomerCode}' AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
 
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Customer Code exists" };
+                        return new SqlResponce { Result = -1, Message = "Customer Code exists" };
 
-                    //var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>( $"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Customer WHERE CustomerId <>{m_Customer.CustomerId} AND CustomerName='{m_Customer.CustomerName}' AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
+                    //var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>( $"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Customer WHERE CustomerId <>{m_Customer.CustomerId} AND CustomerName='{m_Customer.CustomerName}' AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
 
                     //if ((nameExist?.IsExist ?? 0) > 0)
-                    //    return new SqlResponse { Result = -1, Message = "Customer Name exists" };
+                    //    return new SqlResponce { Result = -1, Message = "Customer Name exists" };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Customer WHERE CustomerId<>0 AND CustomerId={m_Customer.CustomerId} AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT TOP (1) 1 AS IsExist FROM dbo.M_Customer WHERE CustomerId<>0 AND CustomerId={m_Customer.CustomerId} AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany ({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Customer}))");
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
@@ -123,11 +123,11 @@ namespace AMESWEB.Areas.Master.Data.Services
                             entityHead.Property(b => b.CompanyId).IsModified = false;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Customer Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Customer Not Found" };
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>("SELECT ISNULL((SELECT TOP 1 (CustomerId + 1) FROM dbo.M_Customer WHERE (CustomerId + 1) NOT IN (SELECT CustomerId FROM dbo.M_Customer)),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>("SELECT ISNULL((SELECT TOP 1 (CustomerId + 1) FROM dbo.M_Customer WHERE (CustomerId + 1) NOT IN (SELECT CustomerId FROM dbo.M_Customer)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -138,7 +138,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                             _context.Add(m_Customer);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "CustomerId Should not be zero" };
+                            return new SqlResponce { Result = -1, Message = "CustomerId Should not be zero" };
                     }
 
                     var CustomerToSave = _context.SaveChanges();
@@ -168,17 +168,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = m_Customer.CustomerId, Message = "Save Successfully" };
+                            return new SqlResponce { Result = m_Customer.CustomerId, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Save Failed" };
+                        return new SqlResponce { Result = -1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -203,7 +203,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -232,7 +232,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCustomerAsync(short CompanyId, short UserId, int CustomerId)
+        public async Task<SqlResponce> DeleteCustomerAsync(short CompanyId, short UserId, int CustomerId)
         {
             string CustomerCode = string.Empty;
             try
@@ -264,19 +264,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CustomerId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "CustomerId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -301,7 +301,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -364,7 +364,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCustomerAddressAsync(short CompanyId, short UserId, M_CustomerAddress m_CustomerAddress)
+        public async Task<SqlResponce> SaveCustomerAddressAsync(short CompanyId, short UserId, M_CustomerAddress m_CustomerAddress)
         {
             bool IsEdit = m_CustomerAddress.CustomerId != 0 && m_CustomerAddress.AddressId != 0;
             try
@@ -373,10 +373,10 @@ namespace AMESWEB.Areas.Master.Data.Services
                 {
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_CustomerAddress where CustomerId = {m_CustomerAddress.CustomerId} And Address1 = '{m_CustomerAddress.Address1}' And AddressId<>{m_CustomerAddress.AddressId}");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_CustomerAddress where CustomerId = {m_CustomerAddress.CustomerId} And Address1 = '{m_CustomerAddress.Address1}' And AddressId<>{m_CustomerAddress.AddressId}");
 
                         if (DataExist.Count() > 0 && (DataExist.ToList()[0].IsExist == 1 || DataExist.ToList()[0].IsExist == 2))
-                            return new SqlResponse { Result = -1, Message = "Customer Address Name Exist" };
+                            return new SqlResponce { Result = -1, Message = "Customer Address Name Exist" };
                     }
                     if (IsEdit)
                     {
@@ -386,7 +386,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT ISNULL((SELECT TOP 1(AddressId + 1) FROM dbo.M_CustomerAddress WHERE CustomerId = {m_CustomerAddress.CustomerId} AND (AddressId + 1) NOT IN(SELECT AddressId FROM dbo.M_CustomerAddress where CustomerId= {m_CustomerAddress.CustomerId})),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT ISNULL((SELECT TOP 1(AddressId + 1) FROM dbo.M_CustomerAddress WHERE CustomerId = {m_CustomerAddress.CustomerId} AND (AddressId + 1) NOT IN(SELECT AddressId FROM dbo.M_CustomerAddress where CustomerId= {m_CustomerAddress.CustomerId})),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -397,7 +397,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                             _context.Add(m_CustomerAddress);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                            return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
 
                     var CustomerToSave = _context.SaveChanges();
@@ -406,18 +406,18 @@ namespace AMESWEB.Areas.Master.Data.Services
                     {
                         await _logService.SaveAuditLogAsync(CompanyId, E_Modules.Master, E_Master.Customer, m_CustomerAddress.AddressId, m_CustomerAddress.Address1, "M_CustomerAddress", IsEdit ? E_Mode.Update : E_Mode.Create, "CustomerAddress Save Successfully", UserId);
                         TScope.Complete();
-                        return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        return new SqlResponce { Result = 1, Message = "Save Successfully" };
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Save Failed" };
+                        return new SqlResponce { Result = -1, Message = "Save Failed" };
                     }
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Customer, m_CustomerAddress.AddressId, "", "M_CustomerAddress", E_Mode.Delete, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -426,7 +426,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCustomerAddressAsync(short CompanyId, short UserId, int CustomerId, short AddressId)
+        public async Task<SqlResponce> DeleteCustomerAddressAsync(short CompanyId, short UserId, int CustomerId, short AddressId)
         {
             try
             {
@@ -440,23 +440,23 @@ namespace AMESWEB.Areas.Master.Data.Services
                         {
                             await _logService.SaveAuditLogAsync(CompanyId, E_Modules.Master, E_Master.Customer, AddressId, "", "M_CustomerAddress", E_Mode.Delete, "CustomerAddress Delete Successfully", UserId);
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "AddressId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "AddressId Should be zero" };
                     }
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Customer, AddressId, "", "M_CustomerAddress", E_Mode.Delete, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -529,7 +529,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCustomerContactAsync(short CompanyId, short UserId, M_CustomerContact m_CustomerContact)
+        public async Task<SqlResponce> SaveCustomerContactAsync(short CompanyId, short UserId, M_CustomerContact m_CustomerContact)
         {
             bool IsEdit = false;
             try
@@ -542,10 +542,10 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_CustomerContact where CustomerId = {m_CustomerContact.CustomerId} And ContactName = '{m_CustomerContact.ContactName}' And ContactId<>{m_CustomerContact.ContactId}");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_CustomerContact where CustomerId = {m_CustomerContact.CustomerId} And ContactName = '{m_CustomerContact.ContactName}' And ContactId<>{m_CustomerContact.ContactId}");
 
                         if (DataExist.Count() > 0 && (DataExist.ToList()[0].IsExist == 1 || DataExist.ToList()[0].IsExist == 2))
-                            return new SqlResponse { Result = -1, Message = "Customer Contact Name Exist" };
+                            return new SqlResponce { Result = -1, Message = "Customer Contact Name Exist" };
                     }
                     if (IsEdit)
                     {
@@ -555,7 +555,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT ISNULL((SELECT TOP 1(ContactId + 1) FROM dbo.M_CustomerContact WHERE CustomerId = {m_CustomerContact.CustomerId} AND (ContactId + 1) NOT IN(SELECT ContactId FROM dbo.M_CustomerContact where CustomerId= {m_CustomerContact.CustomerId})),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT ISNULL((SELECT TOP 1(ContactId + 1) FROM dbo.M_CustomerContact WHERE CustomerId = {m_CustomerContact.CustomerId} AND (ContactId + 1) NOT IN(SELECT ContactId FROM dbo.M_CustomerContact where CustomerId= {m_CustomerContact.CustomerId})),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -566,7 +566,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                             _context.Add(m_CustomerContact);
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                            return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
 
                     var CustomerToSave = _context.SaveChanges();
@@ -596,17 +596,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -631,7 +631,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -660,7 +660,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCustomerContactAsync(short CompanyId, short UserId, int CustomerId, short ContactId)
+        public async Task<SqlResponce> DeleteCustomerContactAsync(short CompanyId, short UserId, int CustomerId, short ContactId)
         {
             try
             {
@@ -689,19 +689,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CustomerId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "CustomerId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -727,7 +727,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

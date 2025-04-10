@@ -55,7 +55,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             }
         }
 
-        public async Task<SqlResponse> SaveGLPeriodCloseAsync(short CompanyId, PeriodCloseViewModel periodCloseViewModel, short UserId)
+        public async Task<SqlResponce> SaveGLPeriodCloseAsync(short CompanyId, PeriodCloseViewModel periodCloseViewModel, short UserId)
         {
             bool IsEdit = true;
             try
@@ -98,17 +98,17 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Save Failed" };
+                        return new SqlResponce { Result = -1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -132,7 +132,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             }
         }
 
-        public async Task<SqlResponse> GenrateGLPeriodCloseYearlyAsync(short CompanyId, PeriodCloseViewModel periodCloseViewModel, short UserId)
+        public async Task<SqlResponce> GenrateGLPeriodCloseYearlyAsync(short CompanyId, PeriodCloseViewModel periodCloseViewModel, short UserId)
         {
             bool IsEdit = true;
             try
@@ -175,17 +175,17 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Save Failed" };
+                        return new SqlResponce { Result = -1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)

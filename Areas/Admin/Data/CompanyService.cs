@@ -54,7 +54,7 @@ namespace AMESWEB.Areas.Admin.Data
             CompanyViewModelCount countViewModel = new CompanyViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmCompany M_ACC  LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACC.EditById WHERE (M_ACC.CompanyName LIKE '%{searchString}%' OR M_ACC.CompanyCode LIKE '%{searchString}%' OR M_ACC.Remarks LIKE '%{searchString}%')");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.AdmCompany M_ACC  LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACC.EditById WHERE (M_ACC.CompanyName LIKE '%{searchString}%' OR M_ACC.CompanyCode LIKE '%{searchString}%' OR M_ACC.Remarks LIKE '%{searchString}%')");
 
                 var result = await _repository.GetQueryAsync<CompanyViewModel>($"SELECT M_ACC.CompanyId,M_ACC.CompanyCode,M_ACC.CompanyName,,M_ACC.CompanyId,M_ACC.Remarks,M_ACC.IsActive,M_ACC.CreateById,M_ACC.CreateDate,M_ACC.EditById,M_ACC.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.AdmCompany M_ACC  LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACC.EditById WHERE (M_ACC.CompanyName LIKE '%{searchString}%' OR M_ACC.CompanyCode LIKE '%{searchString}%' OR M_ACC.Remarks LIKE '%{searchString}%') AND M_ACC.CompanyId<>0 ORDER BY M_ACC.CompanyName ");
 
@@ -117,28 +117,28 @@ namespace AMESWEB.Areas.Admin.Data
             }
         }
 
-        public async Task<SqlResponse> SaveCompanyAsync(short UserId, AdmCompany m_Company)
+        public async Task<SqlResponce> SaveCompanyAsync(short UserId, AdmCompany m_Company)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_Company.CompanyId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.AdmCompany WHERE CompanyId<>@CompanyId AND CompanyCode=@CompanyCode",
                         new { m_Company.CompanyId, m_Company.CompanyCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Company Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "Company Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.AdmCompany WHERE CompanyId<>@CompanyId AND CompanyName=@CompanyName",
                         new { m_Company.CompanyId, m_Company.CompanyName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Company Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "Company Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.AdmCompany WHERE CompanyId=@CompanyId",
                             new { m_Company.CompanyId });
 
@@ -150,13 +150,13 @@ namespace AMESWEB.Areas.Admin.Data
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Company Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Company Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (CompanyId + 1) FROM dbo.AdmCompany WHERE (CompanyId + 1) NOT IN (SELECT CompanyId FROM dbo.AdmCompany)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -166,7 +166,7 @@ namespace AMESWEB.Areas.Admin.Data
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -196,17 +196,17 @@ namespace AMESWEB.Areas.Admin.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -230,7 +230,7 @@ namespace AMESWEB.Areas.Admin.Data
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage

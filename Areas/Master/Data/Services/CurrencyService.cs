@@ -33,7 +33,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             CurrencyViewModelCount countViewModel = new CurrencyViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Currency M_Cur WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.Remarks LIKE '%{searchString}%') AND M_Cur.CurrencyId<>0 AND M_Cur.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Currency}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Currency M_Cur WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.Remarks LIKE '%{searchString}%') AND M_Cur.CurrencyId<>0 AND M_Cur.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Currency}))");
 
                 var result = await _repository.GetQueryAsync<CurrencyViewModel>($"SELECT M_Cur.CurrencyId,M_Cur.CompanyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_Cur.IsMultiply,M_Cur.Remarks,M_Cur.IsActive,M_Cur.CreateById,M_Cur.CreateDate,M_Cur.EditById,M_Cur.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_Currency M_Cur LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Cur.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Cur.EditById WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.Remarks LIKE '%{searchString}%') AND M_Cur.CurrencyId<>0 AND M_Cur.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Currency})) ORDER BY M_Cur.CurrencyName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -96,29 +96,29 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCurrencyAsync(short CompanyId, short UserId, M_Currency m_Currency)
+        public async Task<SqlResponce> SaveCurrencyAsync(short CompanyId, short UserId, M_Currency m_Currency)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_Currency.CurrencyId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Currency WHERE CurrencyId<>@CurrencyId AND CurrencyCode=@CurrencyCode AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
                         new { m_Currency.CurrencyId, m_Currency.CurrencyCode, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.Currency });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Currency Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "Currency Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Currency WHERE CurrencyId<>@CurrencyId AND CurrencyName=@CurrencyName AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
                         new { m_Currency.CurrencyId, m_Currency.CurrencyName, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.Currency });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -2, Message = "Currency Name already exists." };
+                        return new SqlResponce { Result = -2, Message = "Currency Name already exists." };
 
                     if (!IsEdit)
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (CurrencyId + 1) FROM dbo.M_Currency WHERE (CurrencyId + 1) NOT IN (SELECT CurrencyId FROM dbo.M_Currency)),1) AS NextId");
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -126,7 +126,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "CurrencyId Should not be zero" };
+                            return new SqlResponce { Result = -1, Message = "CurrencyId Should not be zero" };
                         }
                     }
 
@@ -173,17 +173,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -207,7 +207,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -237,7 +237,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCurrencyAsync(short CompanyId, short UserId, short CurrencyId)
+        public async Task<SqlResponce> DeleteCurrencyAsync(short CompanyId, short UserId, short CurrencyId)
         {
             string CurrencyCode = string.Empty;
             try
@@ -270,19 +270,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CurrencyId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "CurrencyId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -307,7 +307,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -346,7 +346,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             CurrencyDtViewModelCount countViewModel = new CurrencyDtViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_CurrencyDt M_CurDt INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_CurDt.CurrencyId WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND M_CurDt.CurrencyId<>0 AND M_CurDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CurrencyDt}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_CurrencyDt M_CurDt INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_CurDt.CurrencyId WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND M_CurDt.CurrencyId<>0 AND M_CurDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CurrencyDt}))");
 
                 var result = await _repository.GetQueryAsync<CurrencyDtViewModel>($"SELECT M_CurDt.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_CurDt.CompanyId,M_CurDt.ExhRate,M_CurDt.ValidFrom,M_CurDt.CreateById,M_CurDt.CreateDate,M_CurDt.EditById,M_CurDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CurrencyDt M_CurDt INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_CurDt.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_CurDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_CurDt.EditById WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND M_CurDt.CurrencyId<>0 AND M_CurDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CurrencyDt})) ORDER BY M_Cur.CurrencyName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -410,7 +410,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCurrencyDtAsync(short CompanyId, short UserId, M_CurrencyDt m_CurrencyDt)
+        public async Task<SqlResponce> SaveCurrencyDtAsync(short CompanyId, short UserId, M_CurrencyDt m_CurrencyDt)
         {
             //string validFrom = m_CurrencyDt.ValidFrom.ToString("yyyy-MM-dd");
             string validFrom = m_CurrencyDt.ValidFrom.ToString("dd/MMM/yyyy");
@@ -425,7 +425,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_CurrencyDt WHERE CompanyId={CompanyId} AND CurrencyId={m_CurrencyDt.CurrencyId} AND ValidFrom ='{validFrom}'");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_CurrencyDt WHERE CompanyId={CompanyId} AND CurrencyId={m_CurrencyDt.CurrencyId} AND ValidFrom ='{validFrom}'");
 
                         if (DataExist.Count() > 0 && DataExist.ToList()[0].IsExist == 1)
                         {
@@ -468,17 +468,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -502,7 +502,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -532,7 +532,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCurrencyDtAsync(short CompanyId, short UserId, CurrencyDtViewModel currencyDtViewModel)
+        public async Task<SqlResponce> DeleteCurrencyDtAsync(short CompanyId, short UserId, CurrencyDtViewModel currencyDtViewModel)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -561,19 +561,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CurrencyId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "CurrencyId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -597,7 +597,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -637,7 +637,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             CurrencyLocalDtViewModelCount countViewModel = new CurrencyLocalDtViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_CurrencyLocalDt M_CurDt INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_CurDt.CurrencyId WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND M_CurDt.CurrencyId<>0 AND M_CurDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CurrencyLocalDt}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_CurrencyLocalDt M_CurDt INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_CurDt.CurrencyId WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND M_CurDt.CurrencyId<>0 AND M_CurDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CurrencyLocalDt}))");
 
                 var result = await _repository.GetQueryAsync<CurrencyLocalDtViewModel>($"SELECT M_CurDt.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_CurDt.CompanyId,M_CurDt.ExhRate,M_CurDt.ValidFrom,M_CurDt.CreateById,M_CurDt.CreateDate,M_CurDt.EditById,M_CurDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CurrencyLocalDt M_CurDt INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_CurDt.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_CurDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_CurDt.EditById WHERE (M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND M_CurDt.CurrencyId<>0 AND M_CurDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CurrencyLocalDt})) ORDER BY M_Cur.CurrencyName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -701,7 +701,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCurrencyLocalDtAsync(short CompanyId, short UserId, M_CurrencyLocalDt m_CurrencyLocalDt)
+        public async Task<SqlResponce> SaveCurrencyLocalDtAsync(short CompanyId, short UserId, M_CurrencyLocalDt m_CurrencyLocalDt)
         {
             string validFrom = m_CurrencyLocalDt.ValidFrom.ToString("yyyy-MM-dd");
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -715,7 +715,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_CurrencyLocalDt WHERE CompanyId={CompanyId} AND CurrencyId={m_CurrencyLocalDt.CurrencyId} AND ValidFrom ='{validFrom}'");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_CurrencyLocalDt WHERE CompanyId={CompanyId} AND CurrencyId={m_CurrencyLocalDt.CurrencyId} AND ValidFrom ='{validFrom}'");
 
                         if (DataExist.Count() > 0 && DataExist.ToList()[0].IsExist == 1)
                         {
@@ -758,17 +758,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -792,7 +792,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -822,7 +822,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCurrencyLocalDtAsync(short CompanyId, short UserId, CurrencyLocalDtViewModel currencyLocalDtViewModel)
+        public async Task<SqlResponce> DeleteCurrencyLocalDtAsync(short CompanyId, short UserId, CurrencyLocalDtViewModel currencyLocalDtViewModel)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -851,19 +851,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CurrencyId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "CurrencyId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -887,7 +887,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage

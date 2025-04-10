@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.AP
 
         public Task<APDocSetOffViewModel> GetAPDocSetOffByIdAsync(short CompanyId, long SetoffId, string SetoffNo, short UserId);
 
-        public Task<SqlResponse> SaveAPDocSetOffAsync(short CompanyId, ApDocSetOffHd APDocSetOffHd, List<ApDocSetOffDt> APDocSetOffDt, short UserId);
+        public Task<SqlResponce> SaveAPDocSetOffAsync(short CompanyId, ApDocSetOffHd APDocSetOffHd, List<ApDocSetOffDt> APDocSetOffDt, short UserId);
 
-        public Task<SqlResponse> DeleteAPDocSetOffAsync(short CompanyId, long SetoffId, string SetoffNo, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteAPDocSetOffAsync(short CompanyId, long SetoffId, string SetoffNo, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<APDocSetOffViewModel>> GetHistoryAPDocSetOffByIdAsync(short CompanyId, long SetoffId, string SetoffNo, short UserId);
     }

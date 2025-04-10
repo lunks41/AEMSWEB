@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.AP
 
         public Task<APPaymentViewModel> GetAPPaymentByIdAsync(short CompanyId, long PaymentId, string PaymentNo, short UserId);
 
-        public Task<SqlResponse> SaveAPPaymentAsync(short CompanyId, ApPaymentHd APPaymentHd, List<ApPaymentDt> APPaymentDt, short UserId);
+        public Task<SqlResponce> SaveAPPaymentAsync(short CompanyId, ApPaymentHd APPaymentHd, List<ApPaymentDt> APPaymentDt, short UserId);
 
-        public Task<SqlResponse> DeleteAPPaymentAsync(short CompanyId, long PaymentId, string PaymentNo, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteAPPaymentAsync(short CompanyId, long PaymentId, string PaymentNo, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<APPaymentViewModel>> GetHistoryAPPaymentByIdAsync(short CompanyId, long PaymentId, string PaymentNo, short UserId);
     }

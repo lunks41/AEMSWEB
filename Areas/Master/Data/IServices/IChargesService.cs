@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<ChargesViewModel> GetChargesByIdAsync(short CompanyId, short UserId, short ChargeId);
 
-        public Task<SqlResponse> SaveChargesAsync(short CompanyId, short UserId, M_Charges M_Charges);
+        public Task<SqlResponce> SaveChargesAsync(short CompanyId, short UserId, M_Charges M_Charges);
 
-        public Task<SqlResponse> DeleteChargesAsync(short CompanyId, short UserId, short ChargeId);
+        public Task<SqlResponce> DeleteChargesAsync(short CompanyId, short UserId, short ChargeId);
     }
 }

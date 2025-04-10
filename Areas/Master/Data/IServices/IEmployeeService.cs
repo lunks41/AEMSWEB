@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<EmployeeViewModel> GetEmployeeByIdAsync(short CompanyId, short UserId, short EmployeeId);
 
-        public Task<SqlResponse> SaveEmployeeAsync(short CompanyId, short UserId, M_Employee M_Employee);
+        public Task<SqlResponce> SaveEmployeeAsync(short CompanyId, short UserId, M_Employee M_Employee);
 
-        public Task<SqlResponse> DeleteEmployeeAsync(short CompanyId, short UserId, short EmployeeId);
+        public Task<SqlResponce> DeleteEmployeeAsync(short CompanyId, short UserId, short EmployeeId);
     }
 }

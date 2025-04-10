@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
             ArInvoiceViewModelCount countViewModel = new ArInvoiceViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.ArInvoiceHd Invhd INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Invhd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = Invhd.CreditTermId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.M_Country M_Cun ON M_Cun.CountryId = Invhd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.InvoiceNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.ArInvoiceHd Invhd INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Invhd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = Invhd.CreditTermId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.M_Country M_Cun ON M_Cun.CountryId = Invhd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.InvoiceNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.CompanyId={CompanyId}");
                 var result = await _repository.GetQueryAsync<ArInvoiceViewModel>($"SELECT Invhd.CompanyId,Invhd.InvoiceId,Invhd.InvoiceNo,Invhd.ReferenceNo,Invhd.TrnDate,Invhd.AccountDate,Invhd.DeliveryDate,Invhd.DueDate,Invhd.CustomerId,M_Cus.CustomerCode,M_Cus.CustomerName,Invhd.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyCode,Invhd.ExhRate,Invhd.CtyExhRate,Invhd.CreditTermId,M_Crd.CreditTermCode,M_Crd.CreditTermName,Invhd.BankId,M_Ban.BankCode,M_Ban.BankName,Invhd.TotAmt,Invhd.TotLocalAmt,Invhd.TotCtyAmt,Invhd.GstClaimDate,Invhd.GstAmt,Invhd.GstLocalAmt,Invhd.GstCtyAmt,Invhd.TotAmtAftGst,Invhd.TotLocalAmtAftGst,Invhd.TotCtyAmtAftGst,Invhd.BalAmt,Invhd.BalLocalAmt,Invhd.PayAmt,Invhd.PayLocalAmt,Invhd.ExGainLoss,Invhd.SalesOrderId,Invhd.SalesOrderNo,Invhd.OperationId,Invhd.OperationNo,Invhd.Remarks,Invhd.Address1,Invhd.Address2,Invhd.Address3,Invhd.Address4,Invhd.PinCode,Invhd.CountryId,M_Cun.CountryCode,M_Cun.CountryName,Invhd.PhoneNo,Invhd.FaxNo,Invhd.ContactName,Invhd.MobileNo,Invhd.EmailAdd,Invhd.ModuleFrom,Invhd.SupplierName,Invhd.SuppInvoiceNo,Invhd.APInvoiceId,Invhd.APInvoiceNo,Invhd.CreateById,Invhd.CreateDate,Invhd.EditById,Invhd.EditDate,Invhd.IsCancel,Invhd.CancelById,Invhd.CancelDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy,Usr2.UserName AS CancelBy,Invhd.EditVersion FROM dbo.ArInvoiceHd Invhd INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Invhd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = Invhd.CreditTermId INNER JOIN dbo.M_Bank M_Ban ON M_Ban.BankId = Invhd.BankId LEFT JOIN dbo.M_Country M_Cun ON M_Cun.CountryId = Invhd.CountryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.InvoiceNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Ban.BankCode LIKE '%{searchString}%' OR M_Ban.BankName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId} ORDER BY Invhd.AccountDate Desc,Invhd.InvoiceNo Desc OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
@@ -102,7 +102,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
             }
         }
 
-        public async Task<SqlResponse> SaveArInvoiceAsync(short CompanyId, short UserId, ArInvoiceHd arInvoiceHd, List<ArInvoiceDt> arInvoiceDt)
+        public async Task<SqlResponce> SaveArInvoiceAsync(short CompanyId, short UserId, ArInvoiceHd arInvoiceHd, List<ArInvoiceDt> arInvoiceDt)
         {
             bool IsEdit = false;
             string accountDate = arInvoiceHd.AccountDate.ToString("dd/MMM/yyyy");
@@ -120,15 +120,15 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.ArInvoiceHd WHERE IsCancel=0 And CompanyId={CompanyId} And InvoiceId={arInvoiceHd.InvoiceId}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.ArInvoiceHd WHERE IsCancel=0 And CompanyId={CompanyId} And InvoiceId={arInvoiceHd.InvoiceId}");
 
                         if (dataExist.Count() == 0)
-                            return new SqlResponse { Result = -1, Message = "Invoice Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Not Exist" };
                     }
 
                     if (!IsEdit)
                     {
-                        var documentIdNo = await _repository.GetQueryAsync<SqlResponseIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.AR},{(short)E_AR.Invoice},'{accountDate}'");
+                        var documentIdNo = await _repository.GetQueryAsync<SqlResponceIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.AR},{(short)E_AR.Invoice},'{accountDate}'");
 
                         if (documentIdNo.ToList()[0].DocumentId > 0 && documentIdNo.ToList()[0].DocumentNo != string.Empty)
                         {
@@ -136,12 +136,12 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                             arInvoiceHd.InvoiceNo = documentIdNo.ToList()[0].DocumentNo;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Invoice Number can't generate" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Number can't generate" };
                     }
                     else
                     {
                         //Insert the previous arinvoice record to arinvoice history table as well as editversion also.
-                        await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_CreateHistoryRec {CompanyId},{UserId},{arInvoiceHd.InvoiceId},{(short)E_AR.Invoice}");
+                        await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_CreateHistoryRec {CompanyId},{UserId},{arInvoiceHd.InvoiceId},{(short)E_AR.Invoice}");
 
                         //arInvoiceHd.EditVersion = Convert.ToByte(arInvoiceHd.EditVersion + 1);
                     }
@@ -195,7 +195,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                         if (SaveDetails > 0)
                         {
                             //Inserting the records into AR CreateStatement
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arInvoiceHd.InvoiceId},{(short)E_AR.Invoice}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arInvoiceHd.InvoiceId},{(short)E_AR.Invoice}");
 
                             //Saving Audit log
                             var auditLog = new AdmAuditLog
@@ -222,29 +222,29 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                                     await _repository.UpsertExecuteScalarAsync($"update ArinvoiceHd set EditVersion=EditVersion+1 where InvoiceId={arInvoiceHd.InvoiceId}; Update ArInvoiceDt set EditVersion=(SELECT TOP 1 EditVersion FROM dbo.ArInvoiceHd where InvoiceId={arInvoiceHd.InvoiceId}) where InvoiceId={arInvoiceHd.InvoiceId}");
 
                                 //Create / Update Ar Statement
-                                await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arInvoiceHd.InvoiceId},{(short)E_AR.Invoice}");
+                                await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_CreateStatement {CompanyId},{UserId},{arInvoiceHd.InvoiceId},{(short)E_AR.Invoice}");
 
                                 TScope.Complete();
-                                return new SqlResponse { Result = arInvoiceHd.InvoiceId, Message = "Save Successfully" };
+                                return new SqlResponce { Result = arInvoiceHd.InvoiceId, Message = "Save Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
 
                         #endregion Save AuditLog
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
                     //}
                     //else
                     //{
-                    //    return new SqlResponse { Result = -1, Message = "Period Closed" };
+                    //    return new SqlResponce { Result = -1, Message = "Period Closed" };
                     //}
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -268,7 +268,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
             }
         }
 
-        public async Task<SqlResponse> DeleteArInvoiceAsync(short CompanyId, short UserId, long InvoiceId, string CanacelRemarks)
+        public async Task<SqlResponce> DeleteArInvoiceAsync(short CompanyId, short UserId, long InvoiceId, string CanacelRemarks)
         {
             string InvoiceNo = string.Empty;
             try
@@ -286,7 +286,7 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                         if (ArInvoiceToRemove > 0)
                         {
                             //Cancel the Ar Transactions.
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_AR_DeleteStatement {CompanyId},{UserId},{InvoiceId},{(short)E_AR.Invoice}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_AR_DeleteStatement {CompanyId},{UserId},{InvoiceId},{(short)E_AR.Invoice}");
 
                             var auditLog = new AdmAuditLog
                             {
@@ -306,19 +306,19 @@ namespace AMESWEB.Areas.Account.Data.Services.AR
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Invoice Not exists" };
+                        return new SqlResponce { Result = -1, Message = "Invoice Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)

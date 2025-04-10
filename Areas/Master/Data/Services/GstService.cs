@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             GstViewModelCount countViewModel = new GstViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.GstCategoryName LIKE '%{searchString}%' OR M_gtc.GstCategoryCode LIKE '%{searchString}%') AND M_Gt.GstId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.GstCategoryName LIKE '%{searchString}%' OR M_gtc.GstCategoryCode LIKE '%{searchString}%') AND M_Gt.GstId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory}))");
 
                 var result = await _repository.GetQueryAsync<GstViewModel>($"SELECT M_Gt.GstId,M_Gt.GstCode,M_Gt.GstName,M_Gt.CompanyId,M_Gt.Remarks,M_Gt.IsActive,M_Gt.GstCategoryId,M_gtc.GstCategoryCode,M_gtc.GstCategoryName,M_Gt.CreateById,M_Gt.CreateDate,M_Gt.EditById,M_Gt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Gst M_Gt INNER JOIN dbo.M_GstCategory M_gtc ON M_gtc.GstCategoryId = M_Gt.GstCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gt.EditById WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%' OR M_Gt.Remarks LIKE '%{searchString}%' OR M_gtc.GstCategoryName LIKE '%{searchString}%' OR M_gtc.GstCategoryCode LIKE '%{searchString}%') AND M_Gt.GstId<>0 AND M_Gt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Gst})) ORDER BY M_Gt.GstName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -95,7 +95,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveGstAsync(short companyId, short userId, M_Gst gst)
+        public async Task<SqlResponce> SaveGstAsync(short companyId, short userId, M_Gst gst)
         {
             bool isEdit = gst.GstId != 0;
             try
@@ -128,25 +128,25 @@ namespace AMESWEB.Areas.Master.Data.Services
                         });
 
                     if (existenceCheck?.CodeExists == 1)
-                        return new SqlResponse { Result = -1, Message = "GST Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "GST Code already exists." };
 
                     if (existenceCheck?.NameExists == 1)
-                        return new SqlResponse { Result = -2, Message = "GST Name already exists." };
+                        return new SqlResponce { Result = -2, Message = "GST Name already exists." };
 
                     // Generate GstId for new records
                     if (!isEdit)
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             @"SELECT ISNULL((SELECT TOP 1 (GstId + 1)
                             FROM dbo.M_Gst WITH (UPDLOCK, SERIALIZABLE)
                             WHERE (GstId + 1) NOT IN (SELECT GstId FROM dbo.M_Gst)
                             ORDER BY GstId), 1) AS NextId");
 
                         if (sqlMissingResponse == null || sqlMissingResponse.NextId <= 0)
-                            return new SqlResponse { Result = -1, Message = "Failed to generate GST ID." };
+                            return new SqlResponce { Result = -1, Message = "Failed to generate GST ID." };
 
                         if (sqlMissingResponse.NextId > short.MaxValue)
-                            return new SqlResponse { Result = -1, Message = "GST ID exceeds maximum allowed value." };
+                            return new SqlResponce { Result = -1, Message = "GST ID exceeds maximum allowed value." };
 
                         gst.GstId = Convert.ToInt16(sqlMissingResponse.NextId);
 
@@ -166,7 +166,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     var gstSaveResult = await _context.SaveChangesAsync();
 
                     if (gstSaveResult <= 0)
-                        return new SqlResponse { Result = -1, Message = "Save operation failed." };
+                        return new SqlResponce { Result = -1, Message = "Save operation failed." };
 
                     // Audit logging
                     var auditLog = new AdmAuditLog
@@ -187,10 +187,10 @@ namespace AMESWEB.Areas.Master.Data.Services
                     var auditSaveResult = await _context.SaveChangesAsync();
 
                     if (auditSaveResult <= 0)
-                        return new SqlResponse { Result = -1, Message = "Audit log save failed." };
+                        return new SqlResponce { Result = -1, Message = "Audit log save failed." };
 
                     tScope.Complete();
-                    return new SqlResponse { Result = 1, Message = "Saved successfully" };
+                    return new SqlResponce { Result = 1, Message = "Saved successfully" };
                 }
             }
             catch (Exception ex)
@@ -214,7 +214,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                 _context.Add(errorLog);
                 await _context.SaveChangesAsync();
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -99,
                     Message = "System error occurred. Check error logs.",
@@ -223,7 +223,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteGstAsync(short CompanyId, short UserId, short gstId)
+        public async Task<SqlResponce> DeleteGstAsync(short CompanyId, short UserId, short gstId)
         {
             string gstNo = string.Empty;
             try
@@ -258,19 +258,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "GstId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "GstId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -295,7 +295,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -334,7 +334,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             GstDtViewModelCount GstDtViewModelCount = new GstDtViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%') AND M_GsDt.GstId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%') AND M_GsDt.GstId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt}))");
 
                 var result = await _repository.GetQueryAsync<GstDtViewModel>($"SELECT M_GsDt.GstId,M_Gt.GstCode,M_Gt.GstName,M_GsDt.GstPercentage,M_GsDt.CompanyId,M_GsDt.ValidFrom,M_GsDt.CreateById,M_GsDt.CreateDate,M_GsDt.EditById,M_GsDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditB FROM dbo.M_GstDt M_GsDt INNER JOIN dbo.M_Gst M_Gt ON M_Gt.GstId = M_GsDt.GstId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_GsDt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_GsDt.EditById WHERE (M_Gt.GstName LIKE '%{searchString}%' OR M_Gt.GstCode LIKE '%{searchString}%') AND M_GsDt.GstId<>0 AND M_GsDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstDt})) ORDER BY M_Gt.GstName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -398,7 +398,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveGstDtAsync(short CompanyId, short UserId, M_GstDt m_GstDt)
+        public async Task<SqlResponce> SaveGstDtAsync(short CompanyId, short UserId, M_GstDt m_GstDt)
         {
             string validFrom = m_GstDt.ValidFrom.ToString("yyyy-MM-dd");
 
@@ -413,7 +413,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_GstDt WHERE CompanyId={CompanyId} AND GstId={m_GstDt.GstId} AND ValidFrom='{validFrom}'");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_GstDt WHERE CompanyId={CompanyId} AND GstId={m_GstDt.GstId} AND ValidFrom='{validFrom}'");
 
                         if (DataExist.Count() > 0 && DataExist.ToList()[0].IsExist == 1)
                         {
@@ -456,17 +456,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -492,7 +492,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteGstDtAsync(short CompanyId, short UserId, short gstId, DateTime validFrom)
+        public async Task<SqlResponce> DeleteGstDtAsync(short CompanyId, short UserId, short gstId, DateTime validFrom)
         {
             string gstNo = string.Empty;
             try
@@ -527,19 +527,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "GstId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "GstId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -564,7 +564,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -601,7 +601,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             GstCategoryViewModelCount countViewModel = new GstCategoryViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_GstCategory M_Gstc WHERE (M_Gstc.GstCategoryName LIKE '%{searchString}%' OR M_Gstc.GstCategoryCode LIKE '%{searchString}%' OR M_Gstc.Remarks LIKE '%{searchString}%') AND M_Gstc.GstCategoryId<>0 AND M_Gstc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_GstCategory M_Gstc WHERE (M_Gstc.GstCategoryName LIKE '%{searchString}%' OR M_Gstc.GstCategoryCode LIKE '%{searchString}%' OR M_Gstc.Remarks LIKE '%{searchString}%') AND M_Gstc.GstCategoryId<>0 AND M_Gstc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory}))");
 
                 var result = await _repository.GetQueryAsync<GstCategoryViewModel>($"SELECT M_Gstc.GstCategoryId,M_Gstc.GstCategoryCode,M_Gstc.GstCategoryName,M_Gstc.CompanyId,M_Gstc.Remarks,M_Gstc.IsActive,M_Gstc.CreateById,M_Gstc.CreateDate,M_Gstc.EditById,M_Gstc.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_GstCategory M_Gstc LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Gstc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Gstc.EditById WHERE (M_Gstc.GstCategoryName LIKE '%{searchString}%' OR M_Gstc.GstCategoryCode LIKE '%{searchString}%' OR M_Gstc.Remarks LIKE '%{searchString}%') AND M_Gstc.GstCategoryId<>0 AND M_Gstc.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.GstCategory})) ORDER BY M_Gstc.GstCategoryName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -664,28 +664,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveGstCategoryAsync(short CompanyId, short UserId, M_GstCategory m_GstCategory)
+        public async Task<SqlResponce> SaveGstCategoryAsync(short CompanyId, short UserId, M_GstCategory m_GstCategory)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_GstCategory.GstCategoryId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_GstCategory WHERE GstCategoryId<>@GstCategoryId AND GstCategoryCode=@GstCategoryCode",
                         new { m_GstCategory.GstCategoryId, m_GstCategory.GstCategoryCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "GstCategory Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "GstCategory Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_GstCategory WHERE GstCategoryId<>@GstCategoryId AND GstCategoryName=@GstCategoryName",
                         new { m_GstCategory.GstCategoryId, m_GstCategory.GstCategoryName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "GstCategory Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "GstCategory Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_GstCategory WHERE GstCategoryId=@GstCategoryId",
                             new { m_GstCategory.GstCategoryId });
 
@@ -697,12 +697,12 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "GstCategory Not Found" };
+                            return new SqlResponce { Result = -1, Message = "GstCategory Not Found" };
                         }
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (GstCategoryId + 1) FROM dbo.M_GstCategory WHERE (GstCategoryId + 1) NOT IN (SELECT GstCategoryId FROM dbo.M_GstCategory)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -712,7 +712,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -742,17 +742,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -778,7 +778,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteGstCategoryAsync(short CompanyId, short UserId, short gstCategoryId)
+        public async Task<SqlResponce> DeleteGstCategoryAsync(short CompanyId, short UserId, short gstCategoryId)
         {
             string gstCategoryNo = string.Empty;
             try
@@ -813,19 +813,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "GstId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "GstId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -850,7 +850,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

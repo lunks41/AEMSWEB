@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.AR
 
         public Task<ARDebitNoteViewModel> GetARDebitNoteByIdAsync(short CompanyId, long DebitNoteId, string DebitNoteNo, short UserId);
 
-        public Task<SqlResponse> SaveARDebitNoteAsync(short CompanyId, ArDebitNoteHd ARDebitNoteHd, List<ArDebitNoteDt> ARDebitNoteDt, short UserId);
+        public Task<SqlResponce> SaveARDebitNoteAsync(short CompanyId, ArDebitNoteHd ARDebitNoteHd, List<ArDebitNoteDt> ARDebitNoteDt, short UserId);
 
-        public Task<SqlResponse> DeleteARDebitNoteAsync(short CompanyId, long DebitNoteId, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteARDebitNoteAsync(short CompanyId, long DebitNoteId, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<ARDebitNoteViewModel>> GetHistoryARDebitNoteByIdAsync(short CompanyId, long DebitNoteId, string DebitNoteNo, short UserId);
     }

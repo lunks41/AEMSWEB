@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.AR
 
         public Task<ARReceiptViewModel> GetARReceiptByIdAsync(short CompanyId, long ReceiptId, string ReceiptNo, short UserId);
 
-        public Task<SqlResponse> SaveARReceiptAsync(short CompanyId, ArReceiptHd ARReceiptHd, List<ArReceiptDt> ARReceiptDt, short UserId);
+        public Task<SqlResponce> SaveARReceiptAsync(short CompanyId, ArReceiptHd ARReceiptHd, List<ArReceiptDt> ARReceiptDt, short UserId);
 
-        public Task<SqlResponse> DeleteARReceiptAsync(short CompanyId, long ReceiptId, string ReceiptNo, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteARReceiptAsync(short CompanyId, long ReceiptId, string ReceiptNo, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<ARReceiptViewModel>> GetHistoryARReceiptByIdAsync(short CompanyId, long ReceiptId, string ReceiptNo, short UserId);
     }

@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<AccountGroupViewModel> GetAccountGroupByIdAsync(short CompanyId, short UserId, short AccGroupId);
 
-        public Task<SqlResponse> SaveAccountGroupAsync(short CompanyId, short UserId, M_AccountGroup m_AccountGroup);
+        public Task<SqlResponce> SaveAccountGroupAsync(short CompanyId, short UserId, M_AccountGroup m_AccountGroup);
 
-        public Task<SqlResponse> DeleteAccountGroupAsync(short CompanyId, short UserId, short accGroupId);
+        public Task<SqlResponce> DeleteAccountGroupAsync(short CompanyId, short UserId, short accGroupId);
     }
 }

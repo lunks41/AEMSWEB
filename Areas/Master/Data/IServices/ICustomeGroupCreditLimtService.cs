@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<CustomerGroupCreditLimitViewModel> GetCustomerGroupCreditLimitByIdAsync(short CompanyId, short UserId, short GroupCreditLimitId);
 
-        public Task<SqlResponse> SaveCustomerGroupCreditLimitAsync(short CompanyId, short UserId, M_CustomerGroupCreditLimit m_CustomerGroupCreditLimit);
+        public Task<SqlResponce> SaveCustomerGroupCreditLimitAsync(short CompanyId, short UserId, M_CustomerGroupCreditLimit m_CustomerGroupCreditLimit);
 
-        public Task<SqlResponse> DeleteCustomerGroupCreditLimitAsync(short CompanyId, short UserId, M_CustomerGroupCreditLimit M_CustomerGroupCreditLimit);
+        public Task<SqlResponce> DeleteCustomerGroupCreditLimitAsync(short CompanyId, short UserId, M_CustomerGroupCreditLimit M_CustomerGroupCreditLimit);
     }
 }

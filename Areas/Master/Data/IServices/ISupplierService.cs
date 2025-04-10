@@ -12,9 +12,9 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<SupplierViewModel> GetSupplierByIdAsync(short CompanyId, short UserId, int SupplierId, string SupplierCode, string SupplierName);
 
-        public Task<SqlResponse> SaveSupplierAsync(short CompanyId, short UserId, M_Supplier M_Supplier);
+        public Task<SqlResponce> SaveSupplierAsync(short CompanyId, short UserId, M_Supplier M_Supplier);
 
-        public Task<SqlResponse> DeleteSupplierAsync(short CompanyId, short UserId, int SupplierId);
+        public Task<SqlResponce> DeleteSupplierAsync(short CompanyId, short UserId, int SupplierId);
 
         #endregion Supplier
 
@@ -24,9 +24,9 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<SupplierAddressViewModel> GetSupplierAddressByIdAsync(short CompanyId, short UserId, int SupplierId, short AddressId);
 
-        public Task<SqlResponse> SaveSupplierAddressAsync(short CompanyId, short UserId, M_SupplierAddress m_SupplierAddress);
+        public Task<SqlResponce> SaveSupplierAddressAsync(short CompanyId, short UserId, M_SupplierAddress m_SupplierAddress);
 
-        public Task<SqlResponse> DeleteSupplierAddressAsync(short CompanyId, short UserId, int SupplierId, short AddressId);
+        public Task<SqlResponce> DeleteSupplierAddressAsync(short CompanyId, short UserId, int SupplierId, short AddressId);
 
         #endregion Supplier Address
 
@@ -36,9 +36,9 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<SupplierContactViewModel> GetSupplierContactByIdAsync(short CompanyId, short UserId, int SupplierId, short ContactId);
 
-        public Task<SqlResponse> SaveSupplierContactAsync(short CompanyId, short UserId, M_SupplierContact m_SupplierContact);
+        public Task<SqlResponce> SaveSupplierContactAsync(short CompanyId, short UserId, M_SupplierContact m_SupplierContact);
 
-        public Task<SqlResponse> DeleteSupplierContactAsync(short CompanyId, short UserId, int SupplierId, short ContactId);
+        public Task<SqlResponce> DeleteSupplierContactAsync(short CompanyId, short UserId, int SupplierId, short ContactId);
 
         #endregion Supplier Contact
     }

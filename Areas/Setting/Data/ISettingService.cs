@@ -10,7 +10,7 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<DecimalSettingViewModel> GetDecSettingAsync(short CompanyId, short UserId);
 
-        public Task<SqlResponse> SaveDecSettingAsync(short CompanyId, short UserId, S_DecSettings s_DecSettings);
+        public Task<SqlResponce> SaveDecSettingAsync(short CompanyId, short UserId, S_DecSettings s_DecSettings);
 
         #endregion Decimal Setting
 
@@ -18,7 +18,7 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<FinanceSettingViewModel> GetFinSettingAsync(short CompanyId, short UserId);
 
-        public Task<SqlResponse> SaveFinSettingAsync(short CompanyId, short UserId, S_FinSettings s_FinSettings);
+        public Task<SqlResponce> SaveFinSettingAsync(short CompanyId, short UserId, S_FinSettings s_FinSettings);
 
         #endregion Finance Setting
 
@@ -26,7 +26,7 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<TaskSettingViewModel> GetTaskSettingAsync(short CompanyId, short UserId);
 
-        public Task<SqlResponse> SaveTaskSettingAsync(short CompanyId, short UserId, S_TaskSettings s_TaskSettings);
+        public Task<SqlResponce> SaveTaskSettingAsync(short CompanyId, short UserId, S_TaskSettings s_TaskSettings);
 
         #endregion Task Setting
 
@@ -34,7 +34,7 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<IEnumerable<MandatoryFieldsViewModel>> GetMandatoryFieldsByIdAsync(short CompanyId, short UserId, Int16 ModuleId);
 
-        public Task<SqlResponse> SaveMandatoryFieldsAsync(short CompanyId, short UserId, List<S_MandatoryFields> s_MandatoryFields);
+        public Task<SqlResponce> SaveMandatoryFieldsAsync(short CompanyId, short UserId, List<S_MandatoryFields> s_MandatoryFields);
 
         #endregion Mandatory Fields
 
@@ -44,7 +44,7 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<IEnumerable<VisibleFieldsViewModel>> GetVisibleFieldsByIdAsync(short CompanyId, short UserId, Int16 ModuleId);
 
-        public Task<SqlResponse> SaveVisibleFieldsAsync(short CompanyId, short UserId, List<S_VisibleFields> s_VisibleFields);
+        public Task<SqlResponce> SaveVisibleFieldsAsync(short CompanyId, short UserId, List<S_VisibleFields> s_VisibleFields);
 
         #endregion Visible Fields
 
@@ -56,7 +56,7 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<NumberSettingDtViewModel> GetNumberFormatByYearAsync(short CompanyId, short UserId, Int32 NumberId, Int32 NumYear);
 
-        public Task<SqlResponse> SaveNumberFormatAsync(short CompanyId, short UserId, S_NumberFormat s_NumberFormat);
+        public Task<SqlResponce> SaveNumberFormatAsync(short CompanyId, short UserId, S_NumberFormat s_NumberFormat);
 
         #endregion Number Format
 
@@ -68,13 +68,13 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<IEnumerable<UserGridViewModel>> GetUserGridByUserIdAsync(short CompanyId, short UserId, Int16 SelectedUserId);
 
-        public Task<SqlResponse> SaveUserGridAsync(short CompanyId, short UserId, S_UserGrdFormat s_UserGrdFormat);
+        public Task<SqlResponce> SaveUserGridAsync(short CompanyId, short UserId, S_UserGrdFormat s_UserGrdFormat);
 
-        public Task<SqlResponse> CloneUserGridSettingAsync(short CompanyId, short UserId, Int16 FromUserId, Int16 ToUserId);
+        public Task<SqlResponce> CloneUserGridSettingAsync(short CompanyId, short UserId, Int16 FromUserId, Int16 ToUserId);
 
         public Task<UserSettingViewModel> GetUserSettingAsync(short CompanyId, short UserId);
 
-        public Task<SqlResponse> SaveUserSettingAsync(short CompanyId, short UserId, S_UserSettings S_UserSettings);
+        public Task<SqlResponce> SaveUserSettingAsync(short CompanyId, short UserId, S_UserSettings S_UserSettings);
 
         #endregion User Grid
 
@@ -92,6 +92,6 @@ namespace AMESWEB.Areas.Setting.Data
 
         public Task<DynamicLookupViewModel> GetDynamicLookupAsync(short CompanyId, short UserId);
 
-        public Task<SqlResponse> SaveDynamicLookupAsync(short CompanyId, short UserId, S_DynamicLookup s_DynamicLookup);
+        public Task<SqlResponce> SaveDynamicLookupAsync(short CompanyId, short UserId, S_DynamicLookup s_DynamicLookup);
     }
 }

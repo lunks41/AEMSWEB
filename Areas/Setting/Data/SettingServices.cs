@@ -57,13 +57,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveDecSettingAsync(short CompanyId, short UserId, S_DecSettings s_DecSettings)
+        public async Task<SqlResponce> SaveDecSettingAsync(short CompanyId, short UserId, S_DecSettings s_DecSettings)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.S_DecSettings WHERE CompanyId = {s_DecSettings.CompanyId}");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.S_DecSettings WHERE CompanyId = {s_DecSettings.CompanyId}");
 
                     if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                     {
@@ -105,23 +105,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.DecSetting, 0, "", "S_DecSettings", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -164,13 +164,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveFinSettingAsync(short CompanyId, short UserId, S_FinSettings s_FinSettings)
+        public async Task<SqlResponce> SaveFinSettingAsync(short CompanyId, short UserId, S_FinSettings s_FinSettings)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.S_FinSettings WHERE CompanyId = {s_FinSettings.CompanyId}");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.S_FinSettings WHERE CompanyId = {s_FinSettings.CompanyId}");
 
                     if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                     {
@@ -212,23 +212,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.FinSetting, 0, "", "S_FinSetting", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -271,13 +271,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveTaskSettingAsync(short CompanyId, short UserId, S_TaskSettings s_TaskSettings)
+        public async Task<SqlResponce> SaveTaskSettingAsync(short CompanyId, short UserId, S_TaskSettings s_TaskSettings)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.S_FinSettings WHERE CompanyId = {s_TaskSettings.CompanyId}");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.S_FinSettings WHERE CompanyId = {s_TaskSettings.CompanyId}");
 
                     if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                     {
@@ -319,23 +319,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.TaskSetting, 0, "", "S_TaskSettings", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -410,7 +410,7 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveMandatoryFieldsAsync(short CompanyId, short UserId, List<S_MandatoryFields> s_MandatoryFields)
+        public async Task<SqlResponce> SaveMandatoryFieldsAsync(short CompanyId, short UserId, List<S_MandatoryFields> s_MandatoryFields)
         {
             try
             {
@@ -423,7 +423,7 @@ namespace AMESWEB.Areas.Setting.Data
                         entry.State = EntityState.Detached;
                     }
 
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"Create FROM dbo.S_MandatoryFields WHERE CompanyId={CompanyId} AND ModuleId={s_MandatoryFields[0].ModuleId}");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"Create FROM dbo.S_MandatoryFields WHERE CompanyId={CompanyId} AND ModuleId={s_MandatoryFields[0].ModuleId}");
 
                     // Add new records
                     _context.S_MandatoryFields.AddRange(s_MandatoryFields);
@@ -449,18 +449,18 @@ namespace AMESWEB.Areas.Setting.Data
                         await _context.SaveChangesAsync();
 
                         TScope.Complete();
-                        return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        return new SqlResponce { Result = 1, Message = "Save Successfully" };
                     }
 
                     #endregion Audit Log
 
-                    return new SqlResponse { Result = 0, Message = "Save Failed" };
+                    return new SqlResponce { Result = 0, Message = "Save Failed" };
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.MandatoryFields, 0, "", "S_MandatoryFields", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -469,13 +469,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveMandatoryFieldsAsyncV1(short CompanyId, List<S_MandatoryFields> s_MandatoryFields, short UserId)
+        public async Task<SqlResponce> SaveMandatoryFieldsAsyncV1(short CompanyId, List<S_MandatoryFields> s_MandatoryFields, short UserId)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    //var dataExist = await _repository.GetQueryAsync<SqlResponseIds>(
+                    //var dataExist = await _repository.GetQueryAsync<SqlResponceIds>(
                     //$"Create dbo.S_MandatoryFields WHERE ModuleId={s_MandatoryFields[0].ModuleId} AND CompanyId={CompanyId}");
 
                     _context.AddRange(s_MandatoryFields);
@@ -507,23 +507,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 0, Message = "Save Failed" };
+                        return new SqlResponce { Result = 0, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse { Result = -1, Message = "Save Failed" };
+                    return new SqlResponce { Result = -1, Message = "Save Failed" };
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.MandatoryFields, 0, "", "S_MandatoryFields", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -598,7 +598,7 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveVisibleFieldsAsync(short CompanyId, short UserId, List<S_VisibleFields> s_VisibleFields)
+        public async Task<SqlResponce> SaveVisibleFieldsAsync(short CompanyId, short UserId, List<S_VisibleFields> s_VisibleFields)
         {
             try
             {
@@ -611,7 +611,7 @@ namespace AMESWEB.Areas.Setting.Data
                         entry.State = EntityState.Detached;
                     }
 
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"Create FROM dbo.S_VisibleFields WHERE CompanyId={CompanyId} AND ModuleId={s_VisibleFields[0].ModuleId}");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"Create FROM dbo.S_VisibleFields WHERE CompanyId={CompanyId} AND ModuleId={s_VisibleFields[0].ModuleId}");
 
                     // Add new records
                     _context.S_VisibleFields.AddRange(s_VisibleFields);
@@ -638,18 +638,18 @@ namespace AMESWEB.Areas.Setting.Data
 
                         //TScope.Complete();
                         TScope.Complete();
-                        return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                        return new SqlResponce { Result = 1, Message = "Save Successfully" };
                     }
 
                     #endregion Audit Log
 
-                    return new SqlResponse { Result = 0, Message = "Save Failed" };
+                    return new SqlResponce { Result = 0, Message = "Save Failed" };
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.VisibleFields, 0, "", "S_VisibleFieldss", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -667,7 +667,7 @@ namespace AMESWEB.Areas.Setting.Data
             ModelNameViewModelCount countViewModel = new ModelNameViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM AdmTransaction AdmTrn INNER JOIN AdmModule AdmMod on AdmMod.ModuleId=AdmTrn.ModuleId where AdmMod.IsActive=1 And AdmTrn.IsActive=1 And AdmTrn.IsNumber=1");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM AdmTransaction AdmTrn INNER JOIN AdmModule AdmMod on AdmMod.ModuleId=AdmTrn.ModuleId where AdmMod.IsActive=1 And AdmTrn.IsActive=1 And AdmTrn.IsNumber=1");
 
                 var result = await _repository.GetQueryAsync<ModelNameViewModel>($"SELECT AdmMod.ModuleId,AdmMod.ModuleName,AdmTrn.TransactionId,AdmTrn.TransactionName FROM AdmTransaction AdmTrn INNER JOIN AdmModule AdmMod on AdmMod.ModuleId=AdmTrn.ModuleId where AdmMod.IsActive=1 And AdmTrn.IsActive=1 And AdmTrn.IsNumber=1  ORDER BY AdmMod.SeqNo,AdmTrn.SeqNo");
 
@@ -760,7 +760,7 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveNumberFormatAsync(short CompanyId, short UserId, S_NumberFormat s_NumberFormat)
+        public async Task<SqlResponce> SaveNumberFormatAsync(short CompanyId, short UserId, S_NumberFormat s_NumberFormat)
         {
             bool IsEdit = s_NumberFormat.NumberId != 0;
             try
@@ -769,10 +769,10 @@ namespace AMESWEB.Areas.Setting.Data
                 {
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.S_NumberFormat WHERE ModuleId<>{s_NumberFormat.ModuleId} AND TransactionId<>{s_NumberFormat.TransactionId} AND CompanyId={CompanyId} AND Prefix = '{s_NumberFormat.Prefix}'");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.S_NumberFormat WHERE ModuleId<>{s_NumberFormat.ModuleId} AND TransactionId<>{s_NumberFormat.TransactionId} AND CompanyId={CompanyId} AND Prefix = '{s_NumberFormat.Prefix}'");
 
                         if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
-                            return new SqlResponse { Result = -1, Message = "Invoice Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Not Exist" };
                     }
 
                     if (IsEdit)
@@ -783,7 +783,7 @@ namespace AMESWEB.Areas.Setting.Data
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>("SELECT ISNULL((SELECT TOP 1 (NumberId + 1) FROM dbo.S_NumberFormat WHERE (NumberId + 1) NOT IN (SELECT NumberId FROM dbo.S_NumberFormat)),1) AS NextId");
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>("SELECT ISNULL((SELECT TOP 1 (NumberId + 1) FROM dbo.S_NumberFormat WHERE (NumberId + 1) NOT IN (SELECT NumberId FROM dbo.S_NumberFormat)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -820,21 +820,21 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.DocumentNo, 0, "", "S_NumberFormat", IsEdit ? E_Mode.Update : E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -852,7 +852,7 @@ namespace AMESWEB.Areas.Setting.Data
             UserGridViewModelCount countViewModel = new UserGridViewModelCount();
             try
             {
-                //var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>( $"SELECT COUNT(*) AS CountId FROM AdmTransaction AdmTrn INNER JOIN AdmModule AdmMod on AdmMod.ModuleId=AdmTrn.ModuleId where AdmMod.IsActive=1 And AdmTrn.IsActive=1 And AdmTrn.IsNumber=1  ORDER BY AdmMod.SeqNo,AdmTrn.SeqNo");
+                //var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>( $"SELECT COUNT(*) AS CountId FROM AdmTransaction AdmTrn INNER JOIN AdmModule AdmMod on AdmMod.ModuleId=AdmTrn.ModuleId where AdmMod.IsActive=1 And AdmTrn.IsActive=1 And AdmTrn.IsNumber=1  ORDER BY AdmMod.SeqNo,AdmTrn.SeqNo");
 
                 var result = await _repository.GetQueryAsync<UserGridViewModel>($"SELECT S_usr.CompanyId,S_usr.UserId,S_usr.ModuleId,S_usr.TransactionId,S_usr.GrdName,S_usr.GrdKey,S_usr.GrdColVisible,S_usr.GrdColOrder,S_usr.GrdColSize,S_usr.GrdSort,S_usr.GrdString,S_usr.CreateById,S_usr.CreateDate,S_usr.EditById,S_usr.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM S_UserGrdFormat S_usr LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = S_usr.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = S_usr.EditById WHERE S_usr.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Setting},{(short)E_Setting.GridSetting})) and S_usr.UserId={UserId} and S_usr.ModuleId={ModuleId} and S_usr.TransactionId={TransactionId}");
 
@@ -944,13 +944,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveUserGridAsync(short CompanyId, short UserId, S_UserGrdFormat s_UserGrdFormat)
+        public async Task<SqlResponce> SaveUserGridAsync(short CompanyId, short UserId, S_UserGrdFormat s_UserGrdFormat)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.S_UserGrdFormat WHERE CompanyId = {CompanyId} and UserId={UserId} and ModuleId={s_UserGrdFormat.ModuleId} and TransactionId={s_UserGrdFormat.TransactionId} and GrdName='{s_UserGrdFormat.GrdName}'");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.S_UserGrdFormat WHERE CompanyId = {CompanyId} and UserId={UserId} and ModuleId={s_UserGrdFormat.ModuleId} and TransactionId={s_UserGrdFormat.TransactionId} and GrdName='{s_UserGrdFormat.GrdName}'");
 
                     if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                     {
@@ -992,23 +992,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.GridSetting, 0, "", "S_UserGrdFormat", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -1017,7 +1017,7 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> CloneUserGridSettingAsync(short CompanyId, short UserId, Int16 FromUserId, Int16 ToUserId)
+        public async Task<SqlResponce> CloneUserGridSettingAsync(short CompanyId, short UserId, Int16 FromUserId, Int16 ToUserId)
         {
             try
             {
@@ -1062,7 +1062,7 @@ namespace AMESWEB.Areas.Setting.Data
                      );
 
                     if (insertResult == 0) // If no rows were inserted
-                        return new SqlResponse { Result = 0, Message = "No records cloned for the target user." };
+                        return new SqlResponce { Result = 0, Message = "No records cloned for the target user." };
 
                     #region Save AuditLog
 
@@ -1089,23 +1089,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Clone Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Clone Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Clone Failed" };
+                        return new SqlResponce { Result = 1, Message = "Clone Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.GridSetting, 0, "", "S_UserGrdFormat", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -1144,13 +1144,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveUserSettingAsync(short CompanyId, short UserId, S_UserSettings S_UserSettings)
+        public async Task<SqlResponce> SaveUserSettingAsync(short CompanyId, short UserId, S_UserSettings S_UserSettings)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.S_UserSettings WHERE CompanyId = {S_UserSettings.CompanyId} AND UserId={UserId}");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.S_UserSettings WHERE CompanyId = {S_UserSettings.CompanyId} AND UserId={UserId}");
 
                     if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                     {
@@ -1192,23 +1192,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.UserSetting, 0, "", "S_UserSettings", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -1420,13 +1420,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> UpsertDocSeqNoAsync(short CompanyId, short UserId, S_DocSeqNo s_DocSeqNo)
+        public async Task<SqlResponce> UpsertDocSeqNoAsync(short CompanyId, short UserId, S_DocSeqNo s_DocSeqNo)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM S_DocSeqNo WHERE ModuleId={s_DocSeqNo.ModuleId} And TransactionId={s_DocSeqNo.TransactionId} And CompanyId in (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Setting},{(short)E_Setting.DocSeqNo}))");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM S_DocSeqNo WHERE ModuleId={s_DocSeqNo.ModuleId} And TransactionId={s_DocSeqNo.TransactionId} And CompanyId in (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Setting},{(short)E_Setting.DocSeqNo}))");
 
                     if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                     {
@@ -1468,23 +1468,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.DocSeqNo, 0, "", "S_DocSeqNo", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {
@@ -1523,13 +1523,13 @@ namespace AMESWEB.Areas.Setting.Data
             }
         }
 
-        public async Task<SqlResponse> SaveDynamicLookupAsync(short CompanyId, short UserId, S_DynamicLookup s_DynamicLookup)
+        public async Task<SqlResponce> SaveDynamicLookupAsync(short CompanyId, short UserId, S_DynamicLookup s_DynamicLookup)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM S_DynamicLookup WHERE CompanyId = {s_DynamicLookup.CompanyId}");
+                    var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM S_DynamicLookup WHERE CompanyId = {s_DynamicLookup.CompanyId}");
 
                     if (dataExist.Count() > 0 && dataExist.ToList()[0].IsExist == 1)
                     {
@@ -1571,23 +1571,23 @@ namespace AMESWEB.Areas.Setting.Data
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
             {
                 await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Setting, E_Setting.DynamicLookup, 0, "", "S_DynamicLookup", E_Mode.Create, "SQL", UserId);
-                return new SqlResponse { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
+                return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
             }
             catch (Exception ex)
             {

@@ -7,6 +7,6 @@ namespace AMESWEB.Areas.Account.Data.IServices.GL
     {
         public Task<IEnumerable<GLPeriodCloseViewModel>> GetGLPeriodCloseListAsync(short CompanyId, int FinYear, short UserId);
 
-        public Task<SqlResponse> SaveGLPeriodCloseAsync(short CompanyId, PeriodCloseViewModel periodCloseViewModel, short UserId);
+        public Task<SqlResponce> SaveGLPeriodCloseAsync(short CompanyId, PeriodCloseViewModel periodCloseViewModel, short UserId);
     }
 }

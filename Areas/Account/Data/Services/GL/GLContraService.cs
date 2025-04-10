@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             GLContraViewModel countViewModel = new GLContraViewModel();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.GLContraHd Invhd INNER JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Invhd.SupplierId INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Invhd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ContraNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Sup.SupplierCode LIKE '%{searchString}%' OR M_Sup.SupplierName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.GLContraHd Invhd INNER JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Invhd.SupplierId INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Invhd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ContraNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Sup.SupplierCode LIKE '%{searchString}%' OR M_Sup.SupplierName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
                 var result = await _repository.GetQueryAsync<GLContraHdViewModel>($"SELECT Invhd.CompanyId,Invhd.ContraId,Invhd.ContraNo,Invhd.ReferenceNo,Invhd.TrnDate,Invhd.AccountDate,Invhd.SupplierId,M_Sup.SupplierCode,M_Sup.SupplierName,Invhd.CustomerId,M_Cus.CustomerCode,M_Cus.CustomerName,Invhd.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyCode,Invhd.ExhRate,Invhd.Remarks,Invhd.TotAmt,Invhd.TotLocalAmt,Invhd.ExhGainLoss,Invhd.ModuleFrom,Invhd.CreateById,Invhd.CreateDate,Invhd.EditById,Invhd.EditDate,Invhd.IsCancel,Invhd.CancelById,Invhd.CancelDate,Invhd.CancelRemarks,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy,Usr2.UserName AS CancelBy,Invhd.EditVersion FROM dbo.GLContraHd Invhd INNER JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Invhd.SupplierId INNER JOIN dbo.M_Customer M_Cus ON M_Cus.CustomerId = Invhd.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.ContraNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Sup.SupplierCode LIKE '%{searchString}%' OR M_Sup.SupplierName LIKE '%{searchString}%' OR M_Cus.CustomerCode LIKE '%{searchString}%' OR M_Cus.CustomerName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId} ORDER BY Invhd.AccountDate Desc,Invhd.ContraNo Desc OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
@@ -102,7 +102,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             }
         }
 
-        public async Task<SqlResponse> SaveGLContraAsync(short CompanyId, GLContraHd GLContraHd, List<GLContraDt> GLContraDt, short UserId)
+        public async Task<SqlResponce> SaveGLContraAsync(short CompanyId, GLContraHd GLContraHd, List<GLContraDt> GLContraDt, short UserId)
         {
             bool IsEdit = false;
             string accountDate = GLContraHd.AccountDate.ToString("dd/MMM/yyyy");
@@ -116,15 +116,15 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.GLContraHd WHERE IsCancel=0 And CompanyId={CompanyId} And ContraId={GLContraHd.ContraId}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.GLContraHd WHERE IsCancel=0 And CompanyId={CompanyId} And ContraId={GLContraHd.ContraId}");
 
                         if (dataExist.Count() == 0)
-                            return new SqlResponse { Result = -1, Message = "Invoice Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Not Exist" };
                     }
 
                     if (!IsEdit)
                     {
-                        var documentIdNo = await _repository.GetQueryAsync<SqlResponseIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.GL},{(short)E_GL.JournalEntry},'{accountDate}'");
+                        var documentIdNo = await _repository.GetQueryAsync<SqlResponceIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.GL},{(short)E_GL.JournalEntry},'{accountDate}'");
 
                         if (documentIdNo.ToList()[0].DocumentId > 0 && documentIdNo.ToList()[0].DocumentNo != string.Empty)
                         {
@@ -132,11 +132,11 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                             GLContraHd.ContraNo = documentIdNo.ToList()[0].DocumentNo;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Invoice Number can't generate" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Number can't generate" };
                     }
                     else
                     {
-                        await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_GL_CreateHistoryRec {CompanyId},{UserId},{GLContraHd.ContraId},{(short)E_GL.JournalEntry}");
+                        await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_GL_CreateHistoryRec {CompanyId},{UserId},{GLContraHd.ContraId},{(short)E_GL.JournalEntry}");
                     }
 
                     //Saving Header
@@ -182,7 +182,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                         if (SaveDetails > 0)
                         {
                             //Inserting the records into CB CreateStatement
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLContraHd.ContraId},{(short)E_GL.JournalEntry}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLContraHd.ContraId},{(short)E_GL.JournalEntry}");
 
                             //Saving Audit log
                             var auditLog = new AdmAuditLog
@@ -209,25 +209,25 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                                     await _repository.UpsertExecuteScalarAsync($"update GLContraHd set EditVersion=EditVersion+1 where ContraId={GLContraHd.ContraId}; Update GLContraDt set EditVersion=(SELECT TOP 1 EditVersion FROM dbo.GLContraHd where ContraId={GLContraHd.ContraId}) where ContraId={GLContraHd.ContraId}");
 
                                 //Create / Update Ar Statement
-                                await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLContraHd.ContraId},{(short)E_GL.JournalEntry}");
+                                await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLContraHd.ContraId},{(short)E_GL.JournalEntry}");
 
                                 TScope.Complete();
-                                return new SqlResponse { Result = GLContraHd.ContraId, Message = "Save Successfully" };
+                                return new SqlResponce { Result = GLContraHd.ContraId, Message = "Save Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
 
                         #endregion Save AuditLog
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -251,7 +251,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             }
         }
 
-        public async Task<SqlResponse> DeleteGLContraAsync(short CompanyId, long ContraId, string CanacelRemarks, short UserId)
+        public async Task<SqlResponce> DeleteGLContraAsync(short CompanyId, long ContraId, string CanacelRemarks, short UserId)
         {
             string ContraNo = string.Empty;
             try
@@ -269,7 +269,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                         if (GLContraToRemove > 0)
                         {
                             //Cancel the Ar Transactions.
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{ContraId},{(short)E_GL.JournalEntry}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{ContraId},{(short)E_GL.JournalEntry}");
 
                             var auditLog = new AdmAuditLog
                             {
@@ -289,19 +289,19 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Invoice Not exists" };
+                        return new SqlResponce { Result = -1, Message = "Invoice Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)

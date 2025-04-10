@@ -29,7 +29,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             ProductViewModelCount countViewModel = new ProductViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Product M_Prod WHERE (M_Prod.ProductName LIKE '%{searchString}%' OR M_Prod.ProductCode LIKE '%{searchString}%' OR M_Prod.Remarks LIKE '%{searchString}%') AND M_Prod.ProductId<>0 AND M_Prod.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Product}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Product M_Prod WHERE (M_Prod.ProductName LIKE '%{searchString}%' OR M_Prod.ProductCode LIKE '%{searchString}%' OR M_Prod.Remarks LIKE '%{searchString}%') AND M_Prod.ProductId<>0 AND M_Prod.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Product}))");
 
                 var result = await _repository.GetQueryAsync<ProductViewModel>($"SELECT M_Prod.ProductId,M_Prod.ProductCode,M_Prod.ProductName,M_Prod.CompanyId,M_Prod.Remarks,M_Prod.IsActive,M_Prod.CreateById,M_Prod.CreateDate,M_Prod.EditById,M_Prod.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Product M_Prod LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Prod.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Prod.EditById WHERE (M_Prod.ProductName LIKE '%{searchString}%' OR M_Prod.ProductCode LIKE '%{searchString}%' OR M_Prod.Remarks LIKE '%{searchString}%') AND M_Prod.ProductId<>0 AND M_Prod.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Product})) ORDER BY M_Prod.ProductName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -92,28 +92,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveProductAsync(short CompanyId, short UserId, M_Product m_Product)
+        public async Task<SqlResponce> SaveProductAsync(short CompanyId, short UserId, M_Product m_Product)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_Product.ProductId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Product WHERE ProductId<>@ProductId AND ProductCode=@ProductCode",
                         new { m_Product.ProductId, m_Product.ProductCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Product Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "Product Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Product WHERE ProductId<>@ProductId AND ProductName=@ProductName",
                         new { m_Product.ProductId, m_Product.ProductName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Product Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "Product Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_Product WHERE ProductId=@ProductId",
                             new { m_Product.ProductId });
 
@@ -125,13 +125,13 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Product Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Product Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (ProductId + 1) FROM dbo.M_Product WHERE (ProductId + 1) NOT IN (SELECT ProductId FROM dbo.M_Product)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -141,7 +141,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -171,17 +171,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -207,7 +207,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteProductAsync(short CompanyId, short UserId, short productId)
+        public async Task<SqlResponce> DeleteProductAsync(short CompanyId, short UserId, short productId)
         {
             string productNo = string.Empty;
             try
@@ -242,19 +242,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "ProductId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "ProductId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -279,7 +279,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

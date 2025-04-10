@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<AccountTypeViewModel> GetAccountTypeByIdAsync(short CompanyId, short UserId, short accTypeId);
 
-        public Task<SqlResponse> SaveAccountTypeAsync(short CompanyId, short UserId, M_AccountType M_AccountType);
+        public Task<SqlResponce> SaveAccountTypeAsync(short CompanyId, short UserId, M_AccountType M_AccountType);
 
-        public Task<SqlResponse> DeleteAccountTypeAsync(short CompanyId, short UserId, short accTypeId);
+        public Task<SqlResponce> DeleteAccountTypeAsync(short CompanyId, short UserId, short accTypeId);
     }
 }

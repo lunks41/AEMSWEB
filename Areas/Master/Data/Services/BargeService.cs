@@ -31,7 +31,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             BargeViewModelCount countViewModel = new BargeViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Barge M_Brg WHERE (M_Brg.BargeName LIKE '%{searchString}%' OR M_Brg.BargeCode LIKE '%{searchString}%' OR M_Brg.Remarks LIKE '%{searchString}%') AND M_Brg.BargeId<>0 AND M_Brg.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Barge}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Barge M_Brg WHERE (M_Brg.BargeName LIKE '%{searchString}%' OR M_Brg.BargeCode LIKE '%{searchString}%' OR M_Brg.Remarks LIKE '%{searchString}%') AND M_Brg.BargeId<>0 AND M_Brg.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Barge}))");
 
                 var result = await _repository.GetQueryAsync<BargeViewModel>($"SELECT M_Brg.BargeId,M_Brg.CompanyId,M_Brg.BargeCode,M_Brg.BargeName,M_Brg.CallSign,M_Brg.IMOCode,M_Brg.GRT,M_Brg.LicenseNo,M_Brg.BargeType,M_Brg.Flag,M_Brg.Remarks,M_Brg.IsActive,M_Brg.CreateById,M_Brg.CreateDate,M_Brg.EditById,M_Brg.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Barge M_Brg LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Brg.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Brg.EditById WHERE (M_Brg.BargeName LIKE '%{searchString}%' OR M_Brg.BargeCode LIKE '%{searchString}%' OR M_Brg.Remarks LIKE '%{searchString}%') AND M_Brg.BargeId<>0 AND M_Brg.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Barge})) ORDER BY M_Brg.BargeName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -94,28 +94,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveBargeAsync(short CompanyId, short UserId, M_Barge m_Barge)
+        public async Task<SqlResponce> SaveBargeAsync(short CompanyId, short UserId, M_Barge m_Barge)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_Barge.BargeId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Barge WHERE BargeId<>@BargeId AND BargeCode=@BargeCode",
                         new { m_Barge.BargeId, m_Barge.BargeCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Barge Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "Barge Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Barge WHERE BargeId<>@BargeId AND BargeName=@BargeName",
                         new { m_Barge.BargeId, m_Barge.BargeName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Barge Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "Barge Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_Barge WHERE BargeId=@BargeId",
                             new { m_Barge.BargeId });
 
@@ -127,12 +127,12 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Barge Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Barge Not Found" };
                         }
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (BargeId + 1) FROM dbo.M_Barge WHERE (BargeId + 1) NOT IN (SELECT BargeId FROM dbo.M_Barge)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -142,7 +142,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -172,17 +172,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -206,7 +206,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -236,7 +236,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteBargeAsync(short CompanyId, short UserId, short bargeId)
+        public async Task<SqlResponce> DeleteBargeAsync(short CompanyId, short UserId, short bargeId)
         {
             string bargeNo = string.Empty;
             try
@@ -271,19 +271,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "BargeId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "BargeId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -308,7 +308,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

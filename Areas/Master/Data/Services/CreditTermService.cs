@@ -33,7 +33,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             CreditTermViewModelCount countViewModel = new CreditTermViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_CreditTerm M_Crd WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.Remarks LIKE '%{searchString}%') AND M_Crd.CreditTermId<>0 AND M_Crd.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_CreditTerm M_Crd WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.Remarks LIKE '%{searchString}%') AND M_Crd.CreditTermId<>0 AND M_Crd.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm}))");
 
                 var result = await _repository.GetQueryAsync<CreditTermViewModel>($"SELECT M_Crd.CreditTermId,M_Crd.CreditTermCode,M_Crd.CompanyId,M_Crd.CreditTermName,M_Crd.NoDays,M_Crd.Remarks,M_Crd.IsActive,M_Crd.CreateById,M_Crd.CreateDate,M_Crd.EditById,M_Crd.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CreditTerm M_Crd LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%' OR M_Crd.Remarks LIKE '%{searchString}%') AND M_Crd.CreditTermId<>0 AND M_Crd.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTerm})) ORDER BY M_Crd.CreditTermName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -96,28 +96,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCreditTermAsync(short CompanyId, short UserId, M_CreditTerm m_CreditTerm)
+        public async Task<SqlResponce> SaveCreditTermAsync(short CompanyId, short UserId, M_CreditTerm m_CreditTerm)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_CreditTerm.CreditTermId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_CreditTerm WHERE CreditTermId<>@CreditTermId AND CreditTermCode=@CreditTermCode AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
                         new { m_CreditTerm.CreditTermId, m_CreditTerm.CreditTermCode, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.CreditTerm });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "CreditTerm Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "CreditTerm Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_CreditTerm WHERE CreditTermId<>@CreditTermId AND CreditTermName=@CreditTermName AND CompanyId IN (SELECT DISTINCT CompanyId FROM dbo.Fn_Adm_GetShareCompany (@CompanyId, @ModuleId, @MasterId))",
                         new { m_CreditTerm.CreditTermId, m_CreditTerm.CreditTermName, CompanyId, ModuleId = (short)E_Modules.Master, MasterId = (short)E_Master.CreditTerm });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -2, Message = "CreditTerm Name already exists." };
+                        return new SqlResponce { Result = -2, Message = "CreditTerm Name already exists." };
 
                     if (!IsEdit)
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (CreditTermId + 1) FROM dbo.M_CreditTerm WHERE (CreditTermId + 1) NOT IN (SELECT CreditTermId FROM dbo.M_CreditTerm)),1) AS NextId");
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
@@ -125,7 +125,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "CreditTermId Should not be zero" };
+                            return new SqlResponce { Result = -1, Message = "CreditTermId Should not be zero" };
                         }
                     }
 
@@ -159,17 +159,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -195,7 +195,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCreditTermAsync(short CompanyId, short UserId, short creditTermId)
+        public async Task<SqlResponce> DeleteCreditTermAsync(short CompanyId, short UserId, short creditTermId)
         {
             string creditTermNo = string.Empty;
             try
@@ -230,19 +230,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CreditTermId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "CreditTermId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -267,7 +267,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -306,7 +306,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             CreditTermDtViewModelCount countViewModel = new CreditTermDtViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_CreditTermDt M_CrdDt INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_CrdDt.CreditTermId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%') AND M_CrdDt.CreditTermId<>0 AND M_CrdDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTermDt}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_CreditTermDt M_CrdDt INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_CrdDt.CreditTermId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%') AND M_CrdDt.CreditTermId<>0 AND M_CrdDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTermDt}))");
 
                 var result = await _repository.GetQueryAsync<CreditTermDtViewModel>($"SELECT M_CrdDt.CreditTermId,M_Crd.CreditTermCode,M_Crd.CreditTermName,M_CrdDt.CompanyId,M_CrdDt.FromDay,M_CrdDt.ToDay,M_CrdDt.IsEndOfMonth,M_CrdDt.DueDay,M_CrdDt.NoMonth,M_CrdDt.CreateById,M_CrdDt.CreateDate,M_CrdDt.EditById,M_CrdDt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_CreditTermDt M_CrdDt INNER JOIN dbo.M_CreditTerm M_Crd ON M_Crd.CreditTermId = M_CrdDt.CreditTermId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Crd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Crd.EditById WHERE (M_Crd.CreditTermCode LIKE '%{searchString}%' OR M_Crd.CreditTermName LIKE '%{searchString}%') AND M_CrdDt.CreditTermId<>0 AND M_CrdDt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.CreditTermDt})) ORDER BY M_Crd.CreditTermName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -369,7 +369,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveCreditTermDtAsync(short CompanyId, short UserId, M_CreditTermDt m_CreditTermDt)
+        public async Task<SqlResponce> SaveCreditTermDtAsync(short CompanyId, short UserId, M_CreditTermDt m_CreditTermDt)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -383,7 +383,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_CreditTermDt WHERE CreditTermId={m_CreditTermDt.CreditTermId} AND CompanyId={CompanyId} AND FromDay={m_CreditTermDt.FromDay}");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_CreditTermDt WHERE CreditTermId={m_CreditTermDt.CreditTermId} AND CompanyId={CompanyId} AND FromDay={m_CreditTermDt.FromDay}");
 
                         if (DataExist.Count() > 0 && DataExist.ToList()[0].IsExist == 1)
                         {
@@ -426,17 +426,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -460,7 +460,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -490,7 +490,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteCreditTermDtAsync(short CompanyId, short UserId, short CreditTermId, short FromDay)
+        public async Task<SqlResponce> DeleteCreditTermDtAsync(short CompanyId, short UserId, short CreditTermId, short FromDay)
         {
             try
             {
@@ -520,19 +520,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "CreditTermDt Not exists" };
+                        return new SqlResponce { Result = -1, Message = "CreditTermDt Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -557,7 +557,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

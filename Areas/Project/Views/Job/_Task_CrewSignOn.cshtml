@@ -1,5 +1,6 @@
-﻿  <!-- CrewSignOn Modal -->
-<div class="modal fade" id="addCrewSignOnModal" tabindex="-1" aria-labelledby="addCrewSignOnModalLabel" aria-hidden="true">
+﻿<!-- CrewSignOn Modal -->
+<div class="modal fade" id="addCrewSignOnModal" tabindex="-1" aria-labelledby="addCrewSignOnModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +16,7 @@
                         <div class="col-md-4">
                             <div class="col-mb-4">
                                 <label class="form-label">Visa Type</label>
-                                <select class="form-select" id="visaTypeId">
+                                <select class="form-select" id="crewSignOn_visaTypeId">
                                     <option value="">Select Visa Type</option>
                                     <!-- Options to be populated -->
                                 </select>
@@ -24,7 +25,7 @@
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Gender <span class="text-danger">*</span></label>
-                                <select class="form-select" id="chargeId" required>
+                                <select class="form-select" id="crewSignOn_chargeId" required>
                                     <option value="">Select Gender</option>
                                 </select>
                             </div>
@@ -32,13 +33,13 @@
                         <div class="col-md-4">
                             <div class="col-mb-6">
                                 <label class="form-label">Crew Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="crewName" required>
+                                <input type="text" class="form-control" id="crewSignOn_crewName" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Rank <span class="text-danger">*</span></label>
-                                <select class="form-select" id="glId" required>
+                                <select class="form-select" id="crewSignOn_glId" required>
                                     <option value="">Select Rank</option>
                                 </select>
                             </div>
@@ -52,7 +53,7 @@
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Charge Code <span class="text-danger">*</span></label>
-                                <select class="form-select" id="chargeId" required>
+                                <select class="form-select" id="crewSignOn_chargeId" required>
                                     <option value="">Select Charge</option>
                                 </select>
                             </div>
@@ -60,7 +61,7 @@
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                                <select class="form-select" id="glId" required>
+                                <select class="form-select" id="crewSignOn_glId" required>
                                     <option value="">Select GL</option>
                                 </select>
                             </div>
@@ -122,7 +123,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#auditCollapse">
+                                    data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -157,11 +158,125 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankCrewSignOnClose" onclick="clearBankCrewSignOnForm()">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankCrewSignOnClose"
+                    onclick="clearBankCrewSignOnForm()">Close</button>
                 <button type="button" class="btn btn-primary" id="btnBankCrewSignOnEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankCrewSignOnClear" onclick="clearBankCrewSignOnForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankCrewSignOnSave" onclick="saveBankCrewSignOn()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnBankCrewSignOnClear"
+                    onclick="clearBankCrewSignOnForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnBankCrewSignOnSave"
+                    onclick="saveBankCrewSignOn()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function refreshCrewSignOnDropdown() {
+        // Add dropdown binding logic specific to Crew Sign On
+    }
+
+    function clearCrewSignOnForm() {
+        $('#crewSignOn_jobOrderId').val('');
+        $('#crewSignOnId').val('');
+        $('#crewSignOn_visaTypeId').val('');
+        $('#crewSignOn_chargeId').val('');
+        $('#crewSignOn_crewName').val('');
+        $('#crewSignOn_glId').val('');
+    }
+
+    function openCrewSignOnModal(crewId, mode) {
+        // Add modal opening logic specific to Crew Sign On
+    }
+
+    function saveCrewSignOn() {
+        const crewSignOnData = {
+            JobOrderId: parseInt($('#crewSignOn_jobOrderId').val()) || 0,
+            CrewSignOnId: parseInt($('#crewSignOnId').val()) || 0,
+            VisaTypeId: parseInt($('#crewSignOn_visaTypeId').val()) || 0,
+            ChargeId: parseInt($('#crewSignOn_chargeId').val()) || 0,
+            CrewName: $('#crewSignOn_crewName').val(),
+            GLId: parseInt($('#crewSignOn_glId').val()) || 0
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveCrewSignOn", "Job", new { area = "Project" })',
+            type: 'POST',
+            data: JSON.stringify(crewSignOnData),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.success) {
+                    alert('Crew Sign On saved successfully!');
+                    clearCrewSignOnForm();
+                    $('#addCrewSignOnModal').modal('hide');
+                } else {
+                    alert(response.message || 'Failed to save crew sign on.');
+                }
+            },
+            error: function () {
+                alert('An error occurred while saving the crew sign on.');
+            }
+        });
+    }
+
+    function deleteCrewSignOn(jobOrderId, crewSignOnId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteCrewSignOn", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, crewSignOnId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadCrewSignOnGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function populateCrewSignOnModalFields(data) {
+        // Populate modal fields with data
+        $('#companyId').val(data.companyId);
+        $('#crewSignOnId').val(data.crewSignOnId);
+        $('#crewSignOn_jobOrderId').val(data.jobOrderId);
+        $('#crewSignOn_jobOrderNo').val(data.jobOrderNo);
+        // ...existing code...
+    }
+
+    function openCrewSignOnModal(jobOrderId, jobOrderNo, crewSignOnId, mode) {
+        const $modal = $('#addCrewSignOnModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedCrewSignOnId = parseInt(crewSignOnId, 10);
+        $('#crewSignOn_jobOrderId').val(jobOrderId);
+        $('#crewSignOn_jobOrderNo').val(jobOrderNo);
+
+        if (parsedJobOrderId > 0 && parsedCrewSignOnId > 0) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+            $.get('@Url.Action("GetCrewSignOnById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                crewSignOnId: parsedCrewSignOnId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshCrewSignOnDropdown();
+                        clearCrewSignOnForm();
+                        populateCrewSignOnModalFields(response.data);
+                        $('#addCrewSignOnModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            refreshCrewSignOnDropdown();
+            clearCrewSignOnForm();
+            setDefaultDropdownValues();
+            $('#addCrewSignOnModal').modal('show');
+        }
+    }
+
+    function setDefaultDropdownValues() {
+        // Set default values for dropdowns
+        $('#crewSignOn_cmb_gl').data('kendoMultiColumnComboBox').value(488);
+        // ...existing code...
+    }
+</script>

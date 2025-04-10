@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.GL
 
         public Task<GLJournalHdViewModel> GetGLJournalByIdNoAsync(short CompanyId, long JournalId, string JournalNo, short UserId);
 
-        public Task<SqlResponse> SaveGLJournalAsync(short CompanyId, GLJournalHd GLJournalHd, List<GLJournalDt> GLJournalDts, short UserId);
+        public Task<SqlResponce> SaveGLJournalAsync(short CompanyId, GLJournalHd GLJournalHd, List<GLJournalDt> GLJournalDts, short UserId);
 
-        public Task<SqlResponse> DeleteGLJournalAsync(short CompanyId, long JournalId, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteGLJournalAsync(short CompanyId, long JournalId, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<GLJournalHdViewModel>> GetHistoryGLJournalByIdAsync(short CompanyId, long JournalId, string JournalNo, short UserId);
     }

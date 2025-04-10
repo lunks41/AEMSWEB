@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.CB
 
         public Task<CBBankReconHdViewModel> GetCBBankReconByIdNoAsync(short CompanyId, long ReconId, string ReconNo, short UserId);
 
-        public Task<SqlResponse> SaveCBBankReconAsync(short CompanyId, CBBankReconHd CBBankReconHd, List<CBBankReconDt> CBBankReconDt, short UserId);
+        public Task<SqlResponce> SaveCBBankReconAsync(short CompanyId, CBBankReconHd CBBankReconHd, List<CBBankReconDt> CBBankReconDt, short UserId);
 
-        public Task<SqlResponse> DeleteCBBankReconAsync(short CompanyId, long ReconId, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteCBBankReconAsync(short CompanyId, long ReconId, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<CBBankReconHdViewModel>> GetHistoryCBBankReconByIdAsync(short CompanyId, long ReconId, string ReconNo, short UserId);
     }

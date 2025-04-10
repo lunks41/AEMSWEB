@@ -10,9 +10,9 @@ namespace AMESWEB.Areas.Account.Data.IServices.AR
 
         public Task<ARRefundViewModel> GetARRefundByIdAsync(short CompanyId, long RefundId, string RefundNo, short UserId);
 
-        public Task<SqlResponse> SaveARRefundAsync(short CompanyId, ArRefundHd ARRefundHd, List<ArRefundDt> ARRefundDt, short UserId);
+        public Task<SqlResponce> SaveARRefundAsync(short CompanyId, ArRefundHd ARRefundHd, List<ArRefundDt> ARRefundDt, short UserId);
 
-        public Task<SqlResponse> DeleteARRefundAsync(short CompanyId, long RefundId, string RefundNo, string CanacelRemarks, short UserId);
+        public Task<SqlResponce> DeleteARRefundAsync(short CompanyId, long RefundId, string RefundNo, string CanacelRemarks, short UserId);
 
         public Task<IEnumerable<ARRefundViewModel>> GetHistoryARRefundByIdAsync(short CompanyId, long RefundId, string RefundNo, short UserId);
     }

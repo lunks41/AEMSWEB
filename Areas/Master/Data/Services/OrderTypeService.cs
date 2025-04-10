@@ -30,7 +30,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             OrderTypeViewModelCount countViewModel = new OrderTypeViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_OrderType M_Ord WHERE (M_Ord.OrderTypeName LIKE '%{searchString}%' OR M_Ord.OrderTypeCode LIKE '%{searchString}%' OR M_Ord.Remarks LIKE '%{searchString}%') AND M_Ord.OrderTypeId<>0 AND M_Ord.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderType}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_OrderType M_Ord WHERE (M_Ord.OrderTypeName LIKE '%{searchString}%' OR M_Ord.OrderTypeCode LIKE '%{searchString}%' OR M_Ord.Remarks LIKE '%{searchString}%') AND M_Ord.OrderTypeId<>0 AND M_Ord.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderType}))");
 
                 var result = await _repository.GetQueryAsync<OrderTypeViewModel>($"SELECT M_Ord.CompanyId,M_Ord.OrderTypeId,M_Ord.OrderTypeCode,M_Ord.OrderTypeName,M_Ord.OrderTypeCategoryId,M_Ordc.OrderTypeCategoryCode,M_Ordc.OrderTypeCategoryName,M_Ord.Remarks,M_Ord.IsActive,M_Ord.CreateById,M_Ord.CreateDate,M_Ord.EditById,M_Ord.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_OrderType M_Ord INNER JOIN dbo.M_OrderTypeCategory M_Ordc ON M_Ordc.OrderTypeCategoryId = M_Ord.OrderTypeCategoryId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Ord.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Ord.EditById WHERE (M_Ord.OrderTypeName LIKE '%{searchString}%' OR M_Ord.OrderTypeCode LIKE '%{searchString}%' OR M_Ordc.OrderTypeCategoryCode LIKE '%{searchString}%' OR M_Ordc.OrderTypeCategoryName LIKE '%{searchString}%' OR M_Ord.Remarks LIKE '%{searchString}%') AND M_Ord.OrderTypeId<>0 AND M_Ord.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderType})) ORDER BY M_Ordc.OrderTypeCategoryName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -93,28 +93,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveOrderTypeAsync(short CompanyId, short UserId, M_OrderType m_OrderType)
+        public async Task<SqlResponce> SaveOrderTypeAsync(short CompanyId, short UserId, M_OrderType m_OrderType)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_OrderType.OrderTypeId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_OrderType WHERE OrderTypeId<>@OrderTypeId AND OrderTypeCode=@OrderTypeCode",
                         new { m_OrderType.OrderTypeId, m_OrderType.OrderTypeCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "OrderType Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "OrderType Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_OrderType WHERE OrderTypeId<>@OrderTypeId AND OrderTypeName=@OrderTypeName",
                         new { m_OrderType.OrderTypeId, m_OrderType.OrderTypeName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "OrderType Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "OrderType Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_OrderType WHERE OrderTypeId=@OrderTypeId",
                             new { m_OrderType.OrderTypeId });
 
@@ -126,13 +126,13 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "OrderType Not Found" };
+                            return new SqlResponce { Result = -1, Message = "OrderType Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (OrderTypeId + 1) FROM dbo.M_OrderType WHERE (OrderTypeId + 1) NOT IN (SELECT OrderTypeId FROM dbo.M_OrderType)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -142,7 +142,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -172,17 +172,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -208,7 +208,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteOrderTypeAsync(short CompanyId, short UserId, short orderTypeId)
+        public async Task<SqlResponce> DeleteOrderTypeAsync(short CompanyId, short UserId, short orderTypeId)
         {
             string orderTypeNo = string.Empty;
             try
@@ -243,19 +243,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "OrderTypeId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "OrderTypeId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -280,7 +280,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage
@@ -315,7 +315,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             OrderTypeCategoryViewModelCount countViewModel = new OrderTypeCategoryViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_OrderTypeCategory M_OrdC WHERE (M_OrdC.OrderTypeCategoryName LIKE '%{searchString}%' OR M_OrdC.OrderTypeCategoryCode LIKE '%{searchString}%' OR M_OrdC.Remarks LIKE '%{searchString}%') AND M_OrdC.OrderTypeCategoryId<>0 AND M_OrdC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderTypeCategory}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_OrderTypeCategory M_OrdC WHERE (M_OrdC.OrderTypeCategoryName LIKE '%{searchString}%' OR M_OrdC.OrderTypeCategoryCode LIKE '%{searchString}%' OR M_OrdC.Remarks LIKE '%{searchString}%') AND M_OrdC.OrderTypeCategoryId<>0 AND M_OrdC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderTypeCategory}))");
 
                 var result = await _repository.GetQueryAsync<OrderTypeCategoryViewModel>($"SELECT M_OrdC.CompanyId,M_OrdC.OrderTypeCategoryId,M_OrdC.OrderTypeCategoryCode,M_OrdC.OrderTypeCategoryName,M_OrdC.Remarks,M_OrdC.IsActive,M_OrdC.CreateById,M_OrdC.CreateDate,M_OrdC.EditById,M_OrdC.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_OrderTypeCategory M_OrdC LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_OrdC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_OrdC.EditById WHERE (M_OrdC.OrderTypeCategoryName LIKE '%{searchString}%' OR M_OrdC.OrderTypeCategoryCode LIKE '%{searchString}%' OR M_OrdC.Remarks LIKE '%{searchString}%') AND M_OrdC.OrderTypeCategoryId<>0 AND M_OrdC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.OrderTypeCategory})) ORDER BY M_OrdC.OrderTypeCategoryName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -378,28 +378,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveOrderTypeCategoryAsync(short CompanyId, short UserId, M_OrderTypeCategory m_OrderTypeCategory)
+        public async Task<SqlResponce> SaveOrderTypeCategoryAsync(short CompanyId, short UserId, M_OrderTypeCategory m_OrderTypeCategory)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_OrderTypeCategory.OrderTypeCategoryId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_OrderTypeCategory WHERE OrderTypeCategoryId<>@OrderTypeCategoryId AND OrderTypeCategoryCode=@OrderTypeCategoryCode",
                         new { m_OrderTypeCategory.OrderTypeCategoryId, m_OrderTypeCategory.OrderTypeCategoryCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "OrderTypeCategory Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "OrderTypeCategory Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_OrderTypeCategory WHERE OrderTypeCategoryId<>@OrderTypeCategoryId AND OrderTypeCategoryName=@OrderTypeCategoryName",
                         new { m_OrderTypeCategory.OrderTypeCategoryId, m_OrderTypeCategory.OrderTypeCategoryName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "OrderTypeCategory Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "OrderTypeCategory Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_OrderTypeCategory WHERE OrderTypeCategoryId=@OrderTypeCategoryId",
                             new { m_OrderTypeCategory.OrderTypeCategoryId });
 
@@ -411,12 +411,12 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "OrderTypeCategory Not Found" };
+                            return new SqlResponce { Result = -1, Message = "OrderTypeCategory Not Found" };
                         }
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (OrderTypeCategoryId + 1) FROM dbo.M_OrderTypeCategory WHERE (OrderTypeCategoryId + 1) NOT IN (SELECT OrderTypeCategoryId FROM dbo.M_OrderTypeCategory)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -426,7 +426,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -456,17 +456,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -492,7 +492,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteOrderTypeCategoryAsync(short CompanyId, short UserId, short orderTypeCategoryId)
+        public async Task<SqlResponce> DeleteOrderTypeCategoryAsync(short CompanyId, short UserId, short orderTypeCategoryId)
         {
             string orderTypeCategoryNo = string.Empty;
             try
@@ -527,19 +527,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "OrderTypeCategoryId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "OrderTypeCategoryId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -564,7 +564,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

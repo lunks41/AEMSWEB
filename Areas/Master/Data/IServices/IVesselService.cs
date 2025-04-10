@@ -10,8 +10,8 @@ namespace AMESWEB.Areas.Master.Data.IServices
 
         public Task<VesselViewModel> GetVesselByIdAsync(short CompanyId, short UserId, int VesselId);
 
-        public Task<SqlResponse> SaveVesselAsync(short CompanyId, short UserId, M_Vessel m_Vessel);
+        public Task<SqlResponce> SaveVesselAsync(short CompanyId, short UserId, M_Vessel m_Vessel);
 
-        public Task<SqlResponse> DeleteVesselAsync(short CompanyId, short UserId, int VesselId);
+        public Task<SqlResponce> DeleteVesselAsync(short CompanyId, short UserId, int VesselId);
     }
 }

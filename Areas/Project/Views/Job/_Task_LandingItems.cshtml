@@ -1,5 +1,6 @@
-﻿  <!-- LandingItem Modal -->
-<div class="modal fade" id="addLandingItemModal" tabindex="-1" aria-labelledby="addLandingItemModalLabel" aria-hidden="true">
+﻿<!-- LandingItem Modal -->
+<div class="modal fade" id="addLandingItemModal" tabindex="-1" aria-labelledby="addLandingItemModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,8 +9,8 @@
             </div>
             <div class="modal-body">
                 <form id="landingItemForm">
-                    <input type="hidden" id="landingItem_jobOrderId" />
-                    <input type="hidden" id="landingItemId" />
+                    <input type="hidden" id="landingItems_jobOrderId" />
+                    <input type="hidden" id="landingItemsId" />
 
                     <div class="row">
                         <div class="col-md-4">
@@ -32,30 +33,31 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="quantity" step="0.01" value="0.00" required>
+                            <input type="number" class="form-control" id="landingItems_quantity" step="0.01"
+                                value="0.00" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">UOM <span class="text-danger">*</span></label>
-                            <select class="form-select" id="glId" required>
+                            <select class="form-select" id="landingItems_glId" required>
                                 <option value="">Select UOM</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Landing Type</label>
-                            <select class="form-select" id="chargeId">
+                            <select class="form-select" id="landingItems_chargeId">
                                 <option value="">Select Landing Type</option>
                             </select>
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Charge Code</label>
-                            <select class="form-select" id="chargeId">
+                            <select class="form-select" id="landingItems_chargeId">
                                 <option value="">Select Charge</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select class="form-select" id="glId" required>
+                            <select class="form-select" id="landingItems_glId" required>
                                 <option value="">Select GL</option>
                             </select>
                         </div>
@@ -76,13 +78,13 @@
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Weight</label>
-                                <input type="number" class="form-control" id="weight" step="0.01">
+                                <input type="number" class="form-control" id="landingItems_weight" step="0.01">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Amount Deposited</label>
-                                <input type="number" class="form-control" id="weight" step="0.01">
+                                <input type="number" class="form-control" id="landingItems_weight" step="0.01">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -100,7 +102,7 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="col-md-6">
                             <div class="mb-1">
                                 <label class="form-label">Remark</label>
@@ -114,7 +116,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#auditCollapse">
+                                    data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -149,11 +151,65 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankLandingItemClose" onclick="clearBankLandingItemForm()">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankLandingItemClose"
+                    onclick="clearBankLandingItemForm()">Close</button>
                 <button type="button" class="btn btn-primary" id="btnBankLandingItemEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankLandingItemClear" onclick="clearBankLandingItemForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankLandingItemSave" onclick="saveBankLandingItem()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnBankLandingItemClear"
+                    onclick="clearBankLandingItemForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnBankLandingItemSave"
+                    onclick="saveBankLandingItem()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function refreshLandingItemsDropdown() {
+        // Add dropdown binding logic specific to Landing Items
+    }
+
+    function clearLandingItemsForm() {
+        $('#landingItems_jobOrderId').val('');
+        $('#landingItemsId').val('');
+        $('#landingItems_quantity').val('');
+        $('#landingItems_chargeId').val('');
+        $('#landingItems_glId').val('');
+        $('#landingItems_weight').val('');
+        $('#landingItems_remarks').val('');
+    }
+
+    function openLandingItemsModal(itemId, mode) {
+        // Add modal opening logic specific to Landing Items
+    }
+
+    function saveLandingItems() {
+        const landingItemsData = {
+            LandingItemsId: parseInt($('#landingItemsId').val()) || 0,
+            JobOrderId: parseInt($('#landingItems_jobOrderId').val()) || 0,
+            Quantity: parseFloat($('#landingItems_quantity').val()) || 0,
+            ChargeId: parseInt($('#landingItems_chargeId').val()) || 0,
+            GLId: parseInt($('#landingItems_glId').val()) || 0,
+            Weight: parseFloat($('#landingItems_weight').val()) || 0,
+            Remarks: $('#landingItems_remarks').val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveLandingItems", "Job", new { area = "Project" })',
+            type: 'POST',
+            data: JSON.stringify(landingItemsData),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.success) {
+                    alert('Landing Items saved successfully!');
+                    clearLandingItemsForm();
+                    $('#addLandingItemsModal').modal('hide');
+                } else {
+                    alert(response.message || 'Failed to save landing items.');
+                }
+            },
+            error: function () {
+                alert('An error occurred while saving the landing items.');
+            }
+        });
+    }
+</script>

@@ -30,7 +30,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             PortViewModelCount countViewModel = new PortViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_Port M_Pro INNER JOIN dbo.M_PortRegion M_Prg ON M_Prg.PortRegionId = M_Pro.PortRegionId WHERE (M_Pro.PortName LIKE '%{searchString}%' OR M_Pro.PortCode LIKE '%{searchString}%' OR M_Pro.Remarks LIKE '%{searchString}%'OR M_Prg.PortRegionCode LIKE '%{searchString}%' OR M_Prg.PortRegionName LIKE '%{searchString}%') AND M_Pro.PortId<>0 AND M_Pro.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Port}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_Port M_Pro INNER JOIN dbo.M_PortRegion M_Prg ON M_Prg.PortRegionId = M_Pro.PortRegionId WHERE (M_Pro.PortName LIKE '%{searchString}%' OR M_Pro.PortCode LIKE '%{searchString}%' OR M_Pro.Remarks LIKE '%{searchString}%'OR M_Prg.PortRegionCode LIKE '%{searchString}%' OR M_Prg.PortRegionName LIKE '%{searchString}%') AND M_Pro.PortId<>0 AND M_Pro.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Port}))");
 
                 var result = await _repository.GetQueryAsync<PortViewModel>($"SELECT M_Pro.PortId,M_Pro.CompanyId,M_Pro.PortRegionId,M_Prg.PortRegionCode,M_Prg.PortRegionName,M_Pro.PortCode,M_Pro.PortName,M_Pro.Remarks,M_Pro.IsActive,M_Pro.CreateById,M_Pro.CreateDate,M_Pro.EditById,M_Pro.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_Port M_Pro INNER JOIN dbo.M_PortRegion M_Prg ON M_Prg.PortRegionId = M_Pro.PortRegionId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Pro.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Pro.EditById WHERE (M_Pro.PortName LIKE '%{searchString}%' OR M_Pro.PortCode LIKE '%{searchString}%' OR M_Pro.Remarks LIKE '%{searchString}%'OR M_Prg.PortRegionCode LIKE '%{searchString}%' OR M_Prg.PortRegionName LIKE '%{searchString}%') AND M_Pro.PortId<>0 AND M_Pro.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Port})) ORDER BY M_Pro.PortName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -93,28 +93,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SavePortAsync(short CompanyId, short UserId, M_Port m_Port)
+        public async Task<SqlResponce> SavePortAsync(short CompanyId, short UserId, M_Port m_Port)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_Port.PortId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Port WHERE PortId<>@PortId AND PortCode=@PortCode",
                         new { m_Port.PortId, m_Port.PortCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Port Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "Port Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_Port WHERE PortId<>@PortId AND PortName=@PortName",
                         new { m_Port.PortId, m_Port.PortName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "Port Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "Port Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_Port WHERE PortId=@PortId",
                             new { m_Port.PortId });
 
@@ -126,13 +126,13 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Port Not Found" };
+                            return new SqlResponce { Result = -1, Message = "Port Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (PortId + 1) FROM M_Port WHERE (PortId + 1) NOT IN (SELECT PortId FROM M_Port)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -142,7 +142,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -172,17 +172,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (Exception ex)
                 {
@@ -208,7 +208,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeletePortAsync(short CompanyId, short UserId, short portId)
+        public async Task<SqlResponce> DeletePortAsync(short CompanyId, short UserId, short portId)
         {
             string portNo = string.Empty;
             try
@@ -243,19 +243,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "PortId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "PortId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -280,7 +280,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

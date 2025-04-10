@@ -33,7 +33,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             AccountSetupViewModelCount countViewModel = new AccountSetupViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_AccountSetup M_ACC INNER JOIN dbo.M_AccountSetupCategory M_Accsc ON M_Accsc.AccSetupCategoryId = M_ACC.AccSetupCategoryId WHERE (M_ACC.AccSetupName LIKE '%{searchString}%' OR M_ACC.AccSetupCode LIKE '%{searchString}%' OR M_ACC.Remarks LIKE '%{searchString}%' OR M_Accsc.AccSetupCategoryName LIKE '%{searchString}%' OR M_Accsc.AccSetupCategoryCode LIKE '%{searchString}%') AND M_ACC.AccSetupId<>0 AND M_ACC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetup}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_AccountSetup M_ACC INNER JOIN dbo.M_AccountSetupCategory M_Accsc ON M_Accsc.AccSetupCategoryId = M_ACC.AccSetupCategoryId WHERE (M_ACC.AccSetupName LIKE '%{searchString}%' OR M_ACC.AccSetupCode LIKE '%{searchString}%' OR M_ACC.Remarks LIKE '%{searchString}%' OR M_Accsc.AccSetupCategoryName LIKE '%{searchString}%' OR M_Accsc.AccSetupCategoryCode LIKE '%{searchString}%') AND M_ACC.AccSetupId<>0 AND M_ACC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetup}))");
 
                 var result = await _repository.GetQueryAsync<AccountSetupViewModel>($"SELECT M_ACC.AccSetupId,M_ACC.AccSetupCode,M_ACC.AccSetupName,M_ACC.CompanyId,M_ACC.AccSetupCategoryId,M_Accsc.AccSetupCategoryCode,M_Accsc.AccSetupCategoryName,M_ACC.Remarks,M_ACC.IsActive,M_ACC.CreateById,M_ACC.CreateDate,M_ACC.EditById,M_ACC.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountSetup M_ACC  LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACC.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACC.EditById INNER JOIN dbo.M_AccountSetupCategory M_Accsc ON M_Accsc.AccSetupCategoryId = M_ACC.AccSetupCategoryId  WHERE (M_ACC.AccSetupName LIKE '%{searchString}%' OR M_ACC.AccSetupCode LIKE '%{searchString}%' OR M_ACC.Remarks LIKE '%{searchString}%' OR M_Accsc.AccSetupCategoryName LIKE '%{searchString}%' OR M_Accsc.AccSetupCategoryCode LIKE '%{searchString}%') AND M_ACC.AccSetupId<>0 AND M_ACC.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetup})) ORDER BY M_ACC.AccSetupName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -96,28 +96,28 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveAccountSetupAsync(short CompanyId, short UserId, M_AccountSetup m_AccountSetup)
+        public async Task<SqlResponce> SaveAccountSetupAsync(short CompanyId, short UserId, M_AccountSetup m_AccountSetup)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_AccountSetup.AccSetupId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_AccountSetup WHERE AccSetupId<>@AccSetupId AND AccSetupCode=@AccSetupCode",
                         new { m_AccountSetup.AccSetupId, m_AccountSetup.AccSetupCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "AccSetup Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "AccSetup Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         $"SELECT 1 AS IsExist FROM dbo.M_AccountSetup WHERE AccSetupId<>@AccSetupId AND AccSetupName=@AccSetupName",
                         new { m_AccountSetup.AccSetupId, m_AccountSetup.AccSetupName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "AccSetup Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "AccSetup Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             $"SELECT 1 AS IsExist FROM dbo.M_AccountSetup WHERE AccSetupId=@AccSetupId",
                             new { m_AccountSetup.AccSetupId });
 
@@ -129,12 +129,12 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "AccountSetup Not Found" };
+                            return new SqlResponce { Result = -1, Message = "AccountSetup Not Found" };
                         }
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (AccSetupId + 1) FROM dbo.M_AccountSetup WHERE (AccSetupId + 1) NOT IN (SELECT AccSetupId FROM dbo.M_AccountSetup)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -144,7 +144,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -174,17 +174,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -208,7 +208,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -238,7 +238,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountSetupAsync(short CompanyId, short UserId, short accSetupId)
+        public async Task<SqlResponce> DeleteAccountSetupAsync(short CompanyId, short UserId, short accSetupId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -268,19 +268,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "AccSetupId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "AccSetupId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -304,7 +304,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -344,7 +344,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             AccountSetupDtViewModelCount countViewModel = new AccountSetupDtViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_AccountSetupDt M_ACCdt INNER JOIN dbo.M_AccountSetup M_Acc ON M_Acc.AccSetupId = M_ACCdt.AccSetupId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_ACCdt.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chacc ON M_Chacc.GLId = M_ACCdt.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACCdt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACCdt.EditById WHERE (M_Acc.AccSetupCode LIKE '%{searchString}%' OR M_ACC.AccSetupName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Chacc.GLCode LIKE '%{searchString}%'  OR M_Chacc.GLName LIKE '%{searchString}%') AND M_ACCdt.AccSetupId<>0 AND M_ACCdt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupDt}))");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.M_AccountSetupDt M_ACCdt INNER JOIN dbo.M_AccountSetup M_Acc ON M_Acc.AccSetupId = M_ACCdt.AccSetupId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_ACCdt.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chacc ON M_Chacc.GLId = M_ACCdt.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACCdt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACCdt.EditById WHERE (M_Acc.AccSetupCode LIKE '%{searchString}%' OR M_ACC.AccSetupName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Chacc.GLCode LIKE '%{searchString}%'  OR M_Chacc.GLName LIKE '%{searchString}%') AND M_ACCdt.AccSetupId<>0 AND M_ACCdt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupDt}))");
 
                 var result = await _repository.GetQueryAsync<AccountSetupDtViewModel>($"SELECT M_ACCdt.CompanyId,M_ACCdt.AccSetupId,M_ACC.AccSetupCode,M_ACC.AccSetupName,M_ACCdt.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyName,M_ACCdt.GLId,M_Chacc.GLCode,M_Chacc.GLName,M_ACCdt.CreateById,M_ACCdt.CreateDate,M_ACCdt.EditById,M_ACCdt.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM dbo.M_AccountSetupDt M_ACCdt INNER JOIN dbo.M_AccountSetup M_Acc ON M_Acc.AccSetupId = M_ACCdt.AccSetupId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = M_ACCdt.CurrencyId INNER JOIN dbo.M_ChartOfAccount M_Chacc ON M_Chacc.GLId = M_ACCdt.GLId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_ACCdt.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_ACCdt.EditById WHERE (M_Acc.AccSetupCode LIKE '%{searchString}%' OR M_ACC.AccSetupName LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%' OR M_Chacc.GLCode LIKE '%{searchString}%'  OR M_Chacc.GLName LIKE '%{searchString}%') AND M_ACCdt.AccSetupId<>0 AND M_ACCdt.CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupDt})) ORDER BY M_ACC.AccSetupName OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
@@ -407,7 +407,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveAccountSetupDtAsync(short CompanyId, short UserId, M_AccountSetupDt m_AccountSetupDt)
+        public async Task<SqlResponce> SaveAccountSetupDtAsync(short CompanyId, short UserId, M_AccountSetupDt m_AccountSetupDt)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -420,7 +420,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     }
                     if (IsEdit)
                     {
-                        var DataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupDt WHERE CompanyId={CompanyId} AND AccSetupId={m_AccountSetupDt.AccSetupId} AND CurrencyId={m_AccountSetupDt.CurrencyId} AND GLId={m_AccountSetupDt.GLId}");
+                        var DataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupDt WHERE CompanyId={CompanyId} AND AccSetupId={m_AccountSetupDt.AccSetupId} AND CurrencyId={m_AccountSetupDt.CurrencyId} AND GLId={m_AccountSetupDt.GLId}");
 
                         if (DataExist.Count() > 0 && DataExist.ToList()[0].IsExist == 1)
                         {
@@ -463,17 +463,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -497,7 +497,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -527,7 +527,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short glId)
+        public async Task<SqlResponce> DeleteAccountSetupDtAsync(short CompanyId, short UserId, short accSetupId, short currencyId, short glId)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -557,19 +557,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "AccountSetupDtId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "AccountSetupDtId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -593,7 +593,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -633,7 +633,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             AccountSetupCategoryViewModelCount countViewModel = new AccountSetupCategoryViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM M_AccountSetupCategory M_AccSetCa  WHERE M_AccSetCa.AccSetupCategoryId<>0 AND  ( M_AccSetCa.AccSetupCategoryName LIKE '%{searchString}%' OR M_AccSetCa.AccSetupCategoryCode LIKE '%{searchString}%' OR M_AccSetCa.Remarks LIKE '%{searchString}%')");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM M_AccountSetupCategory M_AccSetCa  WHERE M_AccSetCa.AccSetupCategoryId<>0 AND  ( M_AccSetCa.AccSetupCategoryName LIKE '%{searchString}%' OR M_AccSetCa.AccSetupCategoryCode LIKE '%{searchString}%' OR M_AccSetCa.Remarks LIKE '%{searchString}%')");
 
                 var result = await _repository.GetQueryAsync<AccountSetupCategoryViewModel>($"SELECT M_AccSetCa.AccSetupCategoryId,M_AccSetCa.AccSetupCategoryCode,M_AccSetCa.AccSetupCategoryName,M_AccSetCa.Remarks,M_AccSetCa.IsActive,M_AccSetCa.CreateById,M_AccSetCa.CreateDate,M_AccSetCa.EditById,M_AccSetCa.EditDate,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy FROM M_AccountSetupCategory M_AccSetCa LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_AccSetCa.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_AccSetCa.EditById WHERE M_AccSetCa.AccSetupCategoryId<>0 AND  ( M_AccSetCa.AccSetupCategoryName LIKE '%{searchString}%' OR M_AccSetCa.AccSetupCategoryCode LIKE '%{searchString}%' OR M_AccSetCa.Remarks LIKE '%{searchString}%') AND CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetupCategory})) ORDER BY M_AccSetCa.AccSetupCategoryName");
 
@@ -696,24 +696,24 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> SaveAccountSetupCategoryAsync(short CompanyId, short UserId, M_AccountSetupCategory m_AccountSetupCategory)
+        public async Task<SqlResponce> SaveAccountSetupCategoryAsync(short CompanyId, short UserId, M_AccountSetupCategory m_AccountSetupCategory)
         {
             using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 bool IsEdit = m_AccountSetupCategory.AccSetupCategoryId != 0;
                 try
                 {
-                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId<>@AccSetupCategoryId AND AccSetupCategoryCode=@AccSetupCategoryCode", new { m_AccountSetupCategory.AccSetupCategoryId, m_AccountSetupCategory.AccSetupCategoryCode });
+                    var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId<>@AccSetupCategoryId AND AccSetupCategoryCode=@AccSetupCategoryCode", new { m_AccountSetupCategory.AccSetupCategoryId, m_AccountSetupCategory.AccSetupCategoryCode });
                     if ((codeExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "AccSetupCategory Code already exists." };
+                        return new SqlResponce { Result = -1, Message = "AccSetupCategory Code already exists." };
 
-                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId<>@AccSetupCategoryId AND AccSetupCategoryName=@AccSetupCategoryName", new { m_AccountSetupCategory.AccSetupCategoryId, m_AccountSetupCategory.AccSetupCategoryName });
+                    var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId<>@AccSetupCategoryId AND AccSetupCategoryName=@AccSetupCategoryName", new { m_AccountSetupCategory.AccSetupCategoryId, m_AccountSetupCategory.AccSetupCategoryName });
                     if ((nameExist?.IsExist ?? 0) > 0)
-                        return new SqlResponse { Result = -1, Message = "AccSetupCategory Name already exists." };
+                        return new SqlResponce { Result = -1, Message = "AccSetupCategory Name already exists." };
 
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId=@AccSetupCategoryId", new { m_AccountSetupCategory.AccSetupCategoryId });
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.M_AccountSetupCategory WHERE AccSetupCategoryId=@AccSetupCategoryId", new { m_AccountSetupCategory.AccSetupCategoryId });
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
@@ -722,12 +722,12 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "AccountSetupCategory Not Found" };
+                            return new SqlResponce { Result = -1, Message = "AccountSetupCategory Not Found" };
                         }
                     }
                     else
                     {
-                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>(
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "SELECT ISNULL((SELECT TOP 1 (AccSetupCategoryId + 1) FROM dbo.M_AccountSetupCategory WHERE (AccSetupCategoryId + 1) NOT IN (SELECT AccSetupCategoryId FROM dbo.M_AccountSetupCategory)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
@@ -737,7 +737,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Internal Server Error" };
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
                         }
                     }
 
@@ -767,17 +767,17 @@ namespace AMESWEB.Areas.Master.Data.Services
                         if (auditLogSave > 0)
                         {
                             TScope.Complete();
-                            return new SqlResponse { Result = 1, Message = "Save Successfully" };
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = 1, Message = "Save Failed" };
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
                     }
 
                     #endregion Save AuditLog
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
                 catch (SqlException sqlEx)
                 {
@@ -801,7 +801,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                     string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                    return new SqlResponse
+                    return new SqlResponce
                     {
                         Result = -1,
                         Message = errorMessage
@@ -831,7 +831,7 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        public async Task<SqlResponse> DeleteAccountSetupCategoryAsync(short CompanyId, short UserId, short accSetupCategoryId)
+        public async Task<SqlResponce> DeleteAccountSetupCategoryAsync(short CompanyId, short UserId, short accSetupCategoryId)
         {
             string accSetupCategoryNo = string.Empty;
             try
@@ -866,19 +866,19 @@ namespace AMESWEB.Areas.Master.Data.Services
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Delete Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Delete Failed" };
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "AccSetupCategoryId Should be zero" };
+                        return new SqlResponce { Result = -1, Message = "AccSetupCategoryId Should be zero" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (SqlException sqlEx)
@@ -903,7 +903,7 @@ namespace AMESWEB.Areas.Master.Data.Services
 
                 string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
 
-                return new SqlResponse
+                return new SqlResponce
                 {
                     Result = -1,
                     Message = errorMessage

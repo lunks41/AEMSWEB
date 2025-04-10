@@ -32,7 +32,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             GLJournalViewModel countViewModel = new GLJournalViewModel();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponseIds>($"SELECT COUNT(*) AS CountId FROM dbo.GLJournalHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.JournalNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.GLJournalHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.JournalNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId}");
                 var result = await _repository.GetQueryAsync<GLJournalHdViewModel>($"SELECT Invhd.CompanyId,Invhd.JournalId,Invhd.JournalNo,Invhd.ReferenceNo,Invhd.TrnDate,Invhd.AccountDate,Invhd.CurrencyId,M_Cur.CurrencyCode,M_Cur.CurrencyCode,Invhd.ExhRate,Invhd.CtyExhRate,Invhd.TotAmt,Invhd.TotLocalAmt,Invhd.TotCtyAmt,Invhd.GstClaimDate,Invhd.GstAmt,Invhd.GstLocalAmt,Invhd.GstCtyAmt,Invhd.TotAmtAftGst,Invhd.TotLocalAmtAftGst,Invhd.TotCtyAmtAftGst,Invhd.Remarks,Invhd.IsReverse,Invhd.IsRecurrency,Invhd.RevDate,Invhd.RecurrenceUntil,Invhd.ModuleFrom,Invhd.CreateById,Invhd.CreateDate,Invhd.EditById,Invhd.EditDate,Invhd.IsCancel,Invhd.CancelById,Invhd.CancelDate,Invhd.CancelRemarks,Usr.UserName AS CreateBy,Usr1.UserName AS EditBy,Usr2.UserName AS CancelBy,Invhd.EditVersion FROM dbo.GLJournalHd Invhd INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Invhd.CurrencyId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Invhd.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Invhd.EditById LEFT JOIN dbo.AdmUser Usr2 ON Usr2.UserId = Invhd.CancelById WHERE (Invhd.JournalNo LIKE '%{searchString}%' OR Invhd.ReferenceNo LIKE '%{searchString}%' OR M_Cur.CurrencyCode LIKE '%{searchString}%' OR M_Cur.CurrencyName LIKE '%{searchString}%') AND Invhd.AccountDate BETWEEN '{fromDate}' AND '{toDate}' AND Invhd.CompanyId={CompanyId} ORDER BY Invhd.AccountDate Desc,Invhd.JournalNo Desc OFFSET {pageSize}*({pageNumber - 1}) ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
                 countViewModel.responseCode = 200;
@@ -102,7 +102,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             }
         }
 
-        public async Task<SqlResponse> SaveGLJournalAsync(short CompanyId, GLJournalHd GLJournalHd, List<GLJournalDt> GLJournalDt, short UserId)
+        public async Task<SqlResponce> SaveGLJournalAsync(short CompanyId, GLJournalHd GLJournalHd, List<GLJournalDt> GLJournalDt, short UserId)
         {
             bool IsEdit = false;
             string accountDate = GLJournalHd.AccountDate.ToString("dd/MMM/yyyy");
@@ -116,15 +116,15 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                     }
                     if (IsEdit)
                     {
-                        var dataExist = await _repository.GetQueryAsync<SqlResponseIds>($"SELECT 1 AS IsExist FROM dbo.GLJournalHd WHERE IsCancel=0 And CompanyId={CompanyId} And JournalId={GLJournalHd.JournalId}");
+                        var dataExist = await _repository.GetQueryAsync<SqlResponceIds>($"SELECT 1 AS IsExist FROM dbo.GLJournalHd WHERE IsCancel=0 And CompanyId={CompanyId} And JournalId={GLJournalHd.JournalId}");
 
                         if (dataExist.Count() == 0)
-                            return new SqlResponse { Result = -1, Message = "Invoice Not Exist" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Not Exist" };
                     }
 
                     if (!IsEdit)
                     {
-                        var documentIdNo = await _repository.GetQueryAsync<SqlResponseIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.GL},{(short)E_GL.JournalEntry},'{accountDate}'");
+                        var documentIdNo = await _repository.GetQueryAsync<SqlResponceIds>($"exec S_GENERATE_NUMBER_NOANDID {CompanyId},{(short)E_Modules.GL},{(short)E_GL.JournalEntry},'{accountDate}'");
 
                         if (documentIdNo.ToList()[0].DocumentId > 0 && documentIdNo.ToList()[0].DocumentNo != string.Empty)
                         {
@@ -132,11 +132,11 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                             GLJournalHd.JournalNo = documentIdNo.ToList()[0].DocumentNo;
                         }
                         else
-                            return new SqlResponse { Result = -1, Message = "Invoice Number can't generate" };
+                            return new SqlResponce { Result = -1, Message = "Invoice Number can't generate" };
                     }
                     else
                     {
-                        await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_GL_CreateHistoryRec {CompanyId},{UserId},{GLJournalHd.JournalId},{(short)E_GL.JournalEntry}");
+                        await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_GL_CreateHistoryRec {CompanyId},{UserId},{GLJournalHd.JournalId},{(short)E_GL.JournalEntry}");
                     }
 
                     //Saving Header
@@ -182,7 +182,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                         if (SaveDetails > 0)
                         {
                             //Inserting the records into GL CreateStatement
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLJournalHd.JournalId},{(short)E_GL.JournalEntry}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLJournalHd.JournalId},{(short)E_GL.JournalEntry}");
 
                             //Saving Audit log
                             var auditLog = new AdmAuditLog
@@ -209,25 +209,25 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                                     await _repository.UpsertExecuteScalarAsync($"update GLJournalHd set EditVersion=EditVersion+1 where JournalId={GLJournalHd.JournalId}; Update GLJournalDt set EditVersion=(SELECT TOP 1 EditVersion FROM dbo.GLJournalHd where JournalId={GLJournalHd.JournalId}) where JournalId={GLJournalHd.JournalId}");
 
                                 //Create / Update Ar Statement
-                                await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLJournalHd.JournalId},{(short)E_GL.JournalEntry}");
+                                await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_GL_PosttoGL {CompanyId},{UserId},{GLJournalHd.JournalId},{(short)E_GL.JournalEntry}");
 
                                 TScope.Complete();
-                                return new SqlResponse { Result = GLJournalHd.JournalId, Message = "Save Successfully" };
+                                return new SqlResponce { Result = GLJournalHd.JournalId, Message = "Save Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = 1, Message = "Save Failed" };
+                            return new SqlResponce { Result = 1, Message = "Save Failed" };
                         }
 
                         #endregion Save AuditLog
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Id Should not be zero" };
+                        return new SqlResponce { Result = -1, Message = "Id Should not be zero" };
                     }
 
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
@@ -251,7 +251,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
             }
         }
 
-        public async Task<SqlResponse> DeleteGLJournalAsync(short CompanyId, long JournalId, string CanacelRemarks, short UserId)
+        public async Task<SqlResponce> DeleteGLJournalAsync(short CompanyId, long JournalId, string CanacelRemarks, short UserId)
         {
             string JournalNo = string.Empty;
             try
@@ -269,7 +269,7 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                         if (GLJournalToRemove > 0)
                         {
                             //Cancel the Ar Transactions.
-                            await _repository.GetQueryAsync<SqlResponseIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{JournalId},{(short)E_GL.JournalEntry}");
+                            await _repository.GetQueryAsync<SqlResponceIds>($"exec FIN_CB_DeleteStatement {CompanyId},{UserId},{JournalId},{(short)E_GL.JournalEntry}");
 
                             var auditLog = new AdmAuditLog
                             {
@@ -289,19 +289,19 @@ namespace AMESWEB.Areas.Account.Data.Services.GL
                             if (auditLogSave > 0)
                             {
                                 TScope.Complete();
-                                return new SqlResponse { Result = 1, Message = "Cancel Successfully" };
+                                return new SqlResponce { Result = 1, Message = "Cancel Successfully" };
                             }
                         }
                         else
                         {
-                            return new SqlResponse { Result = -1, Message = "Cancel Failed" };
+                            return new SqlResponce { Result = -1, Message = "Cancel Failed" };
                         }
                     }
                     else
                     {
-                        return new SqlResponse { Result = -1, Message = "Invoice Not exists" };
+                        return new SqlResponce { Result = -1, Message = "Invoice Not exists" };
                     }
-                    return new SqlResponse();
+                    return new SqlResponce();
                 }
             }
             catch (Exception ex)
