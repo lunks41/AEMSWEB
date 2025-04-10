@@ -1226,17 +1226,33 @@ function getCookie(name) {
     // Dark/Light Toggle
     const getSwitchToggleId = document.getElementById('switch-toggle');
     if (getSwitchToggleId) {
+        debugger;
         const switchtoggle = document.querySelector(".switch-toggle");
         const savedTheme = localStorage.getItem("trezo_theme");
+        const kendoLight = document.getElementById('kendo-theme-light');
+        const kendoDark = document.getElementById('kendo-theme-dark');
+
         if (savedTheme) {
             document.body.setAttribute("data-theme", savedTheme);
+            if (savedTheme === "dark") {
+                kendoLight.disabled = true;
+                kendoDark.disabled = false;
+            } else {
+                kendoLight.disabled = false;
+                kendoDark.disabled = true;
+            }
         }
         switchtoggle.addEventListener("click", function () {
             if (document.body.getAttribute("data-theme") === "dark") {
                 document.body.setAttribute("data-theme", "light");
+                kendoLight.disabled = false;
+                kendoDark.disabled = true;
+
                 localStorage.setItem("trezo_theme", "light");
             } else {
                 document.body.setAttribute("data-theme", "dark");
+                kendoLight.disabled = true;
+                kendoDark.disabled = false;
                 localStorage.setItem("trezo_theme", "dark");
             }
         });

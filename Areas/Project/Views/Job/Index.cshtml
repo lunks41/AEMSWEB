@@ -11,12 +11,6 @@
     int companyId = ViewBag.CompanyId;
 }
 <style>
-
-    .filter-section {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-    }
-
     .status-tabs .nav-link {
         border-radius: 20px;
         padding: 8px 20px;
@@ -51,7 +45,7 @@
     /*grid capsule*/
     .status-pill {
         display: inline-block;
-        padding: 4px 12px;
+        padding: 3px 13px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 500;
@@ -59,34 +53,35 @@
     }
 
     .completed {
-        background-color: #e6f4ea;
-        color: #137333;
+        background-color: var(--bs-success-bg-subtle) !important;
+        color: var(--bs-success-text-emphasis) !important;
     }
 
     .confirm {
-        background-color: #e8f0fe;
-        color: #1967d2;
+        background-color: var(--bs-primary-bg-subtle) !important;
+        color: var(--bs-primary-text-emphasis) !important;
     }
 
     .pending {
-        background-color: #fef7e0;
-        color: #f9ab00;
+        background-color: var(--bs-warning-bg-subtle) !important;
+        color: var(--bs-warning-text-emphasis) !important;
     }
 
     .cancel {
-        background-color: #fce8e6;
-        color: #c5221f;
+        background-color: var(--bs-danger-bg-subtle) !important;
+        color: var(--bs-danger-text-emphasis) !important;
     }
 
     .cancel-with-services {
-        background-color: #f3e8fd;
-        color: #7622d7;
+        background-color: var(--bs-secondary-bg-subtle) !important;
+        color: var(--bs-secondary-text-emphasis) !important;
     }
 
     .default-status {
-        background-color: #f1f3f4;
-        color: #5f6368;
+        background-color: var(--bs-tertiary-bg) !important;
+        color: var(--bs-tertiary-color) !important;
     }
+    /*grid capsule*/
 </style>
 
 <div class="row">
@@ -94,7 +89,7 @@
         <div class="card">
             <div class="card-body">
                 <!-- Simple Header Section -->
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Job Management</h4>
                     <div>
                         <button class="btn btn-light btn-sm me-2" onclick="loadJobOrderGrid();loadStatusCounts();">Refresh</button>
@@ -103,16 +98,13 @@
                 </div>
 
                 <!-- Simple Filter Section -->
-                <div class="filter-section bg-light p-3 rounded mb-4">
+                <div class="p-3 rounded">
                     <div class="row align-items-center">
                         <div class="col-md-3">
                             <input type="text" id="txtsearch" class="form-control form-control-sm" placeholder="Search jobs..." onkeydown="handleEnterKey(event)">
                         </div>
                         <div class="col-md-3">
-                            <select id="customerDropdown" class="form-select form-select-sm">
-                                <option value="">All Customers</option>
-                                <!-- Dynamically populated options -->
-                            </select>
+                            <select id="job_cmb_customer" style="width: 100%" placeholder="Select Customer"></select>
                         </div>
                         <div class="col-md-4">
                             <div class="d-flex">
@@ -245,7 +237,23 @@
                 currentStatus = $(this).data('status');
                 loadJobOrderGrid();
             });
+            refreshJobDropdown();
+            toastr.success("check success");
+            toastr.error("check error");
+            toastr.info("check info");
+            toastr.warning("check warning");
         });
+
+        function refreshJobDropdown() {
+
+            const customerUrl = '@Url.Action("GetCustomerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const customercolumnsProperties = [
+                { field: 'customerCode', title: 'Code', width: 100 },
+                { field: 'customerName', title: 'Name', width: 200 }
+            ];
+            const customerfilterFields = ['customerCode', 'customerName'];
+            bindMultiColumnComboBox(customerUrl, "job_cmb_customer", "customerName", "customerId", customercolumnsProperties, customerfilterFields);
+        }
 
         function openJobOrderModal() {
             const modalId = `#addJobOrderModal`;
@@ -302,6 +310,7 @@
             $('[data-status="all"]').addClass('active');
             loadJobOrderGrid();
             loadStatusCounts();
+            refreshJobDropdown();
         }
 
         // Helper function to format a date as yyyy-MM-dd.
@@ -320,7 +329,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "60px",
+                    width: "80px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openViewJobOrderModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}', 'view')">
              <i class="material-symbols-outlined text-primary">visibility</i></button>`;

@@ -60,7 +60,6 @@
                                 <input type="number" class="form-control" id="distanceFromJettyToVessel" step="0.0001">
                             </div>
                         </div>
-
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Lunch Hire Time (1)</label>
@@ -87,11 +86,11 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-1">
-                                <b>Waitg Time At Loadg Pt (2-1) : 01:00 Hrs</b>
+                                <b>Waitg Time At Loadg Pt (2-1) : <span id="time2minus1"></span></b>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <b>Waitg Time Along Side (4-3) :  01:00 Hrs</b>
+                            <b>Waitg Time Along Side (4-3) :  <span id="time4minus3"></span></b>
                         </div>
 
                         <div class="col-md-4">
@@ -140,8 +139,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-1">
-                                <label for="launchServices_cmb_gl" class="form-label">Launch From (Port)</label>
-                                <select id="launchServices_cmb_gl" style="width: 100%"></select>
+                                <label for="launchServices_cmb_port" class="form-label">Launch From (Port)</label>
+                                <select id="launchServices_cmb_port" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -218,6 +217,12 @@
 
     function refreshLaunchServicesDropdown() {
 
+        const launchUrl = '@Url.Action("GetBargeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(launchUrl, "launchServices_cmb_barge", "bargeName", "bargeId");
+
+        const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(portUrl, "launchServices_cmb_port", "portName", "portId");
+
         const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const glcolumnsProperties = [
             { field: 'glCode', title: 'Code', width: 100 },
@@ -226,7 +231,7 @@
         const glfilterFields = ['glCode', 'glName'];
         bindMultiColumnComboBox(chartOfAccountUrl, "launchServices_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
 
-        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=1`;
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=2`;
         bindComboBox(chargeUrl, "launchServices_cmb_charge", "chargeName", "chargeId");
 
         const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
@@ -234,13 +239,44 @@
 
         const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
         bindComboBox(statusUrl, "launchServices_cmb_status", "orderTypeName", "orderTypeId");
-
     }
 
     function SelectedDropdown(DrpdwnName) {
     }
 
     function OnSelectDropdown(dataItem, DrpdwnName) {
+    }
+
+    function calculateTimeDifferences() {
+        // Get input elements
+        const loadingTime = document.getElementById('loadingTime');
+        const leftJetty = document.getElementById('leftJetty');
+        const alongsideVessel = document.getElementById('alongsideVessel');
+        const departedFromVessel = document.getElementById('departedFromVessel');
+
+        // Get values and convert to dates
+        const time1 = new Date(loadingTime.value);
+        const time2 = new Date(leftJetty.value);
+        const time3 = new Date(alongsideVessel.value);
+        const time4 = new Date(departedFromVessel.value);
+
+        // Calculate differences in milliseconds
+        const diff2minus1 = time2 - time1;
+        const diff4minus3 = time4 - time3;
+
+        // Format time function
+        function formatTime(duration) {
+            if (duration < 0) return "Invalid time sequence";
+
+            const hours = Math.floor(duration / 3600000);
+            const minutes = Math.floor((duration % 3600000) / 60000);
+
+            return `${hours} hours ${minutes} minutes`;
+        }
+
+        // Display results
+        document.getElementById('time2minus1').textContent = formatTime(diff2minus1);
+        document.getElementById('time4minus3').textContent = formatTime(diff4minus3);
     }
 
     function clearLaunchServicesForm() {
