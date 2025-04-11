@@ -1,0 +1,118 @@
+@{
+    Layout = null;
+}
+<div id="modalContainer">
+    <div class="modal">
+        <div class="modal-body">
+            <div class="invoice-section">
+                <!-- Actual Invoice Section -->
+                <div class="actual-invoice">
+                    <h2>Actual Invoice</h2>
+                    <div class="content">
+                        <!-- Actual Invoice content goes here -->
+                        @* Add your dynamic actual invoice content here *@
+                    </div>
+                </div>
+
+                <!-- Supporting Documents Section -->
+                <div class="supporting-documents">
+                    <h2>Supporting Documents</h2>
+                    <div class="content">
+                        <!-- Supporting Documents content goes here -->
+                        @* Add your dynamic supporting documents content here *@
+                    </div>
+                    <textarea class="note-input" placeholder="Add your notes here..."></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="footer-navigation">
+                <button id="preview" class="btn btn-secondary" onclick="previewContent()">Preview</button>
+                <button id="remarks" class="btn btn-info" onclick="addRemarks()">Remarks</button>
+                <button id="previous" class="btn btn-secondary" onclick="previousDocument()">Previous</button>
+                <button id="next" class="btn btn-primary" onclick="nextDocument()">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal {
+        width: 1000px; /* Fixed width */
+        height: 600px; /* Fixed height */
+        margin: auto;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .modal-body {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        height: calc(100% - 60px); /* Adjust for header/footer */
+    }
+
+    .invoice-section {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    .actual-invoice, .supporting-documents {
+        flex: 1;
+        margin: 0 1rem;
+        overflow: auto; /* Add scroll if content exceeds fixed height */
+    }
+
+        .actual-invoice h2, .supporting-documents h2 {
+            text-align: center;
+        }
+
+    .note-input {
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 1rem;
+        border-top: 1px solid #ccc;
+        background-color: #f8f9fa;
+        height: 60px; /* Fixed footer height */
+        box-sizing: border-box;
+    }
+
+    .footer-navigation .btn {
+        margin: 0 0.5rem;
+    }
+</style>
+
+<script>
+    function previewContent() {
+        alert('Previewing Content');
+        // Add logic to preview content
+    }
+
+    function addRemarks() {
+        alert('Adding Remarks');
+        // Add logic to add remarks
+    }
+
+    function previousDocument() {
+        alert('Navigating to the previous document');
+        // Add logic to navigate to the previous document
+    }
+
+    function nextDocument() {
+        alert('Navigating to the next document');
+        // Add logic to navigate to the next document
+    }
+</script>

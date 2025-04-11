@@ -4,46 +4,34 @@ namespace AMESWEB.Entities.Project
 {
     public class Ser_FreshWater
     {
+        [Key]
         public int FreshWaterId { get; set; }
+
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }
-        public string JobOrderNo { get; set; } = string.Empty;
+        public string JobOrderNo { get; set; } // Nullable
         public short TaskId { get; set; }
-        public string? TaskName { get; set; } = string.Empty;
-        public long? DebitNoteId { get; set; }
-        public string? DebitNoteNo { get; set; } = string.Empty;
-        public decimal TotAmt { get; set; } = 0M;
-        public decimal GstAmt { get; set; } = 0M;
-        public decimal TotAmtAftGst { get; set; } = 0M;
-        public string? Remarks { get; set; } = string.Empty;
-        public short CreateById { get; set; }
-        public DateTime CreateDate { get; set; } = DateTime.Now;
-        public short? EditById { get; set; }
-        public DateTime? EditDate { get; set; }
-        public byte EditVersion { get; set; } = 0;
-
-        // Fresh water specific fields
-        public DateTime? DateOfSupply { get; set; }
-
-        public string? ReceiptNumber { get; set; }
-        public decimal? Distance { get; set; }
-        public decimal Quantity { get; set; } = 0M;
+        public long? DebitNoteId { get; set; } // Nullable
+        public string DebitNoteNo { get; set; } // Nullable
+        public decimal TotAmt { get; set; } = 0m;
+        public decimal GstAmt { get; set; } = 0m;
+        public decimal TotAmtAftGst { get; set; } = 0m;
+        public DateTime? DateOfSupply { get; set; } // Nullable
+        public string ReceiptNumber { get; set; } // Nullable
+        public decimal? Distance { get; set; } // Nullable
+        public decimal Quantity { get; set; } = 0m; // Default zero
         public short GLId { get; set; }
-        public string? GlName { get; set; } = string.Empty;
         public short ChargeId { get; set; }
-        public string? ChargeName { get; set; } = string.Empty;
-        public short? BargeNameLookupId { get; set; }
-        public string? BargeName { get; set; } = string.Empty;
-        public string? BargeOperatorName { get; set; }
-        public bool? IsVesselCallingLocation { get; set; }
+        public short? BargeNameLookupId { get; set; } // Nullable
+        public string BargeOperatorName { get; set; } // Nullable
+        public bool? IsVesselCallingLocation { get; set; } // Nullable
         public short StatusId { get; set; }
-        public string? StatusName { get; set; } = string.Empty;
-        public short? UomId { get; set; }
-        public string? UomName { get; set; } = string.Empty;
-
-        // Additional fields for UI display
-        public string? CreateBy { get; set; } = string.Empty;
-
-        public string? EditBy { get; set; } = string.Empty;
+        public short? UomId { get; set; } // Nullable
+        public string Remarks { get; set; } = string.Empty; // Default empty
+        public short CreateById { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.Now; // Default current date
+        public short? EditById { get; set; } // Nullable
+        public DateTime? EditDate { get; set; } // Nullable
+        public byte EditVersion { get; set; }
     }
 }

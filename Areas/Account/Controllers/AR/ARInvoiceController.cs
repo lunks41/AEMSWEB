@@ -274,5 +274,10 @@ namespace AMESWEB.Areas.Account.Controllers
                 return Json(new { success = false, message = "An error occurred." });
             }
         }
+
+        public IActionResult PreviewInvoice()
+        {
+            return PartialView("~/Views/Shared/_PreviewInvoice.cshtml");
+        }
     }
 }

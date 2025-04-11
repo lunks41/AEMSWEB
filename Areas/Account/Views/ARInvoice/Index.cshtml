@@ -71,6 +71,9 @@
                                 <button type="button" class="btn btn-dark" id="btnUnpost" title="Unpost">
                                     <span class="material-symbols-outlined">undo</span>
                                 </button>
+                                <button type="button" class="btn btn-dark" id="btnPreViewInvoice" title="Invoice" onclick="openPreviewInvoiceModal();">
+                                    <span class="material-symbols-outlined">undo</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -399,7 +402,7 @@
         }
 
         function handleGstSelection(selectedDataItem) {
-            
+
             try {
                 if (!selectedDataItem) {
                     throw new Error("Invalid Gst data");
@@ -418,7 +421,7 @@
                         companyId: companyId
                     },
                     success: function (response) {
-                        
+
                         if (response) {
                             $("#gstPercentageDt").val(response);
                             handleGstPercentageChange();
@@ -833,7 +836,7 @@
         }
 
         function openInvoiceDtModal(itemNo) {
-            
+
             try {
                 const itemNoInt = parseInt(itemNo, 10);
 
@@ -1070,6 +1073,25 @@
         function deleteInvoice() {
             // Unpost logic here
             console.log("Unposting invoice...");
+        }
+
+        function openPreviewInvoiceModal() {
+            $.ajax({
+                url: '@Url.Action("PreviewInvoice", "ARInvoice", new { area = "Account" })', // Replace with your actual action and controller
+                type: 'GET',
+                success: function (response) {
+                    // Inject the modal content into the container
+                    $('#modalContainer').html(response);
+
+                    // Show the modal (Bootstrap 5 example)
+                    const modal = new bootstrap.Modal(document.querySelector('#modalContainer .modal'));
+                    modal.show();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading modal:', error);
+                    alert('Failed to load the modal. Please try again.');
+                }
+            });
         }
     </script>
 }

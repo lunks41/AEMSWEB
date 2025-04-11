@@ -6,22 +6,29 @@ namespace AMESWEB.Entities.Project
     [Table("Ser_CrewMiscellaneous")]
     public class Ser_CrewMiscellaneous
     {
-        [Key]
-        public Int64 CrewMiscellaneousId { get; set; }
+        public byte CompanyId { get; set; }
 
-        public Int64 JobOrderId { get; set; }
-        public string? JobOrderNo { get; set; }
-        public string? Description { get; set; }
-        public decimal Amount { get; set; }
-        public short TaskId { get; set; } = 1;
-        public string? Remarks { get; set; }
-        public string? Reference { get; set; }
-        public DateTime? TransactionDate { get; set; }
-        public bool IsDeleted { get; set; }
-        public short CompanyId { get; set; }
+        [Key]
+        public long CrewMiscellaneousId { get; set; }
+
+        public long JobOrderId { get; set; }
+        public string JobOrderNo { get; set; } // Nullable
+        public short TaskId { get; set; }
+        public long? DebitNoteId { get; set; } // Nullable
+        public string DebitNoteNo { get; set; } // Nullable
+        public decimal TotAmt { get; set; } = 0m;
+        public decimal GstAmt { get; set; } = 0m;
+        public decimal TotAmtAftGst { get; set; } = 0m;
+        public string MiscDescription { get; set; } // Not nullable
+        public decimal MiscAmount { get; set; } = 0m; // Default value
+        public short GLId { get; set; }
+        public decimal Quantity { get; set; } = 0m; // Default value
+        public int? ChargeId { get; set; } // Nullable
+        public string Remarks { get; set; } = string.Empty; // Default value
         public short CreateById { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public short? EditById { get; set; }
-        public DateTime? EditDate { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.Now; // Default current date
+        public short? EditById { get; set; } // Nullable
+        public DateTime? EditDate { get; set; } // Nullable
+        public byte EditVersion { get; set; }
     }
 }

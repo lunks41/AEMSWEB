@@ -4,79 +4,57 @@ namespace AMESWEB.Entities.Project
 {
     public class Ser_ConsignmentImport
     {
+        [Key]
         public long ConsignmentImportId { get; set; }
+
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }
-        public string JobOrderNo { get; set; } = string.Empty;
+        public string JobOrderNo { get; set; } // Nullable
         public short TaskId { get; set; }
-        public string? TaskName { get; set; } = string.Empty;
-        public long? DebitNoteId { get; set; }
-        public string? DebitNoteNo { get; set; } = string.Empty;
-        public decimal TotAmt { get; set; } = 0M;
-        public decimal GstAmt { get; set; } = 0M;
-        public decimal TotAmtAftGst { get; set; } = 0M;
-
-        // Consignment specific fields
-        public long? ConsignmentNo { get; set; }
-
-        public string? AWBNumber { get; set; }
-        public string? DeclarationNumber { get; set; }
-        public DateTime? BookingDate { get; set; }
-        public decimal Weight { get; set; } = 0M;
-        public string? PickupLocation { get; set; }
-        public string? DeliveryLocation { get; set; }
+        public long? DebitNoteId { get; set; } // Nullable
+        public string DebitNoteNo { get; set; } // Nullable
+        public decimal TotAmt { get; set; } = 0m;
+        public decimal GstAmt { get; set; } = 0m;
+        public decimal TotAmtAftGst { get; set; } = 0m;
+        public long? ConsignmentNo { get; set; } // Nullable
+        public string AWBNumber { get; set; } // Nullable
+        public string DeclarationNumber { get; set; } // Nullable
+        public DateTime? BookingDate { get; set; } // Nullable
+        public decimal Weight { get; set; } = 0m; // Default value
+        public string PickupLocation { get; set; } // Nullable
+        public string DeliveryLocation { get; set; } // Nullable
         public short GLId { get; set; }
-        public string? GlName { get; set; } = string.Empty;
         public short ChargeId { get; set; }
-        public string? ChargeName { get; set; } = string.Empty;
-        public int? SupplierId { get; set; }
-        public string? SupplierName { get; set; } = string.Empty;
-        public string? ReferenceNumber { get; set; }
-        public string? BillEntryNumber { get; set; }
-        public decimal? Quantity { get; set; } = 0M;
-        public string? PickupLocationAddress { get; set; }
-        public string? DeliveryLocationAddress { get; set; }
-        public short? CargoType { get; set; }
-        public string? CargoTypeName { get; set; } = string.Empty;
-        public int? NoOfPcs { get; set; }
-        public DateTime? DateReceived { get; set; }
-        public DateTime? DateDelivered { get; set; }
+        public int? SupplierId { get; set; } // Nullable
+        public string ReferenceNumber { get; set; } // Nullable
+        public string BillEntryNumber { get; set; } // Nullable
+        public decimal? Quantity { get; set; } = 0m; // Nullable and default value
+        public string PickupLocationAddress { get; set; } // Nullable
+        public string DeliveryLocationAddress { get; set; } // Nullable
+        public short? CargoType { get; set; } // Nullable
+        public int? NoOfPcs { get; set; } // Nullable
+        public DateTime? DateReceived { get; set; } // Nullable
+        public DateTime? DateDelivered { get; set; } // Nullable
         public short StatusId { get; set; }
-        public string? StatusName { get; set; } = string.Empty;
-        public short? ModeId { get; set; }
-        public string? ModeName { get; set; } = string.Empty;
-        public string? ClearedBy { get; set; }
-        public string? TransporterName { get; set; }
-
-        // Deposit and refund fields
-        public bool? IsDepositRefundReceived { get; set; }
-
-        public decimal? AmountDeposited { get; set; }
-        public string? RefundInstrumentNumber { get; set; }
-        public bool? IsWarehouseCharges { get; set; }
-        public short? LocationLookupId { get; set; }
-        public string? LocationName { get; set; } = string.Empty;
+        public short? ModeId { get; set; } // Nullable
+        public string ClearedBy { get; set; } // Nullable
+        public string TransporterName { get; set; } // Nullable
+        public bool? IsDepositRefundReceived { get; set; } // Nullable
+        public decimal? AmountDeposited { get; set; } // Nullable
+        public string RefundInstrumentNumber { get; set; } // Nullable
+        public bool? IsWarehouseCharges { get; set; } // Nullable
+        public short? LocationLookupId { get; set; } // Nullable
         public short TypeId { get; set; }
-        public string? TypeName { get; set; } = string.Empty;
-        public decimal? RefundAmt { get; set; } = 0M;
-        public short? UomId { get; set; }
-        public string? UomName { get; set; } = string.Empty;
-        public string? HawbNumber { get; set; }
+        public decimal? RefundAmt { get; set; } = 0m; // Nullable and default value
+        public short? UomId { get; set; } // Nullable
+        public string HawbNumber { get; set; } // Nullable
         public bool IsRefundedReceived { get; set; }
         public bool IsRefundedExpected { get; set; }
-
-        // Common fields
-        public string? Remarks { get; set; } = string.Empty;
-
+        public string Remarks { get; set; } = string.Empty; // Default value
         public short CreateById { get; set; }
-        public DateTime CreateDate { get; set; } = DateTime.Now;
-        public short? EditById { get; set; }
-        public DateTime? EditDate { get; set; }
-        public byte EditVersion { get; set; } = 0;
-
-        // Additional fields for UI display
-        public string? CreateBy { get; set; } = string.Empty;
-
-        public string? EditBy { get; set; } = string.Empty;
+        public DateTime CreateDate { get; set; } = DateTime.Now; // Default current date
+        public short? EditById { get; set; } // Nullable
+        public DateTime? EditDate { get; set; } // Nullable
+        public byte EditVersion { get; set; }
     }
 }

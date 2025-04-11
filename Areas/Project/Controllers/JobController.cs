@@ -257,6 +257,235 @@ namespace AMESWEB.Areas.Project.Controllers
 
         #endregion Port Expenses
 
+        #region Crew Miscellaneous
+
+        [HttpGet]
+        public async Task<JsonResult> CrewMiscellaneousList(string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetCrewMiscellaneousListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Crew Miscellaneous list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCrewMiscellaneousById(Int64 jobOrderId, Int64 crewMiscellaneousId, string companyId)
+        {
+            if (jobOrderId <= 0)
+                return Json(new { success = false, message = "Invalid Crew Miscellaneous ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetCrewMiscellaneousByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewMiscellaneousId);
+                return data == null
+                    ? Json(new { success = false, message = "Crew Miscellaneous not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Crew Miscellaneous by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCrewMiscellaneous([FromBody] SaveCrewMiscellaneousViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var crewMiscellaneousToSave = new Ser_CrewMiscellaneous
+                {
+                    CrewMiscellaneousId = model.crewMiscellaneous.CrewMiscellaneousId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.crewMiscellaneous.JobOrderId,
+                    JobOrderNo = model.crewMiscellaneous.JobOrderNo ?? string.Empty,
+                    TaskId = model.crewMiscellaneous.TaskId,
+                    Remarks = model.crewMiscellaneous.Remarks?.Trim() ?? string.Empty,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.Now,
+                };
+
+                var result = await _jobTaskService.SaveCrewMiscellaneousAsync(companyIdShort, parsedUserId.Value, crewMiscellaneousToSave);
+                return Json(new { success = true, message = "Crew Miscellaneous saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving Crew Miscellaneous");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCrewMiscellaneous(Int64 jobOrderId, Int64 crewMiscellaneousId, string companyId)
+        {
+            if (jobOrderId <= 0)
+            {
+                _logger.LogWarning("Delete failed: Invalid Crew Miscellaneous ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Crew Miscellaneous ID." });
+            }
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
+            if (permissions == null || !permissions.IsDelete)
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this Crew Miscellaneous." });
+            }
+
+            try
+            {
+                await _jobTaskService.DeleteCrewMiscellaneousAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewMiscellaneousId);
+                return Json(new { success = true, message = "Crew Miscellaneous deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Crew Miscellaneous. Crew Miscellaneous ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
+            }
+        }
+
+        #endregion Crew Miscellaneous
+
+        #region Medical Assistance
+
+        [HttpGet]
+        public async Task<JsonResult> MedicalAssistanceList(string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetMedicalAssistanceListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Medical Assistance list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetMedicalAssistanceById(Int64 jobOrderId, Int64 medicalAssistanceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+                return Json(new { success = false, message = "Invalid Medical Assistance ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetMedicalAssistanceByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, medicalAssistanceId);
+                return data == null
+                    ? Json(new { success = false, message = "Medical Assistance not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Medical Assistance by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveMedicalAssistance([FromBody] SaveMedicalAssistanceViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var medicalAssistanceToSave = new Ser_MedicalAssistance
+                {
+                    MedicalAssistanceId = model.medicalAssistance.MedicalAssistanceId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.medicalAssistance.JobOrderId,
+                    JobOrderNo = model.medicalAssistance.JobOrderNo ?? string.Empty,
+                    TaskId = model.medicalAssistance.TaskId,
+                    Remarks = model.medicalAssistance.Remarks?.Trim() ?? string.Empty,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.Now,
+                    EditVersion = 0
+                };
+
+                var result = await _jobTaskService.SaveMedicalAssistanceAsync(companyIdShort, parsedUserId.Value, medicalAssistanceToSave);
+                return Json(new { success = true, message = "Medical Assistance saved successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving Medical Assistance");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteMedicalAssistance(Int64 jobOrderId, Int64 medicalAssistanceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+            {
+                _logger.LogWarning("Delete failed: Invalid Medical Assistance ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Medical Assistance ID." });
+            }
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
+            if (permissions == null || !permissions.IsDelete)
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this Medical Assistance." });
+            }
+
+            try
+            {
+                await _jobTaskService.DeleteMedicalAssistanceAsync(companyIdShort, parsedUserId.Value, jobOrderId, medicalAssistanceId);
+                return Json(new { success = true, message = "Medical Assistance deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Medical Assistance. Medical Assistance ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
+            }
+        }
+
+        #endregion Medical Assistance
+
         #region Launch Services
 
         [HttpGet]
