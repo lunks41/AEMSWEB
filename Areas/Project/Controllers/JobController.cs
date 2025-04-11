@@ -7,6 +7,7 @@ using AMESWEB.IServices;
 using AMESWEB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 
 namespace AMESWEB.Areas.Project.Controllers
 {
@@ -408,12 +409,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetEquipmentsUsedListAsync(parsedCompanyId, parsedUserId.Value, jobOrderId);
+                    var result = await _jobTaskService.GetEquipmentsUsedListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                     return Json(result);
                 }
                 else
@@ -433,12 +434,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetEquipmentsUsedByIdAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, equipmentsUsedId);
+                    var result = await _jobTaskService.GetEquipmentsUsedByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, equipmentsUsedId);
                     return Json(result);
                 }
                 else
@@ -463,27 +464,19 @@ namespace AMESWEB.Areas.Project.Controllers
                     return BadRequest(new { success = false, message = "Invalid input data." });
                 }
 
-                var parsedCompanyId = short.Parse(model.companyId);
-                var parsedUserId = GetParsedUserId();
-
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
+                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 // Create the entity from view model
                 var equipmentsUsed = new Ser_EquipmentsUsed
                 {
                     EquipmentsUsedId = model.equipmentsUsed.EquipmentsUsedId,
-                    CompanyId = parsedCompanyId,
+                    CompanyId = companyIdShort,
                     JobOrderId = model.equipmentsUsed.JobOrderId,
                     JobOrderNo = model.equipmentsUsed.JobOrderNo,
                     TaskId = model.equipmentsUsed.TaskId,
 
                     // Equipment details
-                    EquipmentId = model.equipmentsUsed.EquipmentId,
-                    EquipmentUseDate = model.equipmentsUsed.EquipmentUseDate,
-                    Duration = model.equipmentsUsed.Duration,
                     GLId = model.equipmentsUsed.GLId,
                     StatusId = model.equipmentsUsed.StatusId,
                     ChargeId = model.equipmentsUsed.ChargeId,
@@ -506,7 +499,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = model.equipmentsUsed.EditVersion
                 };
 
-                var result = await _jobTaskService.SaveEquipmentsUsedAsync(parsedCompanyId, parsedUserId.Value, equipmentsUsed);
+                var result = await _jobTaskService.SaveEquipmentsUsedAsync(companyIdShort, parsedUserId.Value, equipmentsUsed);
 
                 return Json(result);
             }
@@ -522,15 +515,10 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var result = await _jobTaskService.DeleteEquipmentsUsedAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, equipmentsUsedId);
+                var result = await _jobTaskService.DeleteEquipmentsUsedAsync(companyIdShort, parsedUserId.Value, jobOrderId, equipmentsUsedId);
                 return Json(result);
             }
             catch (Exception ex)
@@ -549,12 +537,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetCrewSignOnListAsync(parsedCompanyId, parsedUserId.Value, jobOrderId);
+                    var result = await _jobTaskService.GetCrewSignOnListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                     return Json(result);
                 }
                 else
@@ -574,12 +562,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetCrewSignOnByIdAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, crewSignOnId);
+                    var result = await _jobTaskService.GetCrewSignOnByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOnId);
                     return Json(result);
                 }
                 else
@@ -604,18 +592,13 @@ namespace AMESWEB.Areas.Project.Controllers
                     return BadRequest(new { success = false, message = "Invalid input data." });
                 }
 
-                var parsedCompanyId = short.Parse(model.companyId);
-                var parsedUserId = GetParsedUserId();
-
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
+                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 var crewSignOn = new Ser_CrewSignOn
                 {
                     CrewSignOnId = model.crewSignOn.CrewSignOnId,
-                    CompanyId = parsedCompanyId,
+                    CompanyId = companyIdShort,
                     JobOrderId = model.crewSignOn.JobOrderId,
                     JobOrderNo = model.crewSignOn.JobOrderNo,
                     TaskId = model.crewSignOn.TaskId,
@@ -647,7 +630,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = model.crewSignOn.EditVersion
                 };
 
-                var result = await _jobTaskService.SaveCrewSignOnAsync(parsedCompanyId, parsedUserId.Value, crewSignOn);
+                var result = await _jobTaskService.SaveCrewSignOnAsync(companyIdShort, parsedUserId.Value, crewSignOn);
 
                 return Json(result);
             }
@@ -663,15 +646,10 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var result = await _jobTaskService.DeleteCrewSignOnAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, crewSignOnId);
+                var result = await _jobTaskService.DeleteCrewSignOnAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOnId);
                 return Json(result);
             }
             catch (Exception ex)
@@ -690,12 +668,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetCrewSignOffListAsync(parsedCompanyId, parsedUserId.Value, jobOrderId);
+                    var result = await _jobTaskService.GetCrewSignOffListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                     return Json(result);
                 }
                 else
@@ -715,12 +693,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetCrewSignOffByIdAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, crewSignOffId);
+                    var result = await _jobTaskService.GetCrewSignOffByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOffId);
                     return Json(result);
                 }
                 else
@@ -745,20 +723,15 @@ namespace AMESWEB.Areas.Project.Controllers
                     return BadRequest(new { success = false, message = "Invalid input data." });
                 }
 
-                var parsedCompanyId = short.Parse(model.companyId);
-                var parsedUserId = GetParsedUserId();
-
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
+                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 // Create the entity from view model
                 var crewSignOff = new Ser_CrewSignOff
                 {
                     // Basic identification
                     CrewSignOffId = model.crewSignOff.CrewSignOffId,
-                    CompanyId = parsedCompanyId,
+                    CompanyId = companyIdShort,
                     JobOrderId = model.crewSignOff.JobOrderId,
                     JobOrderNo = model.crewSignOff.JobOrderNo,
                     TaskId = model.crewSignOff.TaskId,
@@ -798,7 +771,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = model.crewSignOff.EditVersion
                 };
 
-                var result = await _jobTaskService.SaveCrewSignOffAsync(parsedCompanyId, parsedUserId.Value, crewSignOff);
+                var result = await _jobTaskService.SaveCrewSignOffAsync(companyIdShort, parsedUserId.Value, crewSignOff);
 
                 return Json(result);
             }
@@ -814,15 +787,10 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var result = await _jobTaskService.DeleteCrewSignOffAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, crewSignOffId);
+                var result = await _jobTaskService.DeleteCrewSignOffAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOffId);
                 return Json(result);
             }
             catch (Exception ex)
@@ -834,85 +802,6 @@ namespace AMESWEB.Areas.Project.Controllers
 
         #endregion Crew Sign Off
 
-        #region Crew Miscellaneous
-
-        #endregion Crew Miscellaneous
-
-        #region Medical Assistance
-
-        [HttpGet]
-        public async Task<IActionResult> GetMedicalAssistanceList(Int64 JobOrderId)
-        {
-            try
-            {
-                var result = await _jobTaskService.GetMedicalAssistanceListAsync(GetCompanyId(), GetUserId(), JobOrderId);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetMedicalAssistanceById(Int64 JobOrderId, Int64 MedicalAssistanceId)
-        {
-            try
-            {
-                var result = await _jobTaskService.GetMedicalAssistanceByIdAsync(GetCompanyId(), GetUserId(), JobOrderId, MedicalAssistanceId);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveMedicalAssistance(Ser_MedicalAssistance ser_MedicalAssistance)
-        {
-            try
-            {
-                ser_MedicalAssistance.CompanyId = GetCompanyId();
-                ser_MedicalAssistance.CreateById = GetUserId();
-
-                var result = await _jobTaskService.SaveMedicalAssistanceAsync(GetCompanyId(), GetUserId(), ser_MedicalAssistance);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteMedicalAssistance(Int64 JobOrderId, Int64 MedicalAssistanceId)
-        {
-            try
-            {
-                var result = await _jobTaskService.DeleteMedicalAssistanceAsync(GetCompanyId(), GetUserId(), JobOrderId, MedicalAssistanceId);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        #endregion Medical Assistance
-
-        #region Consignment Import
-
-        #endregion Consignment Import
-
-        #region Consignment Export
-
-        #endregion Consignment Export
-
-        #region Third Party Supply
-
-        #endregion Third Party Supply
-
         #region Fresh Water Supply
 
         [HttpGet]
@@ -920,12 +809,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetFreshWaterListAsync(parsedCompanyId, parsedUserId.Value, jobOrderId);
+                    var result = await _jobTaskService.GetFreshWaterListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                     return Json(result);
                 }
                 else
@@ -945,12 +834,12 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetFreshWaterByIdAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, freshWaterId);
+                    var result = await _jobTaskService.GetFreshWaterByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, freshWaterId);
                     return Json(result);
                 }
                 else
@@ -975,28 +864,21 @@ namespace AMESWEB.Areas.Project.Controllers
                     return BadRequest(new { success = false, message = "Invalid input data." });
                 }
 
-                var parsedCompanyId = short.Parse(model.companyId);
-                var parsedUserId = GetParsedUserId();
-
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
+                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
                 // Create the entity from view model
                 var freshWater = new Ser_FreshWater
                 {
                     FreshWaterId = model.freshWater.FreshWaterId,
-                    CompanyId = parsedCompanyId,
+                    CompanyId = companyIdShort,
                     JobOrderId = model.freshWater.JobOrderId,
                     JobOrderNo = model.freshWater.JobOrderNo,
                     TaskId = model.freshWater.TaskId,
 
                     // Supply details
-                    SupplyDate = model.freshWater.SupplyDate,
                     Quantity = model.freshWater.Quantity,
                     UomId = model.freshWater.UomId,
-                    SupplierId = model.freshWater.SupplierId,
                     GLId = model.freshWater.GLId,
                     StatusId = model.freshWater.StatusId,
                     ChargeId = model.freshWater.ChargeId,
@@ -1019,7 +901,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = model.freshWater.EditVersion
                 };
 
-                var result = await _jobTaskService.SaveFreshWaterAsync(parsedCompanyId, parsedUserId.Value, freshWater);
+                var result = await _jobTaskService.SaveFreshWaterAsync(companyIdShort, parsedUserId.Value, freshWater);
 
                 return Json(result);
             }
@@ -1035,15 +917,10 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             try
             {
-                var parsedCompanyId = short.Parse(companyId);
-                var parsedUserId = GetParsedUserId();
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
 
-                if (!parsedUserId.HasValue)
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-
-                var result = await _jobTaskService.DeleteFreshWaterAsync(parsedCompanyId, parsedUserId.Value, jobOrderId, freshWaterId);
+                var result = await _jobTaskService.DeleteFreshWaterAsync(companyIdShort, parsedUserId.Value, jobOrderId, freshWaterId);
                 return Json(result);
             }
             catch (Exception ex)
@@ -1054,130 +931,6 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         #endregion Fresh Water Supply
-
-        #region FreshWater
-
-        [HttpGet]
-        public async Task<IActionResult> GetFreshWater(Int64 JobOrderId)
-        {
-            try
-            {
-                var result = await _service.GetFreshWaterListAsync(CompanyId, UserId, JobOrderId);
-
-                return Json(new
-                {
-                    responseCode = 200,
-                    responseMessage = "success",
-                    totalRecords = result.totalRecords,
-                    data = result.data
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    responseCode = 500,
-                    responseMessage = ex.Message + " " + ex.InnerException?.Message
-                });
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetFreshWaterById(Int64 JobOrderId, Int64 FreshWaterId)
-        {
-            try
-            {
-                var result = await _service.GetFreshWaterByIdAsync(CompanyId, UserId, JobOrderId, FreshWaterId);
-
-                return Json(new
-                {
-                    responseCode = 200,
-                    responseMessage = "success",
-                    data = result
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    responseCode = 500,
-                    responseMessage = ex.Message + " " + ex.InnerException?.Message
-                });
-            }
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> SaveFreshWater(Ser_FreshWater ser_FreshWater)
-        {
-            try
-            {
-                ser_FreshWater.CompanyId = CompanyId;
-                ser_FreshWater.CreateById = UserId;
-
-                if (ser_FreshWater.FreshWaterId > 0)
-                {
-                    ser_FreshWater.EditById = UserId;
-                    ser_FreshWater.EditDate = DateTime.Now;
-                }
-
-                var result = await _service.SaveFreshWaterAsync(CompanyId, UserId, ser_FreshWater);
-
-                return Json(new
-                {
-                    responseCode = result.Result > 0 ? 200 : 400,
-                    responseMessage = result.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    responseCode = 500,
-                    responseMessage = ex.Message + " " + ex.InnerException?.Message
-                });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<JsonResult> DeleteFreshWater(Int64 JobOrderId, Int64 FreshWaterId)
-        {
-            try
-            {
-                var result = await _service.DeleteFreshWaterAsync(CompanyId, UserId, JobOrderId, FreshWaterId);
-
-                return Json(new
-                {
-                    responseCode = result.Result > 0 ? 200 : 400,
-                    responseMessage = result.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    responseCode = 500,
-                    responseMessage = ex.Message + " " + ex.InnerException?.Message
-                });
-            }
-        }
-
-        #endregion FreshWater
-
-        #region Technicians Surveyors
-
-        #endregion Technicians Surveyors
-
-        #region Landing Items
-
-        #endregion Landing Items
-
-        #region Other Service
-
-        #endregion Other Service
-
-        #region Agency Remuneration
-
-        #endregion Agency Remuneration
 
         #endregion Task
 

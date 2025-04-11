@@ -6,6 +6,7 @@
         public string? CountryCode { get; set; }
         public string? CountryName { get; set; }
         public Int16 CompanyId { get; set; }
+        public string? ISDCODE { get; set; }
         public string? Remarks { get; set; }
         public bool IsActive { get; set; }
         public Int16 CreateById { get; set; }

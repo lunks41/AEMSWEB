@@ -118,6 +118,7 @@ namespace AMESWEB.Areas.Master.Controllers
                     CountryCode = model.country.CountryCode ?? string.Empty,
                     CountryName = model.country.CountryName ?? string.Empty,
                     Remarks = model.country.Remarks?.Trim() ?? string.Empty,
+                    ISDCODE = model.country.ISDCODE ?? string.Empty,
                     IsActive = model.country.IsActive,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,

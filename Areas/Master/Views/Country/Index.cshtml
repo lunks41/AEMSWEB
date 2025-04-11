@@ -66,16 +66,22 @@
                     <form id="countryForm">
                         <input type="hidden" id="countryId" />
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="countryCode" class="form-label">Code <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="countryCode" required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="countryName" class="form-label">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="countryName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="isdcode" class="form-label">ISD Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="isdcode" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -151,7 +157,7 @@
                 canRead: @Json.Serialize(canRead),
             };
 
-            $('#countryCode, #countryName').on('input', checkCountryMandatoryFields);
+            $('#countryCode, #countryName,#isdcode').on('input', checkCountryMandatoryFields);
             loadCountryGrid();
             initializeCountryForm();
             clearCountryForm();
@@ -179,7 +185,7 @@
             $('#editDate').text('');
 
             // Reset readonly and disabled states
-            $('#countryCode, #countryName, #seqNo, #remarks').prop('readonly', false);
+            $('#countryCode, #countryName,#isdcode, #seqNo, #remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
 
             $('#isActive').prop('checked', true);
@@ -231,6 +237,7 @@
                 },
                 { field: "countryCode", title: "Code" },
                 { field: "countryName", title: "Name" },
+                { field: "isd", title: "ISD" },
                 { field: "remarks", title: "Remarks" },
                 { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -263,6 +270,7 @@
             $('#countryId').val(data.countryId);
             $('#countryCode').val(data.countryCode);
             $('#countryName').val(data.countryName);
+            $('#isdcode').val(data.isd);
             $('#remarks').val(data.remarks);
             $('#isActive').prop('checked', data.isActive);
 
@@ -278,7 +286,7 @@
             const isView = mode === 'view';
             const canEdit = permissions.canEdit && !isView;
 
-            $('#countryCode, #countryName,  #remarks').prop('readonly', !canEdit);
+            $('#countryCode, #countryName,#isdcode,  #remarks').prop('readonly', !canEdit);
             $('#isActive').prop('disabled', !canEdit);
             $('#btnCountrySave').toggle(canEdit);
             $('#btnCountryEdit').toggle(isView && permissions.canEdit);
@@ -308,6 +316,7 @@
                CountryId: parseInt($('#countryId').val()) || 0,
                CountryCode: $('#countryCode').val().trim(),
                CountryName: $('#countryName').val().trim(),
+                ISD: $('#isdcode').val().trim(),
                 Remarks: $('#remarks').val(),
                 IsActive: $('#isActive').prop('checked')
             };
@@ -326,7 +335,7 @@
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                       
+
                         loadCountryGrid();
                         clearCountryForm();
                         $('#addCountryModal').modal('hide');

@@ -1608,7 +1608,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             {
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_CrewMiscellaneous Ser_Misc LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Misc.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Misc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Misc.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Misc.ChargeId AND M_Chr.TaskId = Ser_Misc.TaskId WHERE Ser_Misc.JobOrderId={JobOrderId} AND Ser_Misc.CompanyId={CompanyId}");
 
-                var result = await _repository.GetQueryAsync<CrewMiscellaneousViewModel>($"SELECT Ser_Misc.CrewMiscId,Ser_Misc.CompanyId,Ser_Misc.JobOrderId,Ser_Misc.JobOrderNo,Ser_Misc.TaskId,Ser_Misc.MiscDate,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Misc.GLId,Ser_Misc.StatusId,M_Or.OrderTypeName As StatusName,Ser_Misc.DebitNoteId,Ser_Misc.DebitNoteNo,Ser_Misc.TotAmt,Ser_Misc.GstAmt,Ser_Misc.TotAmtAftGst,Ser_Misc.Remarks,Ser_Misc.CreateById,Ser_Misc.CreateDate,Ser_Misc.EditById,Ser_Misc.EditDate,Ser_Misc.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_CrewMiscellaneous Ser_Misc LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Misc.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Misc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Misc.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Misc.ChargeId AND M_Chr.TaskId = Ser_Misc.TaskId WHERE Ser_Misc.JobOrderId={JobOrderId} AND Ser_Misc.CompanyId={CompanyId}");
+                var result = await _repository.GetQueryAsync<CrewMiscellaneousViewModel>($"SELECT Ser_Misc.CrewMiscellaneousId,Ser_Misc.CompanyId,Ser_Misc.JobOrderId,Ser_Misc.JobOrderNo,Ser_Misc.TaskId,Ser_Misc.MiscDate,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Misc.GLId,Ser_Misc.StatusId,M_Or.OrderTypeName As StatusName,Ser_Misc.DebitNoteId,Ser_Misc.DebitNoteNo,Ser_Misc.TotAmt,Ser_Misc.GstAmt,Ser_Misc.TotAmtAftGst,Ser_Misc.Remarks,Ser_Misc.CreateById,Ser_Misc.CreateDate,Ser_Misc.EditById,Ser_Misc.EditDate,Ser_Misc.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_CrewMiscellaneous Ser_Misc LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Misc.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Misc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Misc.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Misc.ChargeId AND M_Chr.TaskId = Ser_Misc.TaskId WHERE Ser_Misc.JobOrderId={JobOrderId} AND Ser_Misc.CompanyId={CompanyId}");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -1639,11 +1639,11 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<CrewMiscellaneousViewModel> GetCrewMiscellaneousByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 CrewMiscId)
+        public async Task<CrewMiscellaneousViewModel> GetCrewMiscellaneousByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 CrewMiscellaneousId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<CrewMiscellaneousViewModel>($"SELECT Ser_Misc.CrewMiscId,Ser_Misc.CompanyId,Ser_Misc.JobOrderId,Ser_Misc.JobOrderNo,Ser_Misc.TaskId,Ser_Misc.MiscDate,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Misc.GLId,Ser_Misc.StatusId,M_Or.OrderTypeName As StatusName,Ser_Misc.DebitNoteId,Ser_Misc.DebitNoteNo,Ser_Misc.TotAmt,Ser_Misc.GstAmt,Ser_Misc.TotAmtAftGst,Ser_Misc.Remarks,Ser_Misc.CreateById,Ser_Misc.CreateDate,Ser_Misc.EditById,Ser_Misc.EditDate,Ser_Misc.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_CrewMiscellaneous Ser_Misc LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Misc.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Misc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Misc.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Misc.ChargeId AND M_Chr.TaskId = Ser_Misc.TaskId WHERE Ser_Misc.JobOrderId={JobOrderId} AND Ser_Misc.CrewMiscId={CrewMiscId} AND Ser_Misc.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<CrewMiscellaneousViewModel>($"SELECT Ser_Misc.CrewMiscellaneousId,Ser_Misc.CompanyId,Ser_Misc.JobOrderId,Ser_Misc.JobOrderNo,Ser_Misc.TaskId,Ser_Misc.MiscDate,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Misc.GLId,Ser_Misc.StatusId,M_Or.OrderTypeName As StatusName,Ser_Misc.DebitNoteId,Ser_Misc.DebitNoteNo,Ser_Misc.TotAmt,Ser_Misc.GstAmt,Ser_Misc.TotAmtAftGst,Ser_Misc.Remarks,Ser_Misc.CreateById,Ser_Misc.CreateDate,Ser_Misc.EditById,Ser_Misc.EditDate,Ser_Misc.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_CrewMiscellaneous Ser_Misc LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Misc.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Misc.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Misc.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Misc.ChargeId AND M_Chr.TaskId = Ser_Misc.TaskId WHERE Ser_Misc.JobOrderId={JobOrderId} AND Ser_Misc.CrewMiscellaneousId={CrewMiscellaneousId} AND Ser_Misc.CompanyId={CompanyId}");
 
                 return result;
             }
@@ -1671,7 +1671,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
         public async Task<SqlResponce> SaveCrewMiscellaneousAsync(short CompanyId, short UserId, Ser_CrewMiscellaneous ser_CrewMiscellaneous)
         {
-            bool IsEdit = ser_CrewMiscellaneous.CrewMiscId != 0;
+            bool IsEdit = ser_CrewMiscellaneous.CrewMiscellaneousId != 0;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -1679,8 +1679,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                     if (IsEdit)
                     {
                         var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                     $"SELECT 1 AS IsExist FROM dbo.Ser_CrewMiscellaneous WHERE CrewMiscId=@CrewMiscId",
-                     new { ser_CrewMiscellaneous.CrewMiscId });
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_CrewMiscellaneous WHERE CrewMiscellaneousId=@CrewMiscellaneousId",
+                     new { ser_CrewMiscellaneous.CrewMiscellaneousId });
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
@@ -1697,11 +1697,11 @@ namespace AMESWEB.Areas.Project.Data.Services
                     {
                         // Take the Next Id From SQL
                         var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                     "SELECT ISNULL((SELECT TOP 1 (CrewMiscId + 1) FROM dbo.Ser_CrewMiscellaneous WHERE (CrewMiscId + 1) NOT IN (SELECT CrewMiscId FROM dbo.Ser_CrewMiscellaneous)),1) AS NextId");
+                     "SELECT ISNULL((SELECT TOP 1 (CrewMiscellaneousId + 1) FROM dbo.Ser_CrewMiscellaneous WHERE (CrewMiscellaneousId + 1) NOT IN (SELECT CrewMiscellaneousId FROM dbo.Ser_CrewMiscellaneous)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
-                            ser_CrewMiscellaneous.CrewMiscId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_CrewMiscellaneous.CrewMiscellaneousId = Convert.ToInt16(sqlMissingResponse.NextId);
                             ser_CrewMiscellaneous.EditById = null;
                             ser_CrewMiscellaneous.EditDate = null;
                             _context.Add(ser_CrewMiscellaneous);
@@ -1718,7 +1718,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     {
                         if (IsEdit)
                         {
-                            await _repository.UpsertExecuteScalarAsync($"update Ser_CrewMiscellaneous set EditVersion=EditVersion+1 WHERE CrewMiscId={ser_CrewMiscellaneous.CrewMiscId} AND CompanyId={CompanyId}");
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_CrewMiscellaneous set EditVersion=EditVersion+1 WHERE CrewMiscellaneousId={ser_CrewMiscellaneous.CrewMiscellaneousId} AND CompanyId={CompanyId}");
                         }
                         else
                         {
@@ -1728,7 +1728,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                             "DECLARE @TaskItemNo SMALLINT; " +
                             $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_CrewMiscellaneous.JobOrderId} AND (ItemNo + 1) NOT IN     (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_CrewMiscellaneous.JobOrderId})), 1);  " +
                             $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_CrewMiscellaneous.JobOrderId} AND TaskId = {ser_CrewMiscellaneous.TaskId} AND (TaskItemNo + 1) NOT IN     (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt      WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_CrewMiscellaneous.JobOrderId} AND TaskId = {ser_CrewMiscellaneous.TaskId})), 1);   " +
-                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId )   VALUES ({CompanyId},{ser_CrewMiscellaneous.JobOrderId},'{ser_CrewMiscellaneous.JobOrderNo}',@ItemNo,{ser_CrewMiscellaneous.TaskId},@TaskItemNo,{ser_CrewMiscellaneous.CrewMiscId});");
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId )   VALUES ({CompanyId},{ser_CrewMiscellaneous.JobOrderId},'{ser_CrewMiscellaneous.JobOrderNo}',@ItemNo,{ser_CrewMiscellaneous.TaskId},@TaskItemNo,{ser_CrewMiscellaneous.CrewMiscellaneousId});");
                         }
 
                         var auditLog = new AdmAuditLog
@@ -1736,7 +1736,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                             CompanyId = CompanyId,
                             ModuleId = (short)E_Modules.Project,
                             TransactionId = (short)E_Project.Job,
-                            DocumentId = ser_CrewMiscellaneous.CrewMiscId,
+                            DocumentId = ser_CrewMiscellaneous.CrewMiscellaneousId,
                             DocumentNo = "",
                             TblName = "Ser_CrewMiscellaneous",
                             ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
@@ -1799,7 +1799,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = ser_CrewMiscellaneous.CrewMiscId,
+                    DocumentId = ser_CrewMiscellaneous.CrewMiscellaneousId,
                     DocumentNo = "",
                     TblName = "Ser_CrewMiscellaneous",
                     ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
@@ -1823,7 +1823,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     {
                         var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={crewMiscId}");
 
-                        var deleteCrewMiscellaneousResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_CrewMiscellaneous WHERE CompanyId={CompanyId} AND CrewMiscId={crewMiscId}");
+                        var deleteCrewMiscellaneousResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_CrewMiscellaneous WHERE CompanyId={CompanyId} AND CrewMiscellaneousId={crewMiscId}");
 
                         if (deletejobOrderResult > 0 && deleteCrewMiscellaneousResult > 0)
                         {
@@ -1855,7 +1855,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     }
                     else
                     {
-                        return new SqlResponce { Result = -1, Message = "CrewMiscId Should be greater than zero" };
+                        return new SqlResponce { Result = -1, Message = "CrewMiscellaneousId Should be greater than zero" };
                     }
                     return new SqlResponce();
                 }
@@ -3173,5 +3173,1572 @@ namespace AMESWEB.Areas.Project.Data.Services
         }
 
         #endregion Third Party Supply
+
+        #region FreshWater
+
+        public async Task<FreshWaterViewModelCount> GetFreshWaterListAsync(short CompanyId, short UserId, Int64 JobOrderId)
+        {
+            FreshWaterViewModelCount countViewModel = new FreshWaterViewModelCount();
+            try
+            {
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_FreshWater Ser_FWS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_FWS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_FWS.ChargeId AND M_Chr.TaskId = Ser_FWS.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_FWS.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_FWS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_FWS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_FWS.EditById WHERE Ser_FWS.JobOrderId={JobOrderId} AND Ser_FWS.CompanyId={CompanyId}");
+
+                var result = await _repository.GetQueryAsync<FreshWaterViewModel>($"SELECT Ser_FWS.FreshWaterId,Ser_FWS.CompanyId,Ser_FWS.JobOrderId,Ser_FWS.JobOrderNo,Ser_FWS.TaskId,Ser_FWS.Quantity,Ser_FWS.SupplierId,M_Ser.SupplierName,Ser_FWS.ChargeId,M_Chr.ChargeName,Ser_FWS.StatusId,M_Or.OrderTypeName As StatusName,Ser_FWS.UomId,M_Uo.UomName,Ser_FWS.DeliverDate,Ser_FWS.GLId,Ser_FWS.DebitNoteId,Ser_FWS.DebitNoteNo,Ser_FWS.Remarks,Ser_FWS.CreateById,Ser_FWS.CreateDate,Ser_FWS.EditById,Ser_FWS.EditDate,Ser_FWS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_FreshWater Ser_FWS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_FWS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_FWS.ChargeId AND M_Chr.TaskId = Ser_FWS.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_FWS.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_FWS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_FWS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_FWS.EditById WHERE Ser_FWS.JobOrderId={JobOrderId} AND Ser_FWS.CompanyId={CompanyId}");
+
+                countViewModel.responseCode = 200;
+                countViewModel.responseMessage = "success";
+                countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
+                countViewModel.data = result?.ToList() ?? new List<FreshWaterViewModel>();
+
+                return countViewModel;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_FreshWater",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<FreshWaterViewModel> GetFreshWaterByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 FreshWaterId)
+        {
+            try
+            {
+                var result = await _repository.GetQuerySingleOrDefaultAsync<FreshWaterViewModel>($"SELECT Ser_FWS.FreshWaterId,Ser_FWS.CompanyId,Ser_FWS.JobOrderId,Ser_FWS.JobOrderNo,Ser_FWS.TaskId,Ser_FWS.Quantity,Ser_FWS.SupplierId,M_Ser.SupplierName,Ser_FWS.ChargeId,M_Chr.ChargeName,Ser_FWS.StatusId,M_Or.OrderTypeName As StatusName,Ser_FWS.UomId,M_Uo.UomName,Ser_FWS.DeliverDate,Ser_FWS.GLId,Ser_FWS.DebitNoteId,Ser_FWS.DebitNoteNo,Ser_FWS.Remarks,Ser_FWS.CreateById,Ser_FWS.CreateDate,Ser_FWS.EditById,Ser_FWS.EditDate,Ser_FWS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_FreshWater Ser_FWS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_FWS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_FWS.ChargeId AND M_Chr.TaskId = Ser_FWS.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_FWS.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_FWS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_FWS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_FWS.EditById WHERE Ser_FWS.JobOrderId={JobOrderId} AND Ser_FWS.FreshWaterId={FreshWaterId} AND Ser_FWS.CompanyId={CompanyId}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_FreshWater",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<SqlResponce> SaveFreshWaterAsync(short CompanyId, short UserId, Ser_FreshWater ser_FreshWater)
+        {
+            bool IsEdit = ser_FreshWater.FreshWaterId != 0;
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (IsEdit)
+                    {
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_FreshWater WHERE FreshWaterId=@FreshWaterId",
+                     new { ser_FreshWater.FreshWaterId });
+
+                        if ((dataExist?.IsExist ?? 0) > 0)
+                        {
+                            var entityHead = _context.Update(ser_FreshWater);
+                            entityHead.Property(b => b.CreateById).IsModified = false;
+                            entityHead.Property(b => b.CompanyId).IsModified = false;
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "FreshWater Not Found" };
+                        }
+                    }
+                    else
+                    {
+                        // Take the Next Id From SQL
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     "SELECT ISNULL((SELECT TOP 1 (FreshWaterId + 1) FROM dbo.Ser_FreshWater WHERE (FreshWaterId + 1) NOT IN (SELECT FreshWaterId FROM dbo.Ser_FreshWater)),1) AS NextId");
+
+                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
+                        {
+                            ser_FreshWater.FreshWaterId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_FreshWater.EditById = null;
+                            ser_FreshWater.EditDate = null;
+                            _context.Add(ser_FreshWater);
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
+                        }
+                    }
+
+                    var saveChangeRecord = _context.SaveChanges();
+
+                    if (saveChangeRecord > 0)
+                    {
+                        if (IsEdit)
+                        {
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_FreshWater set EditVersion=EditVersion+1 WHERE FreshWaterId={ser_FreshWater.FreshWaterId} AND CompanyId={CompanyId}");
+                        }
+                        else
+                        {
+                            //Insert into Ser_JobOrderDt Table
+                            await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                            "DECLARE @ItemNo SMALLINT;   " +
+                            "DECLARE @TaskItemNo SMALLINT; " +
+                            $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_FreshWater.JobOrderId} AND (ItemNo + 1) NOT IN (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_FreshWater.JobOrderId})), 1);  " +
+                            $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_FreshWater.JobOrderId} AND TaskId = {ser_FreshWater.TaskId} AND (TaskItemNo + 1) NOT IN (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_FreshWater.JobOrderId} AND TaskId = {ser_FreshWater.TaskId})), 1);   " +
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId) VALUES ({CompanyId},{ser_FreshWater.JobOrderId},'{ser_FreshWater.JobOrderNo}',@ItemNo,{ser_FreshWater.TaskId},@TaskItemNo,{ser_FreshWater.FreshWaterId});");
+                        }
+
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = CompanyId,
+                            ModuleId = (short)E_Modules.Project,
+                            TransactionId = (short)E_Project.Job,
+                            DocumentId = ser_FreshWater.FreshWaterId,
+                            DocumentNo = "",
+                            TblName = "Ser_FreshWater",
+                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                            Remarks = "FreshWater Save Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
+                    }
+
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_FreshWater",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = ser_FreshWater.FreshWaterId,
+                    DocumentNo = "",
+                    TblName = "Ser_FreshWater",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw;
+            }
+        }
+
+        public async Task<SqlResponce> DeleteFreshWaterAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 freshWaterSupplyId)
+        {
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (freshWaterSupplyId > 0)
+                    {
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={freshWaterSupplyId}");
+
+                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_FreshWater WHERE CompanyId={CompanyId} AND FreshWaterId={freshWaterSupplyId}");
+
+                        if (deletejobOrderResult > 0 && deleteResult > 0)
+                        {
+                            var auditLog = new AdmAuditLog
+                            {
+                                CompanyId = CompanyId,
+                                ModuleId = (short)E_Modules.Project,
+                                TransactionId = (short)E_Project.Job,
+                                DocumentId = freshWaterSupplyId,
+                                DocumentNo = "",
+                                TblName = "Ser_FreshWater",
+                                ModeId = (short)E_Mode.Delete,
+                                Remarks = "FreshWater Delete Successfully",
+                                CreateById = UserId
+                            };
+                            _context.Add(auditLog);
+                            var auditLogSave = await _context.SaveChangesAsync();
+
+                            if (auditLogSave > 0)
+                            {
+                                TScope.Complete();
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
+                            }
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = -1, Message = "FreshWaterId Should be greater than zero" };
+                    }
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = freshWaterSupplyId,
+                    DocumentNo = "",
+                    TblName = "Ser_FreshWater",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = freshWaterSupplyId,
+                    DocumentNo = "",
+                    TblName = "Ser_FreshWater",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        #endregion FreshWater
+
+        #region TechniciansSurveyors
+
+        public async Task<TechniciansSurveyorsViewModelCount> GetTechniciansSurveyorsListAsync(short CompanyId, short UserId, Int64 JobOrderId)
+        {
+            TechniciansSurveyorsViewModelCount countViewModel = new TechniciansSurveyorsViewModelCount();
+            try
+            {
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.CompanyId={CompanyId}");
+
+                var result = await _repository.GetQueryAsync<TechniciansSurveyorsViewModel>($"SELECT Ser_TS.TechniciansSurveyorsId,Ser_TS.CompanyId,Ser_TS.JobOrderId,Ser_TS.JobOrderNo,Ser_TS.TaskId,Ser_TS.SupplierId,M_Ser.SupplierName,Ser_TS.ChargeId,M_Chr.ChargeName,Ser_TS.StatusId,M_Or.OrderTypeName As StatusName,Ser_TS.ServiceDate,Ser_TS.GLId,Ser_TS.DebitNoteId,Ser_TS.DebitNoteNo,Ser_TS.Remarks,Ser_TS.CreateById,Ser_TS.CreateDate,Ser_TS.EditById,Ser_TS.EditDate,Ser_TS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.CompanyId={CompanyId}");
+
+                countViewModel.responseCode = 200;
+                countViewModel.responseMessage = "success";
+                countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
+                countViewModel.data = result?.ToList() ?? new List<TechniciansSurveyorsViewModel>();
+
+                return countViewModel;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_TechniciansSurveyors",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<TechniciansSurveyorsViewModel> GetTechniciansSurveyorsByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 TechniciansSurveyorsId)
+        {
+            try
+            {
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TechniciansSurveyorsViewModel>($"SELECT Ser_TS.TechniciansSurveyorsId,Ser_TS.CompanyId,Ser_TS.JobOrderId,Ser_TS.JobOrderNo,Ser_TS.TaskId,Ser_TS.SupplierId,M_Ser.SupplierName,Ser_TS.ChargeId,M_Chr.ChargeName,Ser_TS.StatusId,M_Or.OrderTypeName As StatusName,Ser_TS.ServiceDate,Ser_TS.GLId,Ser_TS.DebitNoteId,Ser_TS.DebitNoteNo,Ser_TS.Remarks,Ser_TS.CreateById,Ser_TS.CreateDate,Ser_TS.EditById,Ser_TS.EditDate,Ser_TS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.TechniciansSurveyorsId={TechniciansSurveyorsId} AND Ser_TS.CompanyId={CompanyId}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_TechniciansSurveyors",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<SqlResponce> SaveTechniciansSurveyorsAsync(short CompanyId, short UserId, Ser_TechniciansSurveyors ser_TechniciansSurveyors)
+        {
+            bool IsEdit = ser_TechniciansSurveyors.TechniciansSurveyorsId != 0;
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (IsEdit)
+                    {
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_TechniciansSurveyors WHERE TechniciansSurveyorsId=@TechniciansSurveyorsId",
+                     new { ser_TechniciansSurveyors.TechniciansSurveyorsId });
+
+                        if ((dataExist?.IsExist ?? 0) > 0)
+                        {
+                            var entityHead = _context.Update(ser_TechniciansSurveyors);
+                            entityHead.Property(b => b.CreateById).IsModified = false;
+                            entityHead.Property(b => b.CompanyId).IsModified = false;
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "TechniciansSurveyors Not Found" };
+                        }
+                    }
+                    else
+                    {
+                        // Take the Next Id From SQL
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     "SELECT ISNULL((SELECT TOP 1 (TechniciansSurveyorsId + 1) FROM dbo.Ser_TechniciansSurveyors WHERE (TechniciansSurveyorsId + 1) NOT IN (SELECT TechniciansSurveyorsId FROM dbo.Ser_TechniciansSurveyors)),1) AS NextId");
+
+                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
+                        {
+                            ser_TechniciansSurveyors.TechniciansSurveyorsId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_TechniciansSurveyors.EditById = null;
+                            ser_TechniciansSurveyors.EditDate = null;
+                            _context.Add(ser_TechniciansSurveyors);
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
+                        }
+                    }
+
+                    var saveChangeRecord = _context.SaveChanges();
+
+                    if (saveChangeRecord > 0)
+                    {
+                        if (IsEdit)
+                        {
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_TechniciansSurveyors set EditVersion=EditVersion+1 WHERE TechniciansSurveyorsId={ser_TechniciansSurveyors.TechniciansSurveyorsId} AND CompanyId={CompanyId}");
+                        }
+                        else
+                        {
+                            //Insert into Ser_JobOrderDt Table
+                            await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                            "DECLARE @ItemNo SMALLINT;   " +
+                            "DECLARE @TaskItemNo SMALLINT; " +
+                            $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId} AND (ItemNo + 1) NOT IN (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId})), 1);  " +
+                            $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId} AND TaskId = {ser_TechniciansSurveyors.TaskId} AND (TaskItemNo + 1) NOT IN (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId} AND TaskId = {ser_TechniciansSurveyors.TaskId})), 1);   " +
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId) VALUES ({CompanyId},{ser_TechniciansSurveyors.JobOrderId},'{ser_TechniciansSurveyors.JobOrderNo}',@ItemNo,{ser_TechniciansSurveyors.TaskId},@TaskItemNo,{ser_TechniciansSurveyors.TechniciansSurveyorsId});");
+                        }
+
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = CompanyId,
+                            ModuleId = (short)E_Modules.Project,
+                            TransactionId = (short)E_Project.Job,
+                            DocumentId = ser_TechniciansSurveyors.TechniciansSurveyorsId,
+                            DocumentNo = "",
+                            TblName = "Ser_TechniciansSurveyors",
+                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                            Remarks = "TechniciansSurveyors Save Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
+                    }
+
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_TechniciansSurveyors",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = ser_TechniciansSurveyors.TechniciansSurveyorsId,
+                    DocumentNo = "",
+                    TblName = "Ser_TechniciansSurveyors",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw;
+            }
+        }
+
+        public async Task<SqlResponce> DeleteTechniciansSurveyorsAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 techniciansSurveyorsId)
+        {
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (techniciansSurveyorsId > 0)
+                    {
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={techniciansSurveyorsId}");
+
+                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_TechniciansSurveyors WHERE CompanyId={CompanyId} AND TechniciansSurveyorsId={techniciansSurveyorsId}");
+
+                        if (deletejobOrderResult > 0 && deleteResult > 0)
+                        {
+                            var auditLog = new AdmAuditLog
+                            {
+                                CompanyId = CompanyId,
+                                ModuleId = (short)E_Modules.Project,
+                                TransactionId = (short)E_Project.Job,
+                                DocumentId = techniciansSurveyorsId,
+                                DocumentNo = "",
+                                TblName = "Ser_TechniciansSurveyors",
+                                ModeId = (short)E_Mode.Delete,
+                                Remarks = "TechniciansSurveyors Delete Successfully",
+                                CreateById = UserId
+                            };
+                            _context.Add(auditLog);
+                            var auditLogSave = await _context.SaveChangesAsync();
+
+                            if (auditLogSave > 0)
+                            {
+                                TScope.Complete();
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
+                            }
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = -1, Message = "TechniciansSurveyorsId Should be greater than zero" };
+                    }
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = techniciansSurveyorsId,
+                    DocumentNo = "",
+                    TblName = "Ser_TechniciansSurveyors",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = techniciansSurveyorsId,
+                    DocumentNo = "",
+                    TblName = "Ser_TechniciansSurveyors",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        #endregion TechniciansSurveyors
+
+        #region LandingItems
+
+        public async Task<LandingItemsViewModelCount> GetLandingItemsListAsync(short CompanyId, short UserId, Int64 JobOrderId)
+        {
+            LandingItemsViewModelCount countViewModel = new LandingItemsViewModelCount();
+            try
+            {
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_LandingItems Ser_LI INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_LI.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_LI.ChargeId AND M_Chr.TaskId = Ser_LI.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_LI.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_LI.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_LI.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_LI.EditById WHERE Ser_LI.JobOrderId={JobOrderId} AND Ser_LI.CompanyId={CompanyId}");
+
+                var result = await _repository.GetQueryAsync<LandingItemsViewModel>($"SELECT Ser_LI.LandingItemId,Ser_LI.CompanyId,Ser_LI.JobOrderId,Ser_LI.JobOrderNo,Ser_LI.TaskId,Ser_LI.Quantity,Ser_LI.SupplierId,M_Ser.SupplierName,Ser_LI.ChargeId,M_Chr.ChargeName,Ser_LI.StatusId,M_Or.OrderTypeName As StatusName,Ser_LI.UomId,M_Uo.UomName,Ser_LI.LandingDate,Ser_LI.GLId,Ser_LI.DebitNoteId,Ser_LI.DebitNoteNo,Ser_LI.Remarks,Ser_LI.CreateById,Ser_LI.CreateDate,Ser_LI.EditById,Ser_LI.EditDate,Ser_LI.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_LandingItems Ser_LI INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_LI.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_LI.ChargeId AND M_Chr.TaskId = Ser_LI.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_LI.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_LI.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_LI.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_LI.EditById WHERE Ser_LI.JobOrderId={JobOrderId} AND Ser_LI.CompanyId={CompanyId}");
+
+                countViewModel.responseCode = 200;
+                countViewModel.responseMessage = "success";
+                countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
+                countViewModel.data = result?.ToList() ?? new List<LandingItemsViewModel>();
+
+                return countViewModel;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_LandingItems",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<LandingItemsViewModel> GetLandingItemsByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 LandingItemId)
+        {
+            try
+            {
+                var result = await _repository.GetQuerySingleOrDefaultAsync<LandingItemsViewModel>($"SELECT Ser_LI.LandingItemId,Ser_LI.CompanyId,Ser_LI.JobOrderId,Ser_LI.JobOrderNo,Ser_LI.TaskId,Ser_LI.Quantity,Ser_LI.SupplierId,M_Ser.SupplierName,Ser_LI.ChargeId,M_Chr.ChargeName,Ser_LI.StatusId,M_Or.OrderTypeName As StatusName,Ser_LI.UomId,M_Uo.UomName,Ser_LI.LandingDate,Ser_LI.GLId,Ser_LI.DebitNoteId,Ser_LI.DebitNoteNo,Ser_LI.Remarks,Ser_LI.CreateById,Ser_LI.CreateDate,Ser_LI.EditById,Ser_LI.EditDate,Ser_LI.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_LandingItems Ser_LI INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_LI.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_LI.ChargeId AND M_Chr.TaskId = Ser_LI.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_LI.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_LI.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_LI.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_LI.EditById WHERE Ser_LI.JobOrderId={JobOrderId} AND Ser_LI.LandingItemId={LandingItemId} AND Ser_LI.CompanyId={CompanyId}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_LandingItems",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<SqlResponce> SaveLandingItemsAsync(short CompanyId, short UserId, Ser_LandingItems ser_LandingItems)
+        {
+            bool IsEdit = ser_LandingItems.LandingItemId != 0;
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (IsEdit)
+                    {
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_LandingItems WHERE LandingItemId=@LandingItemId",
+                     new { ser_LandingItems.LandingItemId });
+
+                        if ((dataExist?.IsExist ?? 0) > 0)
+                        {
+                            var entityHead = _context.Update(ser_LandingItems);
+                            entityHead.Property(b => b.CreateById).IsModified = false;
+                            entityHead.Property(b => b.CompanyId).IsModified = false;
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "LandingItems Not Found" };
+                        }
+                    }
+                    else
+                    {
+                        // Take the Next Id From SQL
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     "SELECT ISNULL((SELECT TOP 1 (LandingItemId + 1) FROM dbo.Ser_LandingItems WHERE (LandingItemId + 1) NOT IN (SELECT LandingItemId FROM dbo.Ser_LandingItems)),1) AS NextId");
+
+                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
+                        {
+                            ser_LandingItems.LandingItemId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_LandingItems.EditById = null;
+                            ser_LandingItems.EditDate = null;
+                            _context.Add(ser_LandingItems);
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
+                        }
+                    }
+
+                    var saveChangeRecord = _context.SaveChanges();
+
+                    if (saveChangeRecord > 0)
+                    {
+                        if (IsEdit)
+                        {
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_LandingItems set EditVersion=EditVersion+1 WHERE LandingItemId={ser_LandingItems.LandingItemId} AND CompanyId={CompanyId}");
+                        }
+                        else
+                        {
+                            //Insert into Ser_JobOrderDt Table
+                            await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                            "DECLARE @ItemNo SMALLINT;   " +
+                            "DECLARE @TaskItemNo SMALLINT; " +
+                            $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_LandingItems.JobOrderId} AND (ItemNo + 1) NOT IN (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_LandingItems.JobOrderId})), 1);  " +
+                            $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_LandingItems.JobOrderId} AND TaskId = {ser_LandingItems.TaskId} AND (TaskItemNo + 1) NOT IN (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_LandingItems.JobOrderId} AND TaskId = {ser_LandingItems.TaskId})), 1);   " +
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId) VALUES ({CompanyId},{ser_LandingItems.JobOrderId},'{ser_LandingItems.JobOrderNo}',@ItemNo,{ser_LandingItems.TaskId},@TaskItemNo,{ser_LandingItems.LandingItemId});");
+                        }
+
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = CompanyId,
+                            ModuleId = (short)E_Modules.Project,
+                            TransactionId = (short)E_Project.Job,
+                            DocumentId = ser_LandingItems.LandingItemId,
+                            DocumentNo = "",
+                            TblName = "Ser_LandingItems",
+                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                            Remarks = "LandingItems Save Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
+                    }
+
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_LandingItems",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = ser_LandingItems.LandingItemId,
+                    DocumentNo = "",
+                    TblName = "Ser_LandingItems",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw;
+            }
+        }
+
+        public async Task<SqlResponce> DeleteLandingItemsAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 landingItemsId)
+        {
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (landingItemsId > 0)
+                    {
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={landingItemsId}");
+
+                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_LandingItems WHERE CompanyId={CompanyId} AND LandingItemId={landingItemsId}");
+
+                        if (deletejobOrderResult > 0 && deleteResult > 0)
+                        {
+                            var auditLog = new AdmAuditLog
+                            {
+                                CompanyId = CompanyId,
+                                ModuleId = (short)E_Modules.Project,
+                                TransactionId = (short)E_Project.Job,
+                                DocumentId = landingItemsId,
+                                DocumentNo = "",
+                                TblName = "Ser_LandingItems",
+                                ModeId = (short)E_Mode.Delete,
+                                Remarks = "LandingItems Delete Successfully",
+                                CreateById = UserId
+                            };
+                            _context.Add(auditLog);
+                            var auditLogSave = await _context.SaveChangesAsync();
+
+                            if (auditLogSave > 0)
+                            {
+                                TScope.Complete();
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
+                            }
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = -1, Message = "LandingItemId Should be greater than zero" };
+                    }
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = landingItemsId,
+                    DocumentNo = "",
+                    TblName = "Ser_LandingItems",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = landingItemsId,
+                    DocumentNo = "",
+                    TblName = "Ser_LandingItems",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        #endregion LandingItems
+
+        #region OtherService
+
+        public async Task<OtherServiceViewModelCount> GetOtherServiceListAsync(short CompanyId, short UserId, Int64 JobOrderId)
+        {
+            OtherServiceViewModelCount countViewModel = new OtherServiceViewModelCount();
+            try
+            {
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_OtherService Ser_OS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_OS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_OS.ChargeId AND M_Chr.TaskId = Ser_OS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_OS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_OS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_OS.EditById WHERE Ser_OS.JobOrderId={JobOrderId} AND Ser_OS.CompanyId={CompanyId}");
+
+                var result = await _repository.GetQueryAsync<OtherServiceViewModel>($"SELECT Ser_OS.OtherServiceId,Ser_OS.CompanyId,Ser_OS.JobOrderId,Ser_OS.JobOrderNo,Ser_OS.TaskId,Ser_OS.SupplierId,M_Ser.SupplierName,Ser_OS.ChargeId,M_Chr.ChargeName,Ser_OS.StatusId,M_Or.OrderTypeName As StatusName,Ser_OS.ServiceDate,Ser_OS.GLId,Ser_OS.DebitNoteId,Ser_OS.DebitNoteNo,Ser_OS.Remarks,Ser_OS.CreateById,Ser_OS.CreateDate,Ser_OS.EditById,Ser_OS.EditDate,Ser_OS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_OtherService Ser_OS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_OS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_OS.ChargeId AND M_Chr.TaskId = Ser_OS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_OS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_OS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_OS.EditById WHERE Ser_OS.JobOrderId={JobOrderId} AND Ser_OS.CompanyId={CompanyId}");
+
+                countViewModel.responseCode = 200;
+                countViewModel.responseMessage = "success";
+                countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
+                countViewModel.data = result?.ToList() ?? new List<OtherServiceViewModel>();
+
+                return countViewModel;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_OtherService",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<OtherServiceViewModel> GetOtherServiceByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 OtherServiceId)
+        {
+            try
+            {
+                var result = await _repository.GetQuerySingleOrDefaultAsync<OtherServiceViewModel>($"SELECT Ser_OS.OtherServiceId,Ser_OS.CompanyId,Ser_OS.JobOrderId,Ser_OS.JobOrderNo,Ser_OS.TaskId,Ser_OS.SupplierId,M_Ser.SupplierName,Ser_OS.ChargeId,M_Chr.ChargeName,Ser_OS.StatusId,M_Or.OrderTypeName As StatusName,Ser_OS.ServiceDate,Ser_OS.GLId,Ser_OS.DebitNoteId,Ser_OS.DebitNoteNo,Ser_OS.Remarks,Ser_OS.CreateById,Ser_OS.CreateDate,Ser_OS.EditById,Ser_OS.EditDate,Ser_OS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_OtherService Ser_OS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_OS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_OS.ChargeId AND M_Chr.TaskId = Ser_OS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_OS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_OS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_OS.EditById WHERE Ser_OS.JobOrderId={JobOrderId} AND Ser_OS.OtherServiceId={OtherServiceId} AND Ser_OS.CompanyId={CompanyId}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_OtherService",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<SqlResponce> SaveOtherServiceAsync(short CompanyId, short UserId, Ser_OtherService ser_OtherService)
+        {
+            bool IsEdit = ser_OtherService.OtherServiceId != 0;
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (IsEdit)
+                    {
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_OtherService WHERE OtherServiceId=@OtherServiceId",
+                     new { ser_OtherService.OtherServiceId });
+
+                        if ((dataExist?.IsExist ?? 0) > 0)
+                        {
+                            var entityHead = _context.Update(ser_OtherService);
+                            entityHead.Property(b => b.CreateById).IsModified = false;
+                            entityHead.Property(b => b.CompanyId).IsModified = false;
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "OtherService Not Found" };
+                        }
+                    }
+                    else
+                    {
+                        // Take the Next Id From SQL
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                     "SELECT ISNULL((SELECT TOP 1 (OtherServiceId + 1) FROM dbo.Ser_OtherService WHERE (OtherServiceId + 1) NOT IN (SELECT OtherServiceId FROM dbo.Ser_OtherService)),1) AS NextId");
+
+                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
+                        {
+                            ser_OtherService.OtherServiceId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_OtherService.EditById = null;
+                            ser_OtherService.EditDate = null;
+                            _context.Add(ser_OtherService);
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
+                        }
+                    }
+
+                    var saveChangeRecord = _context.SaveChanges();
+
+                    if (saveChangeRecord > 0)
+                    {
+                        if (IsEdit)
+                        {
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_OtherService set EditVersion=EditVersion+1 WHERE OtherServiceId={ser_OtherService.OtherServiceId} AND CompanyId={CompanyId}");
+                        }
+                        else
+                        {
+                            //Insert into Ser_JobOrderDt Table
+                            await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                            "DECLARE @ItemNo SMALLINT;   " +
+                            "DECLARE @TaskItemNo SMALLINT; " +
+                            $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_OtherService.JobOrderId} AND (ItemNo + 1) NOT IN (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_OtherService.JobOrderId})), 1);  " +
+                            $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_OtherService.JobOrderId} AND TaskId = {ser_OtherService.TaskId} AND (TaskItemNo + 1) NOT IN (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_OtherService.JobOrderId} AND TaskId = {ser_OtherService.TaskId})), 1);   " +
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId) VALUES ({CompanyId},{ser_OtherService.JobOrderId},'{ser_OtherService.JobOrderNo}',@ItemNo,{ser_OtherService.TaskId},@TaskItemNo,{ser_OtherService.OtherServiceId});");
+                        }
+
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = CompanyId,
+                            ModuleId = (short)E_Modules.Project,
+                            TransactionId = (short)E_Project.Job,
+                            DocumentId = ser_OtherService.OtherServiceId,
+                            DocumentNo = "",
+                            TblName = "Ser_OtherService",
+                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                            Remarks = "OtherService Save Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = 1, Message = "Save Failed" };
+                    }
+
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_OtherService",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = ser_OtherService.OtherServiceId,
+                    DocumentNo = "",
+                    TblName = "Ser_OtherService",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw;
+            }
+        }
+
+        public async Task<SqlResponce> DeleteOtherServiceAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 otherServiceId)
+        {
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (otherServiceId > 0)
+                    {
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={otherServiceId}");
+
+                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_OtherService WHERE CompanyId={CompanyId} AND OtherServiceId={otherServiceId}");
+
+                        if (deletejobOrderResult > 0 && deleteResult > 0)
+                        {
+                            var auditLog = new AdmAuditLog
+                            {
+                                CompanyId = CompanyId,
+                                ModuleId = (short)E_Modules.Project,
+                                TransactionId = (short)E_Project.Job,
+                                DocumentId = otherServiceId,
+                                DocumentNo = "",
+                                TblName = "Ser_OtherService",
+                                ModeId = (short)E_Mode.Delete,
+                                Remarks = "OtherService Delete Successfully",
+                                CreateById = UserId
+                            };
+                            _context.Add(auditLog);
+                            var auditLogSave = await _context.SaveChangesAsync();
+
+                            if (auditLogSave > 0)
+                            {
+                                TScope.Complete();
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
+                            }
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = -1, Message = "OtherServiceId Should be greater than zero" };
+                    }
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = otherServiceId,
+                    DocumentNo = "",
+                    TblName = "Ser_OtherService",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = otherServiceId,
+                    DocumentNo = "",
+                    TblName = "Ser_OtherService",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        #endregion OtherService
+
+        #region Agency Remuneration
+
+        public async Task<AgencyRemunerationViewModelCount> GetAgencyRemunerationListAsync(short CompanyId, short UserId, Int64 JobOrderId)
+        {
+            AgencyRemunerationViewModelCount countViewModel = new AgencyRemunerationViewModelCount();
+            try
+            {
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_AgencyRemuneration Ser_Agency INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Agency.ChargeId AND M_Chr.TaskId = Ser_Agency.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Agency.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Agency.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Agency.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Agency.EditById WHERE Ser_Agency.JobOrderId={JobOrderId} AND Ser_Agency.CompanyId={CompanyId}");
+
+                var result = await _repository.GetQueryAsync<AgencyRemunerationViewModel>($"SELECT Ser_Agency.AgencyRemunerationId,Ser_Agency.CompanyId,Ser_Agency.JobOrderId,Ser_Agency.JobOrderNo,Ser_Agency.TaskId,Ser_Agency.Quantity,Ser_Agency.ChargeId,M_Chr.ChargeName,Ser_Agency.StatusId,M_Or.OrderTypeName As StatusName,Ser_Agency.UomId,M_Uo.UomName,Ser_Agency.DeliverDate,Ser_Agency.GLId,Ser_Agency.DebitNoteId,Ser_Agency.DebitNoteNo,Ser_Agency.Remarks,Ser_Agency.CreateById,Ser_Agency.CreateDate,Ser_Agency.EditById,Ser_Agency.EditDate,Ser_Agency.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_AgencyRemuneration Ser_Agency INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Agency.ChargeId AND M_Chr.TaskId = Ser_Agency.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Agency.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Agency.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Agency.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Agency.EditById WHERE Ser_Agency.JobOrderId={JobOrderId} AND Ser_Agency.CompanyId={CompanyId}");
+
+                countViewModel.responseCode = 200;
+                countViewModel.responseMessage = "success";
+                countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
+                countViewModel.data = result?.ToList() ?? new List<AgencyRemunerationViewModel>();
+
+                return countViewModel;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_AgencyRemuneration",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<AgencyRemunerationViewModel> GetAgencyRemunerationByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 AgencyRemunerationId)
+        {
+            try
+            {
+                var result = await _repository.GetQuerySingleOrDefaultAsync<AgencyRemunerationViewModel>($"SELECT Ser_Agency.AgencyRemunerationId,Ser_Agency.CompanyId,Ser_Agency.JobOrderId,Ser_Agency.JobOrderNo,Ser_Agency.TaskId,Ser_Agency.Quantity,Ser_Agency.ChargeId,M_Chr.ChargeName,Ser_Agency.StatusId,M_Or.OrderTypeName As StatusName,Ser_Agency.UomId,M_Uo.UomName,Ser_Agency.DeliverDate,Ser_Agency.GLId,Ser_Agency.DebitNoteId,Ser_Agency.DebitNoteNo,Ser_Agency.Remarks,Ser_Agency.CreateById,Ser_Agency.CreateDate,Ser_Agency.EditById,Ser_Agency.EditDate,Ser_Agency.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_AgencyRemuneration Ser_Agency INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Agency.ChargeId AND M_Chr.TaskId = Ser_Agency.TaskId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Agency.UomId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Agency.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Agency.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Agency.EditById WHERE Ser_Agency.JobOrderId={JobOrderId} AND Ser_Agency.AgencyRemunerationId={AgencyRemunerationId} AND Ser_Agency.CompanyId={CompanyId} ");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "Ser_AgencyRemuneration",
+                    ModeId = (short)E_Mode.View,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<SqlResponce> SaveAgencyRemunerationAsync(short CompanyId, short UserId, Ser_AgencyRemuneration ser_AgencyRemuneration)
+        {
+            // Determine if this is an update vs. a new insert
+            bool IsEdit = ser_AgencyRemuneration.AgencyRemunerationId != 0;
+
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (IsEdit)
+                    {
+                        // Check if the record exists
+                        var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                            "SELECT 1 AS IsExist FROM dbo.Ser_AgencyRemuneration WHERE AgencyRemunerationId=@AgencyRemunerationId",
+                            new { ser_AgencyRemuneration.AgencyRemunerationId }
+                        );
+
+                        if ((dataExist?.IsExist ?? 0) > 0)
+                        {
+                            // Update fields (exclude creation info)
+                            var entityEntry = _context.Update(ser_AgencyRemuneration);
+                            entityEntry.Property(b => b.CreateById).IsModified = false;
+                            entityEntry.Property(b => b.CompanyId).IsModified = false;
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Agency Remuneration Not Found" };
+                        }
+                    }
+                    else
+                    {
+                        // Get the next available AgencyRemunerationId from the table
+                        var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
+                            "SELECT ISNULL((SELECT TOP 1 (AgencyRemunerationId + 1) FROM dbo.Ser_AgencyRemuneration WHERE (AgencyRemunerationId + 1) NOT IN (SELECT AgencyRemunerationId FROM dbo.Ser_AgencyRemuneration)), 1) AS NextId"
+                        );
+
+                        if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
+                        {
+                            ser_AgencyRemuneration.AgencyRemunerationId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_AgencyRemuneration.EditById = null;
+                            ser_AgencyRemuneration.EditDate = null;
+                            _context.Add(ser_AgencyRemuneration);
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Internal Server Error" };
+                        }
+                    }
+
+                    // Persist changes for the Agency Remuneration record
+                    var saveChangeRecord = _context.SaveChanges();
+
+                    if (saveChangeRecord > 0)
+                    {
+                        // Create Audit Log for tracking the operation
+                        var auditLog = new AdmAuditLog
+                        {
+                            CompanyId = CompanyId,
+                            ModuleId = (short)E_Modules.Project,
+                            TransactionId = (short)E_Project.Job,
+                            DocumentId = ser_AgencyRemuneration.AgencyRemunerationId,
+                            DocumentNo = "",
+                            TblName = "Ser_AgencyRemuneration",
+                            ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                            Remarks = "Agency Remuneration Saved Successfully",
+                            CreateById = UserId,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _context.Add(auditLog);
+                        var auditLogSave = _context.SaveChanges();
+
+                        if (auditLogSave > 0)
+                        {
+                            TScope.Complete();
+                            return new SqlResponce { Result = 1, Message = "Save Successfully" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = -1, Message = "Save Failed" };
+                    }
+
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = ser_AgencyRemuneration.AgencyRemunerationId,
+                    DocumentNo = "",
+                    TblName = "Ser_AgencyRemuneration",
+                    ModeId = (short)E_Mode.Create, // or Update based on context
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = ser_AgencyRemuneration.AgencyRemunerationId,
+                    DocumentNo = "",
+                    TblName = "Ser_AgencyRemuneration",
+                    ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw;
+            }
+        }
+
+        public async Task<SqlResponce> DeleteAgencyRemunerationAsync(short CompanyId, short UserId, long jobOrderId, long agencyRemunerationId)
+        {
+            try
+            {
+                using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (agencyRemunerationId > 0)
+                    {
+                        // Delete from the Agency Remuneration table
+                        var deleteResult = await _repository.GetRowExecuteAsync(
+                            $"DELETE FROM dbo.Ser_AgencyRemuneration WHERE CompanyId = {CompanyId} AND AgencyRemunerationId = {agencyRemunerationId}"
+                        );
+
+                        if (deleteResult > 0)
+                        {
+                            var auditLog = new AdmAuditLog
+                            {
+                                CompanyId = CompanyId,
+                                ModuleId = (short)E_Modules.Project,
+                                TransactionId = (short)E_Project.Job,
+                                DocumentId = agencyRemunerationId,
+                                DocumentNo = "",
+                                TblName = "Ser_AgencyRemuneration",
+                                ModeId = (short)E_Mode.Delete,
+                                Remarks = "Agency Remuneration Deleted Successfully",
+                                CreateById = UserId
+                            };
+
+                            _context.Add(auditLog);
+                            var auditLogSave = await _context.SaveChangesAsync();
+
+                            if (auditLogSave > 0)
+                            {
+                                TScope.Complete();
+                                return new SqlResponce { Result = 1, Message = "Delete Successfully" };
+                            }
+                        }
+                        else
+                        {
+                            return new SqlResponce { Result = -1, Message = "Delete Failed" };
+                        }
+                    }
+                    else
+                    {
+                        return new SqlResponce { Result = -1, Message = "Agency Remuneration Id must be greater than zero" };
+                    }
+                    return new SqlResponce();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                _context.ChangeTracker.Clear();
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = agencyRemunerationId,
+                    DocumentNo = "",
+                    TblName = "Ser_AgencyRemuneration",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                string errorMessage = SqlErrorHelper.GetErrorMessage(sqlEx.Number);
+
+                return new SqlResponce
+                {
+                    Result = -1,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                _context.ChangeTracker.Clear();
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Project,
+                    TransactionId = (short)E_Project.Job,
+                    DocumentId = agencyRemunerationId,
+                    DocumentNo = "",
+                    TblName = "Ser_AgencyRemuneration",
+                    ModeId = (short)E_Mode.Delete,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId,
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
     }
 }
+
+#endregion Agency Remuneration

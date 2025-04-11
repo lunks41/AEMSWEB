@@ -2,7 +2,7 @@
 {
     public class SaveEquipmentsUsedViewModel
     {
-        public EquipmentsUsedViewModel portExpense { get; set; }
+        public EquipmentsUsedViewModel equipmentsUsed { get; set; }
         public string? companyId { get; set; }
     }
 
