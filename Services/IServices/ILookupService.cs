@@ -19,7 +19,7 @@ namespace AMESWEB.IServices
 
         public Task<IEnumerable<AccountSetupCategoryLookupModel>> GetAccountSetupCategoryLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupAsync(Int16 CompanyId, Int16 UserId, byte categoryId);
 
         public Task<IEnumerable<AccountGroupLookupModel>> GetAccountGroupLookupAsync(Int16 CompanyId, Int16 UserId);
 
@@ -27,7 +27,7 @@ namespace AMESWEB.IServices
 
         public Task<IEnumerable<AccountTypeLookupModel>> GetAccountTypeLookupAsync(Int16 CompanyId, Int16 UserId);
 
-        public Task<IEnumerable<BankLookupModel>> GetBankLookupAsync(Int16 CompanyId, Int16 UserId);
+        public Task<IEnumerable<BankLookupModel>> GetBankLookupAsync(Int16 CompanyId, Int16 UserId, byte isOwnBank, byte isPettyCash);
 
         public Task<IEnumerable<BankLookupModel>> GetBankLookup_SuppAsync(Int16 CompanyId, Int16 UserId);
 
@@ -44,8 +44,6 @@ namespace AMESWEB.IServices
         public Task<IEnumerable<CountryLookupModel>> GetCountryLookupAsync(Int16 CompanyId, Int16 UserId);
 
         public Task<IEnumerable<CurrencyLookupModel>> GetCurrencyLookupAsync(Int16 CompanyId, Int16 UserId);
-
-        
 
         public Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId);
 
@@ -78,6 +76,7 @@ namespace AMESWEB.IServices
         public Task<IEnumerable<ProductLookupModel>> GetProductLookupAsync(Int16 CompanyId, Int16 UserId);
 
         public Task<IEnumerable<TaskLookupModel>> GetTaskLookupAsync(Int16 CompanyId, Int16 UserId);
+
         public Task<IEnumerable<TaskLookupModel>> GetTaskByJobOrderLookupAsync(Int16 CompanyId, Int16 UserId, long jobOrderId);
 
         public Task<IEnumerable<ChargeLookupModel>> GetChargeLookupAsync(Int16 CompanyId, Int16 UserId, int taskId);
@@ -106,13 +105,17 @@ namespace AMESWEB.IServices
 
         public Task<IEnumerable<VesselLookupModel>> GetVesselLookupAsync_V1(Int16 CompanyId, Int16 UserId, string searchString, Int16 RecordCount);
 
-        public Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId);
+        public Task<IEnumerable<AddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId);
 
-        public Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId);
+        public Task<IEnumerable<ContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId);
 
-        public Task<IEnumerable<SupplierAddressLookupModel>> GetSupplierAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
+        public Task<IEnumerable<AddressLookupModel>> GetSupplierAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
 
-        public Task<IEnumerable<SupplierContactLookupModel>> GetSupplierContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
+        public Task<IEnumerable<ContactLookupModel>> GetSupplierContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
+
+        public Task<IEnumerable<AddressLookupModel>> GetBankAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 BankId);
+
+        public Task<IEnumerable<ContactLookupModel>> GetBankContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId);
 
         public Task<IEnumerable<YearLookupModel>> GetPeriodCloseYearLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
 
@@ -121,7 +124,8 @@ namespace AMESWEB.IServices
         public Task<IEnumerable<DocumentTypeLookupModel>> GetDocumentTypeLookupAsync(Int16 CompanyId, Int16 UserId, Int16 ModuleId);
 
         public Task<IEnumerable<JobOrderLookupModel>> GetJobOrderLookupAsync(Int16 CompanyId, Int16 UserId);
-        public Task<IEnumerable<JobOrderLookupModel>> GetCustomerJobOrderLookupAsync(Int16 CompanyId, Int16 UserId,int customerId);
+
+        public Task<IEnumerable<JobOrderLookupModel>> GetCustomerJobOrderLookupAsync(Int16 CompanyId, Int16 UserId, int customerId);
 
         public Task<IEnumerable<CodeLookupModel>> GetCustomerCodeLookupAsync(Int16 CompanyId, Int16 UserId);
 

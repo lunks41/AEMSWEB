@@ -14,7 +14,36 @@
         public string? BankName { get; set; }
     }
 
-    public class AccountGroupLookupModel
+    public class AddressLookupModel
+    {
+        public short AddressId { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Address3 { get; set; }
+        public string? Address4 { get; set; }
+        public string? PinCode { get; set; }
+        public short CountryId { get; set; }
+        public string? CountryCode { get; set; }
+        public string? CountryName { get; set; }
+        public string? PhoneNo { get; set; }
+        public string? FaxNo { get; set; }
+        public string? EmailAdd { get; set; }
+        public string? WebUrl { get; set; }
+    }
+    public class ContactLookupModel
+    {
+        public short ContactId { get; set; }
+        public string? ContactName { get; set; }
+        public string? OtherName { get; set; }
+        public string? MobileNo { get; set; }
+        public string? OffNo { get; set; }
+        public string? FaxNo { get; set; }
+        public string? EmailAdd { get; set; }
+        public string? MessId { get; set; }
+        public string? ContactMessType { get; set; }
+    }
+
+        public class AccountGroupLookupModel
     {
         public short AccGroupId { get; set; }
         public string? AccGroupCode { get; set; }
@@ -89,34 +118,6 @@
         public string? CurrencyCode { get; set; }
         public string? CurrencyName { get; set; }
         public bool IsMultiply { get; set; }
-    }
-    public class CustomerAddressLookupModel
-    {
-        public short AddressId { get; set; }
-        public string? Address1 { get; set; }
-        public string? Address2 { get; set; }
-        public string? Address3 { get; set; }
-        public string? Address4 { get; set; }
-        public string? PinCode { get; set; }
-        public short CountryId { get; set; }
-        public string? CountryCode { get; set; }
-        public string? CountryName { get; set; }
-        public string? PhoneNo { get; set; }
-        public string? FaxNo { get; set; }
-        public string? EmailAdd { get; set; }
-        public string? WebUrl { get; set; }
-    }
-    public class CustomerContactLookupModel
-    {
-        public short ContactId { get; set; }
-        public string? ContactName { get; set; }
-        public string? OtherName { get; set; }
-        public string? MobileNo { get; set; }
-        public string? OffNo { get; set; }
-        public string? FaxNo { get; set; }
-        public string? EmailAdd { get; set; }
-        public string? MessId { get; set; }
-        public string? ContactMessType { get; set; }
     }
     public class CustomerGroupCreditLimitLookupModel
     {
@@ -222,17 +223,6 @@
         public short SubCategoryId { get; set; }
         public string? SubCategoryCode { get; set; }
         public string? SubCategoryName { get; set; }
-    }
-    public class SupplierAddressLookupModel
-    {
-        public short AddressId { get; set; }
-        public string? Address1 { get; set; }
-        public string? Address2 { get; set; }
-    }
-    public class SupplierContactLookupModel
-    {
-        public short ContactId { get; set; }
-        public string? ContactName { get; set; }
     }
     public class SupplierLookupModel
     {

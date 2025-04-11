@@ -8,6 +8,148 @@ namespace AMESWEB.Controllers
         private readonly ILogger<LookupController> _logger;
         private readonly ILookupService _masterLookupService;
 
+        #region Customer
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId, int customerId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, customerId);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerContactLookupFin(string companyId, int customerId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerContactLookup_FinAsync(companyIdShort, parsedUserId.Value, customerId);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerJobOrderLookup(string companyId, int customerId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerJobOrderLookupAsync(companyIdShort, parsedUserId.Value, customerId);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerCodeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetCustomerCodeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        #endregion Customer
+
+        #region Supplier
+
+        [HttpGet]
+        public async Task<JsonResult> GetSupplierLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetSupplierLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSupplierAddressLookupFin(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetSupplierAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSupplierContactLookupFin(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetSupplierContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSupplierCodeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetSupplierCodeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        #endregion Supplier
+
+        #region Bank
+
+        [HttpGet]
+        public async Task<JsonResult> GetBankLookup(string companyId, byte isOwnBank, byte isPettyCash)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetBankLookupAsync(companyIdShort, parsedUserId.Value,  isOwnBank,  isPettyCash);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetBankAddressLookupFin(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetBankAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetBankContactLookupFin(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetBankContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
+            return Json(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetBankCodeLookup(string companyId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            var data = await _masterLookupService.GetBankCodeLookupAsync(companyIdShort, parsedUserId.Value);
+            return Json(data);
+        }
+
+        #endregion Bank
+
         public LookupController(ILogger<LookupController> logger, IBaseService baseService, ILookupService masterLookupService) : base(logger, baseService)
         {
             _logger = logger;
@@ -20,8 +162,6 @@ namespace AMESWEB.Controllers
             var data = await _masterLookupService.GetCompanyLookupAsync(1);
             return Json(data);
         }
-
-
 
         [HttpGet]
         public async Task<JsonResult> GetUserLookup()
@@ -68,8 +208,6 @@ namespace AMESWEB.Controllers
             return Json(data);
         }
 
-        
-
         [HttpGet]
         public async Task<JsonResult> GetTaskLookup(string companyId)
         {
@@ -97,16 +235,6 @@ namespace AMESWEB.Controllers
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetChargeLookupAsync(companyIdShort, parsedUserId.Value, taskId);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetBankLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetBankLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
 
@@ -141,12 +269,12 @@ namespace AMESWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetAccountSetupLookup(string companyId)
+        public async Task<JsonResult> GetAccountSetupLookup(string companyId, byte categoryId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
-            var data = await _masterLookupService.GetAccountSetupLookupAsync(companyIdShort, parsedUserId.Value);
+            var data = await _masterLookupService.GetAccountSetupLookupAsync(companyIdShort, parsedUserId.Value, categoryId);
             return Json(data);
         }
 
@@ -280,16 +408,6 @@ namespace AMESWEB.Controllers
             return Json(data);
         }
 
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetCustomerLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
-
         //[HttpGet]
         //public async Task<JsonResult> GetPeriodCloseYear(string companyId)
         //{
@@ -375,61 +493,6 @@ namespace AMESWEB.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetCustomerAddressLookupFin(string companyId, int customerId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetCustomerAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, customerId);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerContactLookupFin(string companyId, int customerId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetCustomerContactLookup_FinAsync(companyIdShort, parsedUserId.Value, customerId);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetSupplierAddressLookupFin(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetSupplierAddressLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetSupplierContactLookupFin(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetSupplierContactLookup_FinAsync(companyIdShort, parsedUserId.Value, 1);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetSupplierLookup(string companyId)
-        {
-            //if (string.IsNullOrEmpty(companyId) || !short.TryParse(companyId, out short companyIdShort))
-            //{
-            //    return Json(new { Result = -1, Message = "Invalid company ID", Data = "" });
-            //}
-
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetSupplierLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
-
-        [HttpGet]
         public async Task<JsonResult> GetPaymentTypeLookup(string companyId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -446,46 +509,6 @@ namespace AMESWEB.Controllers
             if (validationResult != null) return validationResult;
 
             var data = await _masterLookupService.GetJobOrderLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerJobOrderLookup(string companyId,int customerId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetCustomerJobOrderLookupAsync(companyIdShort, parsedUserId.Value, customerId);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCustomerCodeLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetCustomerCodeLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetBankCodeLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetBankCodeLookupAsync(companyIdShort, parsedUserId.Value);
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetSupplierCodeLookup(string companyId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            var data = await _masterLookupService.GetSupplierCodeLookupAsync(companyIdShort, parsedUserId.Value);
             return Json(data);
         }
     }

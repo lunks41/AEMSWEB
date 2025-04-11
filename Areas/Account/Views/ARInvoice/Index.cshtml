@@ -219,7 +219,7 @@
             bindComboBox(creditTermsUrl, "invoice_cmb_creditTerms", "creditTermName", "creditTermId");
 
             // Bank
-            const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const bankUrl = `@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=${companyId}&isOwnBank=1&isPettyCash=1`;
             bindComboBox(bankUrl, "invoice_cmb_bank", "bankName", "bankId");
 
             // Currency

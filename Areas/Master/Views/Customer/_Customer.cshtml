@@ -268,12 +268,12 @@
                     return buttons;
                 }
             },
-            { field: "customerCode", title: "Code" },
-            { field: "customerName", title: "Name" },
-            { field: "creditTermCode", title: "Credit Term" },
-            { field: "currencyName", title: "Currency Name" },
+            { field: "customerCode", title: "Code", width: "100px" },
+            { field: "customerName", title: "Name", width: "300px" },
+            { field: "creditTermName", title: "Credit-Term", width: "110px" },
+            { field: "currencyName", title: "Currency", width: "110px" },
             { field: "remarks", title: "Remarks" },
-            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />', width: "110px" }
         ];
 
         let grid = $("#gridcustomer").data("kendoGrid");

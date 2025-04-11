@@ -111,7 +111,7 @@
              const customerCodeUrl = `@Url.Action("GetCustomerCodeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
             bindAutoComplete(customerCodeUrl, "customerCode", "code");
 
-            const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const bankUrl = `@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=${companyId}&isOwnBank=1&isPettyCash=0`;
             bindComboBox(bankUrl, "cmb_bank", "bankName", "bankId");
 
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
@@ -120,7 +120,7 @@
             const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             bindComboBox(creditTermsUrl, "cmb_creditTerm", "creditTermName", "creditTermId");
 
-            const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const accountSetupUrl = `@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=1`;
             bindComboBox(accountSetupUrl, "cmb_accSetup", "accSetupName", "accSetupId");
 
             const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
@@ -133,13 +133,13 @@
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
         document.getElementById('openChildAddressModal').addEventListener('click', function () {
-            
+
             initializeCustomerAddressForm();
             var customerId = document.getElementById('customerId').value;
             document.getElementById('address_customerId').value = customerId;
             var addressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
             addressModal.show();
-            
+
         });
 
         document.getElementById('openChildContactModal').addEventListener('click', function () {
@@ -151,6 +151,5 @@
             var contactModal = new bootstrap.Modal(document.getElementById('addContactModal'));
             contactModal.show();
         });
-
     </script>
 }

@@ -107,7 +107,7 @@
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
             bindComboBox(currencyUrl, "cmb_currency", "currencyName", "currencyId");
 
-            const accSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const accSetupUrl = `@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=0`;
             bindComboBox(accSetupUrl, "cmb_accSetup", "accSetupName", "accSetupId");
 
             const accSetupCategoryUrl = '@Url.Action("GetAccountSetupCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;

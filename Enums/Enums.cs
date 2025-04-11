@@ -194,4 +194,13 @@ namespace AMESWEB.Enums
         CalculateType = 13,
         ServiceType = 14
     }
+
+    public enum AccountSetupCategory
+    {
+        Customer = 1,
+        Vendor = 2,
+        Sales = 3,
+        Purchases = 4,
+        QA = 5
+    }
 }

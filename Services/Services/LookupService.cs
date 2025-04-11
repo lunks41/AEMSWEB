@@ -257,11 +257,11 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<AccountSetupLookupModel>> GetAccountSetupLookupAsync(Int16 CompanyId, Int16 UserId, byte categoryId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<AccountSetupLookupModel>($"select AccSetupId,AccSetupCode,AccSetupName from M_AccountSetup where AccSetupId<>0 And IsActive=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetup})) order by AccSetupName");
+                var result = await _repository.GetQueryAsync<AccountSetupLookupModel>($"select AccSetupId,AccSetupCode,AccSetupName from M_AccountSetup where AccSetupId<>0 And IsActive=1 And AccSetupCategoryId={categoryId} OR {categoryId}=0 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.AccountSetup})) order by AccSetupName");
 
                 return result;
             }
@@ -377,11 +377,11 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<BankLookupModel>> GetBankLookupAsync(Int16 CompanyId, Int16 UserId)
+        public async Task<IEnumerable<BankLookupModel>> GetBankLookupAsync(Int16 CompanyId, Int16 UserId, byte isOwnBank, byte isPettyCash)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<BankLookupModel>($"select BankId,BankCode,BankName from M_Bank where BankId<>0 And IsActive=1 And IsOwnBank=1 And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Bank})) order by BankName");
+                var result = await _repository.GetQueryAsync<BankLookupModel>($"select BankId,BankCode,BankName from M_Bank where BankId<>0 And IsActive=1 And (IsOwnBank = {isOwnBank} OR IsOwnBank = 0) and (IsPettyCashBank = {isPettyCash} OR IsPettyCashBank = 0)  And CompanyId IN (SELECT distinct CompanyId FROM Fn_Adm_GetShareCompany({CompanyId},{(short)E_Modules.Master},{(short)E_Master.Bank})) order by BankName");
 
                 return result;
             }
@@ -646,8 +646,6 @@ namespace AMESWEB.Services.Masters
                 throw new Exception(ex.ToString());
             }
         }
-
-        
 
         public async Task<IEnumerable<CustomerGroupCreditLimitLookupModel>> GetCustomerGroupCreditLimitLookupAsync(Int16 CompanyId, Int16 UserId)
         {
@@ -1465,11 +1463,11 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerAddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId)
+        public async Task<IEnumerable<AddressLookupModel>> GetCustomerAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<CustomerAddressLookupModel>($"select AddressId, Address1, Address2, Address3, Address4, PinCode, CountryId, PhoneNo, FaxNo, EmailAdd, WebUrl from M_CustomerAddress where IsActive=1 And CustomerId={CustomerId} order by IsFinAdd Desc,IsDefaultAdd desc");
+                var result = await _repository.GetQueryAsync<AddressLookupModel>($"select AddressId, Address1, Address2, Address3, Address4, PinCode, CountryId, PhoneNo, FaxNo, EmailAdd, WebUrl from M_CustomerAddress where IsActive=1 And CustomerId={CustomerId} order by IsFinAdd Desc,IsDefaultAdd desc");
 
                 return result;
             }
@@ -1495,11 +1493,11 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<CustomerContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId)
+        public async Task<IEnumerable<ContactLookupModel>> GetCustomerContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, int CustomerId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<CustomerContactLookupModel>($"Select ContactId, ContactName, OtherName, MobileNo, OffNo, FaxNo, EmailAdd, MessId, ContactMessType from M_CustomerContact where IsActive=1 And CustomerId={CustomerId} Order by IsFinance Desc,IsDefault desc");
+                var result = await _repository.GetQueryAsync<ContactLookupModel>($"Select ContactId, ContactName, OtherName, MobileNo, OffNo, FaxNo, EmailAdd, MessId, ContactMessType from M_CustomerContact where IsActive=1 And CustomerId={CustomerId} Order by IsFinance Desc,IsDefault desc");
 
                 return result;
             }
@@ -1525,11 +1523,11 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SupplierAddressLookupModel>> GetSupplierAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
+        public async Task<IEnumerable<AddressLookupModel>> GetSupplierAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<SupplierAddressLookupModel>($"select AddressId, Address1, Address2, Address3, Address4, PinCode, CountryId, PhoneNo, FaxNo, EmailAdd, WebUrl from M_SupplierAddress where IsActive=1 And SupplierId={SupplierId} order by IsFinAdd Desc,IsDefaultAdd desc");
+                var result = await _repository.GetQueryAsync<AddressLookupModel>($"select AddressId, Address1, Address2, Address3, Address4, PinCode, CountryId, PhoneNo, FaxNo, EmailAdd, WebUrl from M_SupplierAddress where IsActive=1 And SupplierId={SupplierId} order by IsFinAdd Desc,IsDefaultAdd desc");
 
                 return result;
             }
@@ -1555,11 +1553,11 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<SupplierContactLookupModel>> GetSupplierContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
+        public async Task<IEnumerable<ContactLookupModel>> GetSupplierContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 SupplierId)
         {
             try
             {
-                var result = await _repository.GetQueryAsync<SupplierContactLookupModel>($"Select ContactId, ContactName, OtherName, MobileNo, OffNo, FaxNo, EmailAdd, MessId, ContactMessType from M_SupplierContact where IsActive=1 And SupplierId={SupplierId} Order by IsFinance Desc,IsDefault desc");
+                var result = await _repository.GetQueryAsync<ContactLookupModel>($"Select ContactId, ContactName, OtherName, MobileNo, OffNo, FaxNo, EmailAdd, MessId, ContactMessType from M_SupplierContact where IsActive=1 And SupplierId={SupplierId} Order by IsFinance Desc,IsDefault desc");
 
                 return result;
             }
@@ -1573,6 +1571,66 @@ namespace AMESWEB.Services.Masters
                     DocumentId = 0,
                     DocumentNo = "",
                     TblName = "M_SupplierContact",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<AddressLookupModel>> GetBankAddressLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 BankId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<AddressLookupModel>($"select AddressId, Address1, Address2, Address3, Address4, PinCode, CountryId, PhoneNo, FaxNo, EmailAdd, WebUrl from M_BankAddress where IsActive=1 And BankId={BankId} order by IsFinAdd Desc,IsDefaultAdd desc");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Bank,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_BankAddress",
+                    ModeId = (short)E_Mode.Lookup,
+                    Remarks = ex.Message + ex.InnerException?.Message,
+                    CreateById = UserId
+                };
+
+                _context.Add(errorLog);
+                _context.SaveChanges();
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<ContactLookupModel>> GetBankContactLookup_FinAsync(Int16 CompanyId, Int16 UserId, Int16 BankId)
+        {
+            try
+            {
+                var result = await _repository.GetQueryAsync<ContactLookupModel>($"Select ContactId, ContactName, OtherName, MobileNo, OffNo, FaxNo, EmailAdd, MessId, ContactMessType from M_BankContact where IsActive=1 And BankId={BankId} Order by IsFinance Desc,IsDefault desc");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var errorLog = new AdmErrorLog
+                {
+                    CompanyId = CompanyId,
+                    ModuleId = (short)E_Modules.Master,
+                    TransactionId = (short)E_Master.Bank,
+                    DocumentId = 0,
+                    DocumentNo = "",
+                    TblName = "M_BankContact",
                     ModeId = (short)E_Mode.Lookup,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId
@@ -1799,7 +1857,7 @@ namespace AMESWEB.Services.Masters
             }
         }
 
-        public async Task<IEnumerable<JobOrderLookupModel>> GetCustomerJobOrderLookupAsync(Int16 CompanyId, Int16 UserId,int customerId)
+        public async Task<IEnumerable<JobOrderLookupModel>> GetCustomerJobOrderLookupAsync(Int16 CompanyId, Int16 UserId, int customerId)
         {
             try
             {
