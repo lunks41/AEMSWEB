@@ -80,14 +80,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="cmd_vessel" class="form-label">Vessel <span class="text-danger">*</span></label>
-                                    <select id="cmd_vessel" style="width: 100%"></select>
+                                    <label for="cmb_vessel" class="form-label">Vessel <span class="text-danger">*</span></label>
+                                    <select id="cmb_vessel" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="cmd_barge" class="form-label">Barge <span class="text-danger">*</span></label>
-                                    <select id="cmd_barge" style="width: 100%"></select>
+                                    <label for="cmb_barge" class="form-label">Barge <span class="text-danger">*</span></label>
+                                    <select id="cmb_barge" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -180,10 +180,10 @@
         function Refresh() {
 
     const vesselUrl = '@Url.Action("GetVesselLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(vesselUrl, "cmd_vessel", "vesselName", "vesselId");
+            bindComboBox(vesselUrl, "cmb_vessel", "vesselName", "vesselId");
 
     const bargeUrl = '@Url.Action("GetBargeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(bargeUrl, "cmd_barge", "bargeName", "bargeId");
+            bindComboBox(bargeUrl, "cmb_barge", "bargeName", "bargeId");
 
 }
 
@@ -204,8 +204,8 @@ function OnSelectDropdown(dataItem, DrpdwnName) { }
             $('#createDate').text('');
             $('#editBy').text('');
             $('#editDate').text('');
-            $('#cmd_vessel').data("kendoComboBox").value('');
-            $('#cmd_barge').data("kendoComboBox").value('');
+            $('#cmb_vessel').data("kendoComboBox").value('');
+            $('#cmb_barge').data("kendoComboBox").value('');
             // Reset readonly and disabled states
             $('#voyageNo, #referenceNo, #seqNo, #remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
@@ -293,8 +293,8 @@ function OnSelectDropdown(dataItem, DrpdwnName) { }
             $('#voyageId').val(data.voyageId);
             $('#voyageNo').val(data.voyageNo);
             $('#referenceNo').val(data.referenceNo);
-            $('#cmd_vessel').data("kendoComboBox").value(data.vesselId > 0 ? data.vesselId : '');
-            $('#cmd_barge').data("kendoComboBox").value(data.bargeId > 0 ? data.bargeId : '');
+            $('#cmb_vessel').data("kendoComboBox").value(data.vesselId > 0 ? data.vesselId : '');
+            $('#cmb_barge').data("kendoComboBox").value(data.bargeId > 0 ? data.bargeId : '');
             $('#remarks').val(data.remarks);
             $('#isActive').prop('checked', data.isActive);
 
@@ -340,8 +340,8 @@ function OnSelectDropdown(dataItem, DrpdwnName) { }
                 VoyageId: parseInt($('#voyageId').val()) || 0,
                 VoyageNo: $('#voyageNo').val().trim(),
                 ReferenceNo: $('#referenceNo').val().trim(),
-                VesselId: parseInt($('#cmd_vessel').data("kendoComboBox").value()) || 0,
-                BargeId: parseInt($('#cmd_barge').data("kendoComboBox").value()) || 0,
+                VesselId: parseInt($('#cmb_vessel').data("kendoComboBox").value()) || 0,
+                BargeId: parseInt($('#cmb_barge').data("kendoComboBox").value()) || 0,
                 Remarks: $('#remarks').val(),
                 IsActive: $('#isActive').prop('checked')
             };

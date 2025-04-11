@@ -105,13 +105,13 @@
             bindMultiColumnComboBox(chartOfAccountUrl, "cmb_glcode", "glName", "glId", columnsProperties, filterFields);
 
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
+            bindComboBox(currencyUrl, "cmb_currency", "currencyName", "currencyId");
 
             const accSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(accSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
+            bindComboBox(accSetupUrl, "cmb_accSetup", "accSetupName", "accSetupId");
 
             const accSetupCategoryUrl = '@Url.Action("GetAccountSetupCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(accSetupCategoryUrl, "cmd_accSetupCategory", "accSetupCategoryName", "accSetupCategoryId");
+            bindComboBox(accSetupCategoryUrl, "cmb_accSetupCategory", "accSetupCategoryName", "accSetupCategoryId");
 
         }
 

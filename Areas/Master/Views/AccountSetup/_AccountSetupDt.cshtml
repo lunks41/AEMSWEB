@@ -48,14 +48,14 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
-                                <select id="cmd_accSetup" style="width: 100%"></select>
+                                <label for="cmb_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
+                                <select id="cmb_accSetup" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <select id="cmd_currency" style="width: 100%"></select>
+                                <label for="cmb_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="cmb_currency" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -130,12 +130,12 @@
             $('#accSetupDteditBy').text('');
             $('#accSetupDteditDate').text('');
 
-            $('#cmd_accSetup').data('kendoComboBox').value('');
-            $('#cmd_currency').data('kendoComboBox').value('');
+            $('#cmb_accSetup').data('kendoComboBox').value('');
+            $('#cmb_currency').data('kendoComboBox').value('');
             $('#cmb_glcode').data('kendoMultiColumnComboBox').value('');
 
-            $('#cmd_accSetup').data('kendoComboBox').enable(false);
-            $('#cmd_currency').data('kendoComboBox').enable(false);
+            $('#cmb_accSetup').data('kendoComboBox').enable(false);
+            $('#cmb_currency').data('kendoComboBox').enable(false);
             $('#cmb_glcode').data('kendoMultiColumnComboBox').enable(false);
             // Reset readonly and disabled states
             $('#accSetupDtValidFrom, #accSetupDtPercentage').prop('readonly', false);
@@ -155,16 +155,16 @@
     }
 
     function checkAccSetupDtMandatoryFields() {
-        let isValid = $('#cmd_accSetup').data('kendoComboBox').value() &&
-            $('#cmd_currency').data('kendoComboBox').value() &&
+        let isValid = $('#cmb_accSetup').data('kendoComboBox').value() &&
+            $('#cmb_currency').data('kendoComboBox').value() &&
             $('#cmb_glcode').data('kendoMultiColumnComboBox').value();
 
         // Disable Save button based on validity
         $('#btnAccSetupDtSave').prop('disabled', !isValid);
 
         // Add visual feedback for invalid fields
-        $('#cmd_accSetup').toggleClass('is-invalid', !$('#cmd_accSetup').data('kendoComboBox').value());
-        $('#cmd_currency').toggleClass('is-invalid', !$('#cmd_currency').data('kendoComboBox').value());
+        $('#cmb_accSetup').toggleClass('is-invalid', !$('#cmb_accSetup').data('kendoComboBox').value());
+        $('#cmb_currency').toggleClass('is-invalid', !$('#cmb_currency').data('kendoComboBox').value());
         $('#cmb_glcode').toggleClass('is-invalid', !$('#cmb_glcode').data('kendoMultiColumnComboBox').value());
     }
 
@@ -226,8 +226,8 @@
 
     function populateAccSetupDtModalFields(data) {
        
-        $('#cmd_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
-        $('#cmd_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+        $('#cmb_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
+        $('#cmb_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
         $('#cmb_glcode').data("kendoMultiColumnComboBox").value(data.glId > 0 ? data.glId : '');
         $('#applyAllCurr').prop('checked', data.applyAllCurr);
 
@@ -243,8 +243,8 @@
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
-        $('#cmd_accSetup').data('kendoComboBox').enable(canEdit);
-        $('#cmd_currency').data('kendoComboBox').enable(canEdit);
+        $('#cmb_accSetup').data('kendoComboBox').enable(canEdit);
+        $('#cmb_currency').data('kendoComboBox').enable(canEdit);
         $('#cmb_glcode').data('kendoMultiColumnComboBox').enable(canEdit);
 
         $('#btnAccSetupDtSave').toggle(canEdit);
@@ -272,8 +272,8 @@
 
     function saveAccSetupDt() {
         let accSetupDtData = {
-            AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
-            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
+            AccSetupId: parseInt($('#cmb_accSetup').data("kendoComboBox").value()) || 0,
+            CurrencyId: parseInt($('#cmb_currency').data("kendoComboBox").value()) || 0,
             GLId: parseInt($('#cmb_glcode').data("kendoMultiColumnComboBox").value()) || 0,
             ApplyAllCurr: $('#applyAllCurr').prop('checked')
         };

@@ -91,20 +91,20 @@
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="CreditTermcreateBy" class="form-label">Created By</label>
-                                            <p id="CreditTermcreateBy" class="form-control-plaintext"></p>
+                                            <label for="creditTermcreateBy" class="form-label">Created By</label>
+                                            <p id="creditTermcreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="CreditTermcreateDate" class="form-label">Created Date</label>
-                                            <p id="CreditTermcreateDate" class="form-control-plaintext"></p>
+                                            <label for="creditTermcreateDate" class="form-label">Created Date</label>
+                                            <p id="creditTermcreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="CreditTermeditBy" class="form-label">Modified By</label>
-                                            <p id="CreditTermeditBy" class="form-control-plaintext"></p>
+                                            <label for="creditTermeditBy" class="form-label">Modified By</label>
+                                            <p id="creditTermeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="CreditTermeditDate" class="form-label">Modified Date</label>
-                                            <p id="CreditTermeditDate" class="form-control-plaintext"></p>
+                                            <label for="creditTermeditDate" class="form-label">Modified Date</label>
+                                            <p id="creditTermeditDate" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -132,11 +132,11 @@
         function clearCreditTermForm() {
             $('#CreditTermForm')[0].reset();
 
-            $('#CreditTermId').val(0);
-            $('#CreditTermcreateBy').text('');
-            $('#CreditTermcreateDate').text('');
-            $('#CreditTermeditBy').text('');
-            $('#CreditTermeditDate').text('');
+            $('#creditTermId').val(0);
+            $('#creditTermcreateBy').text('');
+            $('#creditTermcreateDate').text('');
+            $('#creditTermeditBy').text('');
+            $('#creditTermeditDate').text('');
 
             // Reset readonly and disabled states
             $('#creditTermCode, #creditTermName, #noDays, #remarks').prop('readonly', false);
@@ -227,10 +227,10 @@
             $('#creditTermNoDays').val(data.noDays);
             $('#creditTermremarks').val(data.remarks);
             $('#creditTermisActive').prop('checked', data.isActive);
-            $('#CreditTermcreateBy').text(data.createBy || "N/A");
-            $('#CreditTermcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
-            $('#CreditTermeditBy').text(data.editBy || "N/A");
-            $('#CreditTermeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+            $('#creditTermcreateBy').text(data.createBy || "N/A");
+            $('#creditTermcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+            $('#creditTermeditBy').text(data.editBy || "N/A");
+            $('#creditTermeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
 
             checkCreditTermMandatoryFields();
         }

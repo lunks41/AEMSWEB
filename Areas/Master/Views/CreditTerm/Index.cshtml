@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Order Type ";
+    ViewData["Title"] = $"Credit Terms";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -76,7 +76,7 @@
 
         function Refresh() {
             const CreditTermDtUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(CreditTermDtUrl, "cmd_creditTermDt", "creditTermName", "creditTermId");
+            bindComboBox(CreditTermDtUrl, "cmb_creditTermDt", "creditTermName", "creditTermId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

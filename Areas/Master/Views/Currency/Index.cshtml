@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Order Type ";
+    ViewData["Title"] = $"Currency";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -115,10 +115,10 @@
 
         function Refresh() {
             const CurrencyDtUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(CurrencyDtUrl, "cmd_currencyDt", "currencyName", "currencyId");
+            bindComboBox(CurrencyDtUrl, "cmb_currencyDt", "currencyName", "currencyId");
 
             const CurrencyLocalUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(CurrencyLocalUrl, "cmd_currencyLocalDt", "currencyName", "currencyId");
+            bindComboBox(CurrencyLocalUrl, "cmb_currencyLocalDt", "currencyName", "currencyId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

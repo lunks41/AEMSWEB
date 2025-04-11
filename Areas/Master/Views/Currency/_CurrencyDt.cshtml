@@ -48,8 +48,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_currencyDt" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <select id="cmd_currencyDt" style="width: 100%"></select>
+                                <label for="cmb_currencyDt" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <select id="cmb_currencyDt" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -122,7 +122,7 @@
             $('#currencyDtForm')[0].reset();
 
             $('#currencyId').val(0);
-            $('#cmd_currencyDt').data("kendoComboBox").value('');
+            $('#cmb_currencyDt').data("kendoComboBox").value('');
             $('#currencyDtcreateBy').text('');
             $('#CurrencyDtcreateDate').text('');
             $('#currencyDteditBy').text('');
@@ -216,7 +216,7 @@
         datePicker.value(validFrom);
         $('#currencyDtValidFrom').val(validFrom ? kendo.toString(validFrom, 'yyyy-MM-dd') : '');
         $('#currencyDtPercentage').val(data.exhRate);
-        $('#cmd_currencyDt').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+        $('#cmb_currencyDt').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
         $('#currencyDtcreateBy').text(data.createBy || "N/A");
         $('#CurrencyDtcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
         $('#currencyDteditBy').text(data.editBy || "N/A");
@@ -256,7 +256,7 @@
     function saveCurrencyDt() {
         const datePicker = $("#currencyDtValidFrom").data("kendoDatePicker");
             let CurrencyDtData = {
-                CurrencyId: parseInt($('#cmd_currencyDt').data("kendoComboBox").value()) || 0,
+                CurrencyId: parseInt($('#cmb_currencyDt').data("kendoComboBox").value()) || 0,
                 ValidFrom: kendo.toString(datePicker.value(), "yyyy-MM-dd"),
                 ExhRate: parseFloat($('#currencyDtPercentage').val()) || 0,
             };

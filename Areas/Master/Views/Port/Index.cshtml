@@ -68,8 +68,8 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="cmd_portRegion" class="form-label">Port Region <span class="text-danger">*</span></label>
-                                    <select id="cmd_portRegion" style="width: 100%"></select>
+                                    <label for="cmb_portRegion" class="form-label">Port Region <span class="text-danger">*</span></label>
+                                    <select id="cmb_portRegion" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -174,7 +174,7 @@
 
         function Refresh() {
             const portRegionUrl = '@Url.Action("GetPortRegionLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(portRegionUrl, "cmd_portRegion", "portRegionName", "portRegionId");
+            bindComboBox(portRegionUrl, "cmb_portRegion", "portRegionName", "portRegionId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

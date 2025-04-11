@@ -48,8 +48,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_gst" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select id="cmd_gst" style="width: 100%"></select>
+                                <label for="cmb_gst" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="cmb_gst" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -122,7 +122,7 @@
             $('#gstDtForm')[0].reset();
 
             $('#gstId').val(0);
-            $('#cmd_gst').data("kendoComboBox").value('');
+            $('#cmb_gst').data("kendoComboBox").value('');
             $('#gstDtcreateBy').text('');
             $('#gstDtcreateDate').text('');
             $('#gstDteditBy').text('');
@@ -215,7 +215,7 @@
         datePicker.value(validFrom);
         $('#gstDtValidFrom').val(validFrom ? kendo.toString(validFrom, 'yyyy-MM-dd') : '');
         $('#gstDtPercentage').val(data.gstPercentage);
-        $('#cmd_gst').data("kendoComboBox").value(data.gstId > 0 ? data.gstId : '');
+        $('#cmb_gst').data("kendoComboBox").value(data.gstId > 0 ? data.gstId : '');
         $('#gstDtcreateBy').text(data.createBy || "N/A");
         $('#gstDtcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
         $('#gstDteditBy').text(data.editBy || "N/A");
@@ -255,7 +255,7 @@
     function saveGstDt() {
         const datePicker = $("#gstDtValidFrom").data("kendoDatePicker");
             let gstDtData = {
-                GstId: parseInt($('#cmd_gst').data("kendoComboBox").value()) || 0,
+                GstId: parseInt($('#cmb_gst').data("kendoComboBox").value()) || 0,
                 ValidFrom: kendo.toString(datePicker.value(), "yyyy-MM-dd"),
                 GstPercentage: parseFloat($('#gstDtPercentage').val())||0,
             };

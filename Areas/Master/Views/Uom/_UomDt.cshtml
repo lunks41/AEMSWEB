@@ -50,14 +50,14 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_uom" class="form-label">UOM <span class="text-danger">*</span></label>
-                                <select id="cmd_uom" style="width: 100%"></select>
+                                <label for="cmb_uom" class="form-label">UOM <span class="text-danger">*</span></label>
+                                <select id="cmb_uom" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_packUom" class="form-label">UOM Pack <span class="text-danger">*</span></label>
-                                <select id="cmd_packUom" style="width: 100%"></select>
+                                <label for="cmb_packUom" class="form-label">UOM Pack <span class="text-danger">*</span></label>
+                                <select id="cmb_packUom" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -127,11 +127,11 @@
         $('#uomDtcreateDate').text('');
         $('#uomDteditBy').text('');
         $('#uomDteditDate').text('');
-        $('#cmd_uom').data("kendoComboBox").value('');
-        $('#cmd_packUom').data("kendoComboBox").value('');
+        $('#cmb_uom').data("kendoComboBox").value('');
+        $('#cmb_packUom').data("kendoComboBox").value('');
         $('#uomFactor').val('0');
         // Reset readonly and disabled states
-        $('#cmd_uom, #cmd_packUom, #uomFactor').prop('readonly', false);
+        $('#cmb_uom, #cmb_packUom, #uomFactor').prop('readonly', false);
 
         $('#btnUomDtSave').prop('disabled', false);
         $('#btnUomDtSave').show();
@@ -150,14 +150,14 @@
     }
 
     function checkUomDtMandatoryFields() {
-        let accSetupCode = $('#cmd_uom').data("kendoComboBox").value() || '';
-        let accSetupName = $('#cmd_packUom').data("kendoComboBox").value() || '';
+        let accSetupCode = $('#cmb_uom').data("kendoComboBox").value() || '';
+        let accSetupName = $('#cmb_packUom').data("kendoComboBox").value() || '';
         let isValid = accSetupCode.trim() && accSetupName.trim();
 
         $('#btnUomDtSave').prop('disabled', !isValid);
 
         // Add visual feedback
-        $('#cmd_uom, #cmd_packUom').toggleClass('is-invalid', !isValid);
+        $('#cmb_uom, #cmb_packUom').toggleClass('is-invalid', !isValid);
     }
 
     function loadUomDtGrid() {
@@ -214,8 +214,8 @@
 
     function populateUomDtModalFields(data) {
        
-        $('#cmd_uom').data("kendoComboBox").value(data.uomId > 0 ? data.uomId : '');
-        $('#cmd_packUom').data("kendoComboBox").value(data.packUomId > 0 ? data.packUomId : '');
+        $('#cmb_uom').data("kendoComboBox").value(data.uomId > 0 ? data.uomId : '');
+        $('#cmb_packUom').data("kendoComboBox").value(data.packUomId > 0 ? data.packUomId : '');
         $('#uomFactor').val(data.uomFactor);
 
         $('#uomDtcreateBy').text(data.createBy || "N/A");
@@ -230,7 +230,7 @@
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
-        $('#cmd_uom, #cmd_packUom,  #uomFactor').prop('readonly', !canEdit);
+        $('#cmb_uom, #cmb_packUom,  #uomFactor').prop('readonly', !canEdit);
         $('#btnUomDtSave').toggle(canEdit);
         $('#btnUomDtEdit').toggle(isView && permissions.canEdit);
         $('#btnUomDtClose').show();
@@ -256,8 +256,8 @@
 
     function saveUomDt() {
         let uomDtData = {
-            UomId: parseInt($('#cmd_uom').data("kendoComboBox").value()) || 0,
-            PackUomId: parseInt($('#cmd_uom').data("kendoComboBox").value()) || 0,
+            UomId: parseInt($('#cmb_uom').data("kendoComboBox").value()) || 0,
+            PackUomId: parseInt($('#cmb_uom').data("kendoComboBox").value()) || 0,
             UomFactor: $('#uomFactor').val() || 0,
         };
 

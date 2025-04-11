@@ -61,8 +61,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_gstCategory" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select id="cmd_gstCategory" style="width: 100%"></select>
+                                <label for="cmb_gstCategory" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="cmb_gstCategory" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -133,7 +133,7 @@
             $('#gstForm')[0].reset();
 
             $('#gstId').val(0);
-            $('#cmd_gstCategory').data("kendoComboBox").value('');
+            $('#cmb_gstCategory').data("kendoComboBox").value('');
             $('#gstcreateBy').text('');
             $('#gstcreateDate').text('');
             $('#gsteditBy').text('');
@@ -227,7 +227,7 @@
             $('#gstName').val(data.gstName);
             $('#gstremarks').val(data.remarks);
             $('#gstisActive').prop('checked', data.isActive);
-            $('#cmd_gstCategory').data("kendoComboBox").value(data.gstCategoryId > 0 ? data.gstCategoryId : '');
+            $('#cmb_gstCategory').data("kendoComboBox").value(data.gstCategoryId > 0 ? data.gstCategoryId : '');
             $('#gstcreateBy').text(data.createBy || "N/A");
             $('#gstcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
             $('#gsteditBy').text(data.editBy || "N/A");
@@ -270,7 +270,7 @@
                 GstId: parseInt($('#gstId').val()) || 0,
                 GstCode: $('#gstCode').val().trim(),
                 GstName: $('#gstName').val().trim(),
-                GstCategoryId: parseInt($('#cmd_gstCategory').data("kendoComboBox").value()) || 0,
+                GstCategoryId: parseInt($('#cmb_gstCategory').data("kendoComboBox").value()) || 0,
                 Remarks: $('#gstremarks').val(),
                 IsActive: $('#gstisActive').prop('checked')
             };

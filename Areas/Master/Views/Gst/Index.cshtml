@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = $"Order Type ";
+    ViewData["Title"] = $"Gst";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -106,10 +106,10 @@
 
         function Refresh() {
              const gstUrl = '@Url.Action("GetGstLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(gstUrl, "cmd_gst", "gstName", "gstId");
+            bindComboBox(gstUrl, "cmb_gst", "gstName", "gstId");
 
             const gstCategoryUrl = '@Url.Action("GetGstCategoryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(gstCategoryUrl, "cmd_gstCategory", "gstCategoryName", "gstCategoryId");
+            bindComboBox(gstCategoryUrl, "cmb_gstCategory", "gstCategoryName", "gstCategoryId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

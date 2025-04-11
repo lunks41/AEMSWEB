@@ -108,23 +108,19 @@
         }
 
         function Refresh() {
-             const bankCodeUrl = `@Url.Action("GetBankCodeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
-            bindAutoComplete(bankCodeUrl, "bankCode", "code");
-
-            const bankUrl = '@Url.Action("GetBankLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(bankUrl, "cmd_bank", "bankName", "bankId");
+            const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+            const glcolumnsProperties = [
+                { field: 'glCode', title: 'Code', width: 100 },
+                { field: 'glName', title: 'Name', width: 200 }
+            ];
+            const glfilterFields = ['glCode', 'glName'];
+            bindMultiColumnComboBox(chartOfAccountUrl, "cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
 
             const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(currencyUrl, "cmd_currency", "currencyName", "currencyId");
-
-            const creditTermsUrl = '@Url.Action("GetCreditTermLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(creditTermsUrl, "cmd_creditTerm", "creditTermName", "creditTermId");
-
-            const accountSetupUrl = '@Url.Action("GetAccountSetupLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(accountSetupUrl, "cmd_accSetup", "accSetupName", "accSetupId");
+            bindComboBox(currencyUrl, "cmb_currency", "currencyName", "currencyId");
 
             const countryUrl = '@Url.Action("GetCountryLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(countryUrl, "cmd_country", "countryName", "countryId");
+            bindComboBox(countryUrl, "cmb_country", "countryName", "countryId");
 
         }
 
@@ -133,7 +129,7 @@
         function OnSelectDropdown(dataItem, DrpdwnName) { }
 
         document.getElementById('openChildAddressModal').addEventListener('click', function () {
-            
+
             initializeBankAddressForm();
             var bankId = document.getElementById('bankId').value;
             document.getElementById('address_bankId').value = bankId;

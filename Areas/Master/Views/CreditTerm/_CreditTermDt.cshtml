@@ -48,8 +48,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_creditTermDt" class="form-label">CreditTerm <span class="text-danger">*</span></label>
-                                <select id="cmd_creditTermDt" style="width: 100%"></select>
+                                <label for="cmb_creditTermDt" class="form-label">CreditTerm <span class="text-danger">*</span></label>
+                                <select id="cmb_creditTermDt" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -138,7 +138,7 @@
             $('#creditTermDtForm')[0].reset();
 
             $('#creditTermId').val(0);
-            $('#cmd_creditTermDt').data("kendoComboBox").value('');
+            $('#cmb_creditTermDt').data("kendoComboBox").value('');
             $('#creditTermDtcreateBy').text('');
             $('#CreditTermDtcreateDate').text('');
             $('#creditTermDteditBy').text('');
@@ -230,7 +230,7 @@
     function populateCreditTermDtModalFields(data) {
        
 
-        $('#cmd_creditTermDt').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
+        $('#cmb_creditTermDt').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
         $('#creditTermDtFromDay').val(data.fromDay);
         $('#creditTermDtToDay').val(data.toDay);
         $('#creditTermDtDueDay').val(data.dueDay);
@@ -249,7 +249,7 @@
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
-        $('#cmd_creditTermDt').data("kendoComboBox").enable(!canEdit);
+        $('#cmb_creditTermDt').data("kendoComboBox").enable(!canEdit);
         $('#creditTermDtFromDay, #creditTermDtToDay,#creditTermDtDueDay, #creditTermDtNoMonth').prop('readonly', !canEdit);
         $('#creditTermisEndOfMonth').prop('disabled', !canEdit);
 
@@ -279,7 +279,7 @@
     function saveCreditTermDt() {
 
         let CreditTermDtData = {
-            CreditTermId: parseInt($('#cmd_creditTermDt').data("kendoComboBox").value()) || 0,
+            CreditTermId: parseInt($('#cmb_creditTermDt').data("kendoComboBox").value()) || 0,
             FromDay: parseInt($('#creditTermDtFromDay').val()) || 0,
             ToDay: parseInt($('#creditTermDtToDay').val()) || 0,
             DueDay: parseInt($('#creditTermDtDueDay').val()) || 0,

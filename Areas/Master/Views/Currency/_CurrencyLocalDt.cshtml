@@ -48,8 +48,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_currencyLocalDt" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select id="cmd_currencyLocalDt" style="width: 100%"></select>
+                                <label for="cmb_currencyLocalDt" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="cmb_currencyLocalDt" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -122,7 +122,7 @@
             $('#currencyLocalDtForm')[0].reset();
 
             $('#currencyId').val(0);
-            $('#cmd_currencyLocalDt').data("kendoComboBox").value('');
+            $('#cmb_currencyLocalDt').data("kendoComboBox").value('');
             $('#currencyLocalDtcreateBy').text('');
             $('#currencyLocalDtcreateDate').text('');
             $('#currencyLocalDteditBy').text('');
@@ -215,7 +215,7 @@
         datePicker.value(validFrom);
         $('#currencyLocalDtValidFrom').val(validFrom ? kendo.toString(validFrom, 'yyyy-MM-dd') : '');
         $('#currencyLocalDtPercentage').val(data.exhRate);
-        $('#cmd_currencyLocalDt').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+        $('#cmb_currencyLocalDt').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
         $('#currencyLocalDtcreateBy').text(data.createBy || "N/A");
         $('#currencyLocalDtcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
         $('#currencyLocalDteditBy').text(data.editBy || "N/A");
@@ -255,7 +255,7 @@
     function saveCurrencyLocalDt() {
         const datePicker = $("#currencyLocalDtValidFrom").data("kendoDatePicker");
             let CurrencyLocalDtData = {
-                CurrencyId: parseInt($('#cmd_currencyLocalDt').data("kendoComboBox").value()) || 0,
+                CurrencyId: parseInt($('#cmb_currencyLocalDt').data("kendoComboBox").value()) || 0,
                 ValidFrom: kendo.toString(datePicker.value(), "yyyy-MM-dd"),
                 ExhRate: parseFloat($('#currencyLocalDtPercentage').val())||0,
             };

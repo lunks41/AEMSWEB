@@ -15,7 +15,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
                                 <label class="form-label">Bank Code <span class="text-danger">*</span></label>
-                                <input id="bankCode" required onblur="convertToUpperCase(this)">
+                                <input id="bankCode" required class="form-control" onblur="convertToUpperCase(this)">
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -26,78 +26,44 @@
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label class="form-label">Short Name</label>
-                                <input type="text" class="form-control" id="bankShortName">
+                                <label for="cmb_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <input id="cmb_currency"/>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label class="form-label">Other Name</label>
-                                <input type="text" class="form-control" id="bankOtherName">
+                                <label for="cmb_gl" class="form-label">Gl Account <span class="text-danger">*</span></label>
+                                <select id="cmb_gl" style="width: 100%"></select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="mb-2">
-                                <label class="form-label">Registration No.</label>
-                                <input type="text" class="form-control" id="bankRegNo">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Financial Details -->
-                    <div class="row">
-                        <h5>Financial Details</h5>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="mb-2">
-                                <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <input id="cmd_currency" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="mb-2">
-                                <label for="cmd_creditTerm" class="form-label">Credit Term <span class="text-danger">*</span></label>
-                                <input id="cmd_creditTerm" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="mb-2">
-                                <label for="cmd_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
-                                <input id="cmd_accSetup" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="mb-2">
-                                <label for="cmd_bank" class="form-label">Bank <span class="text-danger">*</span></label>
-                                <input id="cmd_bank" />
-                            </div>
-                        </div>
+                       
                     </div>
 
                     <!-- Status Flags -->
                     <div class="row ">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label class="form-label">Account No.</label>
+                                <input type="text" class="form-control" id="accountNo">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="mb-2">
+                                <label class="form-label">Swift Code</label>
+                                <input type="text" class="form-control" id="swiftCode">
+                            </div>
+                        </div>
                         <h5>Status Flags</h5>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="isBank">
-                                <label class="form-check-label">Is Bank</label>
+                                <input class="form-check-input" type="checkbox" id="isOwnBank">
+                                <label class="form-check-label">Is Own Bank</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="isVendor">
-                                <label class="form-check-label">Is Vendor</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="isTrader">
-                                <label class="form-check-label">Is Trader</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="isSupplier">
-                                <label class="form-check-label">Is Supplier</label>
+                                <input class="form-check-input" type="checkbox" id="isPettyCashBank">
+                                <label class="form-check-label">Is Petty Cash</label>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -110,9 +76,13 @@
 
                     <!-- Remarks -->
                     <div class="row mb-4">
-                        <div class="col-md-12">
-                            <label class="form-label">Remarks</label>
-                            <textarea class="form-control" id="remarks" rows="2"></textarea>
+                        <div class="col-md-6">
+                            <label class="form-label">Remarks 1</label>
+                            <textarea class="form-control" id="remarks1" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Remarks 2</label>
+                            <textarea class="form-control" id="remarks2" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -208,18 +178,15 @@
         $('#bankId').val('');
         $('#bankCode').val('');
         $('#bankName').val('');
-        $('#bankOtherName').val('');
-        $('#bankShortName').val('');
-        $('#bankRegNo').val('');
-        $('#cmd_currency').data("kendoComboBox").value('');
-        $('#cmd_creditTerm').data("kendoComboBox").value('');
-        $('#cmd_accSetup').data("kendoComboBox").value('');
-        $('#cmd_bank').data("kendoComboBox").value('');
-        $('#remarks').val('');
-        $('#isBank').prop('checked', false);
-        $('#isVendor').prop('checked', false);
-        $('#isTrader').prop('checked', false);
-        $('#isSupplier').prop('checked', false);
+        $('#accountNo').val('');
+        $('#swiftCode').val('');
+        $('#cmb_currency').data("kendoComboBox").value('');
+        $('#cmb_gl').data("kendoMultiColumnComboBox").value('');
+        $('#remarks1').val('');
+        $('#remarks2').val('');
+        $('#isOwnBank').prop('checked', false);
+        $('#isPettyCashBank').prop('checked', false);
+
         $('#isActive').prop('checked', true);
         $('#createBy').text('');
         $('#createDate').text('');
@@ -251,7 +218,7 @@
         let columns = [
             {
                 title: "Actions",
-                width: "150px",
+                width: "110px",
                 template: function (dataItem) {
                     let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openBankModal('${dataItem.bankId}', 'view')">
                     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -268,12 +235,18 @@
                     return buttons;
                 }
             },
-            { field: "bankCode", title: "Code" },
-            { field: "bankName", title: "Name" },
-            { field: "creditTermCode", title: "Credit Term" },
-            { field: "currencyName", title: "Currency Name" },
-            { field: "remarks", title: "Remarks" },
-            { field: "isActive", title: "Active", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
+            { field: "bankCode", title: "Code",width:"100px" },
+            { field: "bankName", title: "Name", width: "180px" },
+            { field: "currencyName", title: "Currency Name", width: "110px" },
+            { field: "accountNo", title: "Account No", width: "150px" },
+            { field: "swiftCode", title: "Swift Code", width: "150px" },
+            { field: "glCode", title: "Gl Account", width: "100px" },
+            { field: "glName", title: "Gl Name", width: "150px" },
+            { field: "isOwnBank", title: "Own Bank", width: "120px", template: '<input type="checkbox" #= isOwnBank ? "checked" : "" # disabled />' },
+            { field: "isPettyCashBank", title: "Petty Cash", width: "120px", template: '<input type="checkbox" #= isPettyCashBank ? "checked" : "" # disabled />' },
+            { field: "isActive", title: "Active", width: "120px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' },
+            { field: "remarks1", title: "Remarks 1", width: "250px" },
+            { field: "remarks2", title: "Remarks 2", width: "250px" },
         ];
 
         let grid = $("#gridbank").data("kendoGrid");
@@ -300,18 +273,14 @@
         $('#bankId').val(data.bankId);
         $('#bankCode').val(data.bankCode);
         $('#bankName').val(data.bankName);
-        $('#bankOtherName').val(data.bankOtherName);
-        $('#bankShortName').val(data.bankShortName);
-        $('#bankRegNo').val(data.bankRegNo);
-        $('#cmd_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
-        $('#cmd_creditTerm').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
-        $('#cmd_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
-        $('#cmd_bank').data("kendoComboBox").value(data.bankId > 0 ? data.bankId : '');
-        $('#remarks').val(data.remarks);
-        $('#isBank').prop('checked', data.isBank);
-        $('#isVendor').prop('checked', data.isVendor);
-        $('#isTrader').prop('checked', data.isTrader);
-        $('#isSupplier').prop('checked', data.isSupplier);
+        $('#accountNo').val(data.accountNo);
+        $('#swiftCode').val(data.accountNo);
+        $('#cmb_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+        $('#cmb_gl').data('kendoMultiColumnComboBox').value(data.glId > 0 ? data.glId : '');
+        $('#remarks1').val(data.remarks1);
+        $('#remarks2').val(data.remarks2);
+        $('#isOwnBank').prop('checked', data.isOwnBank);
+        $('#isPettyCashBank').prop('checked', data.isPettyCashBank);
         $('#isActive').prop('checked', data.isActive);
 
         $('#createBy').text(data.createBy || "N/A");
@@ -342,8 +311,8 @@
         const isView = mode === 'view';
         const canEdit = permissions.canEdit && !isView;
 
-        $('#bankCode, #bankName, #remarks').prop('readonly', !canEdit);
-        $('#isActive').prop('disabled', !canEdit);
+        $('#bankCode, #bankName, #accountNo,#swiftCode,#remarks1,#remarks2').prop('readonly', !canEdit);
+        $('#isActive,#isOwnBank,#isPettyCashBank').prop('disabled', !canEdit);
         $('#btnBankSave').toggle(canEdit);
         $('#btnBankEdit').toggle(isView && permissions.canEdit);
         $('#btnBankClose').show();
@@ -376,13 +345,11 @@
     }
 
     function validateMandatoryFields() {
-        
+
         const bankCode = document.getElementById('bankCode').value.trim();
         const bankName = document.getElementById('bankName').value.trim();
-        const currency = $('#cmd_currency').data('kendoComboBox').value();
-        const creditTerm = $('#cmd_creditTerm').data('kendoComboBox').value();
-        const accountSetup = $('#cmd_accSetup').data('kendoComboBox').value();
-        const bank = $('#cmd_bank').data('kendoComboBox').value();
+        const currency = $('#cmb_currency').data('kendoComboBox').value();
+        const glaccount = $('#cmb_gl').data('kendoMultiColumnComboBox').value();
 
         let isValid = true;
 
@@ -401,18 +368,8 @@
             isValid = false;
         }
 
-        if (!creditTerm) {
-            toastr.error('Credit Term is required', 'Missing Field');
-            isValid = false;
-        }
-
-        if (!accountSetup) {
-            toastr.error('Account Setup is required', 'Missing Field');
-            isValid = false;
-        }
-
-        if (!bank) {
-            toastr.error('Bank is required', 'Missing Field');
+        if (!glaccount) {
+            toastr.error('Gl Account is required', 'Missing Field');
             isValid = false;
         }
 
@@ -425,20 +382,14 @@
             BankId: parseInt($('#bankId').val()) || 0,
             BankCode: $('#bankCode').val().trim().toUpperCase(),
             BankName: $('#bankName').val().trim(),
-            BankOtherName: $('#bankOtherName').val(),
-            BankShortName: $('#bankShortName').val(),
-            BankRegNo: $('#bankRegNo').val(),
-            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
-            CreditTermId: parseInt($('#cmd_creditTerm').data("kendoComboBox").value()) || 0,
-            AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
-            BankId: parseInt($('#cmd_bank').data("kendoComboBox").value()) || 0,
-            Remarks: $('#remarks').val(),
-            IsBank: $('#isBank').prop('checked'),
-            IsVendor: $('#isVendor').prop('checked'),
-            IsTrader: $('#isTrader').prop('checked'),
-            IsSupplier: $('#isSupplier').prop('checked'),
+            AccountNo: $('#accountNo').val(),
+            SwiftCode: $('#swiftCode').val(),
+            CurrencyId: parseInt($('#cmb_currency').data("kendoComboBox").value()) || 0,
+            Remarks1: $('#remarks1').val(),
+            Remarks2: $('#remarks2').val(),
+            IsOwnBank: $('#isOwnBank').prop('checked'),
+            IsPettyCashBank: $('#isPettyCashBank').prop('checked'),
             IsActive: $('#isActive').prop('checked'),
-            ParentBankId: 0,
         };
 
         if (validateMandatoryFields()) {

@@ -19,6 +19,7 @@
         public string? GLName { get; set; }
         public bool IsActive { get; set; }
         public bool IsOwnBank { get; set; }
+        public bool IsPettyCashBank { get; set; }
         public Int16 CreateById { get; set; }
         public DateTime CreateDate { get; set; }
         public Int16? EditById { get; set; }

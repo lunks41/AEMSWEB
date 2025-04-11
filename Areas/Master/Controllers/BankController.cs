@@ -25,8 +25,6 @@ namespace AMESWEB.Areas.Master.Controllers
             _bankService = bankService;
         }
 
-        #region Bank CRUD
-
         [Authorize]
         public async Task<IActionResult> Index(int? companyId)
         {
@@ -54,6 +52,9 @@ namespace AMESWEB.Areas.Master.Controllers
 
             return View();
         }
+
+
+        #region Bank CRUD
 
         [HttpGet]
         public async Task<JsonResult> List(int pageNumber, int pageSize, string searchString, string companyId)

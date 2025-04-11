@@ -32,8 +32,8 @@
                             <input type="text" class="form-control" id="pinCode">
                         </div>
                         <div class="col-md-3">
-                            <label for="cmd_country" class="form-label">Country <span class="text-danger">*</span></label>
-                            <select id="cmd_country" style="width: 100%"></select>
+                            <label for="cmb_country" class="form-label">Country <span class="text-danger">*</span></label>
+                            <select id="cmb_country" style="width: 100%"></select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Phone Number</label>
@@ -100,7 +100,7 @@
         $('#address3').val('');
         $('#address4').val('');
         $('#pinCode').val('');
-        $('#cmd_country').data("kendoComboBox").value('');
+        $('#cmb_country').data("kendoComboBox").value('');
         $('#phoneNoAdd').val('');
         $('#faxNoAdd').val('');
         $('#emailAdd').val('');
@@ -198,7 +198,7 @@
         $('#address3').val(data.address3);
         $('#address4').val(data.address4);
         $('#pinCode').val(data.pinCode);
-        $('#cmd_country').data("kendoComboBox").value(data.countryId > 0 ? data.countryId : '');
+        $('#cmb_country').data("kendoComboBox").value(data.countryId > 0 ? data.countryId : '');
         $('#phoneNoAdd').val(data.phoneNo);
         $('#faxNoAdd').val(data.faxNo);
         $('#emailAdd').val(data.emailAdd);
@@ -255,7 +255,7 @@
     function validateAddressFields() {
         let isValid = true;
         const address1 = $('#address1').val().trim();
-        const country = $('#cmd_country').data("kendoComboBox").value();
+        const country = $('#cmb_country').data("kendoComboBox").value();
 
         if (!address1) {
             toastr.error('Address Line 1 is required', 'Validation Error');
@@ -280,7 +280,7 @@
             Address3: $('#address3').val(),
             Address4: $('#address4').val(),
             PinCode: $('#pinCode').val(),
-            CountryId: $('#cmd_country').data("kendoComboBox").value(),
+            CountryId: $('#cmb_country').data("kendoComboBox").value(),
             PhoneNo: $('#phoneNoAdd').val(),
             FaxNo: $('#faxNoAdd').val(),
             EmailAdd: $('#emailAdd').val(),

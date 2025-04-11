@@ -61,8 +61,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="cmd_accSetupCategory" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select id="cmd_accSetupCategory" style="width: 100%"></select>
+                                <label for="cmb_accSetupCategory" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="cmb_accSetupCategory" style="width: 100%"></select>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -133,7 +133,7 @@
             $('#accSetupForm')[0].reset();
 
             $('#accSetupId').val(0);
-            $('#cmd_accSetupCategory').data("kendoComboBox").value('');
+            $('#cmb_accSetupCategory').data("kendoComboBox").value('');
             $('#accSetupcreateBy').text('');
             $('#accSetupcreateDate').text('');
             $('#accSetupeditBy').text('');
@@ -228,7 +228,7 @@
             $('#accSetupName').val(data.accSetupName);
             $('#accSetupremarks').val(data.remarks);
             $('#accSetupisActive').prop('checked', data.isActive);
-            $('#cmd_accSetupCategory').data("kendoComboBox").value(data.accSetupCategoryId > 0 ? data.accSetupCategoryId : '');
+            $('#cmb_accSetupCategory').data("kendoComboBox").value(data.accSetupCategoryId > 0 ? data.accSetupCategoryId : '');
             $('#accSetupcreateBy').text(data.createBy || "N/A");
             $('#accSetupcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
             $('#accSetupeditBy').text(data.editBy || "N/A");
@@ -242,7 +242,7 @@
             const canEdit = permissions.canEdit && !isView;
 
             $('#accSetupCode, #accSetupName,  #accSetupremarks').prop('readonly', !canEdit);
-            $('#cmd_accSetupCategory').data('kendoComboBox').enable(canEdit);
+            $('#cmb_accSetupCategory').data('kendoComboBox').enable(canEdit);
             $('#accSetupisActive').prop('disabled', !canEdit);
             $('#btnAccSetupSave').toggle(canEdit);
             $('#btnAccSetupEdit').toggle(isView && permissions.canEdit);
@@ -272,7 +272,7 @@
                 AccSetupId: parseInt($('#accSetupId').val()) || 0,
                 AccSetupCode: $('#accSetupCode').val().trim(),
                 AccSetupName: $('#accSetupName').val().trim(),
-                AccSetupCategoryId: parseInt($('#cmd_accSetupCategory').data("kendoComboBox").value()) || 0,
+                AccSetupCategoryId: parseInt($('#cmb_accSetupCategory').data("kendoComboBox").value()) || 0,
                 Remarks: $('#accSetupremarks').val(),
                 IsActive: $('#accSetupisActive').prop('checked')
             };

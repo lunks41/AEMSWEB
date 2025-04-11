@@ -19,6 +19,7 @@ namespace AMESWEB.Entities.Masters
         public string? Remarks3 { get; set; }
         public Int16 GLId { get; set; }
         public bool IsActive { get; set; }
+        public bool IsPettyCashBank { get; set; }
         public bool IsOwnBank { get; set; }
         public Int16 CreateById { get; set; }
 

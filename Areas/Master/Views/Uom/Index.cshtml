@@ -79,10 +79,10 @@
 
         function Refresh() {
             const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(uomUrl, "cmd_uom", "uomName", "uomId");
+            bindComboBox(uomUrl, "cmb_uom", "uomName", "uomId");
 
             const uomDtUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-            bindComboBox(uomDtUrl, "cmd_packUom", "uomName", "uomId");
+            bindComboBox(uomDtUrl, "cmb_packUom", "uomName", "uomId");
         }
 
         function SelectedDropdown(DrpdwnName) { }

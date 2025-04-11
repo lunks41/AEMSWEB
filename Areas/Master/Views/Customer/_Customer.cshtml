@@ -49,26 +49,26 @@
                         <h5>Financial Details</h5>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label for="cmd_currency" class="form-label">Currency <span class="text-danger">*</span></label>
-                                <input id="cmd_currency" />
+                                <label for="cmb_currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                                <input id="cmb_currency" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label for="cmd_creditTerm" class="form-label">Credit Term <span class="text-danger">*</span></label>
-                                <input id="cmd_creditTerm" />
+                                <label for="cmb_creditTerm" class="form-label">Credit Term <span class="text-danger">*</span></label>
+                                <input id="cmb_creditTerm" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label for="cmd_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
-                                <input id="cmd_accSetup" />
+                                <label for="cmb_accSetup" class="form-label">Account Setup <span class="text-danger">*</span></label>
+                                <input id="cmb_accSetup" />
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="mb-2">
-                                <label for="cmd_bank" class="form-label">Bank <span class="text-danger">*</span></label>
-                                <input id="cmd_bank" />
+                                <label for="cmb_bank" class="form-label">Bank <span class="text-danger">*</span></label>
+                                <input id="cmb_bank" />
                             </div>
                         </div>
                     </div>
@@ -211,10 +211,10 @@
         $('#customerOtherName').val('');
         $('#customerShortName').val('');
         $('#customerRegNo').val('');
-        $('#cmd_currency').data("kendoComboBox").value('');
-        $('#cmd_creditTerm').data("kendoComboBox").value('');
-        $('#cmd_accSetup').data("kendoComboBox").value('');
-        $('#cmd_bank').data("kendoComboBox").value('');
+        $('#cmb_currency').data("kendoComboBox").value('');
+        $('#cmb_creditTerm').data("kendoComboBox").value('');
+        $('#cmb_accSetup').data("kendoComboBox").value('');
+        $('#cmb_bank').data("kendoComboBox").value('');
         $('#remarks').val('');
         $('#isCustomer').prop('checked', false);
         $('#isVendor').prop('checked', false);
@@ -303,10 +303,10 @@
         $('#customerOtherName').val(data.customerOtherName);
         $('#customerShortName').val(data.customerShortName);
         $('#customerRegNo').val(data.customerRegNo);
-        $('#cmd_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
-        $('#cmd_creditTerm').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
-        $('#cmd_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
-        $('#cmd_bank').data("kendoComboBox").value(data.bankId > 0 ? data.bankId : '');
+        $('#cmb_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
+        $('#cmb_creditTerm').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
+        $('#cmb_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
+        $('#cmb_bank').data("kendoComboBox").value(data.bankId > 0 ? data.bankId : '');
         $('#remarks').val(data.remarks);
         $('#isCustomer').prop('checked', data.isCustomer);
         $('#isVendor').prop('checked', data.isVendor);
@@ -379,10 +379,10 @@
         
         const customerCode = document.getElementById('customerCode').value.trim();
         const customerName = document.getElementById('customerName').value.trim();
-        const currency = $('#cmd_currency').data('kendoComboBox').value();
-        const creditTerm = $('#cmd_creditTerm').data('kendoComboBox').value();
-        const accountSetup = $('#cmd_accSetup').data('kendoComboBox').value();
-        const bank = $('#cmd_bank').data('kendoComboBox').value();
+        const currency = $('#cmb_currency').data('kendoComboBox').value();
+        const creditTerm = $('#cmb_creditTerm').data('kendoComboBox').value();
+        const accountSetup = $('#cmb_accSetup').data('kendoComboBox').value();
+        const bank = $('#cmb_bank').data('kendoComboBox').value();
 
         let isValid = true;
 
@@ -428,10 +428,10 @@
             CustomerOtherName: $('#customerOtherName').val(),
             CustomerShortName: $('#customerShortName').val(),
             CustomerRegNo: $('#customerRegNo').val(),
-            CurrencyId: parseInt($('#cmd_currency').data("kendoComboBox").value()) || 0,
-            CreditTermId: parseInt($('#cmd_creditTerm').data("kendoComboBox").value()) || 0,
-            AccSetupId: parseInt($('#cmd_accSetup').data("kendoComboBox").value()) || 0,
-            BankId: parseInt($('#cmd_bank').data("kendoComboBox").value()) || 0,
+            CurrencyId: parseInt($('#cmb_currency').data("kendoComboBox").value()) || 0,
+            CreditTermId: parseInt($('#cmb_creditTerm').data("kendoComboBox").value()) || 0,
+            AccSetupId: parseInt($('#cmb_accSetup').data("kendoComboBox").value()) || 0,
+            BankId: parseInt($('#cmb_bank').data("kendoComboBox").value()) || 0,
             Remarks: $('#remarks').val(),
             IsCustomer: $('#isCustomer').prop('checked'),
             IsVendor: $('#isVendor').prop('checked'),
