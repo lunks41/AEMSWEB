@@ -1058,16 +1058,34 @@
                     title: "Actions",
                     width: "100px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
                 { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
