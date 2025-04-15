@@ -25,6 +25,20 @@
     };
 }
 
+<style>
+    .menu-item.open > .menu-link {
+        font-weight: bold;
+    }
+
+    .menu-sub {
+        display: none;
+    }
+
+    .menu-item.open .menu-sub {
+        display: block;
+    }
+</style>
+
 <div class="sidebar-area" id="sidebar-area">
     <div class="logo position-relative">
         <a href="@Url.Action("Index", "Dashboard", new { companyId = companyId })" class="d-block text-decoration-none position-relative">
@@ -175,4 +189,19 @@
         localStorage.setItem('logout-event', Date.now());
         document.getElementById('logoutForm').submit();
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname;
+        const menuItems = document.querySelectorAll('.menu-item a');
+
+        menuItems.forEach((menuItem) => {
+            if (menuItem.href.includes(currentPath)) {
+                menuItem.classList.add('active');
+                const parentMenu = menuItem.closest('.menu-item');
+                if (parentMenu) {
+                    parentMenu.classList.add('open');
+                }
+            }
+        });
+    });
 </script>

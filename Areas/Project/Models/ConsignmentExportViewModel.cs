@@ -21,15 +21,17 @@ namespace AMESWEB.Areas.Project.Models
         public long JobOrderId { get; set; }
         public string JobOrderNo { get; set; } = string.Empty;
         public short TaskId { get; set; }
+        public short CargoTypeId { get; set; }
         public string? TaskName { get; set; } = string.Empty;
         public long? DebitNoteId { get; set; }
         public string? DebitNoteNo { get; set; } = string.Empty;
         public decimal TotAmt { get; set; } = 0M;
         public decimal GstAmt { get; set; } = 0M;
         public decimal TotAmtAftGst { get; set; } = 0M;
-        
+
         // Consignment specific fields
-        public long? ConsignmentNo { get; set; }
+        public string? ConsignmentNo { get; set; } = string.Empty;
+
         public string? AWBNumber { get; set; }
         public string? DeclarationNumber { get; set; }
         public DateTime? BookingDate { get; set; }
@@ -38,6 +40,7 @@ namespace AMESWEB.Areas.Project.Models
         public string? DeliveryLocation { get; set; }
         public short GLId { get; set; }
         public string? GlName { get; set; } = string.Empty;
+
         public short ChargeId { get; set; }
         public string? ChargeName { get; set; } = string.Empty;
         public int? SupplierId { get; set; }
@@ -58,9 +61,10 @@ namespace AMESWEB.Areas.Project.Models
         public string? ModeName { get; set; } = string.Empty;
         public string? ClearedBy { get; set; }
         public string? TransporterName { get; set; }
-        
+
         // Deposit and refund fields
         public bool? IsDepositRefundReceived { get; set; }
+
         public decimal? AmountDeposited { get; set; }
         public string? RefundInstrumentNumber { get; set; }
         public bool? IsWarehouseCharges { get; set; }
@@ -74,17 +78,19 @@ namespace AMESWEB.Areas.Project.Models
         public string? HawbNumber { get; set; }
         public bool IsRefundedReceived { get; set; }
         public bool IsRefundedExpected { get; set; }
-        
+
         // Common fields
         public string? Remarks { get; set; } = string.Empty;
+
         public short CreateById { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
         public short? EditById { get; set; }
         public DateTime? EditDate { get; set; }
         public byte EditVersion { get; set; } = 0;
-        
+
         // Additional fields for UI display
         public string? CreateBy { get; set; } = string.Empty;
+
         public string? EditBy { get; set; } = string.Empty;
     }
 }

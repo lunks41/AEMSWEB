@@ -79,6 +79,9 @@ function getCookie(name) {
         });
     })();
 
+    // Set sidebar to be hidden by default
+    document.body.setAttribute("sidebar-data-theme", "sidebar-hide");
+
     // Header Burger Button
     const getHeaderBurgerMenuId = document.getElementById('header-burger-menu');
     if (getHeaderBurgerMenuId) {

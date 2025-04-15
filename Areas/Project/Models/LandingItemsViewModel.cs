@@ -28,6 +28,7 @@ namespace AMESWEB.Areas.Project.Models
         public decimal GstAmt { get; set; } = 0M;
         public decimal TotAmtAftGst { get; set; } = 0M;
         public string? Remarks { get; set; } = string.Empty;
+        public string? ItemName { get; set; } = string.Empty;
         public short CreateById { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
         public short? EditById { get; set; }
@@ -36,6 +37,7 @@ namespace AMESWEB.Areas.Project.Models
 
         // Landing items specific fields
         public DateTime LandingItemDate { get; set; }
+
         public string? LandingItemName { get; set; }
         public string Location { get; set; } = string.Empty;
         public decimal? Quantity { get; set; } = 0M;
@@ -55,6 +57,7 @@ namespace AMESWEB.Areas.Project.Models
 
         // Additional fields for UI display
         public string? CreateBy { get; set; } = string.Empty;
+
         public string? EditBy { get; set; } = string.Empty;
     }
 }

@@ -661,9 +661,9 @@ namespace AMESWEB.Areas.Project.Data.Services
             EquipmentsUsedViewModelCount countViewModel = new EquipmentsUsedViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_EquipmentsUsed Ser_Eq LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Eq.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Eq.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Eq.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Eq.ChargeId AND M_Chr.TaskId = Ser_Eq.TaskId LEFT JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Eq.UomId LEFT JOIN dbo.M_Equipment M_Eq ON M_Eq.EquipmentId = Ser_Eq.EquipmentId WHERE Ser_Eq.JobOrderId={JobOrderId} AND Ser_Eq.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_EquipmentsUsed Ser_Eq LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Eq.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Eq.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Eq.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Eq.ChargeId AND M_Chr.TaskId = Ser_Eq.TaskId LEFT JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Eq.UomId WHERE Ser_Eq.JobOrderId={JobOrderId} AND Ser_Eq.CompanyId={CompanyId}");
 
-                var result = await _repository.GetQueryAsync<EquipmentsUsedViewModel>($"SELECT Ser_Eq.EquipmentsUsedId,Ser_Eq.CompanyId,Ser_Eq.JobOrderId,Ser_Eq.JobOrderNo,Ser_Eq.TaskId,Ser_Eq.EquipmentId,M_Eq.EquipmentName,Ser_Eq.DateUsed,Ser_Eq.Quantity,Ser_Eq.UomId,M_Uo.UomName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Eq.GLId,Ser_Eq.StatusId,M_Or.OrderTypeName As StatusName,Ser_Eq.DebitNoteId,Ser_Eq.DebitNoteNo,Ser_Eq.TotAmt,Ser_Eq.GstAmt,Ser_Eq.TotAmtAftGst,Ser_Eq.Remarks,Ser_Eq.CreateById,Ser_Eq.CreateDate,Ser_Eq.EditById,Ser_Eq.EditDate,Ser_Eq.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_EquipmentsUsed Ser_Eq LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Eq.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Eq.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Eq.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Eq.ChargeId AND M_Chr.TaskId = Ser_Eq.TaskId LEFT JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Eq.UomId LEFT JOIN dbo.M_Equipment M_Eq ON M_Eq.EquipmentId = Ser_Eq.EquipmentId WHERE Ser_Eq.JobOrderId={JobOrderId} AND Ser_Eq.CompanyId={CompanyId}");
+                var result = await _repository.GetQueryAsync<EquipmentsUsedViewModel>($"SELECT Ser_Eq.EquipmentsUsedId,Ser_Eq.CompanyId,Ser_Eq.JobOrderId,Ser_Eq.JobOrderNo,Ser_Eq.TaskId,Ser_Eq.DateUsed,Ser_Eq.Quantity,Ser_Eq.UomId,M_Uo.UomName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Eq.GLId,Ser_Eq.StatusId,M_Or.OrderTypeName As StatusName,Ser_Eq.DebitNoteId,Ser_Eq.DebitNoteNo,Ser_Eq.TotAmt,Ser_Eq.GstAmt,Ser_Eq.TotAmtAftGst,Ser_Eq.Remarks,Ser_Eq.CreateById,Ser_Eq.CreateDate,Ser_Eq.EditById,Ser_Eq.EditDate,Ser_Eq.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_EquipmentsUsed Ser_Eq LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Eq.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Eq.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Eq.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Eq.ChargeId AND M_Chr.TaskId = Ser_Eq.TaskId LEFT JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Eq.UomId WHERE Ser_Eq.JobOrderId={JobOrderId} AND Ser_Eq.CompanyId={CompanyId}");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -698,7 +698,7 @@ namespace AMESWEB.Areas.Project.Data.Services
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<EquipmentsUsedViewModel>($"SELECT Ser_Eq.EquipmentsUsedId,Ser_Eq.CompanyId,Ser_Eq.JobOrderId,Ser_Eq.JobOrderNo,Ser_Eq.TaskId,Ser_Eq.EquipmentId,M_Eq.EquipmentName,Ser_Eq.DateUsed,Ser_Eq.Quantity,Ser_Eq.UomId,M_Uo.UomName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Eq.GLId,Ser_Eq.StatusId,M_Or.OrderTypeName As StatusName,Ser_Eq.DebitNoteId,Ser_Eq.DebitNoteNo,Ser_Eq.TotAmt,Ser_Eq.GstAmt,Ser_Eq.TotAmtAftGst,Ser_Eq.Remarks,Ser_Eq.CreateById,Ser_Eq.CreateDate,Ser_Eq.EditById,Ser_Eq.EditDate,Ser_Eq.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_EquipmentsUsed Ser_Eq LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Eq.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Eq.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Eq.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Eq.ChargeId AND M_Chr.TaskId = Ser_Eq.TaskId LEFT JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Eq.UomId LEFT JOIN dbo.M_Equipment M_Eq ON M_Eq.EquipmentId = Ser_Eq.EquipmentId WHERE Ser_Eq.JobOrderId={JobOrderId} AND Ser_Eq.EquipmentsUsedId={EquipmentsUsedId} AND Ser_Eq.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<EquipmentsUsedViewModel>($"SELECT Ser_Eq.EquipmentsUsedId,Ser_Eq.CompanyId,Ser_Eq.JobOrderId,Ser_Eq.JobOrderNo,Ser_Eq.TaskId,Ser_Eq.DateUsed,Ser_Eq.Quantity,Ser_Eq.UomId,M_Uo.UomName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Eq.GLId,Ser_Eq.StatusId,M_Or.OrderTypeName As StatusName,Ser_Eq.DebitNoteId,Ser_Eq.DebitNoteNo,Ser_Eq.TotAmt,Ser_Eq.GstAmt,Ser_Eq.TotAmtAftGst,Ser_Eq.Remarks,Ser_Eq.CreateById,Ser_Eq.CreateDate,Ser_Eq.EditById,Ser_Eq.EditDate,Ser_Eq.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_EquipmentsUsed Ser_Eq LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Eq.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Eq.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Eq.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Eq.ChargeId AND M_Chr.TaskId = Ser_Eq.TaskId LEFT JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Eq.UomId WHERE Ser_Eq.JobOrderId={JobOrderId} AND Ser_Eq.EquipmentsUsedId={EquipmentsUsedId} AND Ser_Eq.CompanyId={CompanyId}");
 
                 return result;
             }
@@ -3498,7 +3498,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             {
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.CompanyId={CompanyId}");
 
-                var result = await _repository.GetQueryAsync<TechniciansSurveyorsViewModel>($"SELECT Ser_TS.TechniciansSurveyorsId,Ser_TS.CompanyId,Ser_TS.JobOrderId,Ser_TS.JobOrderNo,Ser_TS.TaskId,Ser_TS.SupplierId,M_Ser.SupplierName,Ser_TS.ChargeId,M_Chr.ChargeName,Ser_TS.StatusId,M_Or.OrderTypeName As StatusName,Ser_TS.ServiceDate,Ser_TS.GLId,Ser_TS.DebitNoteId,Ser_TS.DebitNoteNo,Ser_TS.Remarks,Ser_TS.CreateById,Ser_TS.CreateDate,Ser_TS.EditById,Ser_TS.EditDate,Ser_TS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.CompanyId={CompanyId}");
+                var result = await _repository.GetQueryAsync<TechniciansSurveyorsViewModel>($"SELECT Ser_TS.TechnicianSurveyorId,Ser_TS.CompanyId,Ser_TS.JobOrderId,Ser_TS.JobOrderNo,Ser_TS.TaskId,Ser_TS.SupplierId,M_Ser.SupplierName,Ser_TS.ChargeId,M_Chr.ChargeName,Ser_TS.StatusId,M_Or.OrderTypeName As StatusName,Ser_TS.ServiceDate,Ser_TS.GLId,Ser_TS.DebitNoteId,Ser_TS.DebitNoteNo,Ser_TS.Remarks,Ser_TS.CreateById,Ser_TS.CreateDate,Ser_TS.EditById,Ser_TS.EditDate,Ser_TS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.CompanyId={CompanyId}");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
@@ -3529,11 +3529,11 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<TechniciansSurveyorsViewModel> GetTechniciansSurveyorsByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 TechniciansSurveyorsId)
+        public async Task<TechniciansSurveyorsViewModel> GetTechniciansSurveyorsByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 TechnicianSurveyorId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<TechniciansSurveyorsViewModel>($"SELECT Ser_TS.TechniciansSurveyorsId,Ser_TS.CompanyId,Ser_TS.JobOrderId,Ser_TS.JobOrderNo,Ser_TS.TaskId,Ser_TS.SupplierId,M_Ser.SupplierName,Ser_TS.ChargeId,M_Chr.ChargeName,Ser_TS.StatusId,M_Or.OrderTypeName As StatusName,Ser_TS.ServiceDate,Ser_TS.GLId,Ser_TS.DebitNoteId,Ser_TS.DebitNoteNo,Ser_TS.Remarks,Ser_TS.CreateById,Ser_TS.CreateDate,Ser_TS.EditById,Ser_TS.EditDate,Ser_TS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.TechniciansSurveyorsId={TechniciansSurveyorsId} AND Ser_TS.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<TechniciansSurveyorsViewModel>($"SELECT Ser_TS.TechnicianSurveyorId,Ser_TS.CompanyId,Ser_TS.JobOrderId,Ser_TS.JobOrderNo,Ser_TS.TaskId,Ser_TS.SupplierId,M_Ser.SupplierName,Ser_TS.ChargeId,M_Chr.ChargeName,Ser_TS.StatusId,M_Or.OrderTypeName As StatusName,Ser_TS.ServiceDate,Ser_TS.GLId,Ser_TS.DebitNoteId,Ser_TS.DebitNoteNo,Ser_TS.Remarks,Ser_TS.CreateById,Ser_TS.CreateDate,Ser_TS.EditById,Ser_TS.EditDate,Ser_TS.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_TechniciansSurveyors Ser_TS INNER JOIN dbo.M_Supplier M_Ser ON M_Ser.SupplierId = Ser_TS.SupplierId INNER JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_TS.ChargeId AND M_Chr.TaskId = Ser_TS.TaskId INNER JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_TS.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_TS.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_TS.EditById WHERE Ser_TS.JobOrderId={JobOrderId} AND Ser_TS.TechnicianSurveyorId={TechnicianSurveyorId} AND Ser_TS.CompanyId={CompanyId}");
 
                 return result;
             }
@@ -3561,7 +3561,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
         public async Task<SqlResponce> SaveTechniciansSurveyorsAsync(short CompanyId, short UserId, Ser_TechniciansSurveyors ser_TechniciansSurveyors)
         {
-            bool IsEdit = ser_TechniciansSurveyors.TechniciansSurveyorsId != 0;
+            bool IsEdit = ser_TechniciansSurveyors.TechnicianSurveyorId != 0;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -3569,8 +3569,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                     if (IsEdit)
                     {
                         var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                     $"SELECT 1 AS IsExist FROM dbo.Ser_TechniciansSurveyors WHERE TechniciansSurveyorsId=@TechniciansSurveyorsId",
-                     new { ser_TechniciansSurveyors.TechniciansSurveyorsId });
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_TechniciansSurveyors WHERE TechnicianSurveyorId=@TechnicianSurveyorId",
+                     new { ser_TechniciansSurveyors.TechnicianSurveyorId });
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
@@ -3587,11 +3587,11 @@ namespace AMESWEB.Areas.Project.Data.Services
                     {
                         // Take the Next Id From SQL
                         var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                     "SELECT ISNULL((SELECT TOP 1 (TechniciansSurveyorsId + 1) FROM dbo.Ser_TechniciansSurveyors WHERE (TechniciansSurveyorsId + 1) NOT IN (SELECT TechniciansSurveyorsId FROM dbo.Ser_TechniciansSurveyors)),1) AS NextId");
+                     "SELECT ISNULL((SELECT TOP 1 (TechnicianSurveyorId + 1) FROM dbo.Ser_TechniciansSurveyors WHERE (TechnicianSurveyorId + 1) NOT IN (SELECT TechnicianSurveyorId FROM dbo.Ser_TechniciansSurveyors)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
-                            ser_TechniciansSurveyors.TechniciansSurveyorsId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_TechniciansSurveyors.TechnicianSurveyorId = Convert.ToInt16(sqlMissingResponse.NextId);
                             ser_TechniciansSurveyors.EditById = null;
                             ser_TechniciansSurveyors.EditDate = null;
                             _context.Add(ser_TechniciansSurveyors);
@@ -3608,7 +3608,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     {
                         if (IsEdit)
                         {
-                            await _repository.UpsertExecuteScalarAsync($"update Ser_TechniciansSurveyors set EditVersion=EditVersion+1 WHERE TechniciansSurveyorsId={ser_TechniciansSurveyors.TechniciansSurveyorsId} AND CompanyId={CompanyId}");
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_TechniciansSurveyors set EditVersion=EditVersion+1 WHERE TechnicianSurveyorId={ser_TechniciansSurveyors.TechnicianSurveyorId} AND CompanyId={CompanyId}");
                         }
                         else
                         {
@@ -3618,7 +3618,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                             "DECLARE @TaskItemNo SMALLINT; " +
                             $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId} AND (ItemNo + 1) NOT IN (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId})), 1);  " +
                             $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1) FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId} AND TaskId = {ser_TechniciansSurveyors.TaskId} AND (TaskItemNo + 1) NOT IN (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_TechniciansSurveyors.JobOrderId} AND TaskId = {ser_TechniciansSurveyors.TaskId})), 1);   " +
-                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId) VALUES ({CompanyId},{ser_TechniciansSurveyors.JobOrderId},'{ser_TechniciansSurveyors.JobOrderNo}',@ItemNo,{ser_TechniciansSurveyors.TaskId},@TaskItemNo,{ser_TechniciansSurveyors.TechniciansSurveyorsId});");
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId) VALUES ({CompanyId},{ser_TechniciansSurveyors.JobOrderId},'{ser_TechniciansSurveyors.JobOrderNo}',@ItemNo,{ser_TechniciansSurveyors.TaskId},@TaskItemNo,{ser_TechniciansSurveyors.TechnicianSurveyorId});");
                         }
 
                         var auditLog = new AdmAuditLog
@@ -3626,7 +3626,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                             CompanyId = CompanyId,
                             ModuleId = (short)E_Modules.Project,
                             TransactionId = (short)E_Project.Job,
-                            DocumentId = ser_TechniciansSurveyors.TechniciansSurveyorsId,
+                            DocumentId = ser_TechniciansSurveyors.TechnicianSurveyorId,
                             DocumentNo = "",
                             TblName = "Ser_TechniciansSurveyors",
                             ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
@@ -3689,7 +3689,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = ser_TechniciansSurveyors.TechniciansSurveyorsId,
+                    DocumentId = ser_TechniciansSurveyors.TechnicianSurveyorId,
                     DocumentNo = "",
                     TblName = "Ser_TechniciansSurveyors",
                     ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
@@ -3703,17 +3703,17 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponce> DeleteTechniciansSurveyorsAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 techniciansSurveyorsId)
+        public async Task<SqlResponce> DeleteTechniciansSurveyorsAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 TechnicianSurveyorId)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (techniciansSurveyorsId > 0)
+                    if (TechnicianSurveyorId > 0)
                     {
-                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={techniciansSurveyorsId}");
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={TechnicianSurveyorId}");
 
-                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_TechniciansSurveyors WHERE CompanyId={CompanyId} AND TechniciansSurveyorsId={techniciansSurveyorsId}");
+                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_TechniciansSurveyors WHERE CompanyId={CompanyId} AND TechnicianSurveyorId={TechnicianSurveyorId}");
 
                         if (deletejobOrderResult > 0 && deleteResult > 0)
                         {
@@ -3722,7 +3722,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Project,
                                 TransactionId = (short)E_Project.Job,
-                                DocumentId = techniciansSurveyorsId,
+                                DocumentId = TechnicianSurveyorId,
                                 DocumentNo = "",
                                 TblName = "Ser_TechniciansSurveyors",
                                 ModeId = (short)E_Mode.Delete,
@@ -3745,7 +3745,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     }
                     else
                     {
-                        return new SqlResponce { Result = -1, Message = "TechniciansSurveyorsId Should be greater than zero" };
+                        return new SqlResponce { Result = -1, Message = "TechnicianSurveyorId Should be greater than zero" };
                     }
                     return new SqlResponce();
                 }
@@ -3759,7 +3759,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = techniciansSurveyorsId,
+                    DocumentId = TechnicianSurveyorId,
                     DocumentNo = "",
                     TblName = "Ser_TechniciansSurveyors",
                     ModeId = (short)E_Mode.Delete,
@@ -3787,7 +3787,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = techniciansSurveyorsId,
+                    DocumentId = TechnicianSurveyorId,
                     DocumentNo = "",
                     TblName = "Ser_TechniciansSurveyors",
                     ModeId = (short)E_Mode.Delete,

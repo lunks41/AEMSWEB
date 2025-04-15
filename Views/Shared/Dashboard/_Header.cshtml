@@ -4,14 +4,14 @@
             <div class="left-header-content">
                 <ul class="d-flex align-items-center ps-0 mb-0 list-unstyled justify-content-center justify-content-sm-start">
                     <li>
-                        <button class="header-burger-menu bg-transparent p-0 border-0" id="header-burger-menu">
+                        <button class="header-burger-menu bg-transparent p-0 border-0" id="header-burger-menu" aria-label="Menu">
                             <span class="material-symbols-outlined">menu</span>
                         </button>
                     </li>
                     <li>
                         <form class="src-form position-relative">
-                            <input type="text" class="form-control" placeholder="Search here....." />
-                            <button type="submit" class="src-btn position-absolute top-50 end-0 translate-middle-y bg-transparent p-0 border-0">
+                            <input type="text" class="form-control" placeholder="Search here....." aria-label="Search" />
+                            <button type="submit" class="src-btn position-absolute top-50 end-0 translate-middle-y bg-transparent p-0 border-0" aria-label="Submit search">
                                 <span class="material-symbols-outlined">search</span>
                             </button>
                         </form>
@@ -23,14 +23,13 @@
         <div class="col-lg-8 col-sm-6">
             <div class="right-header-content mt-2 mt-sm-0">
                 <ul class="d-flex align-items-center justify-content-center justify-content-sm-end ps-0 mb-0 list-unstyled">
-
                     <li class="header-right-item">
                         <partial name="_LoginPartialV1" />
                     </li>
                     <!-- Dark/Light Mode Button -->
                     <li class="header-right-item">
                         <div class="light-dark">
-                            <button class="switch-toggle settings-btn dark-btn p-0 bg-transparent" id="switch-toggle">
+                            <button class="switch-toggle settings-btn dark-btn p-0 bg-transparent" id="switch-toggle" aria-label="Toggle dark mode">
                                 <span class="dark"><i class="material-symbols-outlined">light_mode</i></span>
                                 <span class="light"><i class="material-symbols-outlined">dark_mode</i></span>
                             </button>
@@ -39,17 +38,15 @@
 
                     <!-- Other Navbar Items -->
                     <li class="header-right-item">
-                        <button class="fullscreen-btn bg-transparent p-0 border-0" id="fullscreen-button">
+                        <button class="fullscreen-btn bg-transparent p-0 border-0" id="fullscreen-button" aria-label="Fullscreen">
                             <i class="material-symbols-outlined text-body">fullscreen</i>
                         </button>
                     </li>
 
                     <li class="header-right-item">
-                        <a class="nav-link text-dark" href="javascript:triggerGlobalLogout()">Logout</a>
-
+                        <button class="btn btn-link nav-link text-dark p-0 border-0" id="logoutButton">Logout</button>
                         <form id="logoutForm" class="d-none" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                             @Html.AntiForgeryToken()
-                            @*<button type="submit" class="btn btn-link nav-link text-dark p-0">Logout</button>*@
                         </form>
                     </li>
                 </ul>
@@ -58,92 +55,168 @@
     </div>
 </header>
 
-<script>
-    // Session timeout settings (30 minutes total, 25 minutes for warning)
-    const totalTimeout = 30 * 60 * 1000; // 30 minutes
-    const warningTimeout = 25 * 60 * 1000; // Show warning after 25 minutes
-    let timeoutTimer;
-    let countdownTimer;
-    let lastActivity = Date.now();
+<!-- Session Timeout Modal -->
+<div class="modal fade" id="sessionTimeoutModal" tabindex="-1" aria-labelledby="sessionTimeoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sessionTimeoutModalLabel">Session Timeout Warning</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Your session is about to expire due to inactivity. You will be logged out in <span id="countdown">5:00</span>.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="logoutNowBtn">Logout Now</button>
+                <button type="button" class="btn btn-primary" id="continueSessionBtn">Continue Session</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    // Activity detection events
-    ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
-        document.addEventListener(event, () => {
-            lastActivity = Date.now();
-            if($('#sessionTimeoutModal').is(':visible')) {
-                continueSession();
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Session timeout settings (30 minutes total, 25 minutes for warning)
+        const SESSION_CONFIG = {
+            totalTimeout: 30 * 60 * 1000,      // 30 minutes
+            warningTimeout: 25 * 60 * 1000,    // Show warning after 25 minutes
+            checkInterval: 10 * 1000,          // Check every 10 seconds
+            storageKey: 'last-activity-time',
+            logoutEventKey: 'logout-event'
+        };
+
+        let timeoutModal = null;
+        let countdownTimer = null;
+
+        // Initialize the modal
+        const sessionTimeoutModal = document.getElementById('sessionTimeoutModal');
+        if (sessionTimeoutModal) {
+            timeoutModal = new bootstrap.Modal(sessionTimeoutModal);
+        }
+
+        // Activity tracking
+        function trackActivity() {
+            const now = Date.now();
+            localStorage.setItem(SESSION_CONFIG.storageKey, now.toString());
+            sessionStorage.setItem(SESSION_CONFIG.storageKey, now.toString());
+        }
+
+        // Add event listeners for activity tracking
+        ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(eventType => {
+            document.addEventListener(eventType, trackActivity, { passive: true });
+        });
+
+        // Initialize activity tracking
+        trackActivity();
+
+        // Check inactivity
+        function checkInactivity() {
+            const now = Date.now();
+            const lastActivity = parseInt(localStorage.getItem(SESSION_CONFIG.storageKey) || now.toString());
+            const elapsed = now - lastActivity;
+
+            if (elapsed > SESSION_CONFIG.totalTimeout) {
+                // Session expired - force logout
+                performLogout();
+                return;
+            }
+
+            if (elapsed > SESSION_CONFIG.warningTimeout &&
+                !document.getElementById('sessionTimeoutModal')?.classList.contains('show')) {
+                showTimeoutWarning(SESSION_CONFIG.totalTimeout - elapsed);
+            }
+        }
+
+        // Show timeout warning
+        function showTimeoutWarning(timeLeft) {
+            if (!timeoutModal) return;
+
+            timeoutModal.show();
+            const countdownElement = document.getElementById('countdown');
+            if (!countdownElement) return;
+
+            let secondsLeft = Math.ceil(timeLeft / 1000);
+            updateCountdown();
+
+            // Clear any existing countdown timer
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+
+            countdownTimer = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    performLogout();
+                    return;
+                }
+                updateCountdown();
+            }, 1000);
+
+            function updateCountdown() {
+                const minutes = Math.floor(secondsLeft / 60);
+                const seconds = secondsLeft % 60;
+                countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // Continue session
+        function continueSession() {
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+            trackActivity();
+            if (timeoutModal) {
+                timeoutModal.hide();
+            }
+        }
+
+        // Perform logout
+        function performLogout() {
+            // Clean up timers
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+
+            // Notify other tabs
+            notifyLogout();
+
+            // Submit the logout form
+            document.getElementById('logoutForm')?.submit();
+        }
+
+        // Cross-tab communication for logout
+        function notifyLogout() {
+            const timestamp = Date.now().toString();
+            localStorage.setItem(SESSION_CONFIG.logoutEventKey, timestamp);
+            // Remove the item to enable future events with the same key
+            setTimeout(() => {
+                localStorage.removeItem(SESSION_CONFIG.logoutEventKey);
+            }, 100);
+        }
+
+        // Listen for logout events from other tabs
+        window.addEventListener('storage', function(event) {
+            if (event.key === SESSION_CONFIG.logoutEventKey) {
+                window.location.href = '@Url.Action("Login", "Account")';
+            }
+            if (event.key === SESSION_CONFIG.storageKey) {
+                // Another tab updated the activity time, sync with this tab
+                sessionStorage.setItem(SESSION_CONFIG.storageKey, event.newValue);
             }
         });
+
+        // Set up event listeners for the modal buttons
+        document.getElementById('continueSessionBtn')?.addEventListener('click', continueSession);
+        document.getElementById('logoutNowBtn')?.addEventListener('click', performLogout);
+        document.getElementById('logoutButton')?.addEventListener('click', performLogout);
+
+        // Start checking inactivity
+        setInterval(checkInactivity, SESSION_CONFIG.checkInterval);
+
+        // Perform initial check
+        checkInactivity();
     });
-
-    // Check inactivity regularly
-    function checkInactivity() {
-        const currentTime = Date.now();
-        const elapsed = currentTime - lastActivity;
-
-        if(elapsed > warningTimeout && !$('#sessionTimeoutModal').is(':visible')) {
-            showTimeoutWarning(totalTimeout - elapsed);
-        }
-
-        if(elapsed > totalTimeout) {
-            triggerGlobalLogout();
-        }
-    }
-
-    // Show timeout warning modal
-    function showTimeoutWarning(timeLeft) {
-        const modal = new bootstrap.Modal(document.getElementById('sessionTimeoutModal'));
-        modal.show();
-
-        let seconds = Math.ceil(timeLeft / 1000);
-
-        countdownTimer = setInterval(() => {
-            seconds--;
-            if(seconds <= 0) {
-                clearInterval(countdownTimer);
-                triggerGlobalLogout();
-            }
-            document.getElementById('countdown').textContent =
-                `${Math.floor(seconds/60)}:${(seconds%60).toString().padStart(2, '0')}`;
-        }, 1000);
-    }
-
-    function continueSession() {
-        clearInterval(countdownTimer);
-        lastActivity = Date.now();
-        $('#sessionTimeoutModal').modal('hide');
-    }
-
-    function logoutNow() {
-        clearInterval(countdownTimer);
-        triggerGlobalLogout();
-    }
-
-    // Cross-tab logout functionality
-    window.addEventListener('storage', function(event) {
-        if (event.key === 'logout-event') {
-            localStorage.removeItem('auth-data');
-            window.location.href = '@Url.Action("Login", "Account")';
-        }
-    });
-
-   function triggerGlobalLogout() {
-    // Cross-tab logout notification
-    localStorage.setItem('logout-event', Date.now());
-    localStorage.removeItem('logout-event');
-
-    // Submit the hidden form
-    document.getElementById('logoutForm').submit();
-}
-
-// Cross-tab logout listener
-window.addEventListener('storage', function(event) {
-    if (event.key === 'logout-event') {
-        window.location.href = '@Url.Action("Login", "Account")';
-    }
-});
-
-    // Initialize check
-    setInterval(checkInactivity, 10000); // Check every 10 seconds
-    checkInactivity();
 </script>

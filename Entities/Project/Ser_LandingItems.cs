@@ -26,6 +26,7 @@ namespace AMESWEB.Entities.Project
         public short GLId { get; set; }
         public short ChargeId { get; set; }
         public short StatusId { get; set; }
+        public string ItemName { get; set; } // Not nullable
         public string LocationName { get; set; } // Not nullable
         public bool? IsDepositRefundReceived { get; set; } // Nullable
         public short? ForwardExportId { get; set; } // Nullable

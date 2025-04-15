@@ -5,7 +5,7 @@ namespace AMESWEB.Entities.Project
     public class Ser_TechniciansSurveyors
     {
         [Key]
-        public long TechniciansSurveyorsId { get; set; }
+        public long TechnicianSurveyorId { get; set; }
 
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }

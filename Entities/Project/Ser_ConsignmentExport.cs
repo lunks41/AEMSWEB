@@ -11,12 +11,13 @@ namespace AMESWEB.Entities.Project
         public long JobOrderId { get; set; }
         public string JobOrderNo { get; set; } // Nullable
         public short TaskId { get; set; }
+        public short CargoTypeId { get; set; }
         public long? DebitNoteId { get; set; } // Nullable
         public string DebitNoteNo { get; set; } // Nullable
         public decimal TotAmt { get; set; } = 0m;
         public decimal GstAmt { get; set; } = 0m;
         public decimal TotAmtAftGst { get; set; } = 0m;
-        public long? ConsignmentNo { get; set; } // Nullable
+        public string? ConsignmentNo { get; set; } // Nullable
         public string AWBNumber { get; set; } // Nullable
         public string DeclarationNumber { get; set; } // Nullable
         public DateTime? BookingDate { get; set; } // Nullable
