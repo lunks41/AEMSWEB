@@ -7,10 +7,13 @@ namespace AMESWEB.Areas.HRM.Models
         public int Id { get; set; }
         public int EmployeeId { get; set; }
         public int LeaveTypeId { get; set; }
+
         [Required]
         public DateTime StartDate { get; set; }
+
         [Required]
         public DateTime EndDate { get; set; }
+
         public string Reason { get; set; }
         public string Status { get; set; } = "Pending"; // Pending, Approved, Rejected
         public DateTime AppliedDate { get; set; } = DateTime.Now;
@@ -24,6 +27,7 @@ namespace AMESWEB.Areas.HRM.Models
     public class LeaveType
     {
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; } // e.g., Annual, Sick, Casual
     }

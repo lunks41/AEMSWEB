@@ -36,6 +36,7 @@ namespace AMESWEB.Areas.Project.Models
 
         // Other service specific fields
         public DateTime OtherServiceDate { get; set; }
+
         public string ServiceProvider { get; set; } = string.Empty;
         public decimal? Amount { get; set; }
         public short GLId { get; set; }
@@ -50,6 +51,7 @@ namespace AMESWEB.Areas.Project.Models
 
         // Additional fields for UI display
         public string? CreateBy { get; set; } = string.Empty;
+
         public string? EditBy { get; set; } = string.Empty;
     }
 }

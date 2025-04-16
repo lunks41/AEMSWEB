@@ -278,7 +278,7 @@
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button" data-status="ThirdParty">
-                                            <span class="badge bg-danger me-1">0</span> Third Party 
+                                            <span class="badge bg-danger me-1">0</span> Third Party
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
@@ -381,11 +381,20 @@
                                 <!-- Crew Sign On Tab -->
                                 <div class="tab-pane fade" id="crew-sign-on">
                                     <!-- Button Group for Crew Sign On -->
-                                    <div class="mb-3">
-                                        <button id="btnAddCrewSignOn" onclick="openChildModal('CrewSignOn')" class="btn btn-primary me-2">Add Crew Sign On</button>
-                                        <button id="btnCreateDebitNoteCrewOn" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardCrewOn" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateCrewOn" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddCrewSignOn" onclick="openChildModal('CrewSignOn')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteCrewSignOn" onclick="openChildDebitNoteModal('CrewSignOn')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardCrewSignOn" onclick="openChildTaskForwardModal('CrewSignOn', 4)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateCrewSignOn" onclick="openChildBulkUpdateModal('CrewSignOn', 4)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isCrewSignOnDebitNoteNo" class="form-check-input">
+                                            <label for="isCrewSignOnDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Crew Sign On -->
                                     <div id="grid-CrewSignOn" class="kendo-grid"></div>
@@ -394,11 +403,20 @@
                                 <!-- Crew Sign Off Tab -->
                                 <div class="tab-pane fade" id="crew-sign-off">
                                     <!-- Button Group for Crew Sign Off -->
-                                    <div class="mb-3">
-                                        <button id="btnAddCrewSignOff" onclick="openChildModal('CrewSignOff')" class="btn btn-primary me-2">Add Crew Sign Off</button>
-                                        <button id="btnCreateDebitNoteCrewOff" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardCrewOff" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateCrewOff" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddCrewSignOff" onclick="openChildModal('CrewSignOff')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteCrewSignOff" onclick="openChildDebitNoteModal('CrewSignOff')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardCrewSignOff" onclick="openChildTaskForwardModal('CrewSignOff', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateCrewSignOff" onclick="openChildBulkUpdateModal('CrewSignOff', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isCrewSignOffDebitNoteNo" class="form-check-input">
+                                            <label for="isCrewSignOffDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Crew Sign Off -->
                                     <div id="grid-CrewSignOff" class="kendo-grid"></div>
@@ -407,24 +425,42 @@
                                 <!-- Crew Miscellaneous Tab -->
                                 <div class="tab-pane fade" id="crew-miscellaneous">
                                     <!-- Button Group for Crew Miscellaneous -->
-                                    <div class="mb-3">
-                                        <button id="btnAddCrewMisc" onclick="openChildModal('CrewMisc')" class="btn btn-primary me-2">Add Crew Miscellaneous</button>
-                                        <button id="btnCreateDebitNoteCrewMisc" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardCrewMisc" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateCrewMisc" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddCrewMiscellaneou" onclick="openChildModal('CrewMiscellaneou')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteCrewMiscellaneou" onclick="openChildDebitNoteModal('CrewMiscellaneou')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardCrewMiscellaneou" onclick="openChildTaskForwardModal('CrewMiscellaneou', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateCrewMiscellaneou" onclick="openChildBulkUpdateModal('CrewMiscellaneou', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isCrewMiscellaneouDebitNoteNo" class="form-check-input">
+                                            <label for="isCrewMiscellaneouDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Crew Miscellaneous -->
-                                    <div id="grid-CrewMisc" class="kendo-grid"></div>
+                                    <div id="grid-CrewMiscellaneous" class="kendo-grid"></div>
                                 </div>
 
                                 <!-- Medical Assistance Tab -->
                                 <div class="tab-pane fade" id="medical-assistance">
                                     <!-- Button Group for Medical Assistance -->
-                                    <div class="mb-3">
-                                        <button id="btnAddMedicalAssistance" onclick="openChildModal('MedicalAssistance')" class="btn btn-primary me-2">Add Medical Assistance</button>
-                                        <button id="btnCreateDebitNoteMedical" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardMedical" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateMedical" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddMedicalAssistance" onclick="openChildModal('MedicalAssistance')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteMedicalAssistance" onclick="openChildDebitNoteModal('MedicalAssistance')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardMedicalAssistance" onclick="openChildTaskForwardModal('MedicalAssistance', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateMedicalAssistance" onclick="openChildBulkUpdateModal('MedicalAssistance', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isMedicalAssistanceDebitNoteNo" class="form-check-input">
+                                            <label for="isMedicalAssistanceDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Medical Assistance -->
                                     <div id="grid-MedicalAssistance" class="kendo-grid"></div>
@@ -434,19 +470,19 @@
                                 <div class="tab-pane fade" id="consignment-import">
                                     <!-- Button Group for Consignment Import -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport')" class="btn btn-primary me-2">Add Consignment Import</button>
-                                        <button id="btnCreateDebitNoteConsignmentImport" onclick="openChildDebitNoteModal('ConsignmentImport')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
-                                        <button id="btnTaskForwardConsignmentImport" onclick="openChildTaskForwardModal('ConsignmentImport',8)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateConsignmentImport" onclick="openChildBulkUpdateModal('ConsignmentImport',8)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteConsignmentImport" onclick="openChildDebitNoteModal('ConsignmentImport')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardConsignmentImport" onclick="openChildTaskForwardModal('ConsignmentImport', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateConsignmentImport" onclick="openChildBulkUpdateModal('ConsignmentImport', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isConsignmentImportDebitNoteNo" class="form-check-input" disabled>
-                                            <label for="isConsignmentImportDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
+                                            <input type="checkbox" id="isConsignmentImportDebitNoteNo" class="form-check-input">
+                                            <label for="isConsignmentImportDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
                                         </div>
 
                                         <!-- Input Box -->
-                                        <input type="text" id="consignmentImportDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Consignment Import -->
                                     <div id="grid-ConsignmentImport" class="kendo-grid"></div>
@@ -456,19 +492,19 @@
                                 <div class="tab-pane fade" id="consignment-export">
                                     <!-- Button Group for Consignment Export -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport')" class="btn btn-primary me-2">Add Consignment Export</button>
-                                        <button id="btnCreateDebitNoteConsignmentExport" onclick="openChildDebitNoteModal('ConsignmentExport')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
-                                        <button id="btnTaskForwardConsignmentExport" onclick="openChildTaskForwardModal('ConsignmentExport',9)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateConsignmentExport" onclick="openChildBulkUpdateModal('ConsignmentExport',9)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteConsignmentExport" onclick="openChildDebitNoteModal('ConsignmentExport')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardConsignmentExport" onclick="openChildTaskForwardModal('ConsignmentExport', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateConsignmentExport" onclick="openChildBulkUpdateModal('ConsignmentExport', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isConsignmentExportDebitNoteNo" class="form-check-input" disabled>
-                                            <label for="isConsignmentExportDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
+                                            <input type="checkbox" id="isConsignmentExportDebitNoteNo" class="form-check-input">
+                                            <label for="isConsignmentExportDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
                                         </div>
 
                                         <!-- Input Box -->
-                                        <input type="text" id="consignmentExportDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Consignment Export -->
                                     <div id="grid-ConsignmentExport" class="kendo-grid"></div>
@@ -477,11 +513,20 @@
                                 <!-- Third Party  Tab -->
                                 <div class="tab-pane fade" id="third-party-supply">
                                     <!-- Button Group for Third Party  -->
-                                    <div class="mb-3">
-                                        <button id="btnAddThirdParty" onclick="openChildModal('ThirdParty')" class="btn btn-primary me-2">Add Third Party </button>
-                                        <button id="btnCreateDebitNoteThirdParty" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardThirdParty" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateThirdParty" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddThirdParty" onclick="openChildModal('ThirdParty')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteThirdParty" onclick="openChildDebitNoteModal('ThirdParty')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardThirdParty" onclick="openChildTaskForwardModal('ThirdParty', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateThirdParty" onclick="openChildBulkUpdateModal('ThirdParty', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isThirdPartyDebitNoteNo" class="form-check-input">
+                                            <label for="isThirdPartyDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Third Party  -->
                                     <div id="grid-ThirdParty" class="kendo-grid"></div>
@@ -490,11 +535,20 @@
                                 <!-- Fresh Water Tab -->
                                 <div class="tab-pane fade" id="fresh-water">
                                     <!-- Button Group for Fresh Water -->
-                                    <div class="mb-3">
-                                        <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add Fresh Water</button>
-                                        <button id="btnCreateDebitNoteFreshWater" class="btn btn-secondary me-2">Create DebitNote</button>
-                                        <button id="btnTaskForwardFreshWater" class="btn btn-info me-2">Task Forward</button>
-                                        <button id="btnBulkUpdateFreshWater" class="btn btn-warning">Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteFreshWater" onclick="openChildDebitNoteModal('FreshWater')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardFreshWater" onclick="openChildTaskForwardModal('FreshWater', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateFreshWater" onclick="openChildBulkUpdateModal('FreshWater', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isFreshWaterDebitNoteNo" class="form-check-input">
+                                            <label for="isFreshWaterDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Fresh Water -->
                                     <div id="grid-FreshWater" class="kendo-grid"></div>
@@ -504,19 +558,19 @@
                                 <div class="tab-pane fade" id="technicians-surveyors">
                                     <!-- Button Group for Technicians Surveyors -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddTechnicianSurveyor" onclick="openChildModal('TechnicianSurveyor')" class="btn btn-primary me-2">Add Technician Surveyor</button>
-                                        <button id="btnCreateDebitNoteTechniciansSurveyors" onclick="openChildDebitNoteModal('TechniciansSurveyors')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
-                                        <button id="btnTaskForwardTechniciansSurveyors" onclick="openChildTaskForwardModal('TechniciansSurveyors',12)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateTechniciansSurveyors" onclick="openChildBulkUpdateModal('TechniciansSurveyors',12)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddTechniciansSurveyors" onclick="openChildModal('TechniciansSurveyors')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteTechniciansSurveyors" onclick="openChildDebitNoteModal('TechniciansSurveyors')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardTechniciansSurveyors" onclick="openChildTaskForwardModal('TechniciansSurveyors', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateTechniciansSurveyors" onclick="openChildBulkUpdateModal('TechniciansSurveyors', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isTechniciansSurveyorsDebitNoteNo" class="form-check-input" disabled>
-                                            <label for="isTechniciansSurveyorsDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
+                                            <input type="checkbox" id="isTechniciansSurveyorsDebitNoteNo" class="form-check-input">
+                                            <label for="isTechniciansSurveyorsDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
                                         </div>
 
                                         <!-- Input Box -->
-                                        <input type="text" id="techniciansSurveyorsDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Technicians Surveyors -->
                                     <div id="grid-TechniciansSurveyors" class="kendo-grid"></div>
@@ -526,19 +580,19 @@
                                 <div class="tab-pane fade" id="landing-items">
                                     <!-- Button Group for Landing Items -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddLandingItems" onclick="openChildModal('LandingItems')" class="btn btn-primary me-2">Add Landing Items</button>
-                                        <button id="btnCreateDebitNoteLandingItems" onclick="openChildDebitNoteModal('LandingItems')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
-                                        <button id="btnTaskForwardLandingItems" onclick="openChildTaskForwardModal('LandingItems',13)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateLandingItems" onclick="openChildBulkUpdateModal('LandingItems',13)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddLandingItem" onclick="openChildModal('LandingItem')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteLandingItem" onclick="openChildDebitNoteModal('LandingItem')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardLandingItem" onclick="openChildTaskForwardModal('LandingItem', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateLandingItem" onclick="openChildBulkUpdateModal('LandingItem', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isLandingItemsDebitNoteNo" class="form-check-input" disabled>
-                                            <label for="isLandingItemsDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
+                                            <input type="checkbox" id="isLandingItemDebitNoteNo" class="form-check-input">
+                                            <label for="isLandingItemDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
                                         </div>
 
                                         <!-- Input Box -->
-                                        <input type="text" id="landingItemsDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Landing Items -->
                                     <div id="grid-LandingItem" class="kendo-grid"></div>
@@ -548,19 +602,19 @@
                                 <div class="tab-pane fade" id="other-service">
                                     <!-- Button Group for Other Service -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add Other Service</button>
-                                        <button id="btnCreateDebitNoteOtherService" onclick="openChildDebitNoteModal('OtherService')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
-                                        <button id="btnTaskForwardOtherService" onclick="openChildTaskForwardModal('OtherService',14)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateOtherService" onclick="openChildBulkUpdateModal('OtherService',14)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteOtherService" onclick="openChildDebitNoteModal('OtherService')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardOtherService" onclick="openChildTaskForwardModal('OtherService', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateOtherService" onclick="openChildBulkUpdateModal('OtherService', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isOtherServiceDebitNoteNo" class="form-check-input" disabled>
-                                            <label for="isOtherServiceDebitNoteNo" class="form-check-label">Is Own DebitNote No.</label>
+                                            <input type="checkbox" id="isOtherServiceDebitNoteNo" class="form-check-input">
+                                            <label for="isOtherServiceDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
                                         </div>
 
                                         <!-- Input Box -->
-                                        <input type="text" id="otherServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Other Service -->
                                     <div id="grid-OtherService" class="kendo-grid"></div>
@@ -569,11 +623,20 @@
                                 <!-- Agency Remuneration Tab -->
                                 <div class="tab-pane fade" id="agency-remuneration">
                                     <!-- Button Group for Agency Remuneration -->
-                                    <div class="mb-3">
-                                        <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add Agency Remuneration</button>
-                                        <button id="btnCreateDebitNoteAgency" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
-                                        <button id="btnTaskForwardAgency" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateAgency" class="btn btn-warning" disabled>Bulk Update</button>
+                                    <div class="mb-3 d-flex align-items-center flex-wrap">
+                                        <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnCreateDebitNoteAgencyRemuneration" onclick="openChildDebitNoteModal('AgencyRemuneration')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardAgencyRemuneration" onclick="openChildTaskForwardModal('AgencyRemuneration', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateAgencyRemuneration" onclick="openChildBulkUpdateModal('AgencyRemuneration', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+
+                                        <!-- Checkbox -->
+                                        <div class="form-check me-2 mb-0">
+                                            <input type="checkbox" id="isAgencyRemunerationDebitNoteNo" class="form-check-input">
+                                            <label for="isAgencyRemunerationDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Agency Remuneration -->
                                     <div id="grid-AgencyRemuneration" class="kendo-grid"></div>
@@ -758,7 +821,7 @@
     }
 
     function openpurchaseExpenseModal(jobOrderId, jobOrderNo, portExpenseId, taskId) {
-        
+
         if (parseInt(jobOrderId) && parseInt(portExpenseId)) {
             const modalId = `#viewPurchaseModal`;
             const modalElement = $(modalId);
@@ -782,7 +845,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAllPortExpense(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
@@ -815,7 +878,7 @@
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
@@ -830,7 +893,7 @@
                 },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 {
                     field: "isActive",
@@ -910,7 +973,7 @@
 
     // ================== LAUNCH SERVICES GRID ================== //
     function initializeLaunchServicesGrid() {
-        
+
         let searchString = "";
         let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
@@ -920,7 +983,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAllLaunchServices(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
@@ -953,7 +1016,7 @@
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 {
@@ -1056,7 +1119,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
@@ -1088,14 +1151,14 @@
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
+
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1122,28 +1185,48 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-crewSignOnId="${dataItem.crewSignOnId}"  onclick="updateSelectedCrewSignOn(this, '${dataItem.jobOrderId}','${dataItem.crewSignOnId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openCrewSignOnModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOnId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openCrewSignOnModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOnId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteCrewSignOn('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOnId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openCrewSignOnModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOnId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "crewName", title: "Crew", width: "200px" },
+                { field: "visaName", title: "Visa", width: "200px" },
+                { field: "nationality", title: "Nationality", width: "200px" },
+                { field: "flightDetails", title: "FlightDetails", width: "200px" },
+                { field: "hotelName", title: "HotelName", width: "200px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1170,28 +1253,48 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-crewSignOffId="${dataItem.crewSignOffId}"  onclick="updateSelectedCrewSignOff(this, '${dataItem.jobOrderId}','${dataItem.crewSignOffId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openCrewSignOffModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOffId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openCrewSignOffModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOffId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteCrewSignOff('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOffId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openCrewSignOffModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.crewSignOffId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
-                { field: "supplierName", title: "Supplier Name", width: "200px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
+                { field: "crewName", title: "Crew", width: "200px" },
+                { field: "visaName", title: "Visa", width: "200px" },
+                { field: "nationality", title: "Nationality", width: "200px" },
+                { field: "flightDetails", title: "FlightDetails", width: "200px" },
+                { field: "hotelName", title: "HotelName", width: "200px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1207,49 +1310,67 @@
     }
 
     // ================== CRE MISCELLANEOUS GRID ================== //
-    function initializeCrewMiscGrid() {
+    function initializeCrewMiscellaneousGrid() {
 
         let searchString = "";
         let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
 
         if (jobOrderId > 0) {
-            let url = '@Url.Action("CrewMiscList", "Job", new { area = "Project" })';
+            let url = '@Url.Action("CrewMiscellaneousList", "Job", new { area = "Project" })';
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
+
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
 
-            let grid = $("#grid-CrewMisc").data("kendoGrid");
+            let grid = $("#grid-CrewMiscellaneous").data("kendoGrid");
             if (grid) {
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-CrewMisc", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGrid("grid-CrewMiscellaneous", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -1266,28 +1387,46 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
+
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1313,40 +1452,40 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllConsignmentImport" onclick="toggleSelectAllConsignmentImport(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectConsignmentImport" ${commonStyle} data-consignmentImportId="${dataItem.consignmentImportId}"  onclick="updateSelectedConsignmentImport(this, '${dataItem.jobOrderId}','${dataItem.consignmentImportId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentImportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}', 'view')">
-        <i class="material-symbols-outlined text-primary">visibility</i>
-    </button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentImportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}', 'edit')">
-        <i class="material-symbols-outlined text-warning" >edit</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteConsignmentImport('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined text-danger" >delete</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}','${dataItem.taskId}')">
-        <i class="material-symbols-outlined" >universal_currency_alt</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
 
                         buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined" >payments</i>
-    </button>`;
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
 
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "consignmentNo", title: "Consignment No.", width: "150px" },
                 { field: "cargoTypeName", title: "Cargo Type", width: "150px" },
                 { field: "uomName", title: "UOM", width: "100px" },
@@ -1388,40 +1527,40 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllConsignmentExport" onclick="toggleSelectAllConsignmentExport(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectConsignmentExport" ${commonStyle} data-consignmentExportId="${dataItem.consignmentExportId}"  onclick="updateSelectedConsignmentExport(this, '${dataItem.jobOrderId}','${dataItem.consignmentExportId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentExportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}', 'view')">
-        <i class="material-symbols-outlined text-primary">visibility</i>
-    </button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentExportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}', 'edit')">
-        <i class="material-symbols-outlined text-warning" >edit</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteConsignmentExport('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined text-danger" >delete</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}','${dataItem.taskId}')">
-        <i class="material-symbols-outlined" >universal_currency_alt</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
 
                         buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined" >payments</i>
-    </button>`;
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
 
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "consignmentNo", title: "Consignment No.", width: "150px" },
                 { field: "cargoTypeName", title: "Cargo Type", width: "150px" },
                 { field: "uomName", title: "UOM", width: "100px" },
@@ -1452,8 +1591,6 @@
         }
     }
 
-   
-
     // ================== THIRD PARTY SUPPLY GRID ================== //
     function initializeThirdPartyGrid() {
 
@@ -1466,28 +1603,46 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
+
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1514,28 +1669,46 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
+
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1562,28 +1735,46 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
+
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1609,40 +1800,40 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllTechniciansSurveyors" onclick="toggleSelectAllTechniciansSurveyors(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectTechniciansSurveyors" ${commonStyle} data-technicianSurveyorId="${dataItem.technicianSurveyorId}"  onclick="updateSelectedTechniciansSurveyors(this, '${dataItem.jobOrderId}','${dataItem.technicianSurveyorId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openTechniciansSurveyorsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}', 'view')">
-        <i class="material-symbols-outlined text-primary">visibility</i>
-    </button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openTechniciansSurveyorsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}', 'edit')">
-        <i class="material-symbols-outlined text-warning" >edit</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteTechniciansSurveyors('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined text-danger" >delete</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}','${dataItem.taskId}')">
-        <i class="material-symbols-outlined" >universal_currency_alt</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
 
                         buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined" >payments</i>
-    </button>`;
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
 
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "personName", title: "Person Name", width: "200px" },
                 {
                     field: "serviceDate",
@@ -1693,7 +1884,7 @@
             let idsArray = mulid.split(",").filter(id => id !== technicianSurveyorId);
             mulid = idsArray.join(",");
         }
-        
+
         // Call function to update button states
         updateTechniciansSurveyorsButtonStates();
     }
@@ -1740,28 +1931,46 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     template: function (dataItem) {
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i></button>`;
+                        // Define a common style for equal height, width, and gap
+                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'edit')">
-    <i class="material-symbols-outlined text-warning">edit</i></button>`;
+                        // Row checkbox with common style
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" onclick="deletePortExpense('${dataItem.jobOrderId}','${dataItem.portExpenseId}')">
-    <i class="material-symbols-outlined text-danger">delete</i></button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        return buttons;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
+
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
+
+                        return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
-                { field: "jobOrderNo", title: "Job Order No", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
+
                 { field: "supplierName", title: "Supplier Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "uomName", title: "Uom Name", width: "120px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
-               
+
                 { field: "remarks", title: "Remarks", width: "200px" },
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
@@ -1787,40 +1996,40 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllLandingItems" onclick="toggleSelectAllLandingItems(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectLandingItems" ${commonStyle} data-landingItemId="${dataItem.landingItemId}"  onclick="updateSelectedLandingItems(this, '${dataItem.jobOrderId}','${dataItem.landingItemId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLandingItemsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}', 'view')">
-        <i class="material-symbols-outlined text-primary">visibility</i>
-    </button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLandingItemsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}', 'edit')">
-        <i class="material-symbols-outlined text-warning" >edit</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteLandingItems('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined text-danger" >delete</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}','${dataItem.taskId}')">
-        <i class="material-symbols-outlined" >universal_currency_alt</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
 
                         buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined" >payments</i>
-    </button>`;
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
 
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "itemName", title: "Item Name", width: "150px" },
                 { field: "uomName", title: "UOM", width: "100px" },
                 { field: "quantity", title: "Quantity", width: "100px" },
@@ -1873,7 +2082,7 @@
             let idsArray = mulid.split(",").filter(id => id !== landingItemId);
             mulid = idsArray.join(",");
         }
-        
+
         // Call function to update button states
         updateLandingItemsButtonStates();
     }
@@ -1919,40 +2128,40 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllOtherService" onclick="toggleSelectAllOtherService(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectOtherService" ${commonStyle} data-otherServiceId="${dataItem.otherServiceId}"  onclick="updateSelectedOtherService(this, '${dataItem.jobOrderId}','${dataItem.otherServiceId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openOtherServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}', 'view')">
-        <i class="material-symbols-outlined text-primary">visibility</i>
-    </button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openOtherServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}', 'edit')">
-        <i class="material-symbols-outlined text-warning" >edit</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteOtherService('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined text-danger" >delete</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}','${dataItem.taskId}')">
-        <i class="material-symbols-outlined" >universal_currency_alt</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
 
                         buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined" >payments</i>
-    </button>`;
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
 
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "serviceName", title: "Service Name", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
@@ -1991,7 +2200,7 @@
             let idsArray = mulid.split(",").filter(id => id !== otherServiceId);
             mulid = idsArray.join(",");
         }
-        
+
         // Call function to update button states
         updateOtherServiceButtonStates();
     }
@@ -2038,40 +2247,40 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "200px",
+                    width: "170px",
                     headerTemplate: '<input type="checkbox" id="selectAllAgencyRemuneration" onclick="toggleSelectAllAgencyRemuneration(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectAgencyRemuneration" ${commonStyle} data-agencyRemunerationId="${dataItem.agencyRemunerationId}"  onclick="updateSelectedAgencyRemuneration(this, '${dataItem.jobOrderId}','${dataItem.agencyRemunerationId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
-                        // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openAgencyRemunerationModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}', 'view')">
-        <i class="material-symbols-outlined text-primary">visibility</i>
-    </button>`;
+                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+    <i class="material-symbols-outlined text-primary">visibility</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openAgencyRemunerationModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}', 'edit')">
-        <i class="material-symbols-outlined text-warning" >edit</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+    <i class="material-symbols-outlined text-warning" >edit</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteAgencyRemuneration('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined text-danger" >delete</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+    <i class="material-symbols-outlined text-danger" >delete</i>
+</button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openpurchaseExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}','${dataItem.taskId}')">
-        <i class="material-symbols-outlined" >universal_currency_alt</i>
-    </button>`;
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+    <i class="material-symbols-outlined" >universal_currency_alt</i>
+</button>`;
 
                         buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-        <i class="material-symbols-outlined" >payments</i>
-    </button>`;
+    <i class="material-symbols-outlined" >payments</i>
+</button>`;
 
                         return rowCheckbox + buttons;
                     }
                 },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "150px" },
+                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
                 { field: "chargeName", title: "Charge Name", width: "150px" },
                 { field: "statusName", title: "Status Name", width: "150px" },
                 { field: "totAmt", title: "Total Amount", width: "100px" },
@@ -2109,7 +2318,7 @@
             let idsArray = mulid.split(",").filter(id => id !== agencyRemunerationId);
             mulid = idsArray.join(",");
         }
-        
+
         // Call function to update button states
         updateAgencyRemunerationButtonStates();
     }
@@ -2189,7 +2398,7 @@
         let anySelected = document.querySelectorAll(".selectEquipmentsUsed:checked").length > 0;
 
         // Check the state of the isEquipmentsUsedDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isEquipmentsUsedDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isEquipmentsUsedDebitNoteNo") ?
                                  document.getElementById("isEquipmentsUsedDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2248,7 +2457,7 @@
         let anySelected = document.querySelectorAll(".selectCrewSignOn:checked").length > 0;
 
         // Check the state of the isCrewSignOnDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isCrewSignOnDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isCrewSignOnDebitNoteNo") ?
                                  document.getElementById("isCrewSignOnDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2307,7 +2516,7 @@
         let anySelected = document.querySelectorAll(".selectCrewSignOff:checked").length > 0;
 
         // Check the state of the isCrewSignOffDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isCrewSignOffDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isCrewSignOffDebitNoteNo") ?
                                  document.getElementById("isCrewSignOffDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2366,7 +2575,7 @@
         let anySelected = document.querySelectorAll(".selectCrewMiscellaneous:checked").length > 0;
 
         // Check the state of the isCrewMiscellaneousDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isCrewMiscellaneousDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isCrewMiscellaneousDebitNoteNo") ?
                                  document.getElementById("isCrewMiscellaneousDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2425,7 +2634,7 @@
         let anySelected = document.querySelectorAll(".selectMedicalAssistance:checked").length > 0;
 
         // Check the state of the isMedicalAssistanceDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isMedicalAssistanceDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isMedicalAssistanceDebitNoteNo") ?
                                  document.getElementById("isMedicalAssistanceDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2579,7 +2788,7 @@
         let anySelected = document.querySelectorAll(".selectThirdParty:checked").length > 0;
 
         // Check the state of the isThirdPartyDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isThirdPartyDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isThirdPartyDebitNoteNo") ?
                                  document.getElementById("isThirdPartyDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2638,7 +2847,7 @@
         let anySelected = document.querySelectorAll(".selectFreshWater:checked").length > 0;
 
         // Check the state of the isFreshWaterDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isFreshWaterDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isFreshWaterDebitNoteNo") ?
                                  document.getElementById("isFreshWaterDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2699,7 +2908,7 @@
         let anySelected = document.querySelectorAll(".selectLandingItems:checked").length > 0;
 
         // Check the state of the isLandingItemsDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isLandingItemsDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isLandingItemsDebitNoteNo") ?
                                  document.getElementById("isLandingItemsDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2758,7 +2967,7 @@
         let anySelected = document.querySelectorAll(".selectOtherService:checked").length > 0;
 
         // Check the state of the isOtherServiceDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isOtherServiceDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isOtherServiceDebitNoteNo") ?
                                  document.getElementById("isOtherServiceDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions
@@ -2817,7 +3026,7 @@
         let anySelected = document.querySelectorAll(".selectAgencyRemuneration:checked").length > 0;
 
         // Check the state of the isAgencyRemunerationDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isAgencyRemunerationDebitNoteNo") ? 
+        let isDebitNoteChecked = document.getElementById("isAgencyRemunerationDebitNoteNo") ?
                                  document.getElementById("isAgencyRemunerationDebitNoteNo").checked : false;
 
         // Enable or disable buttons based on both conditions

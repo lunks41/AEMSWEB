@@ -1,6 +1,6 @@
 ﻿<!-- CrewMiscellaneous Modal -->
 <div class="modal fade" id="addCrewMiscellaneousModal" tabindex="-1" aria-labelledby="addCrewMiscellaneousModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addCrewMiscellaneousModalLabel">Crew Miscellaneous</h5>
@@ -15,7 +15,7 @@
                     <input type="hidden" id="crewMiscellaneous_debitNoteId" />
                     <input type="hidden" id="crewMiscellaneous_debitNoteNo" />
                     <input type="hidden" id="crewMiscellaneousId" />
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label">Miscellaneous Description <span class="text-danger">*</span></label>
@@ -196,7 +196,7 @@
             refreshCrewMiscellaneousDropdown();
             clearCrewMiscellaneousForm();
             setDefaultCrewMiscellaneousValues();
-           
+
             $('#addCrewMiscellaneousModal').modal('show');
         }
     }
@@ -238,7 +238,7 @@
         $('#crewMiscellaneousEditBy').text(data.editBy || "N/A");
         $('#crewMiscellaneousEditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#crewMiscellaneousEditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnCrewMiscellaneousClear').hide();
 
@@ -247,7 +247,7 @@
             // Disable dropdowns
             chargeCombo.enable(false);
             glCombo.enable(false);
-            
+
             // Disable inputs
             $('#crewMiscellaneous_miscDescription, #crewMiscellaneous_quantity, #crewMiscellaneous_miscAmount, #crewMiscellaneous_remarks').prop('readonly', true);
             $('#btnCrewMiscellaneousSave').prop('disabled', false);
@@ -255,7 +255,7 @@
             // Enable all controls
             chargeCombo.enable(true);
             glCombo.enable(true);
-            
+
             // Enable inputs
             $('#crewMiscellaneous_miscDescription, #crewMiscellaneous_quantity, #crewMiscellaneous_miscAmount, #crewMiscellaneous_remarks').prop('readonly', false);
             $('#btnCrewMiscellaneousSave').prop('disabled', false);
@@ -321,21 +321,21 @@
     $('#crewMiscellaneous_miscAmount').on('change', function() {
         calculateCrewMiscellaneousTotals();
     });
-    
+
     // Calculate total amounts when quantity changes
     $('#crewMiscellaneous_quantity').on('change', function() {
         calculateCrewMiscellaneousTotals();
     });
-    
+
     function calculateCrewMiscellaneousTotals() {
         const amount = parseFloat($('#crewMiscellaneous_miscAmount').val()) || 0;
         const quantity = parseFloat($('#crewMiscellaneous_quantity').val()) || 1;
         const gstRate = 0.07; // Assuming 7% GST
-        
+
         const totAmt = amount * quantity;
         const gstAmt = totAmt * gstRate;
         const totAmtAftGst = totAmt + gstAmt;
-        
+
         $('#crewMiscellaneous_totAmt').val(totAmt.toFixed(2));
         $('#crewMiscellaneous_gstAmt').val(gstAmt.toFixed(2));
         $('#crewMiscellaneous_totAmtAftGst').val(totAmtAftGst.toFixed(2));

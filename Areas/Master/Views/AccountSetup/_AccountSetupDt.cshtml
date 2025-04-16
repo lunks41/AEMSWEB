@@ -225,7 +225,7 @@
     }
 
     function populateAccSetupDtModalFields(data) {
-       
+
         $('#cmb_accSetup').data("kendoComboBox").value(data.accSetupId > 0 ? data.accSetupId : '');
         $('#cmb_currency').data("kendoComboBox").value(data.currencyId > 0 ? data.currencyId : '');
         $('#cmb_glcode').data("kendoMultiColumnComboBox").value(data.glId > 0 ? data.glId : '');
@@ -279,7 +279,7 @@
         };
 
         console.log("accSetupDt Data : " + accSetupDtData);
-       
+
         if (!accSetupDtData.AccSetupId || !accSetupDtData.CurrencyId || !accSetupDtData.GLId) {
             alert('All mandatory fields must be filled out!');
             return;
@@ -292,7 +292,7 @@
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                   
+
                     loadAccSetupDtGrid();
                     clearAccSetupDtForm();
                     $('#addAccSetupDtModal').modal('hide');

@@ -46,9 +46,10 @@ namespace AMESWEB.Areas.Project.Models
         public short? EditById { get; set; }
         public DateTime? EditDate { get; set; }
         public byte EditVersion { get; set; } = 0;
-        
+
         // Additional fields for UI display
         public string? CreateBy { get; set; } = string.Empty;
+
         public string? EditBy { get; set; } = string.Empty;
     }
 }

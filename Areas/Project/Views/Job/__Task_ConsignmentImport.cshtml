@@ -15,7 +15,7 @@
                     <input type="hidden" id="consignmentImport_debitNoteId" />
                     <input type="hidden" id="consignmentImport_debitNoteNo" />
                     <input type="hidden" id="consignmentImportId" />
-                    
+
                     <div class="row">
                         <!-- First row -->
                         <div class="col-md-3">
@@ -275,16 +275,16 @@
 
         const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=4`;
         bindComboBox(chargeUrl, "consignmentImport_cmb_charge", "chargeName", "chargeId");
-        
+
         const cargoTypeUrl = `@Url.Action("GetCargoTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
         bindComboBox(cargoTypeUrl, "consignmentImport_cmb_cargoType", "cargoTypeName", "cargoTypeId");
-        
+
         const typeUrl = `@Url.Action("GetConsignmentTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
         bindComboBox(typeUrl, "consignmentImport_cmb_type", "typeName", "typeId");
-        
+
         const modeUrl = `@Url.Action("GetTransportModeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
         bindComboBox(modeUrl, "consignmentImport_cmb_mode", "modeName", "modeId");
-        
+
         const locationUrl = `@Url.Action("GetLocationLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
         bindComboBox(locationUrl, "consignmentImport_cmb_location", "locationName", "locationLookupId");
 
@@ -437,7 +437,7 @@
             refreshConsignmentImportDropdown();
             clearConsignmentImportForm();
             setDefaultConsignmentImportValues();
-           
+
             $('#addConsignmentImportModal').modal('show');
         }
     }
@@ -456,12 +456,12 @@
             const bookingDate = new Date(data.bookingDate).toLocaleDateString('en-CA');
             $('#consignmentImport_bookingDate').val(bookingDate);
         }
-        
+
         if (data.dateReceived) {
             const dateReceived = new Date(data.dateReceived).toLocaleDateString('en-CA');
             $('#consignmentImport_dateReceived').val(dateReceived);
         }
-        
+
         if (data.dateDelivered) {
             const dateDelivered = new Date(data.dateDelivered).toLocaleDateString('en-CA');
             $('#consignmentImport_dateDelivered').val(dateDelivered);
@@ -497,25 +497,25 @@
         statusCombo.one('dataBound', function () {
             statusCombo.value(data.statusId > 0 ? data.statusId : '');
         });
-        
+
         const cargoTypeCombo = $('#consignmentImport_cmb_cargoType').data('kendoComboBox');
         cargoTypeCombo.value(data.cargoTypeId > 0 ? data.cargoTypeId : '');
         cargoTypeCombo.one('dataBound', function () {
             cargoTypeCombo.value(data.cargoTypeId > 0 ? data.cargoTypeId : '');
         });
-        
+
         const typeCombo = $('#consignmentImport_cmb_type').data('kendoComboBox');
         typeCombo.value(data.typeId > 0 ? data.typeId : '');
         typeCombo.one('dataBound', function () {
             typeCombo.value(data.typeId > 0 ? data.typeId : '');
         });
-        
+
         const modeCombo = $('#consignmentImport_cmb_mode').data('kendoComboBox');
         modeCombo.value(data.modeId > 0 ? data.modeId : '');
         modeCombo.one('dataBound', function () {
             modeCombo.value(data.modeId > 0 ? data.modeId : '');
         });
-        
+
         const locationCombo = $('#consignmentImport_cmb_location').data('kendoComboBox');
         locationCombo.value(data.locationLookupId > 0 ? data.locationLookupId : '');
         locationCombo.one('dataBound', function () {
@@ -558,7 +558,7 @@
         $('#consignmentImporteditBy').text(data.editBy || "N/A");
         $('#consignmentImporteditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#consignmentImporteditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnConsignmentImportClear').hide();
 
@@ -574,7 +574,7 @@
             statusCombo.enable(false);
             supplierCombo.enable(false);
             glCombo.enable(false);
-            
+
             // Disable inputs
             $('input, textarea').not('#btnConsignmentImportSave').prop('readonly', true);
             $('input[type="checkbox"]').prop('disabled', true);
@@ -590,7 +590,7 @@
             statusCombo.enable(true);
             supplierCombo.enable(true);
             glCombo.enable(true);
-            
+
             $('input, textarea').not('#consignmentImport_totAmt, #consignmentImport_gstAmt, #consignmentImport_totAmtAftGst').prop('readonly', false);
             $('input[type="checkbox"]').prop('disabled', false);
             $('#btnConsignmentImportSave').prop('disabled', false);
@@ -627,7 +627,7 @@
             LocationLookupId: parseInt($('#consignmentImport_cmb_location').data('kendoComboBox').value()) || null,
             UomId: parseInt($('#consignmentImport_cmb_uom').data('kendoComboBox').value()) || null,
             StatusId: parseInt($('#consignmentImport_cmb_status').data('kendoComboBox').value()) || 0,
-            
+
             ConsignmentNo: $('#consignmentImport_consignmentNo').val() || '',
             AWBNumber: $('#consignmentImport_awbNumber').val() || '',
             HawbNumber: $('#consignmentImport_hawbNumber').val() || '',
@@ -649,17 +649,17 @@
             AmountDeposited: parseFloat($('#consignmentImport_amountDeposited').val()) || null,
             RefundAmt: parseFloat($('#consignmentImport_refundAmt').val()) || null,
             RefundInstrumentNumber: $('#consignmentImport_refundInstrumentNumber').val() || '',
-            
+
             IsDepositRefundReceived: $('#consignmentImport_isDepositRefundReceived').is(':checked'),
             IsWarehouseCharges: $('#consignmentImport_isWarehouseCharges').is(':checked'),
             IsRefundedReceived: $('#consignmentImport_isRefundedReceived').is(':checked'),
             IsRefundedExpected: $('#consignmentImport_isRefundedExpected').is(':checked'),
-            
+
             TotAmt: parseFloat($('#consignmentImport_totAmt').val()) || 0,
             GstAmt: parseFloat($('#consignmentImport_gstAmt').val()) || 0,
             TotAmtAftGst: parseFloat($('#consignmentImport_totAmtAftGst').val()) || 0,
             Remarks: $('#consignmentImport_remarks').val() || '',
-            
+
             DebitNoteId: parseInt($('#consignmentImport_debitNoteId').val()) || null,
             DebitNoteNo: $('#consignmentImport_debitNoteNo').val() || '',
             TaskId: 4, // Assuming TaskId 4 is for Consignment Import
@@ -689,11 +689,11 @@
     $('#consignmentImport_amountDeposited').on('change', function() {
         const amount = parseFloat($(this).val()) || 0;
         const gstRate = 0.07; // Assuming 7% GST
-        
+
         const gstAmt = amount * gstRate;
         const totAmt = amount;
         const totAmtAftGst = totAmt + gstAmt;
-        
+
         $('#consignmentImport_totAmt').val(totAmt.toFixed(2));
         $('#consignmentImport_gstAmt').val(gstAmt.toFixed(2));
         $('#consignmentImport_totAmtAftGst').val(totAmtAftGst.toFixed(2));

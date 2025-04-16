@@ -30,7 +30,7 @@
 <script>
 
     function openTaskForwardModal(serviceType, taskId, customerId, jobOrderId, multipleId ) {
-        
+
         $('#multipleId').val(multipleId);
         $('#taskId').val(taskId);
         $('#serviceType').val(serviceType);
@@ -41,7 +41,7 @@
         const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
 
         if (isValidId(parsedCustomerId)) {
-            
+
             const customerjobOrderUrl = `@Url.Action("GetCustomerJobOrderLookup", "Lookup", new { area = "" })?companyId=${companyId}&customerId=${parsedCustomerId}`;
             bindComboBox(customerjobOrderUrl, "taskForward_cmb_jobOrder", "jobOrderNo", "jobOrderId");
 
@@ -56,7 +56,7 @@
     }
 
     function saveTaskForward() {
-        
+
         let inJobOrderId = parseInt($('#taskForward_cmb_jobOrder').data('kendoComboBox').value()) || 0;
         let inJobOrderNo = $('#taskForward_cmb_jobOrder').data('kendoComboBox').text() || '';
         let inPrvJobOrderId = parseInt($('#jobOrderId').val()) || 0;
@@ -73,7 +73,7 @@
             success: function (response) {
                 if (response.success) {
                     toastr.success(response.message || "Task Forward saved successfully.");
-                   
+
                     const serviceType = $('#serviceType').val();
                     const functionName = `initialize${serviceType}Grid`;
                     if (typeof window[functionName] === 'function') {

@@ -1,7 +1,7 @@
 ﻿<!-- LandingItem Modal -->
 <div class="modal fade" id="addLandingItemModal" tabindex="-1" aria-labelledby="addLandingItemModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addLandingItemModalLabel">Landing Items</h5>
@@ -34,7 +34,7 @@
                         <div class="col-md-4">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="landingItems_quantity" step="0.01"
-                                value="0.00" required>
+                                   value="0.00" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">UOM <span class="text-danger">*</span></label>
@@ -102,7 +102,6 @@
                             </div>
                         </div>
 
-
                         <div class="col-md-6">
                             <div class="mb-1">
                                 <label class="form-label">Remark</label>
@@ -116,7 +115,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#auditCollapse">
+                                        data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -152,12 +151,18 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankLandingItemClose"
-                    onclick="clearBankLandingItemForm()">Close</button>
+                        onclick="clearBankLandingItemForm()">
+                    Close
+                </button>
                 <button type="button" class="btn btn-primary" id="btnBankLandingItemEdit">Edit</button>
                 <button type="button" class="btn btn-secondary" id="btnBankLandingItemClear"
-                    onclick="clearBankLandingItemForm()">Clear</button>
+                        onclick="clearBankLandingItemForm()">
+                    Clear
+                </button>
                 <button type="button" class="btn btn-primary" id="btnBankLandingItemSave"
-                    onclick="saveBankLandingItem()">Save</button>
+                        onclick="saveBankLandingItem()">
+                    Save
+                </button>
             </div>
         </div>
     </div>
@@ -165,7 +170,7 @@
 
 <!-- LandingItems Modal -->
 <div class="modal fade" id="addLandingItemsModal" tabindex="-1" aria-labelledby="addLandingItemsModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addLandingItemsModalLabel">Landing Items</h5>
@@ -438,7 +443,7 @@
             refreshLandingItemsDropdown();
             clearLandingItemsForm();
             setDefaultLandingItemsValues();
-           
+
             $('#addLandingItemsModal').modal('show');
         }
     }
@@ -506,7 +511,7 @@
         $('#landingItemseditBy').text(data.editBy || "N/A");
         $('#landingItemseditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#landingItemseditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnLandingItemsClear').hide();
 
@@ -517,7 +522,7 @@
             statusCombo.enable(false);
             glCombo.enable(false);
             forwardExportCombo.enable(false);
-            
+
             $('input, textarea').not('#btnLandingItemsSave').prop('readonly', true);
             $('#landingItems_isDepositRefundReceived').prop('disabled', true);
             $('#btnLandingItemsSave').prop('disabled', false);
@@ -527,7 +532,7 @@
             statusCombo.enable(true);
             glCombo.enable(true);
             forwardExportCombo.enable(true);
-            
+
             $('input, textarea').not('#landingItems_totAmt, #landingItems_gstAmt, #landingItems_totAmtAftGst').prop('readonly', false);
             $('#landingItems_isDepositRefundReceived').prop('disabled', false);
             $('#btnLandingItemsSave').prop('disabled', false);
@@ -560,7 +565,7 @@
             UomId: parseInt($('#landingItems_cmb_uom').data('kendoComboBox').value()) || null,
             StatusId: parseInt($('#landingItems_cmb_status').data('kendoComboBox').value()) || 0,
             ForwardExportId: parseInt($('#landingItems_cmb_forwardExport').data('kendoComboBox').value()) || null,
-            
+
             LandingItemDate: $('#landingItems_date').val() || null,
             LandingItemName: $('#landingItems_itemName').val() || '',
             ItemName: $('#landingItems_itemName').val() || '',
@@ -569,12 +574,12 @@
             Quantity: parseFloat($('#landingItems_quantity').val()) || 0,
             Weight: parseFloat($('#landingItems_weight').val()) || 0,
             IsDepositRefundReceived: $('#landingItems_isDepositRefundReceived').is(':checked'),
-            
+
             TotAmt: parseFloat($('#landingItems_totAmt').val()) || 0,
             GstAmt: parseFloat($('#landingItems_gstAmt').val()) || 0,
             TotAmtAftGst: parseFloat($('#landingItems_totAmtAftGst').val()) || 0,
             Remarks: $('#landingItems_remarks').val() || '',
-            
+
             DebitNoteId: parseInt($('#landingItems_debitNoteId').val()) || null,
             DebitNoteNo: $('#landingItems_debitNoteNo').val() || '',
             TaskId: 3, // Assuming TaskId 3 is for Landing Items
@@ -613,7 +618,7 @@
         const gstRate = 0.07; // Assuming 7% GST
         const gstAmt = totAmt * gstRate;
         const totAmtAftGst = totAmt + gstAmt;
-        
+
         $('#landingItems_totAmt').val(totAmt.toFixed(2));
         $('#landingItems_gstAmt').val(gstAmt.toFixed(2));
         $('#landingItems_totAmtAftGst').val(totAmtAftGst.toFixed(2));

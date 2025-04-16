@@ -1,6 +1,6 @@
 ﻿<!-- TechniciansSurveyors Modal -->
 <div class="modal fade" id="addTechniciansSurveyorsModal" tabindex="-1" aria-labelledby="addTechniciansSurveyorsModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addTechniciansSurveyorsModalLabel">Technicians & Surveyors</h5>
@@ -158,7 +158,7 @@
 
         $('#techSurv_cmb_engineer').data('kendoMultiColumnComboBox').value('');
         $('#techSurv_cmb_gl').data('kendoMultiColumnComboBox').value('');
-        
+
         $('#techSurv_cmb_charge').data('kendoComboBox').value('');
         $('#techSurv_cmb_technicianType').data('kendoComboBox').value('');
         $('#techSurv_cmb_status').data('kendoComboBox').value('');
@@ -234,7 +234,7 @@
     }
 
     function openTechSurvModal(jobOrderId, jobOrderNo, techniciansSurveyorsId, mode) {
-        
+
         const $modal = $('#addTechniciansSurveyorsModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
         const parsedTechSurvId = parseInt(techniciansSurveyorsId, 10);
@@ -266,7 +266,7 @@
             refreshTechSurvDropdown();
             clearTechSurvForm();
             setDefaultTechSurvValues();
-           
+
             $('#addTechniciansSurveyorsModal').modal('show');
         }
     }
@@ -335,7 +335,7 @@
         $('#techSurveditBy').text(data.editBy || "N/A");
         $('#techSurveditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#techSurveditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnTechSurvClear').hide();
 
@@ -347,7 +347,7 @@
             glCombo.enable(false);
             statusCombo.enable(false);
             currencyCombo.enable(false);
-            
+
             $('#techSurv_serviceDate, #techSurv_hours, #techSurv_rate, #techSurv_amount, #techSurv_remarks').prop('readonly', true);
             $('#btnTechSurvSave').prop('disabled', false);
         } else {
@@ -357,7 +357,7 @@
             glCombo.enable(true);
             statusCombo.enable(true);
             currencyCombo.enable(true);
-            
+
             $('#techSurv_serviceDate, #techSurv_hours, #techSurv_rate, #techSurv_remarks').prop('readonly', false);
             $('#techSurv_amount').prop('readonly', true);
             $('#btnTechSurvSave').prop('disabled', false);
@@ -391,13 +391,13 @@
             GLId: parseInt($('#techSurv_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
             StatusId: parseInt($('#techSurv_cmb_status').data('kendoComboBox').value()) || 0,
             CurrencyId: parseInt($('#techSurv_cmb_currency').data('kendoComboBox').value()) || null,
-            
+
             ServiceDate: $('#techSurv_serviceDate').val() || null,
             Hours: parseFloat($('#techSurv_hours').val()) || 0,
             Rate: parseFloat($('#techSurv_rate').val()) || 0,
             Amount: parseFloat($('#techSurv_amount').val()) || 0,
             Remarks: $('#techSurv_remarks').val() || '',
-            
+
             DebitNoteId: parseInt($('#techSurv_debitNoteId').val()) || null,
             DebitNoteNo: $('#techSurv_debitNoteNo').val() || '',
             TaskId: 5, // Assuming TaskId 5 is for Technicians & Surveyors
@@ -432,7 +432,7 @@
         const hours = parseFloat($('#techSurv_hours').val()) || 0;
         const rate = parseFloat($('#techSurv_rate').val()) || 0;
         const amount = hours * rate;
-        
+
         $('#techSurv_amount').val(amount.toFixed(2));
     }
 </script>

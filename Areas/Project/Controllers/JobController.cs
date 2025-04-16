@@ -7,8 +7,6 @@ using AMESWEB.IServices;
 using AMESWEB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.Design;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AMESWEB.Areas.Project.Controllers
 {
@@ -71,7 +69,7 @@ namespace AMESWEB.Areas.Project.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching job list");
+                _logger.LogError(ex, "Error in JobOrderList: Error fetching job list");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -94,7 +92,7 @@ namespace AMESWEB.Areas.Project.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching jobOrder by ID");
+                _logger.LogError(ex, "Error in GetJobOrderById: Error fetching jobOrder by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -155,7 +153,7 @@ namespace AMESWEB.Areas.Project.Controllers
         public async Task<JsonResult> GetPortExpensesById(Int64 jobOrderId, Int64 portExpenseId, string companyId)
         {
             if (jobOrderId <= 0)
-                return Json(new { success = false, message = "Invalid Account Type ID" });
+                return Json(new { success = false, message = "Invalid Port Expenses ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -164,12 +162,12 @@ namespace AMESWEB.Areas.Project.Controllers
             {
                 var data = await _jobTaskService.GetPortExpensesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, portExpenseId);
                 return data == null
-                    ? Json(new { success = false, message = "Account Type not found" })
+                    ? Json(new { success = false, message = "Port Expenses not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching account type by ID");
+                _logger.LogError(ex, "Error fetching port expenses by ID");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -213,11 +211,11 @@ namespace AMESWEB.Areas.Project.Controllers
                 };
 
                 var data = await _jobTaskService.SavePortExpensesAsync(companyIdShort, parsedUserId.Value, portExpenseToSave);
-                return Json(new { success = true, message = "Account Type saved successfully", data = data });
+                return Json(new { success = true, message = "PortExpenses saved successfully", data = data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving account type");
+                _logger.LogError(ex, "Error in SavePortExpenses: Error saving PortExpenses");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }
@@ -227,8 +225,8 @@ namespace AMESWEB.Areas.Project.Controllers
         {
             if (jobOrderId <= 0)
             {
-                _logger.LogWarning("Delete failed: Invalid Account Type ID {JobOrderId}.", jobOrderId);
-                return Json(new { success = false, message = "Invalid Account Type ID." });
+                _logger.LogWarning("Delete failed: Invalid PortExpenses ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Port Expenses ID." });
             }
 
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -241,18 +239,18 @@ namespace AMESWEB.Areas.Project.Controllers
             if (permissions == null || !permissions.IsDelete)
             {
                 _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
-                return Json(new { success = false, message = "You do not have permission to delete this account group." });
+                return Json(new { success = false, message = "You do not have permission to delete this Port Expense." });
             }
 
             try
             {
                 await _jobTaskService.DeletePortExpensesAsync(companyIdShort, parsedUserId.Value, jobOrderId, portExpenseId);
-                return Json(new { success = true, message = "Account Type deleted successfully." });
+                return Json(new { success = true, message = "Port Expense deleted successfully." });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting the Account Type. Account Type ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
-                return Json(new { success = false, message = "An error occurred." });
+                _logger.LogError(ex, "An error occurred while deleting the Port Expense. Port Expense ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                return Json(new { success = false, message = "An error occurred while deleting the Port Expense." });
             }
         }
 
@@ -282,7 +280,7 @@ namespace AMESWEB.Areas.Project.Controllers
         public async Task<JsonResult> GetLaunchServicesById(Int64 jobOrderId, Int64 launchServiceId, string companyId)
         {
             if (jobOrderId <= 0)
-                return Json(new { success = false, message = "Invalid Account Type ID" });
+                return Json(new { success = false, message = "Invalid Launch Services ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
@@ -291,7 +289,7 @@ namespace AMESWEB.Areas.Project.Controllers
             {
                 var data = await _jobTaskService.GetLaunchServicesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
                 return data == null
-                    ? Json(new { success = false, message = "Account Type not found" })
+                    ? Json(new { success = false, message = "Launch Services not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
@@ -571,7 +569,9 @@ namespace AMESWEB.Areas.Project.Controllers
                 if (parsedUserId.HasValue)
                 {
                     var data = await _jobTaskService.GetCrewSignOnByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOnId);
-                    return Json(data);
+                    return data == null
+                     ? Json(new { success = false, message = "Account Type not found" })
+                     : Json(new { success = true, data });
                 }
                 else
                 {
@@ -606,8 +606,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     JobOrderNo = model.crewSignOn.JobOrderNo,
                     TaskId = model.crewSignOn.TaskId,
                     CrewName = model.crewSignOn.CrewName,
-                    SignOnDate = model.crewSignOn.SignOnDate,
-                    Position = model.crewSignOn.Position,
+                    Date = model.crewSignOn.Date,
                     GLId = model.crewSignOn.GLId,
                     GenderId = model.crewSignOn.GenderId,
                     Nationality = model.crewSignOn.Nationality,
@@ -702,7 +701,9 @@ namespace AMESWEB.Areas.Project.Controllers
                 if (parsedUserId.HasValue)
                 {
                     var data = await _jobTaskService.GetCrewSignOffByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOffId);
-                    return Json(data);
+                    return data == null
+                    ? Json(new { success = false, message = "Account Type not found" })
+                    : Json(new { success = true, data });
                 }
                 else
                 {
@@ -741,8 +742,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
                     // Crew details
                     CrewName = model.crewSignOff.CrewName,
-                    SignOffDate = model.crewSignOff.SignOffDate,
-                    Position = model.crewSignOff.Position,
+                    Date = model.crewSignOff.Date,
                     GLId = model.crewSignOff.GLId,
                     GenderId = model.crewSignOff.GenderId,
                     Nationality = model.crewSignOff.Nationality,
@@ -1783,7 +1783,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
         #endregion Technicians Surveyors
 
-        #region Third Party 
+        #region Third Party
 
         [HttpGet]
         public async Task<JsonResult> ThirdPartyList(string companyId, Int64 jobOrderId)
@@ -1907,9 +1907,9 @@ namespace AMESWEB.Areas.Project.Controllers
             }
         }
 
-        #endregion Third Party 
+        #endregion Third Party
 
-        #region Fresh Water 
+        #region Fresh Water
 
         [HttpGet]
         public async Task<JsonResult> FreshWaterList(string companyId, Int64 jobOrderId)
@@ -1947,7 +1947,9 @@ namespace AMESWEB.Areas.Project.Controllers
                 if (parsedUserId.HasValue)
                 {
                     var data = await _jobTaskService.GetFreshWaterByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, freshWaterId);
-                    return Json(data);
+                    return data == null
+                     ? Json(new { success = false, message = "Fresh Water not found" })
+                     : Json(new { success = true, data });
                 }
                 else
                 {
@@ -2037,7 +2039,7 @@ namespace AMESWEB.Areas.Project.Controllers
             }
         }
 
-        #endregion Fresh Water 
+        #endregion Fresh Water
 
         #endregion Task
 
@@ -2062,11 +2064,11 @@ namespace AMESWEB.Areas.Project.Controllers
             try
             {
                 var data = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, jobOrderNo, prevJobOrderId, taskId, multipleId);
-                return Json(new { success = true, message = "Account Type saved successfully", data = data });
+                return Json(new { success = true, message = "Task Forward saved successfully", data = data });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving account type");
+                _logger.LogError(ex, "Error saving task forward");
                 return Json(new { success = false, message = "An error occurred" });
             }
         }

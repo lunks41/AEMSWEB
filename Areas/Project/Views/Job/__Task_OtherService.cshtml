@@ -1,6 +1,6 @@
 ﻿<!-- OtherService Modal -->
 <div class="modal fade" id="addOtherServiceModal" tabindex="-1" aria-labelledby="addOtherServiceModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addOtherServiceModalLabel">Other Service</h5>
@@ -282,7 +282,7 @@
             refreshOtherServiceDropdown();
             clearOtherServiceForm();
             setDefaultOtherServiceValues();
-           
+
             $('#addOtherServiceModal').modal('show');
         }
     }
@@ -354,7 +354,7 @@
         $('#otherServiceeditBy').text(data.editBy || "N/A");
         $('#otherServiceeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#otherServiceeditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnOtherServiceClear').hide();
 
@@ -366,7 +366,7 @@
             statusCombo.enable(false);
             glCombo.enable(false);
             currencyCombo.enable(false);
-            
+
             $('input, textarea').not('#btnOtherServiceSave').prop('readonly', true);
             $('#btnOtherServiceSave').prop('disabled', false);
         } else {
@@ -376,7 +376,7 @@
             statusCombo.enable(true);
             glCombo.enable(true);
             currencyCombo.enable(true);
-            
+
             $('input, textarea').not('#otherService_totAmt, #otherService_gstAmt, #otherService_totAmtAftGst').prop('readonly', false);
             $('#btnOtherServiceSave').prop('disabled', false);
         }
@@ -409,17 +409,17 @@
             UomId: parseInt($('#otherService_cmb_uom').data('kendoComboBox').value()) || null,
             StatusId: parseInt($('#otherService_cmb_status').data('kendoComboBox').value()) || 0,
             CurrencyId: parseInt($('#otherService_cmb_currency').data('kendoComboBox').value()) || null,
-            
+
             ServiceDate: $('#otherService_serviceDate').val() || null,
             ServiceName: $('#otherService_serviceName').val() || '',
             Quantity: parseFloat($('#otherService_quantity').val()) || 1,
             Rate: parseFloat($('#otherService_rate').val()) || 0,
-            
+
             TotAmt: parseFloat($('#otherService_totAmt').val()) || 0,
             GstAmt: parseFloat($('#otherService_gstAmt').val()) || 0,
             TotAmtAftGst: parseFloat($('#otherService_totAmtAftGst').val()) || 0,
             Remarks: $('#otherService_remarks').val() || '',
-            
+
             DebitNoteId: parseInt($('#otherService_debitNoteId').val()) || null,
             DebitNoteNo: $('#otherService_debitNoteNo').val() || '',
             TaskId: 6, // Assuming TaskId 6 is for Other Service
@@ -457,7 +457,7 @@
         const gstRate = 0.07; // Assuming 7% GST
         const gstAmt = totAmt * gstRate;
         const totAmtAftGst = totAmt + gstAmt;
-        
+
         $('#otherService_totAmt').val(totAmt.toFixed(2));
         $('#otherService_gstAmt').val(gstAmt.toFixed(2));
         $('#otherService_totAmtAftGst').val(totAmtAftGst.toFixed(2));

@@ -114,7 +114,7 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         #endregion Consignment Export
 
-        #region Third Party 
+        #region Third Party
 
         public Task<ThirdPartyViewModelCount> GetThirdPartyListAsync(short CompanyId, short UserId, Int64 JobOrderId);
 
@@ -124,7 +124,7 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         public Task<SqlResponce> DeleteThirdPartyAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 thirdPartyId);
 
-        #endregion Third Party 
+        #endregion Third Party
 
         #region Fresh Water
 

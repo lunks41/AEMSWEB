@@ -32,21 +32,21 @@ namespace AMESWEB.Areas.Master.Data.Services
             {
                 CategoryViewModelCount countViewModel = new CategoryViewModelCount();
                 var parameters = new { CompanyId, ModuleId = (short)E_Modules.Master, TransactionId = (short)E_Master.Category, SearchPattern = $"%{searchString}%", Skip = pageSize * (pageNumber - 1), Take = pageSize };
-                
+
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                    @"SELECT COUNT(*) AS CountId 
-                    FROM M_Category M_Cat 
-                    WHERE (M_Cat.CategoryName LIKE @SearchPattern 
-                        OR M_Cat.CategoryCode LIKE @SearchPattern 
+                    @"SELECT COUNT(*) AS CountId
+                    FROM M_Category M_Cat
+                    WHERE (M_Cat.CategoryName LIKE @SearchPattern
+                        OR M_Cat.CategoryCode LIKE @SearchPattern
                         OR M_Cat.Remarks LIKE @SearchPattern)
-                        AND M_Cat.CategoryId <> 0 
+                        AND M_Cat.CategoryId <> 0
                         AND M_Cat.CompanyId IN (
-                            SELECT DISTINCT CompanyId 
+                            SELECT DISTINCT CompanyId
                             FROM Fn_Adm_GetShareCompany(@CompanyId, @ModuleId, @TransactionId)
                         )", parameters);
 
                 var result = await _repository.GetQueryAsync<CategoryViewModel>(
-                    @"SELECT 
+                    @"SELECT
                         M_Cat.CategoryId,
                         M_Cat.CompanyId,
                         M_Cat.CategoryCode,
@@ -58,20 +58,20 @@ namespace AMESWEB.Areas.Master.Data.Services
                         M_Cat.EditById,
                         M_Cat.EditDate,
                         Usr.UserName AS CreateBy,
-                        Usr1.UserName AS EditBy 
+                        Usr1.UserName AS EditBy
                     FROM M_Category M_Cat
                     LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = M_Cat.CreateById
                     LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = M_Cat.EditById
-                    WHERE (M_Cat.CategoryName LIKE @SearchPattern 
-                        OR M_Cat.CategoryCode LIKE @SearchPattern 
+                    WHERE (M_Cat.CategoryName LIKE @SearchPattern
+                        OR M_Cat.CategoryCode LIKE @SearchPattern
                         OR M_Cat.Remarks LIKE @SearchPattern)
                         AND M_Cat.CategoryId <> 0
                         AND M_Cat.CompanyId IN (
-                            SELECT DISTINCT CompanyId 
+                            SELECT DISTINCT CompanyId
                             FROM Fn_Adm_GetShareCompany(@CompanyId, @ModuleId, @TransactionId)
                         )
                     ORDER BY M_Cat.CategoryName
-                    OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY", 
+                    OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY",
                     parameters);
 
                 countViewModel.responseCode = 200;
@@ -130,7 +130,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     var codeExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         "SELECT 1 AS IsExist FROM dbo.M_Category WHERE CategoryId != @CategoryId AND CategoryCode = @CategoryCode",
                         new { m_Category.CategoryId, m_Category.CategoryCode });
-                        
+
                     if ((codeExist?.IsExist ?? 0) > 0)
                         return new SqlResponce { Result = -1, Message = "Category Code already exists." };
 
@@ -138,7 +138,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     var nameExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                         "SELECT 1 AS IsExist FROM dbo.M_Category WHERE CategoryId != @CategoryId AND CategoryName = @CategoryName",
                         new { m_Category.CategoryId, m_Category.CategoryName });
-                        
+
                     if ((nameExist?.IsExist ?? 0) > 0)
                         return new SqlResponce { Result = -1, Message = "Category Name already exists." };
 
@@ -207,8 +207,8 @@ namespace AMESWEB.Areas.Master.Data.Services
                 }
                 catch (SqlException sqlEx)
                 {
-                    await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Category, 
-                        m_Category.CategoryId, m_Category.CategoryCode, "M_Category", 
+                    await _logService.LogErrorAsync(sqlEx, CompanyId, E_Modules.Master, E_Master.Category,
+                        m_Category.CategoryId, m_Category.CategoryCode, "M_Category",
                         IsEdit ? E_Mode.Update : E_Mode.Create, "SQL", UserId);
 
                     return new SqlResponce { Result = -1, Message = SqlErrorHelper.GetErrorMessage(sqlEx.Number) };
@@ -218,7 +218,7 @@ namespace AMESWEB.Areas.Master.Data.Services
                     await _logService.LogErrorAsync(ex, CompanyId, E_Modules.Master, E_Master.Category,
                         m_Category.CategoryId, m_Category.CategoryCode, "M_Category",
                         IsEdit ? E_Mode.Update : E_Mode.Create, "General", UserId);
-                        
+
                     throw;
                 }
             }

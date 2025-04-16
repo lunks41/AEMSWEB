@@ -376,7 +376,7 @@
     }
 
     function validateMandatoryFields() {
-        
+
         const customerCode = document.getElementById('customerCode').value.trim();
         const customerName = document.getElementById('customerName').value.trim();
         const currency = $('#cmb_currency').data('kendoComboBox').value();
@@ -441,7 +441,6 @@
             ParentCustomerId: 0,
             SupplierId: 0
         };
-
 
         if (validateMandatoryFields()) {
             $.ajax({

@@ -228,7 +228,6 @@
     }
 
     function populateCreditTermDtModalFields(data) {
-       
 
         $('#cmb_creditTermDt').data("kendoComboBox").value(data.creditTermId > 0 ? data.creditTermId : '');
         $('#creditTermDtFromDay').val(data.fromDay);
@@ -301,7 +300,7 @@
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                   
+
                     loadCreditTermDtGrid();
                     clearCreditTermDtForm();
                     $('#addCreditTermDtModal').modal('hide');

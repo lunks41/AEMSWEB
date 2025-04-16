@@ -441,7 +441,7 @@
     }
 
     function openAddJobOrderModal(jobOrderId, jobOrderNo, companyID) {
-        
+
         const $modal = $('#addJobOrderModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
         const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
@@ -460,7 +460,7 @@
                 })
                 .always(() => $modal.find('.modal-overlay').remove());
         } else {
-            
+
             refreshAddJobOrderDropdown();
             clearAddJobOrderForm();
             $('#addAddJobOrderModal').modal('show');

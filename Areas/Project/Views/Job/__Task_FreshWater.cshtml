@@ -1,6 +1,6 @@
 ﻿<!-- FreshWater Modal -->
 <div class="modal fade" id="addFreshWaterModal" tabindex="-1" aria-labelledby="addFreshWaterModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addFreshWaterModalLabel">Fresh Water</h5>
@@ -273,7 +273,7 @@
             refreshFreshWaterDropdown();
             clearFreshWaterForm();
             setDefaultFreshWaterValues();
-           
+
             $('#addFreshWaterModal').modal('show');
         }
     }
@@ -341,7 +341,7 @@
         $('#freshWatereditBy').text(data.editBy || "N/A");
         $('#freshWatereditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#freshWatereditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnFreshWaterClear').hide();
 
@@ -352,7 +352,7 @@
             statusCombo.enable(false);
             glCombo.enable(false);
             bargeNameCombo.enable(false);
-            
+
             $('input, textarea').not('#btnFreshWaterSave').prop('readonly', true);
             $('#freshWater_isVesselCallingLocation').prop('disabled', true);
             $('#btnFreshWaterSave').prop('disabled', false);
@@ -362,7 +362,7 @@
             statusCombo.enable(true);
             glCombo.enable(true);
             bargeNameCombo.enable(true);
-            
+
             $('input, textarea').not('#freshWater_totAmt, #freshWater_gstAmt, #freshWater_totAmtAftGst').prop('readonly', false);
             $('#freshWater_isVesselCallingLocation').prop('disabled', false);
             $('#btnFreshWaterSave').prop('disabled', false);
@@ -395,19 +395,19 @@
             UomId: parseInt($('#freshWater_cmb_uom').data('kendoComboBox').value()) || null,
             StatusId: parseInt($('#freshWater_cmb_status').data('kendoComboBox').value()) || 0,
             BargeNameLookupId: parseInt($('#freshWater_cmb_bargeName').data('kendoComboBox').value()) || null,
-            
+
             DateOf: $('#freshWater_dateOf').val() || null,
             ReceiptNumber: $('#freshWater_receiptNumber').val() || '',
             BargeOperatorName: $('#freshWater_bargeOperatorName').val() || '',
             Distance: parseFloat($('#freshWater_distance').val()) || 0.00,
             Quantity: parseFloat($('#freshWater_quantity').val()) || 0.00,
             IsVesselCallingLocation: $('#freshWater_isVesselCallingLocation').is(':checked'),
-            
+
             TotAmt: parseFloat($('#freshWater_totAmt').val()) || 0,
             GstAmt: parseFloat($('#freshWater_gstAmt').val()) || 0,
             TotAmtAftGst: parseFloat($('#freshWater_totAmtAftGst').val()) || 0,
             Remarks: $('#freshWater_remarks').val() || '',
-            
+
             DebitNoteId: parseInt($('#freshWater_debitNoteId').val()) || null,
             DebitNoteNo: $('#freshWater_debitNoteNo').val() || '',
             TaskId: 9, // Assuming TaskId 9 is for Fresh Water
@@ -446,7 +446,7 @@
         const gstRate = 0.07; // Assuming 7% GST
         const gstAmt = totAmt * gstRate;
         const totAmtAftGst = totAmt + gstAmt;
-        
+
         $('#freshWater_totAmt').val(totAmt.toFixed(2));
         $('#freshWater_gstAmt').val(gstAmt.toFixed(2));
         $('#freshWater_totAmtAftGst').val(totAmtAftGst.toFixed(2));

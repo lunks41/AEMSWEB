@@ -51,10 +51,6 @@
                         </div>
                     </div>
 
-
-
-
-
                     <!-- Loading Details -->
                     <div class="card mb-3">
                         <div class="card-header bg-light">
@@ -175,7 +171,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Accounts Details -->
                     <div class="card mb-3">
                         <div class="card-header bg-light">
@@ -183,7 +179,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                
+
                                 <div class="col-md-3">
                                     <label for="equipmentsUsed_cmb_launch" class="form-label">Launch DebitNo </label>
                                     <select id="equipmentsUsed_cmb_launch" style="width: 100%"></select>
@@ -282,7 +278,7 @@
         $('#equipmentsUsed_debitNoteId').val('');
         $('#equipmentsUsed_debitNoteNo').val('');
         $('#equipmentsUsed_launchServiceId').val('');
-        
+
         // Clear dropdowns
         $('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox').value('');
         $('#equipmentsUsed_cmb_charge').data('kendoComboBox').value('');
@@ -295,7 +291,7 @@
         // Clear basic fields
         $('#equipmentsUsed_date').val('');
         $('#equipmentsUsed_referenceNo').val('');
-        
+
         // Clear timesheet fields
         $('#equipmentsUsed_morningTimeIn').val('');
         $('#equipmentsUsed_morningTimeOut').val('');
@@ -307,26 +303,26 @@
         $('#equipmentsUsed_totalOvertimeHours').val('');
         $('#equipmentsUsed_driverName').val('');
         $('#equipmentsUsed_vehicleName').val('');
-        
+
         // Clear equipment details
         $('#equipmentsUsed_quantity').val('0.00');
         $('#equipmentsUsed_mafi').val('');
         $('#equipmentsUsed_isEquimentFooter').prop('checked', false);
         $('#equipmentsUsed_equimentFooter').val('');
-        
+
         // Clear loading details
         $('#equipmentsUsed_loadingRefNo').val('');
         $('#equipmentsUsed_launchServiceDebitNoteNo').val('');
         $('#equipmentsUsed_craneloading').val('0');
         $('#equipmentsUsed_forkliftloading').val('0');
         $('#equipmentsUsed_stevedorloading').val('0');
-        
+
         // Clear offloading details
         $('#equipmentsUsed_offloadingRefNo').val('');
         $('#equipmentsUsed_craneOffloading').val('0');
         $('#equipmentsUsed_forkliftOffloading').val('0');
         $('#equipmentsUsed_stevedorOffloading').val('0');
-        
+
         // Clear financial details
         $('#equipmentsUsed_totAmt').val('0.00');
         $('#equipmentsUsed_gstAmt').val('0.00');
@@ -344,7 +340,7 @@
     }
 
     function setDefaultEquipmentsUsedValues() {
-        // Set current date 
+        // Set current date
         const today = new Date().toISOString().split('T')[0];
         $('#equipmentsUsed_date').val(today);
 
@@ -385,7 +381,7 @@
     }
 
     function openEquipmentsUsedModal(jobOrderId, jobOrderNo, equipmentsUsedId, mode) {
-        
+
         const $modal = $('#addEquipmentsUsedModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
         const parsedEquipmentsUsedId = parseInt(equipmentsUsedId, 10);
@@ -417,13 +413,13 @@
             refreshEquipmentsUsedDropdown();
             clearEquipmentsUsedForm();
             setDefaultEquipmentsUsedValues();
-           
+
             $('#addEquipmentsUsedModal').modal('show');
         }
     }
 
     function populateEquipmentsUsedModalFields(data) {
-        
+
         // Set hidden fields
         $('#companyId').val(data.companyId);
         $('#equipmentsUsedId').val(data.equipmentsUsedId);
@@ -438,7 +434,7 @@
             const formattedDate = new Date(data.date).toLocaleDateString('en-CA');
             $('#equipmentsUsed_date').val(formattedDate);
         }
-        
+
         // Set combobox values
         const glCombo = $('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox');
         glCombo.value(data.glId > 0 ? data.glId : '');
@@ -463,19 +459,19 @@
         statusCombo.one('dataBound', function () {
             statusCombo.value(data.statusId > 0 ? data.statusId : '');
         });
-        
+
         const craneChargeCombo = $('#equipmentsUsed_cmb_craneCharge').data('kendoComboBox');
         craneChargeCombo.value(data.craneChargeId > 0 ? data.craneChargeId : '');
         craneChargeCombo.one('dataBound', function () {
             craneChargeCombo.value(data.craneChargeId > 0 ? data.craneChargeId : '');
         });
-        
+
         const forkliftChargeCombo = $('#equipmentsUsed_cmb_forkliftCharge').data('kendoComboBox');
         forkliftChargeCombo.value(data.forkliftChargeId > 0 ? data.forkliftChargeId : '');
         forkliftChargeCombo.one('dataBound', function () {
             forkliftChargeCombo.value(data.forkliftChargeId > 0 ? data.forkliftChargeId : '');
         });
-        
+
         const stevedorChargeCombo = $('#equipmentsUsed_cmb_stevedorCharge').data('kendoComboBox');
         stevedorChargeCombo.value(data.stevedorChargeId > 0 ? data.stevedorChargeId : '');
         stevedorChargeCombo.one('dataBound', function () {
@@ -484,7 +480,7 @@
 
         // Set basic fields
         $('#equipmentsUsed_referenceNo').val(data.referenceNo);
-        
+
         // Set timesheet fields
         $('#equipmentsUsed_morningTimeIn').val(data.morningTimeIn);
         $('#equipmentsUsed_morningTimeOut').val(data.morningTimeOut);
@@ -496,26 +492,26 @@
         $('#equipmentsUsed_totalOvertimeHours').val(data.totalOvertimeHours);
         $('#equipmentsUsed_driverName').val(data.driverName);
         $('#equipmentsUsed_vehicleName').val(data.vehicleName);
-        
+
         // Set equipment details
         $('#equipmentsUsed_quantity').val(data.quantity);
         $('#equipmentsUsed_mafi').val(data.mafi);
         $('#equipmentsUsed_isEquimentFooter').prop('checked', data.isEquimentFooter === true);
         $('#equipmentsUsed_equimentFooter').val(data.equimentFooter);
-        
+
         // Set loading details
         $('#equipmentsUsed_loadingRefNo').val(data.loadingRefNo);
         $('#equipmentsUsed_launchServiceDebitNoteNo').val(data.launchServiceDebitNoteNo);
         $('#equipmentsUsed_craneloading').val(data.craneloading);
         $('#equipmentsUsed_forkliftloading').val(data.forkliftloading);
         $('#equipmentsUsed_stevedorloading').val(data.stevedorloading);
-        
+
         // Set offloading details
         $('#equipmentsUsed_offloadingRefNo').val(data.offloadingRefNo);
         $('#equipmentsUsed_craneOffloading').val(data.craneOffloading);
         $('#equipmentsUsed_forkliftOffloading').val(data.forkliftOffloading);
         $('#equipmentsUsed_stevedorOffloading').val(data.stevedorOffloading);
-        
+
         // Set financial details
         $('#equipmentsUsed_totAmt').val(data.totAmt);
         $('#equipmentsUsed_gstAmt').val(data.gstAmt);
@@ -528,7 +524,7 @@
         $('#equipmentsUsededitBy').text(data.editBy || "N/A");
         $('#equipmentsUsededitDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#equipmentsUsededitVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnEquipmentsUsedClear').hide();
 
@@ -542,7 +538,7 @@
             craneChargeCombo.enable(false);
             forkliftChargeCombo.enable(false);
             stevedorChargeCombo.enable(false);
-            
+
             // Disable all input fields
             $('input, textarea').not('#btnEquipmentsUsedSave').prop('readonly', true);
             $('input[type="checkbox"]').prop('disabled', true);
@@ -556,7 +552,7 @@
             craneChargeCombo.enable(true);
             forkliftChargeCombo.enable(true);
             stevedorChargeCombo.enable(true);
-            
+
             // Enable all input fields
             $('input, textarea').not('#equipmentsUsed_gstAmt, #equipmentsUsed_totAmtAftGst, #equipmentsUsed_morningTotalHours, #equipmentsUsed_eveningTotalHours, #equipmentsUsed_totalRegularHours').prop('readonly', false);
             $('input[type="checkbox"]').prop('disabled', false);
@@ -591,7 +587,7 @@
             GLId: parseInt($('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
             UomId: parseInt($('#equipmentsUsed_cmb_uom').data('kendoComboBox').value()) || 0,
             StatusId: parseInt($('#equipmentsUsed_cmb_status').data('kendoComboBox').value()) || 0,
-            
+
             MorningTimeIn: $('#equipmentsUsed_morningTimeIn').val() || '',
             MorningTimeOut: $('#equipmentsUsed_morningTimeOut').val() || '',
             MorningTotalHours: $('#equipmentsUsed_morningTotalHours').val() || '',
@@ -602,34 +598,34 @@
             TotalOvertimeHours: $('#equipmentsUsed_totalOvertimeHours').val() || '',
             DriverName: $('#equipmentsUsed_driverName').val() || '',
             VehicleName: $('#equipmentsUsed_vehicleName').val() || '',
-            
+
             Quantity: parseFloat($('#equipmentsUsed_quantity').val()) || 0,
             Mafi: $('#equipmentsUsed_mafi').val() || '',
             IsEquimentFooter: $('#equipmentsUsed_isEquimentFooter').is(':checked'),
             EquimentFooter: $('#equipmentsUsed_equimentFooter').val() || '',
-            
+
             LoadingRefNo: $('#equipmentsUsed_loadingRefNo').val() || '',
             LaunchServiceDebitNoteNo: $('#equipmentsUsed_launchServiceDebitNoteNo').val() || '',
             LaunchServiceId: parseInt($('#equipmentsUsed_launchServiceId').val()) || 0,
-            
+
             ForkliftChargeId: parseInt($('#equipmentsUsed_cmb_forkliftCharge').data('kendoComboBox').value()) || 0,
             CraneChargeId: parseInt($('#equipmentsUsed_cmb_craneCharge').data('kendoComboBox').value()) || 0,
             StevedorChargeId: parseInt($('#equipmentsUsed_cmb_stevedorCharge').data('kendoComboBox').value()) || 0,
-            
+
             Craneloading: parseInt($('#equipmentsUsed_craneloading').val()) || 0,
             Forkliftloading: parseInt($('#equipmentsUsed_forkliftloading').val()) || 0,
             Stevedorloading: parseInt($('#equipmentsUsed_stevedorloading').val()) || 0,
-            
+
             OffloadingRefNo: $('#equipmentsUsed_offloadingRefNo').val() || '',
             CraneOffloading: parseInt($('#equipmentsUsed_craneOffloading').val()) || 0,
             ForkliftOffloading: parseInt($('#equipmentsUsed_forkliftOffloading').val()) || 0,
             StevedorOffloading: parseInt($('#equipmentsUsed_stevedorOffloading').val()) || 0,
-            
+
             TotAmt: parseFloat($('#equipmentsUsed_totAmt').val()) || 0,
             GstAmt: parseFloat($('#equipmentsUsed_gstAmt').val()) || 0,
             TotAmtAftGst: parseFloat($('#equipmentsUsed_totAmtAftGst').val()) || 0,
             Remarks: $('#equipmentsUsed_remarks').val() || '',
-            
+
             DebitNoteId: parseInt($('#equipmentsUsed_debitNoteId').val()) || 0,
             DebitNoteNo: $('#equipmentsUsed_debitNoteNo').val() || '',
             TaskId: 9, // Assuming TaskId 9 is for Equipment Used
@@ -662,39 +658,39 @@
     function calculateMorningHours() {
         const timeIn = $('#equipmentsUsed_morningTimeIn').val();
         const timeOut = $('#equipmentsUsed_morningTimeOut').val();
-        
+
         if (timeIn && timeOut) {
             const timeInDate = new Date(`2000-01-01T${timeIn}`);
             const timeOutDate = new Date(`2000-01-01T${timeOut}`);
-            
+
             let hours = (timeOutDate - timeInDate) / (1000 * 60 * 60);
             if (hours < 0) hours += 24; // Handle overnight shift
-            
+
             $('#equipmentsUsed_morningTotalHours').val(hours.toFixed(2));
             calculateTotalHours();
         }
     }
-    
+
     function calculateEveningHours() {
         const timeIn = $('#equipmentsUsed_eveningTimeIn').val();
         const timeOut = $('#equipmentsUsed_eveningTimeOut').val();
-        
+
         if (timeIn && timeOut) {
             const timeInDate = new Date(`2000-01-01T${timeIn}`);
             const timeOutDate = new Date(`2000-01-01T${timeOut}`);
-            
+
             let hours = (timeOutDate - timeInDate) / (1000 * 60 * 60);
             if (hours < 0) hours += 24; // Handle overnight shift
-            
+
             $('#equipmentsUsed_eveningTotalHours').val(hours.toFixed(2));
             calculateTotalHours();
         }
     }
-    
+
     function calculateTotalHours() {
         const morningHours = parseFloat($('#equipmentsUsed_morningTotalHours').val()) || 0;
         const eveningHours = parseFloat($('#equipmentsUsed_eveningTotalHours').val()) || 0;
-        
+
         const totalHours = morningHours + eveningHours;
         $('#equipmentsUsed_totalRegularHours').val(totalHours.toFixed(2));
     }
@@ -703,10 +699,10 @@
     $('#equipmentsUsed_totAmt').on('change', function() {
         const amount = parseFloat($(this).val()) || 0;
         const gstRate = 0.07; // Assuming 7% GST
-        
+
         const gstAmt = amount * gstRate;
         const totAmtAftGst = amount + gstAmt;
-        
+
         $('#equipmentsUsed_gstAmt').val(gstAmt.toFixed(2));
         $('#equipmentsUsed_totAmtAftGst').val(totAmtAftGst.toFixed(2));
     });

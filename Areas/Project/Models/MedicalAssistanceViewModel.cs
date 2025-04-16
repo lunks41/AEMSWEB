@@ -33,9 +33,10 @@ namespace AMESWEB.Areas.Project.Models
         public short? EditById { get; set; }
         public DateTime? EditDate { get; set; }
         public byte EditVersion { get; set; } = 0;
-        
+
         // Medical assistance specific fields
         public DateTime MedicalAssistanceDate { get; set; }
+
         public DateTime MedicalAssistanceDateInGmt { get; set; }
         public string Rank { get; set; } = string.Empty;
         public string PersonName { get; set; } = string.Empty;
@@ -57,9 +58,10 @@ namespace AMESWEB.Areas.Project.Models
         public string? UomName { get; set; } = string.Empty;
         public DateTime? AdmittedDate { get; set; }
         public DateTime? DischargedDate { get; set; }
-        
+
         // Additional fields for UI display
         public string? CreateBy { get; set; } = string.Empty;
+
         public string? EditBy { get; set; } = string.Empty;
     }
 }

@@ -53,7 +53,6 @@ namespace AMESWEB.Areas.Master.Controllers
             return View();
         }
 
-
         #region Bank CRUD
 
         [HttpGet]

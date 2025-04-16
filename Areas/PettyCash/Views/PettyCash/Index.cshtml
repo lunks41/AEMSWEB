@@ -47,17 +47,16 @@
 
 <!-- Reject Modal -->
 <!--<div class="modal fade" id="rejectModal">-->
-    <!-- Modal content with form -->
+<!-- Modal content with form -->
 <!--</div>-->
-
 @*@functions {
-    string GetStatusBadge(ApprovalStatus status)
-    {
-        return status switch
+        string GetStatusBadge(ApprovalStatus status)
         {
-            ApprovalStatus.Approved => "badge-success",
-            ApprovalStatus.Rejected => "badge-danger",
-            _ => "badge-warning"
-        };
-    }
-}*@-->
+            return status switch
+            {
+                ApprovalStatus.Approved => "badge-success",
+                ApprovalStatus.Rejected => "badge-danger",
+                _ => "badge-warning"
+            };
+        }
+    }*@-->

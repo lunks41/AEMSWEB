@@ -1,6 +1,6 @@
 ﻿<!-- ThirdParty Modal -->
 <div class="modal fade" id="addThirdPartyModal" tabindex="-1" aria-labelledby="addThirdPartyModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addThirdPartyModalLabel">Third Party </h5>
@@ -234,7 +234,7 @@
             refreshThirdPartyDropdown();
             clearThirdPartyForm();
             setDefaultThirdPartyValues();
-           
+
             $('#addThirdPartyModal').modal('show');
         }
     }
@@ -283,12 +283,12 @@
         $('#thirdParty_quantity').val(data.quantity);
         $('#thirdParty_supplierName').val(data.supplierName);
         $('#thirdParty_supplierMobileNumber').val(data.supplierMobileNumber);
-        
+
         if (data.dateDelivered) {
             const formattedDate = new Date(data.dateDelivered).toLocaleDateString('en-CA');
             $('#thirdParty_dateDelivered').val(formattedDate);
         }
-        
+
         $('#thirdParty_remarks').val(data.remarks);
 
         // Set audit fields
@@ -297,7 +297,7 @@
         $('#thirdPartyeditBy').text(data.editBy || "N/A");
         $('#thirdPartyeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#thirdPartyeditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnThirdPartyClear').hide();
 
@@ -354,7 +354,7 @@
             Remarks: $('#thirdParty_remarks').val() || '',
             DebitNoteId: parseInt($('#thirdParty_debitNoteId').val()) || 0,
             DebitNoteNo: $('#thirdParty_debitNoteNo').val() || '',
-            TaskId: 8, // Assuming TaskId 8 is for Third Party 
+            TaskId: 8, // Assuming TaskId 8 is for Third Party
         };
 
         $.ajax({

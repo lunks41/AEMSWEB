@@ -27,6 +27,7 @@ namespace AMESWEB.Areas.Master.Data.Services
         }
 
         #region CUSTOMER
+
         public async Task<CustomerViewModelCount> GetCustomerListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString)
         {
             CustomerViewModelCount countViewModel = new CustomerViewModelCount();
@@ -330,9 +331,11 @@ namespace AMESWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
-        #endregion
+
+        #endregion CUSTOMER
 
         #region ADDRESS
+
         public async Task<IEnumerable<CustomerAddressViewModel>> GetCustomerAddressByCustomerIdAsync(short CompanyId, short UserId, int CustomerId)
         {
             try
@@ -464,10 +467,10 @@ namespace AMESWEB.Areas.Master.Data.Services
                 throw new Exception(ex.ToString());
             }
         }
-        #endregion
+
+        #endregion ADDRESS
 
         #region CONTACT
-        
 
         public async Task<IEnumerable<CustomerContactViewModel>> GetCustomerContactByCustomerIdAsync(short CompanyId, short UserId, int CustomerId)
         {
@@ -757,6 +760,6 @@ namespace AMESWEB.Areas.Master.Data.Services
             }
         }
 
-        #endregion
+        #endregion CONTACT
     }
 }

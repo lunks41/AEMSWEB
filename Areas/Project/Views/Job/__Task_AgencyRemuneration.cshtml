@@ -1,6 +1,6 @@
 ﻿<!-- AgencyRemuneration Modal -->
 <div class="modal fade" id="addAgencyRemunerationModal" tabindex="-1" aria-labelledby="addAgencyRemunerationModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addAgencyRemunerationModalLabel">Agency Remuneration</h5>
@@ -243,7 +243,7 @@
             refreshAgencyRemunerationDropdown();
             clearAgencyRemunerationForm();
             setDefaultAgencyRemunerationValues();
-           
+
             $('#addAgencyRemunerationModal').modal('show');
         }
     }
@@ -262,7 +262,7 @@
             const remunerationDate = new Date(data.remunerationDate).toLocaleDateString('en-CA');
             $('#agencyRemuneration_remunerationDate').val(remunerationDate);
         }
-        
+
         if (data.crewHandlingDateGmt) {
             const crewHandlingDate = new Date(data.crewHandlingDateGmt).toLocaleDateString('en-CA');
             $('#agencyRemuneration_crewHandlingDateGmt').val(crewHandlingDate);
@@ -308,7 +308,7 @@
         $('#agencyRemunerationeditBy').text(data.editBy || "N/A");
         $('#agencyRemunerationeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#agencyRemunerationeditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnAgencyRemunerationClear').hide();
 
@@ -393,11 +393,11 @@
     $('#agencyRemuneration_amount').on('change', function() {
         const amount = parseFloat($(this).val()) || 0;
         const gstRate = 0.07; // Assuming 7% GST
-        
+
         const gstAmt = amount * gstRate;
         const totAmt = amount;
         const totAmtAftGst = totAmt + gstAmt;
-        
+
         $('#agencyRemuneration_totAmt').val(totAmt.toFixed(2));
         $('#agencyRemuneration_gstAmt').val(gstAmt.toFixed(2));
         $('#agencyRemuneration_totAmtAftGst').val(totAmtAftGst.toFixed(2));

@@ -33,9 +33,10 @@ namespace AMESWEB.Areas.Project.Models
         public short? EditById { get; set; }
         public DateTime? EditDate { get; set; }
         public byte EditVersion { get; set; } = 0;
-        
+
         // Fresh water specific fields
         public DateTime? DateOf { get; set; }
+
         public string? ReceiptNumber { get; set; }
         public decimal? Distance { get; set; }
         public decimal Quantity { get; set; } = 0M;
@@ -51,9 +52,10 @@ namespace AMESWEB.Areas.Project.Models
         public string? StatusName { get; set; } = string.Empty;
         public short? UomId { get; set; }
         public string? UomName { get; set; } = string.Empty;
-        
+
         // Additional fields for UI display
         public string? CreateBy { get; set; } = string.Empty;
+
         public string? EditBy { get; set; } = string.Empty;
     }
 }

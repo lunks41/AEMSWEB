@@ -39,7 +39,7 @@ namespace AMESWEB.Areas.Project.Models
         public decimal TaxableAmt { get; set; } = 0M;
         public decimal NonTaxableAmt { get; set; } = 0M;
         public byte EditVersion { get; set; } = 0;
-        
+
         // Additional UI display fields
         public List<DebitNoteDtViewModel>? DebitNoteDetails { get; set; }
     }

@@ -33,9 +33,10 @@ namespace AMESWEB.Areas.Project.Models
         public short? EditById { get; set; }
         public DateTime? EditDate { get; set; }
         public byte EditVersion { get; set; } = 0;
-        
+
         // Third party supply specific fields
         public decimal Quantity { get; set; } = 0M;
+
         public string? SupplierName { get; set; }
         public short GLId { get; set; }
         public string? GlName { get; set; } = string.Empty;
@@ -48,9 +49,10 @@ namespace AMESWEB.Areas.Project.Models
         public short UomId { get; set; }
         public string? UomName { get; set; } = string.Empty;
         public DateTime? DateDelivered { get; set; }
-        
+
         // Additional fields for UI display
         public string? CreateBy { get; set; } = string.Empty;
+
         public string? EditBy { get; set; } = string.Empty;
     }
 }

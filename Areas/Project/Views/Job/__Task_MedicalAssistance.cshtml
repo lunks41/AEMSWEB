@@ -1,6 +1,6 @@
 ﻿<!-- MedicalAssistance Modal -->
 <div class="modal fade" id="addMedicalAssistanceModal" tabindex="-1" aria-labelledby="addMedicalAssistanceModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addMedicalAssistanceModalLabel">Medical Assistance</h5>
@@ -258,7 +258,7 @@
             refreshMedicalAssistanceDropdown();
             clearMedicalAssistanceForm();
             setDefaultMedicalAssistanceValues();
-           
+
             $('#addMedicalAssistanceModal').modal('show');
         }
     }
@@ -320,7 +320,7 @@
         $('#medicalAssistanceeditBy').text(data.editBy || "N/A");
         $('#medicalAssistanceeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
         $('#medicalAssistanceeditVersion').text(data.editVersion || "0");
-        
+
         // Hide clear button in edit mode
         $('#btnMedicalAssistanceClear').hide();
 
@@ -330,7 +330,7 @@
             uomCombo.enable(false);
             statusCombo.enable(false);
             glCombo.enable(false);
-            
+
             $('input, textarea').not('#btnMedicalAssistanceSave').prop('readonly', true);
             $('#btnMedicalAssistanceSave').prop('disabled', false);
         } else {
@@ -338,7 +338,7 @@
             uomCombo.enable(true);
             statusCombo.enable(true);
             glCombo.enable(true);
-            
+
             $('input, textarea').not('#medicalAssistance_totAmt, #medicalAssistance_gstAmt, #medicalAssistance_totAmtAftGst').prop('readonly', false);
             $('#btnMedicalAssistanceSave').prop('disabled', false);
         }
@@ -369,19 +369,19 @@
             GLId: parseInt($('#medicalAssistance_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
             UomId: parseInt($('#medicalAssistance_cmb_uom').data('kendoComboBox').value()) || null,
             StatusId: parseInt($('#medicalAssistance_cmb_status').data('kendoComboBox').value()) || 0,
-            
+
             ServiceDate: $('#medicalAssistance_serviceDate').val() || null,
             DoctorName: $('#medicalAssistance_doctorName').val() || '',
             ClinicName: $('#medicalAssistance_clinicName').val() || '',
             PatientName: $('#medicalAssistance_patientName').val() || '',
             NoOfPatients: parseInt($('#medicalAssistance_noOfPatients').val()) || 1,
             Quantity: parseFloat($('#medicalAssistance_quantity').val()) || 1,
-            
+
             TotAmt: parseFloat($('#medicalAssistance_totAmt').val()) || 0,
             GstAmt: parseFloat($('#medicalAssistance_gstAmt').val()) || 0,
             TotAmtAftGst: parseFloat($('#medicalAssistance_totAmtAftGst').val()) || 0,
             Remarks: $('#medicalAssistance_remarks').val() || '',
-            
+
             DebitNoteId: parseInt($('#medicalAssistance_debitNoteId').val()) || null,
             DebitNoteNo: $('#medicalAssistance_debitNoteNo').val() || '',
             TaskId: 7, // Assuming TaskId 7 is for Medical Assistance
@@ -421,7 +421,7 @@
         const gstRate = 0.07; // Assuming 7% GST
         const gstAmt = totAmt * gstRate;
         const totAmtAftGst = totAmt + gstAmt;
-        
+
         $('#medicalAssistance_totAmt').val(totAmt.toFixed(2));
         $('#medicalAssistance_gstAmt').val(gstAmt.toFixed(2));
         $('#medicalAssistance_totAmtAftGst').val(totAmtAftGst.toFixed(2));
