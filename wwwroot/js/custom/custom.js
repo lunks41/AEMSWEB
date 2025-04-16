@@ -1229,7 +1229,7 @@ function getCookie(name) {
     // Dark/Light Toggle
     const getSwitchToggleId = document.getElementById('switch-toggle');
     if (getSwitchToggleId) {
-        debugger;
+        
         const switchtoggle = document.querySelector(".switch-toggle");
         const savedTheme = localStorage.getItem("trezo_theme");
         const kendoLight = document.getElementById('kendo-theme-light');

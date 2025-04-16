@@ -1,5 +1,5 @@
-﻿]  <!-- AgencyRemuneration Modal -->
-<div class="modal fade" id="addAgencyRemunerationModal" tabindex="-1" aria-labelledby="addAgencyRemunerationModalLabel" aria-hidden="true">
+﻿<!-- AgencyRemuneration Modal -->
+<div class="modal fade" id="addAgencyRemunerationModal" tabindex="-1" aria-labelledby="addAgencyRemunerationModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,92 +7,75 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="agencyRemunerationForm" autocomplete="off">
+                <!-- Container replacing form tag -->
+                <div id="agencyRemunerationContainer">
+                    <input type="hidden" id="companyId" />
                     <input type="hidden" id="agencyRemuneration_jobOrderId" />
+                    <input type="hidden" id="agencyRemuneration_jobOrderNo" />
+                    <input type="hidden" id="agencyRemuneration_debitNoteId" />
+                    <input type="hidden" id="agencyRemuneration_debitNoteNo" />
                     <input type="hidden" id="agencyRemunerationId" />
-
                     <div class="row">
-                        <!-- Payment Information -->
-
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Remuneration Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="agencyRemuneration_date" required>
-                            </div>
+                            <label class="form-label">Remuneration Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="agencyRemuneration_remunerationDate">
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Amount <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="agencyRemuneration_amount" step="0.01" value="0.00" required>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Agency Name</label>
-                                <input type="text" class="form-control" id="agencyName">
-                            </div>
+                            <label for="agencyRemuneration_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="agencyRemuneration_cmb_charge" style="width: 100%"></select>
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">GL ID <span class="text-danger">*</span></label>
-                                <select class="form-select" id="agencyRemuneration_glId" required>
-                                    <option value="">Select GL Account</option>
-                                </select>
-                            </div>
+                            <label for="agencyRemuneration_cmb_gl" class="form-label">Gl Account <span class="text-danger">*</span></label>
+                            <select id="agencyRemuneration_cmb_gl" style="width: 100%"></select>
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Charge ID <span class="text-danger">*</span></label>
-                                <select class="form-select" id="agencyRemuneration_chargeId" required>
-                                    <option value="">Select Charge</option>
-                                </select>
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Agency Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="agencyRemuneration_agencyName">
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">UOM</label>
-                                <select class="form-select" id="uomId">
-                                    <option value="">Select Unit</option>
-                                </select>
-                            </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="agencyRemuneration_qty" step="1" value="0">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="agencyRemuneration_cmb_uom" class="form-label">UOM</label>
+                            <select id="agencyRemuneration_cmb_uom" style="width: 100%"></select>
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="qty">
-                            </div>
+                            <label class="form-label">Crew Handling Date (GMT) <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="agencyRemuneration_crewHandlingDateGmt">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="agencyRemuneration_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="agencyRemuneration_cmb_status" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Amount <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="agencyRemuneration_amount" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="agencyRemuneration_totAmt" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">GST Amount</label>
+                            <input type="number" class="form-control" id="agencyRemuneration_gstAmt" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total After GST</label>
+                            <input type="number" class="form-control" id="agencyRemuneration_totAmtAftGst" step="0.01" value="0.00" readonly>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Crew Handling Date (GMT) <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="crewHandlingDateGmt" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="mb-1">
-                                <label class="form-label">Remarks</label>
-                                <textarea class="form-control" id="remarks" rows="3"></textarea>
-                            </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Remark</label>
+                            <textarea class="form-control" id="agencyRemuneration_remarks" rows="2"></textarea>
                         </div>
                     </div>
+
                     <!-- Audit Fields -->
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -101,37 +84,322 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="agencyRemunerationcreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="agencyRemunerationcreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="agencyRemunerationeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="agencyRemunerationeditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="agencyRemunerationeditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankAgencyRemunerationClose" onclick="clearBankAgencyRemunerationForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankAgencyRemunerationEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankAgencyRemunerationClear" onclick="clearBankAgencyRemunerationForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankAgencyRemunerationSave" onclick="saveBankAgencyRemuneration()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnAgencyRemunerationClear" onclick="clearAgencyRemunerationForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnAgencyRemunerationSave" onclick="saveAgencyRemuneration()">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function refreshAgencyRemunerationDropdown() {
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "agencyRemuneration_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=2`;
+        bindComboBox(chargeUrl, "agencyRemuneration_cmb_charge", "chargeName", "chargeId");
+
+        const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(uomUrl, "agencyRemuneration_cmb_uom", "uomName", "uomId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "agencyRemuneration_cmb_status", "orderTypeName", "orderTypeId");
+    }
+
+    function clearAgencyRemunerationForm() {
+        $('#agencyRemunerationId').val('');
+        $('#agencyRemuneration_jobOrderId').val('');
+        $('#agencyRemuneration_jobOrderNo').val('');
+        $('#agencyRemuneration_debitNoteId').val('');
+        $('#agencyRemuneration_debitNoteNo').val('');
+
+        $('#agencyRemuneration_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#agencyRemuneration_cmb_charge').data('kendoComboBox').value('');
+        $('#agencyRemuneration_cmb_uom').data('kendoComboBox').value('');
+        $('#agencyRemuneration_cmb_status').data('kendoComboBox').value('');
+
+        $('#agencyRemuneration_remunerationDate').val('');
+        $('#agencyRemuneration_agencyName').val('');
+        $('#agencyRemuneration_qty').val('0');
+        $('#agencyRemuneration_crewHandlingDateGmt').val('');
+        $('#agencyRemuneration_amount').val('0.00');
+        $('#agencyRemuneration_totAmt').val('0.00');
+        $('#agencyRemuneration_gstAmt').val('0.00');
+        $('#agencyRemuneration_totAmtAftGst').val('0.00');
+        $('#agencyRemuneration_remarks').val('');
+
+        $('#agencyRemunerationcreateBy').text('');
+        $('#agencyRemunerationcreateDate').text('');
+        $('#agencyRemunerationeditBy').text('');
+        $('#agencyRemunerationeditDate').text('');
+        $('#agencyRemunerationeditVersion').text('');
+
+        $('#btnAgencyRemunerationClear').show();
+    }
+
+    function setDefaultAgencyRemunerationValues() {
+        // Set current date for remuneration date
+        const today = new Date().toISOString().split('T')[0];
+        $('#agencyRemuneration_remunerationDate').val(today);
+        $('#agencyRemuneration_crewHandlingDateGmt').val(today);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#agencyRemuneration_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#agencyRemuneration_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first UOM
+        setTimeout(() => {
+            const uomCombo = $('#agencyRemuneration_cmb_uom').data('kendoComboBox');
+            if (uomCombo.dataSource.view().length > 0) {
+                uomCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#agencyRemuneration_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+    }
+
+    function openAgencyRemunerationModal(jobOrderId, jobOrderNo, agencyRemunerationId, mode) {
+        const $modal = $('#addAgencyRemunerationModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedAgencyRemunerationId = parseInt(agencyRemunerationId, 10);
+        $('#agencyRemuneration_jobOrderId').val(jobOrderId);
+        $('#agencyRemuneration_jobOrderNo').val(jobOrderNo);
+
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedAgencyRemunerationId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetAgencyRemunerationById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                agencyRemunerationId: parsedAgencyRemunerationId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshAgencyRemunerationDropdown();
+                        clearAgencyRemunerationForm();
+                        populateAgencyRemunerationModalFields(response.data);
+                        $('#addAgencyRemunerationModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            // Add Mode: Clear form and set default values
+            refreshAgencyRemunerationDropdown();
+            clearAgencyRemunerationForm();
+            setDefaultAgencyRemunerationValues();
+           
+            $('#addAgencyRemunerationModal').modal('show');
+        }
+    }
+
+    function populateAgencyRemunerationModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#agencyRemunerationId').val(data.agencyRemunerationId);
+        $('#agencyRemuneration_jobOrderId').val(data.jobOrderId);
+        $('#agencyRemuneration_jobOrderNo').val(data.jobOrderNo);
+        $('#agencyRemuneration_debitNoteId').val(data.debitNoteId);
+        $('#agencyRemuneration_debitNoteNo').val(data.debitNoteNo);
+
+        // Set date fields
+        if (data.remunerationDate) {
+            const remunerationDate = new Date(data.remunerationDate).toLocaleDateString('en-CA');
+            $('#agencyRemuneration_remunerationDate').val(remunerationDate);
+        }
+        
+        if (data.crewHandlingDateGmt) {
+            const crewHandlingDate = new Date(data.crewHandlingDateGmt).toLocaleDateString('en-CA');
+            $('#agencyRemuneration_crewHandlingDateGmt').val(crewHandlingDate);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const chargeCombo = $('#agencyRemuneration_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#agencyRemuneration_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const uomCombo = $('#agencyRemuneration_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        const statusCombo = $('#agencyRemuneration_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        // Set other fields
+        $('#agencyRemuneration_agencyName').val(data.agencyName);
+        $('#agencyRemuneration_qty').val(data.qty);
+        $('#agencyRemuneration_amount').val(data.amount);
+        $('#agencyRemuneration_totAmt').val(data.totAmt);
+        $('#agencyRemuneration_gstAmt').val(data.gstAmt);
+        $('#agencyRemuneration_totAmtAftGst').val(data.totAmtAftGst);
+        $('#agencyRemuneration_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#agencyRemunerationcreateBy').text(data.createBy || "N/A");
+        $('#agencyRemunerationcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#agencyRemunerationeditBy').text(data.editBy || "N/A");
+        $('#agencyRemunerationeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#agencyRemunerationeditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnAgencyRemunerationClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            chargeCombo.enable(false);
+            uomCombo.enable(false);
+            statusCombo.enable(false);
+            glCombo.enable(false);
+            $('#agencyRemuneration_remunerationDate, #agencyRemuneration_agencyName, #agencyRemuneration_qty, #agencyRemuneration_crewHandlingDateGmt, #agencyRemuneration_amount, #agencyRemuneration_remarks').prop('readonly', true);
+            $('#btnAgencyRemunerationSave').prop('disabled', false);
+        } else {
+            chargeCombo.enable(true);
+            uomCombo.enable(true);
+            statusCombo.enable(true);
+            glCombo.enable(true);
+            $('#agencyRemuneration_remunerationDate, #agencyRemuneration_agencyName, #agencyRemuneration_qty, #agencyRemuneration_crewHandlingDateGmt, #agencyRemuneration_amount, #agencyRemuneration_remarks').prop('readonly', false);
+            $('#btnAgencyRemunerationSave').prop('disabled', false);
+        }
+    }
+
+    function deleteAgencyRemuneration(jobOrderId, agencyRemunerationId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteAgencyRemuneration", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, agencyRemunerationId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadAgencyRemunerationGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveAgencyRemuneration() {
+        let agencyRemunerationData = {
+            AgencyRemunerationId: parseInt($('#agencyRemunerationId').val()) || 0,
+            JobOrderId: parseInt($('#agencyRemuneration_jobOrderId').val()) || 0,
+            JobOrderNo: $('#agencyRemuneration_jobOrderNo').val() || '',
+            RemunerationDate: $('#agencyRemuneration_remunerationDate').val() || '',
+            ChargeId: parseInt($('#agencyRemuneration_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#agencyRemuneration_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            AgencyName: $('#agencyRemuneration_agencyName').val() || '',
+            Qty: parseInt($('#agencyRemuneration_qty').val()) || 0,
+            UomId: parseInt($('#agencyRemuneration_cmb_uom').data('kendoComboBox').value()) || 0,
+            CrewHandlingDateGmt: $('#agencyRemuneration_crewHandlingDateGmt').val() || '',
+            StatusId: parseInt($('#agencyRemuneration_cmb_status').data('kendoComboBox').value()) || 0,
+            Amount: parseFloat($('#agencyRemuneration_amount').val()) || 0,
+            TotAmt: parseFloat($('#agencyRemuneration_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#agencyRemuneration_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#agencyRemuneration_totAmtAftGst').val()) || 0,
+            Remarks: $('#agencyRemuneration_remarks').val(),
+            DebitNoteId: parseInt($('#agencyRemuneration_debitNoteId').val()) || 0,
+            DebitNoteNo: $('#agencyRemuneration_debitNoteNo').val() || '',
+            TaskId: 2, // Assuming TaskId 2 is for Agency Remuneration
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveAgencyRemuneration", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ agencyRemuneration: agencyRemunerationData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    initializeAgencyRemunerationGrid();
+                    clearAgencyRemunerationForm();
+                    $('#addAgencyRemunerationModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save agency remuneration.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
+    }
+
+    // Calculate total amounts when amount changes
+    $('#agencyRemuneration_amount').on('change', function() {
+        const amount = parseFloat($(this).val()) || 0;
+        const gstRate = 0.07; // Assuming 7% GST
+        
+        const gstAmt = amount * gstRate;
+        const totAmt = amount;
+        const totAmtAftGst = totAmt + gstAmt;
+        
+        $('#agencyRemuneration_totAmt').val(totAmt.toFixed(2));
+        $('#agencyRemuneration_gstAmt').val(gstAmt.toFixed(2));
+        $('#agencyRemuneration_totAmtAftGst').val(totAmtAftGst.toFixed(2));
+    });
+</script>

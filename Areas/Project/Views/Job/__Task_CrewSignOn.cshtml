@@ -1,6 +1,5 @@
 ﻿<!-- CrewSignOn Modal -->
-<div class="modal fade" id="addCrewSignOnModal" tabindex="-1" aria-labelledby="addCrewSignOnModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="addCrewSignOnModal" tabindex="-1" aria-labelledby="addCrewSignOnModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,113 +7,104 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="crewSignOnForm">
+                <!-- Container replacing form tag -->
+                <div id="crewSignOnContainer">
+                    <input type="hidden" id="companyId" />
                     <input type="hidden" id="crewSignOn_jobOrderId" />
+                    <input type="hidden" id="crewSignOn_jobOrderNo" />
+                    <input type="hidden" id="crewSignOn_debitNoteId" />
+                    <input type="hidden" id="crewSignOn_debitNoteNo" />
                     <input type="hidden" id="crewSignOnId" />
+                    
                     <div class="row">
-                        <!-- Personal Information -->
+                        <!-- Crew Information -->
+                        <div class="col-md-6">
+                            <label class="form-label">Crew Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="crewSignOn_crewName">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Position</label>
+                            <input type="text" class="form-control" id="crewSignOn_position">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Rank <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="crewSignOn_rankId">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nationality <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="crewSignOn_nationality">
+                        </div>
+                        
+                        <!-- Sign On Information -->
                         <div class="col-md-4">
-                            <div class="col-mb-4">
-                                <label class="form-label">Visa Type</label>
-                                <select class="form-select" id="crewSignOn_visaTypeId">
-                                    <option value="">Select Visa Type</option>
-                                    <!-- Options to be populated -->
-                                </select>
-                            </div>
+                            <label class="form-label">Sign On Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="crewSignOn_signOnDate">
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Gender <span class="text-danger">*</span></label>
-                                <select class="form-select" id="crewSignOn_chargeId" required>
-                                    <option value="">Select Gender</option>
-                                </select>
-                            </div>
+                            <label for="crewSignOn_cmb_gender" class="form-label">Gender</label>
+                            <select id="crewSignOn_cmb_gender" style="width: 100%"></select>
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Crew Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="crewSignOn_crewName" required>
-                            </div>
+                            <label for="crewSignOn_cmb_visaType" class="form-label">Visa Type</label>
+                            <select id="crewSignOn_cmb_visaType" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Rank <span class="text-danger">*</span></label>
-                                <select class="form-select" id="crewSignOn_glId" required>
-                                    <option value="">Select Rank</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-4">
-                                <label class="form-label">Nationality <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nationality" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Charge Code <span class="text-danger">*</span></label>
-                                <select class="form-select" id="crewSignOn_chargeId" required>
-                                    <option value="">Select Charge</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                                <select class="form-select" id="crewSignOn_glId" required>
-                                    <option value="">Select GL</option>
-                                </select>
-                            </div>
-                        </div>
-
+                        
                         <!-- Travel Information -->
+                        <div class="col-md-6">
+                            <label class="form-label">Flight Details <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="crewSignOn_flightDetails">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ticket Number</label>
+                            <input type="text" class="form-control" id="crewSignOn_ticketNo">
+                        </div>
+                        
+                        <!-- Accommodation and Transport -->
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Ticket No</label>
-                                <input type="text" class="form-control" id="ticketNo">
-                            </div>
+                            <label class="form-label">Hotel Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="crewSignOn_hotelName">
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Flight Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="flightDetails" required>
-                            </div>
-                        </div>
-                        <!-- Accommodation & Transport -->
-
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Hotel Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="hotelName" required>
-                            </div>
+                            <label class="form-label">Transport Name</label>
+                            <input type="text" class="form-control" id="crewSignOn_transportName">
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Transport Name</label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
+                            <label class="form-label">Clearing</label>
+                            <input type="text" class="form-control" id="crewSignOn_clearing">
                         </div>
-                        <!-- Administrative -->
+                        
+                        <!-- Financial Information -->
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Clearing By</label>
-                                <input type="text" class="form-control" id="clearing">
-                            </div>
+                            <label for="crewSignOn_cmb_charge" class="form-label">Charge</label>
+                            <select id="crewSignOn_cmb_charge" style="width: 100%"></select>
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                    <!-- Options to be populated -->
-                                </select>
-                            </div>
+                            <label for="crewSignOn_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="crewSignOn_cmb_gl" style="width: 100%"></select>
                         </div>
-                        <div class="col-12">
-                            <div class="mb-1">
-                                <label class="form-label">Remark</label>
-                                <textarea class="form-control" id="remark" rows="2"></textarea>
-                            </div>
+                        <div class="col-md-4">
+                            <label for="crewSignOn_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="crewSignOn_cmb_status" style="width: 100%"></select>
+                        </div>
+                        
+                        <!-- Amount Information -->
+                        <div class="col-md-4">
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="crewSignOn_totAmt" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">GST Amount</label>
+                            <input type="number" class="form-control" id="crewSignOn_gstAmt" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total After GST</label>
+                            <input type="number" class="form-control" id="crewSignOn_totAmtAftGst" step="0.01" value="0.00" readonly>
+                        </div>
+                        
+                        <!-- Remarks -->
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="crewSignOn_remarks" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -122,8 +112,7 @@
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -132,39 +121,35 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="crewSignOnCreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="crewSignOnCreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="crewSignOnEditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="crewSignOnEditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="crewSignOnEditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankCrewSignOnClose"
-                    onclick="clearBankCrewSignOnForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankCrewSignOnEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankCrewSignOnClear"
-                    onclick="clearBankCrewSignOnForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankCrewSignOnSave"
-                    onclick="saveBankCrewSignOn()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnCrewSignOnClear" onclick="clearCrewSignOnForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCrewSignOnSave" onclick="saveCrewSignOn()">Save</button>
             </div>
         </div>
     </div>
@@ -172,50 +157,232 @@
 
 <script>
     function refreshCrewSignOnDropdown() {
-        // Add dropdown binding logic specific to Crew Sign On
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "crewSignOn_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=7`;
+        bindComboBox(chargeUrl, "crewSignOn_cmb_charge", "chargeName", "chargeId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "crewSignOn_cmb_status", "orderTypeName", "orderTypeId");
+
+        const genderUrl = `@Url.Action("GetGenderLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(genderUrl, "crewSignOn_cmb_gender", "genderName", "genderId");
+
+        const visaTypeUrl = `@Url.Action("GetVisaTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(visaTypeUrl, "crewSignOn_cmb_visaType", "visaTypeName", "visaTypeId");
     }
 
     function clearCrewSignOnForm() {
-        $('#crewSignOn_jobOrderId').val('');
         $('#crewSignOnId').val('');
-        $('#crewSignOn_visaTypeId').val('');
-        $('#crewSignOn_chargeId').val('');
+        $('#crewSignOn_jobOrderId').val('');
+        $('#crewSignOn_jobOrderNo').val('');
+        $('#crewSignOn_debitNoteId').val('');
+        $('#crewSignOn_debitNoteNo').val('');
+
+        // Clear dropdowns
+        $('#crewSignOn_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#crewSignOn_cmb_charge').data('kendoComboBox').value('');
+        $('#crewSignOn_cmb_status').data('kendoComboBox').value('');
+        $('#crewSignOn_cmb_gender').data('kendoComboBox').value('');
+        $('#crewSignOn_cmb_visaType').data('kendoComboBox').value('');
+
+        // Clear text inputs
         $('#crewSignOn_crewName').val('');
-        $('#crewSignOn_glId').val('');
+        $('#crewSignOn_position').val('');
+        $('#crewSignOn_rankId').val('');
+        $('#crewSignOn_nationality').val('');
+        $('#crewSignOn_signOnDate').val('');
+        $('#crewSignOn_flightDetails').val('');
+        $('#crewSignOn_ticketNo').val('');
+        $('#crewSignOn_hotelName').val('');
+        $('#crewSignOn_transportName').val('');
+        $('#crewSignOn_clearing').val('');
+        $('#crewSignOn_totAmt').val('0.00');
+        $('#crewSignOn_gstAmt').val('0.00');
+        $('#crewSignOn_totAmtAftGst').val('0.00');
+        $('#crewSignOn_remarks').val('');
+
+        // Clear audit fields
+        $('#crewSignOnCreateBy').text('');
+        $('#crewSignOnCreateDate').text('');
+        $('#crewSignOnEditBy').text('');
+        $('#crewSignOnEditDate').text('');
+        $('#crewSignOnEditVersion').text('');
+
+        $('#btnCrewSignOnClear').show();
     }
 
-    function openCrewSignOnModal(crewId, mode) {
-        // Add modal opening logic specific to Crew Sign On
-    }
+    function setDefaultCrewSignOnValues() {
+        // Set current date for sign on date
+        const today = new Date().toISOString().split('T')[0];
+        $('#crewSignOn_signOnDate').val(today);
 
-    function saveCrewSignOn() {
-        const crewSignOnData = {
-            JobOrderId: parseInt($('#crewSignOn_jobOrderId').val()) || 0,
-            CrewSignOnId: parseInt($('#crewSignOnId').val()) || 0,
-            VisaTypeId: parseInt($('#crewSignOn_visaTypeId').val()) || 0,
-            ChargeId: parseInt($('#crewSignOn_chargeId').val()) || 0,
-            CrewName: $('#crewSignOn_crewName').val(),
-            GLId: parseInt($('#crewSignOn_glId').val()) || 0
-        };
-
-        $.ajax({
-            url: '@Url.Action("SaveCrewSignOn", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(crewSignOnData),
-            contentType: 'application/json',
-            success: function (response) {
-                if (response.success) {
-                    alert('Crew Sign On saved successfully!');
-                    clearCrewSignOnForm();
-                    $('#addCrewSignOnModal').modal('hide');
-                } else {
-                    alert(response.message || 'Failed to save crew sign on.');
-                }
-            },
-            error: function () {
-                alert('An error occurred while saving the crew sign on.');
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#crewSignOn_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
             }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#crewSignOn_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#crewSignOn_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+    }
+
+    function openCrewSignOnModal(jobOrderId, jobOrderNo, crewSignOnId, mode) {
+        const $modal = $('#addCrewSignOnModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedCrewSignOnId = parseInt(crewSignOnId, 10);
+        $('#crewSignOn_jobOrderId').val(jobOrderId);
+        $('#crewSignOn_jobOrderNo').val(jobOrderNo);
+
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedCrewSignOnId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetCrewSignOnById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                crewSignOnId: parsedCrewSignOnId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshCrewSignOnDropdown();
+                        clearCrewSignOnForm();
+                        populateCrewSignOnModalFields(response.data);
+                        $('#addCrewSignOnModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            // Add Mode: Clear form and set default values
+            refreshCrewSignOnDropdown();
+            clearCrewSignOnForm();
+            setDefaultCrewSignOnValues();
+           
+            $('#addCrewSignOnModal').modal('show');
+        }
+    }
+
+    function populateCrewSignOnModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#crewSignOnId').val(data.crewSignOnId);
+        $('#crewSignOn_jobOrderId').val(data.jobOrderId);
+        $('#crewSignOn_jobOrderNo').val(data.jobOrderNo);
+        $('#crewSignOn_debitNoteId').val(data.debitNoteId);
+        $('#crewSignOn_debitNoteNo').val(data.debitNoteNo);
+
+        // Set date fields
+        if (data.signOnDate) {
+            const signOnDate = new Date(data.signOnDate).toLocaleDateString('en-CA');
+            $('#crewSignOn_signOnDate').val(signOnDate);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const chargeCombo = $('#crewSignOn_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
         });
+
+        const glCombo = $('#crewSignOn_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const statusCombo = $('#crewSignOn_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        const genderCombo = $('#crewSignOn_cmb_gender').data('kendoComboBox');
+        genderCombo.value(data.genderId > 0 ? data.genderId : '');
+        genderCombo.one('dataBound', function () {
+            genderCombo.value(data.genderId > 0 ? data.genderId : '');
+        });
+
+        const visaTypeCombo = $('#crewSignOn_cmb_visaType').data('kendoComboBox');
+        visaTypeCombo.value(data.visaTypeId > 0 ? data.visaTypeId : '');
+        visaTypeCombo.one('dataBound', function () {
+            visaTypeCombo.value(data.visaTypeId > 0 ? data.visaTypeId : '');
+        });
+
+        // Set text fields
+        $('#crewSignOn_crewName').val(data.crewName);
+        $('#crewSignOn_position').val(data.position);
+        $('#crewSignOn_rankId').val(data.rankId);
+        $('#crewSignOn_nationality').val(data.nationality);
+        $('#crewSignOn_flightDetails').val(data.flightDetails);
+        $('#crewSignOn_ticketNo').val(data.ticketNo);
+        $('#crewSignOn_hotelName').val(data.hotelName);
+        $('#crewSignOn_transportName').val(data.transportName);
+        $('#crewSignOn_clearing').val(data.clearing);
+        $('#crewSignOn_totAmt').val(data.totAmt);
+        $('#crewSignOn_gstAmt').val(data.gstAmt);
+        $('#crewSignOn_totAmtAftGst').val(data.totAmtAftGst);
+        $('#crewSignOn_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#crewSignOnCreateBy').text(data.createBy || "N/A");
+        $('#crewSignOnCreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#crewSignOnEditBy').text(data.editBy || "N/A");
+        $('#crewSignOnEditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#crewSignOnEditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnCrewSignOnClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            // Disable dropdowns
+            chargeCombo.enable(false);
+            glCombo.enable(false);
+            statusCombo.enable(false);
+            genderCombo.enable(false);
+            visaTypeCombo.enable(false);
+            
+            // Disable inputs
+            $('input, textarea').not('#btnCrewSignOnSave').prop('readonly', true);
+            $('#btnCrewSignOnSave').prop('disabled', false);
+        } else {
+            // Enable all controls
+            chargeCombo.enable(true);
+            glCombo.enable(true);
+            statusCombo.enable(true);
+            genderCombo.enable(true);
+            visaTypeCombo.enable(true);
+            
+            // Enable inputs
+            $('input, textarea').not('#crewSignOn_gstAmt, #crewSignOn_totAmtAftGst').prop('readonly', false);
+            $('#btnCrewSignOnSave').prop('disabled', false);
+        }
     }
 
     function deleteCrewSignOn(jobOrderId, crewSignOnId) {
@@ -234,49 +401,67 @@
         });
     }
 
-    function populateCrewSignOnModalFields(data) {
-        // Populate modal fields with data
-        $('#companyId').val(data.companyId);
-        $('#crewSignOnId').val(data.crewSignOnId);
-        $('#crewSignOn_jobOrderId').val(data.jobOrderId);
-        $('#crewSignOn_jobOrderNo').val(data.jobOrderNo);
-        // ...existing code...
+    function saveCrewSignOn() {
+        let crewSignOnData = {
+            CrewSignOnId: parseInt($('#crewSignOnId').val()) || 0,
+            JobOrderId: parseInt($('#crewSignOn_jobOrderId').val()) || 0,
+            JobOrderNo: $('#crewSignOn_jobOrderNo').val() || '',
+            ChargeId: parseInt($('#crewSignOn_cmb_charge').data('kendoComboBox').value()) || null,
+            GLId: parseInt($('#crewSignOn_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            StatusId: parseInt($('#crewSignOn_cmb_status').data('kendoComboBox').value()) || 0,
+            GenderId: parseInt($('#crewSignOn_cmb_gender').data('kendoComboBox').value()) || null,
+            VisaTypeId: parseInt($('#crewSignOn_cmb_visaType').data('kendoComboBox').value()) || null,
+            
+            CrewName: $('#crewSignOn_crewName').val() || '',
+            Position: $('#crewSignOn_position').val() || '',
+            RankId: $('#crewSignOn_rankId').val() || '',
+            Nationality: $('#crewSignOn_nationality').val() || '',
+            SignOnDate: $('#crewSignOn_signOnDate').val() || '',
+            FlightDetails: $('#crewSignOn_flightDetails').val() || '',
+            TicketNo: $('#crewSignOn_ticketNo').val() || '',
+            HotelName: $('#crewSignOn_hotelName').val() || '',
+            TransportName: $('#crewSignOn_transportName').val() || '',
+            Clearing: $('#crewSignOn_clearing').val() || '',
+            
+            TotAmt: parseFloat($('#crewSignOn_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#crewSignOn_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#crewSignOn_totAmtAftGst').val()) || 0,
+            Remarks: $('#crewSignOn_remarks').val() || '',
+            
+            DebitNoteId: parseInt($('#crewSignOn_debitNoteId').val()) || null,
+            DebitNoteNo: $('#crewSignOn_debitNoteNo').val() || '',
+            TaskId: 7, // Assuming TaskId 7 is for Crew Sign On
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveCrewSignOn", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ crewSignOn: crewSignOnData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    initializeCrewSignOnGrid();
+                    clearCrewSignOnForm();
+                    $('#addCrewSignOnModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save crew sign on.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
     }
 
-    function openCrewSignOnModal(jobOrderId, jobOrderNo, crewSignOnId, mode) {
-        const $modal = $('#addCrewSignOnModal');
-        const parsedJobOrderId = parseInt(jobOrderId, 10);
-        const parsedCrewSignOnId = parseInt(crewSignOnId, 10);
-        $('#crewSignOn_jobOrderId').val(jobOrderId);
-        $('#crewSignOn_jobOrderNo').val(jobOrderNo);
-
-        if (parsedJobOrderId > 0 && parsedCrewSignOnId > 0) {
-            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
-            $.get('@Url.Action("GetCrewSignOnById", "Job", new { area = "Project" })', {
-                jobOrderId: parsedJobOrderId,
-                crewSignOnId: parsedCrewSignOnId,
-                companyId: $('#companyId').val()
-            })
-                .done(function (response) {
-                    if (response.success) {
-                        refreshCrewSignOnDropdown();
-                        clearCrewSignOnForm();
-                        populateCrewSignOnModalFields(response.data);
-                        $('#addCrewSignOnModal').modal('show');
-                    }
-                })
-                .always(() => $modal.find('.modal-overlay').remove());
-        } else {
-            refreshCrewSignOnDropdown();
-            clearCrewSignOnForm();
-            setDefaultDropdownValues();
-            $('#addCrewSignOnModal').modal('show');
-        }
-    }
-
-    function setDefaultDropdownValues() {
-        // Set default values for dropdowns
-        $('#crewSignOn_cmb_gl').data('kendoMultiColumnComboBox').value(488);
-        // ...existing code...
-    }
+    // Calculate GST amounts when total amount changes
+    $('#crewSignOn_totAmt').on('change', function() {
+        const amount = parseFloat($(this).val()) || 0;
+        const gstRate = 0.07; // Assuming 7% GST
+        
+        const gstAmt = amount * gstRate;
+        const totAmtAftGst = amount + gstAmt;
+        
+        $('#crewSignOn_gstAmt').val(gstAmt.toFixed(2));
+        $('#crewSignOn_totAmtAftGst').val(totAmtAftGst.toFixed(2));
+    });
 </script>

@@ -1,185 +1,210 @@
 ﻿<!-- ConsignmentImport Modal -->
-<div class="modal fade" id="addConsignmentImportModal" tabindex="-1" aria-labelledby="addConsignmentImportModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+<div class="modal fade" id="addConsignmentImportModal" tabindex="-1" aria-labelledby="addConsignmentImportModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addConsignmentImportModalLabel">Consignment Import</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="consignmentImportForm">
+                <!-- Container replacing form tag -->
+                <div id="consignmentImportContainer">
+                    <input type="hidden" id="companyId" />
                     <input type="hidden" id="consignmentImport_jobOrderId" />
+                    <input type="hidden" id="consignmentImport_jobOrderNo" />
+                    <input type="hidden" id="consignmentImport_debitNoteId" />
+                    <input type="hidden" id="consignmentImport_debitNoteNo" />
                     <input type="hidden" id="consignmentImportId" />
-
+                    
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">AWB/HAWB No. <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="consignmentImport_awbNo" required>
+                        <!-- First row -->
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_cargoType" class="form-label">Cargo Type <span class="text-danger">*</span></label>
+                            <select id="consignmentImport_cmb_cargoType" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Consignment No</label>
+                            <input type="text" class="form-control" id="consignmentImport_consignmentNo">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">AWB Number</label>
+                            <input type="text" class="form-control" id="consignmentImport_awbNumber">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">HAWB Number</label>
+                            <input type="text" class="form-control" id="consignmentImport_hawbNumber">
+                        </div>
+
+                        <!-- Second row -->
+                        <div class="col-md-3">
+                            <label class="form-label">Declaration Number</label>
+                            <input type="text" class="form-control" id="consignmentImport_declarationNumber">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Booking Date</label>
+                            <input type="date" class="form-control" id="consignmentImport_bookingDate">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Weight <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="consignmentImport_weight" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Number of Pieces</label>
+                            <input type="number" class="form-control" id="consignmentImport_noOfPcs" step="1" value="0">
+                        </div>
+
+                        <!-- Third row -->
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_supplier" class="form-label">Supplier</label>
+                            <input type="text" id="consignmentImport_cmb_supplier" />
+                        </div>
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="consignmentImport_cmb_charge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="consignmentImport_cmb_gl" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_type" class="form-label">Type <span class="text-danger">*</span></label>
+                            <select id="consignmentImport_cmb_type" style="width: 100%"></select>
+                        </div>
+
+                        <!-- Fourth row -->
+                        <div class="col-md-6">
+                            <label class="form-label">Pickup Location</label>
+                            <input type="text" class="form-control" id="consignmentImport_pickupLocation">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Pickup Location Address</label>
+                            <textarea class="form-control" id="consignmentImport_pickupLocationAddress" rows="2"></textarea>
+                        </div>
+
+                        <!-- Fifth row -->
+                        <div class="col-md-6">
+                            <label class="form-label">Delivery Location</label>
+                            <input type="text" class="form-control" id="consignmentImport_deliveryLocation">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Delivery Location Address</label>
+                            <textarea class="form-control" id="consignmentImport_deliveryLocationAddress" rows="2"></textarea>
+                        </div>
+
+                        <!-- Sixth row -->
+                        <div class="col-md-3">
+                            <label class="form-label">Date Received</label>
+                            <input type="date" class="form-control" id="consignmentImport_dateReceived">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Date Delivered</label>
+                            <input type="date" class="form-control" id="consignmentImport_dateDelivered">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="consignmentImport_cmb_status" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_mode" class="form-label">Mode</label>
+                            <select id="consignmentImport_cmb_mode" style="width: 100%"></select>
+                        </div>
+
+                        <!-- Seventh row -->
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="consignmentImport_quantity" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_uom" class="form-label">UOM</label>
+                            <select id="consignmentImport_cmb_uom" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Reference Number</label>
+                            <input type="text" class="form-control" id="consignmentImport_referenceNumber">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Bill Entry Number</label>
+                            <input type="text" class="form-control" id="consignmentImport_billEntryNumber">
+                        </div>
+
+                        <!-- Eighth row - Additional fields -->
+                        <div class="col-md-3">
+                            <label class="form-label">Cleared By</label>
+                            <input type="text" class="form-control" id="consignmentImport_clearedBy">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Transporter Name</label>
+                            <input type="text" class="form-control" id="consignmentImport_transporterName">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="consignmentImport_cmb_location" class="form-label">Location</label>
+                            <select id="consignmentImport_cmb_location" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-control" id="consignmentImport_amountDeposited" step="0.01" value="0.00">
+                        </div>
+
+                        <!-- Ninth row - Checkboxes and refund amounts -->
+                        <div class="col-md-3 mt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="consignmentImport_isDepositRefundReceived">
+                                <label class="form-check-label" for="consignmentImport_isDepositRefundReceived">
+                                    Deposit Refund Received
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">No. Of Packages <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="hotelName" required>
+                        <div class="col-md-3 mt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="consignmentImport_isWarehouseCharges">
+                                <label class="form-check-label" for="consignmentImport_isWarehouseCharges">
+                                    Warehouse Charges
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Received Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
+                        <div class="col-md-3 mt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="consignmentImport_isRefundedReceived">
+                                <label class="form-check-label" for="consignmentImport_isRefundedReceived">
+                                    Refund Received
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Delivered Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Weight <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="consignmentImport_weight" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Cargo Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="consignmentImport_chargeId" required>
-                                    <option value="">Select Cargo</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">UOM <span class="text-danger">*</span></label>
-                                <select class="form-select" id="chargeId" required>
-                                    <option value="">Select UOM</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Consignment Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="chargeId" required>
-                                    <option value="">Select Consignment</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Mode Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="chargeId" required>
-                                    <option value="">Select Mode</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Location Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="chargeId" required>
-                                    <option value="">Select Location</option>
-                                </select>
+                        <div class="col-md-3 mt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="consignmentImport_isRefundedExpected">
+                                <label class="form-check-label" for="consignmentImport_isRefundedExpected">
+                                    Refund Expected
+                                </label>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Charge Code <span class="text-danger">*</span></label>
-                                <select class="form-select" id="consignmentImport_chargeId" required>
-                                    <option value="">Select Charge</option>
-                                </select>
-                            </div>
+                        <!-- Tenth row -->
+                        <div class="col-md-3">
+                            <label class="form-label">Refund Amount</label>
+                            <input type="number" class="form-control" id="consignmentImport_refundAmt" step="0.01" value="0.00">
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                                <select class="form-select" id="consignmentImport_glId" required>
-                                    <option value="">Select GL</option>
-                                </select>
-                            </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Refund Instrument Number</label>
+                            <input type="text" class="form-control" id="consignmentImport_refundInstrumentNumber">
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Pickup Location <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="hotelName" required>
-                            </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="consignmentImport_totAmt" step="0.01" value="0.00" readonly>
                         </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Delivery Location</label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
+                        <div class="col-md-3">
+                            <label class="form-label">GST Amount</label>
+                            <input type="number" class="form-control" id="consignmentImport_gstAmt" step="0.01" value="0.00" readonly>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Clearing by <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
+                        <!-- Last row -->
+                        <div class="col-md-3">
+                            <label class="form-label">Total After GST</label>
+                            <input type="number" class="form-control" id="consignmentImport_totAmtAftGst" step="0.01" value="0.00" readonly>
                         </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Bill Of Entry No <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="hotelName" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Declaration No</label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Delivery Charges <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Carrier Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Reference No <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Amount Deposited <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="transportName">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Refund Instrument No <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                    <!-- Options to be populated -->
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="mb-1">
-                                <label class="form-label">Remark</label>
-                                <textarea class="form-control" id="remark" rows="2"></textarea>
-                            </div>
+                        <div class="col-md-9">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="consignmentImport_remarks" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -187,8 +212,7 @@
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -197,39 +221,35 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="consignmentImportcreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="consignmentImportcreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="consignmentImporteditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="consignmentImporteditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="consignmentImporteditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    id="btnBankConsignmentImportClose" onclick="clearBankConsignmentImportForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankConsignmentImportEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankConsignmentImportClear"
-                    onclick="clearBankConsignmentImportForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankConsignmentImportSave"
-                    onclick="saveBankConsignmentImport()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnConsignmentImportClear" onclick="clearConsignmentImportForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnConsignmentImportSave" onclick="saveConsignmentImport()">Save</button>
             </div>
         </div>
     </div>
@@ -237,18 +257,152 @@
 
 <script>
     function refreshConsignmentImportDropdown() {
-        // Add dropdown binding logic specific to Consignment Import
+        const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const suppliercolumnsProperties = [
+            { field: 'supplierCode', title: 'Code', width: 100 },
+            { field: 'supplierName', title: 'Name', width: 200 }
+        ];
+        const supplierfilterFields = ['supplierCode', 'supplierName'];
+        bindMultiColumnComboBox(supplierUrl, "consignmentImport_cmb_supplier", "supplierName", "supplierId", suppliercolumnsProperties, supplierfilterFields);
+
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "consignmentImport_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=4`;
+        bindComboBox(chargeUrl, "consignmentImport_cmb_charge", "chargeName", "chargeId");
+        
+        const cargoTypeUrl = `@Url.Action("GetCargoTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(cargoTypeUrl, "consignmentImport_cmb_cargoType", "cargoTypeName", "cargoTypeId");
+        
+        const typeUrl = `@Url.Action("GetConsignmentTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(typeUrl, "consignmentImport_cmb_type", "typeName", "typeId");
+        
+        const modeUrl = `@Url.Action("GetTransportModeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(modeUrl, "consignmentImport_cmb_mode", "modeName", "modeId");
+        
+        const locationUrl = `@Url.Action("GetLocationLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(locationUrl, "consignmentImport_cmb_location", "locationName", "locationLookupId");
+
+        const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(uomUrl, "consignmentImport_cmb_uom", "uomName", "uomId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "consignmentImport_cmb_status", "orderTypeName", "orderTypeId");
     }
 
     function clearConsignmentImportForm() {
-        $('#consignmentImport_jobOrderId').val('');
         $('#consignmentImportId').val('');
-        $('#consignmentImport_awbNo').val('');
-        $('#consignmentImport_chargeId').val('');
-        $('#consignmentImport_glId').val('');
-        $('#consignmentImport_weight').val('');
-        $('#consignmentImport_deliverDate').val('');
+        $('#consignmentImport_jobOrderId').val('');
+        $('#consignmentImport_jobOrderNo').val('');
+        $('#consignmentImport_debitNoteId').val('');
+        $('#consignmentImport_debitNoteNo').val('');
+
+        // Clear dropdowns
+        $('#consignmentImport_cmb_supplier').data('kendoMultiColumnComboBox').value('');
+        $('#consignmentImport_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#consignmentImport_cmb_charge').data('kendoComboBox').value('');
+        $('#consignmentImport_cmb_cargoType').data('kendoComboBox').value('');
+        $('#consignmentImport_cmb_type').data('kendoComboBox').value('');
+        $('#consignmentImport_cmb_mode').data('kendoComboBox').value('');
+        $('#consignmentImport_cmb_location').data('kendoComboBox').value('');
+        $('#consignmentImport_cmb_uom').data('kendoComboBox').value('');
+        $('#consignmentImport_cmb_status').data('kendoComboBox').value('');
+
+        // Clear text inputs
+        $('#consignmentImport_consignmentNo').val('');
+        $('#consignmentImport_awbNumber').val('');
+        $('#consignmentImport_hawbNumber').val('');
+        $('#consignmentImport_declarationNumber').val('');
+        $('#consignmentImport_bookingDate').val('');
+        $('#consignmentImport_weight').val('0.00');
+        $('#consignmentImport_noOfPcs').val('0');
+        $('#consignmentImport_pickupLocation').val('');
+        $('#consignmentImport_pickupLocationAddress').val('');
+        $('#consignmentImport_deliveryLocation').val('');
+        $('#consignmentImport_deliveryLocationAddress').val('');
+        $('#consignmentImport_dateReceived').val('');
+        $('#consignmentImport_dateDelivered').val('');
+        $('#consignmentImport_quantity').val('0.00');
+        $('#consignmentImport_referenceNumber').val('');
+        $('#consignmentImport_billEntryNumber').val('');
+        $('#consignmentImport_clearedBy').val('');
+        $('#consignmentImport_transporterName').val('');
+        $('#consignmentImport_amountDeposited').val('0.00');
+        $('#consignmentImport_refundAmt').val('0.00');
+        $('#consignmentImport_refundInstrumentNumber').val('');
+        $('#consignmentImport_totAmt').val('0.00');
+        $('#consignmentImport_gstAmt').val('0.00');
+        $('#consignmentImport_totAmtAftGst').val('0.00');
         $('#consignmentImport_remarks').val('');
+
+        // Clear checkboxes
+        $('#consignmentImport_isDepositRefundReceived').prop('checked', false);
+        $('#consignmentImport_isWarehouseCharges').prop('checked', false);
+        $('#consignmentImport_isRefundedReceived').prop('checked', false);
+        $('#consignmentImport_isRefundedExpected').prop('checked', false);
+
+        // Clear audit fields
+        $('#consignmentImportcreateBy').text('');
+        $('#consignmentImportcreateDate').text('');
+        $('#consignmentImporteditBy').text('');
+        $('#consignmentImporteditDate').text('');
+        $('#consignmentImporteditVersion').text('');
+
+        $('#btnConsignmentImportClear').show();
+    }
+
+    function setDefaultConsignmentImportValues() {
+        // Set current date
+        const today = new Date().toISOString().split('T')[0];
+        $('#consignmentImport_bookingDate').val(today);
+
+        // Set default to first cargo type
+        setTimeout(() => {
+            const cargoTypeCombo = $('#consignmentImport_cmb_cargoType').data('kendoComboBox');
+            if (cargoTypeCombo.dataSource.view().length > 0) {
+                cargoTypeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first type
+        setTimeout(() => {
+            const typeCombo = $('#consignmentImport_cmb_type').data('kendoComboBox');
+            if (typeCombo.dataSource.view().length > 0) {
+                typeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#consignmentImport_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#consignmentImport_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#consignmentImport_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
     }
 
     function openConsignmentImportModal(jobOrderId, jobOrderNo, consignmentImportId, mode) {
@@ -258,8 +412,12 @@
         $('#consignmentImport_jobOrderId').val(jobOrderId);
         $('#consignmentImport_jobOrderNo').val(jobOrderNo);
 
-        if (parsedJobOrderId > 0 && parsedConsignmentImportId > 0) {
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedConsignmentImportId)) {
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
             $.get('@Url.Action("GetConsignmentImportById", "Job", new { area = "Project" })', {
                 jobOrderId: parsedJobOrderId,
                 consignmentImportId: parsedConsignmentImportId,
@@ -275,43 +433,168 @@
                 })
                 .always(() => $modal.find('.modal-overlay').remove());
         } else {
+            // Add Mode: Clear form and set default values
             refreshConsignmentImportDropdown();
             clearConsignmentImportForm();
-            setDefaultDropdownValues();
+            setDefaultConsignmentImportValues();
+           
             $('#addConsignmentImportModal').modal('show');
         }
     }
 
-    function saveConsignmentImport() {
-        const consignmentImportData = {
-            ConsignmentImportId: parseInt($('#consignmentImportId').val()) || 0,
-            JobOrderId: parseInt($('#consignmentImport_jobOrderId').val()) || 0,
-            AWBNo: $('#consignmentImport_awbNo').val(),
-            ChargeId: parseInt($('#consignmentImport_chargeId').val()) || 0,
-            GLId: parseInt($('#consignmentImport_glId').val()) || 0,
-            Weight: parseFloat($('#consignmentImport_weight').val()) || 0,
-            DeliverDate: $('#consignmentImport_deliverDate').val(),
-            Remarks: $('#consignmentImport_remarks').val()
-        };
+    function populateConsignmentImportModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#consignmentImportId').val(data.consignmentImportId);
+        $('#consignmentImport_jobOrderId').val(data.jobOrderId);
+        $('#consignmentImport_jobOrderNo').val(data.jobOrderNo);
+        $('#consignmentImport_debitNoteId').val(data.debitNoteId);
+        $('#consignmentImport_debitNoteNo').val(data.debitNoteNo);
 
-        $.ajax({
-            url: '@Url.Action("SaveConsignmentImport", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(consignmentImportData),
-            contentType: 'application/json',
-            success: function (response) {
-                if (response.success) {
-                    alert('Consignment Import saved successfully!');
-                    clearConsignmentImportForm();
-                    $('#addConsignmentImportModal').modal('hide');
-                } else {
-                    alert(response.message || 'Failed to save consignment import.');
-                }
-            },
-            error: function () {
-                alert('An error occurred while saving the consignment import.');
-            }
+        // Set date fields
+        if (data.bookingDate) {
+            const bookingDate = new Date(data.bookingDate).toLocaleDateString('en-CA');
+            $('#consignmentImport_bookingDate').val(bookingDate);
+        }
+        
+        if (data.dateReceived) {
+            const dateReceived = new Date(data.dateReceived).toLocaleDateString('en-CA');
+            $('#consignmentImport_dateReceived').val(dateReceived);
+        }
+        
+        if (data.dateDelivered) {
+            const dateDelivered = new Date(data.dateDelivered).toLocaleDateString('en-CA');
+            $('#consignmentImport_dateDelivered').val(dateDelivered);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const supplierCombo = $('#consignmentImport_cmb_supplier').data('kendoMultiColumnComboBox');
+        supplierCombo.value(data.supplierId > 0 ? data.supplierId : '');
+        supplierCombo.one('dataBound', function () {
+            supplierCombo.value(data.supplierId > 0 ? data.supplierId : '');
         });
+
+        const chargeCombo = $('#consignmentImport_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#consignmentImport_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const uomCombo = $('#consignmentImport_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        const statusCombo = $('#consignmentImport_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+        
+        const cargoTypeCombo = $('#consignmentImport_cmb_cargoType').data('kendoComboBox');
+        cargoTypeCombo.value(data.cargoTypeId > 0 ? data.cargoTypeId : '');
+        cargoTypeCombo.one('dataBound', function () {
+            cargoTypeCombo.value(data.cargoTypeId > 0 ? data.cargoTypeId : '');
+        });
+        
+        const typeCombo = $('#consignmentImport_cmb_type').data('kendoComboBox');
+        typeCombo.value(data.typeId > 0 ? data.typeId : '');
+        typeCombo.one('dataBound', function () {
+            typeCombo.value(data.typeId > 0 ? data.typeId : '');
+        });
+        
+        const modeCombo = $('#consignmentImport_cmb_mode').data('kendoComboBox');
+        modeCombo.value(data.modeId > 0 ? data.modeId : '');
+        modeCombo.one('dataBound', function () {
+            modeCombo.value(data.modeId > 0 ? data.modeId : '');
+        });
+        
+        const locationCombo = $('#consignmentImport_cmb_location').data('kendoComboBox');
+        locationCombo.value(data.locationLookupId > 0 ? data.locationLookupId : '');
+        locationCombo.one('dataBound', function () {
+            locationCombo.value(data.locationLookupId > 0 ? data.locationLookupId : '');
+        });
+
+        // Set text fields
+        $('#consignmentImport_consignmentNo').val(data.consignmentNo);
+        $('#consignmentImport_awbNumber').val(data.awbNumber);
+        $('#consignmentImport_hawbNumber').val(data.hawbNumber);
+        $('#consignmentImport_declarationNumber').val(data.declarationNumber);
+        $('#consignmentImport_weight').val(data.weight);
+        $('#consignmentImport_noOfPcs').val(data.noOfPcs);
+        $('#consignmentImport_pickupLocation').val(data.pickupLocation);
+        $('#consignmentImport_pickupLocationAddress').val(data.pickupLocationAddress);
+        $('#consignmentImport_deliveryLocation').val(data.deliveryLocation);
+        $('#consignmentImport_deliveryLocationAddress').val(data.deliveryLocationAddress);
+        $('#consignmentImport_quantity').val(data.quantity);
+        $('#consignmentImport_referenceNumber').val(data.referenceNumber);
+        $('#consignmentImport_billEntryNumber').val(data.billEntryNumber);
+        $('#consignmentImport_clearedBy').val(data.clearedBy);
+        $('#consignmentImport_transporterName').val(data.transporterName);
+        $('#consignmentImport_amountDeposited').val(data.amountDeposited);
+        $('#consignmentImport_refundAmt').val(data.refundAmt);
+        $('#consignmentImport_refundInstrumentNumber').val(data.refundInstrumentNumber);
+        $('#consignmentImport_totAmt').val(data.totAmt);
+        $('#consignmentImport_gstAmt').val(data.gstAmt);
+        $('#consignmentImport_totAmtAftGst').val(data.totAmtAftGst);
+        $('#consignmentImport_remarks').val(data.remarks);
+
+        // Set checkboxes
+        $('#consignmentImport_isDepositRefundReceived').prop('checked', data.isDepositRefundReceived === true);
+        $('#consignmentImport_isWarehouseCharges').prop('checked', data.isWarehouseCharges === true);
+        $('#consignmentImport_isRefundedReceived').prop('checked', data.isRefundedReceived === true);
+        $('#consignmentImport_isRefundedExpected').prop('checked', data.isRefundedExpected === true);
+
+        // Set audit fields
+        $('#consignmentImportcreateBy').text(data.createBy || "N/A");
+        $('#consignmentImportcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#consignmentImporteditBy').text(data.editBy || "N/A");
+        $('#consignmentImporteditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#consignmentImporteditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnConsignmentImportClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            // Disable dropdowns
+            chargeCombo.enable(false);
+            cargoTypeCombo.enable(false);
+            typeCombo.enable(false);
+            modeCombo.enable(false);
+            locationCombo.enable(false);
+            uomCombo.enable(false);
+            statusCombo.enable(false);
+            supplierCombo.enable(false);
+            glCombo.enable(false);
+            
+            // Disable inputs
+            $('input, textarea').not('#btnConsignmentImportSave').prop('readonly', true);
+            $('input[type="checkbox"]').prop('disabled', true);
+            $('#btnConsignmentImportSave').prop('disabled', false);
+        } else {
+            // Enable all controls
+            chargeCombo.enable(true);
+            cargoTypeCombo.enable(true);
+            typeCombo.enable(true);
+            modeCombo.enable(true);
+            locationCombo.enable(true);
+            uomCombo.enable(true);
+            statusCombo.enable(true);
+            supplierCombo.enable(true);
+            glCombo.enable(true);
+            
+            $('input, textarea').not('#consignmentImport_totAmt, #consignmentImport_gstAmt, #consignmentImport_totAmtAftGst').prop('readonly', false);
+            $('input[type="checkbox"]').prop('disabled', false);
+            $('#btnConsignmentImportSave').prop('disabled', false);
+        }
     }
 
     function deleteConsignmentImport(jobOrderId, consignmentImportId) {
@@ -330,18 +613,89 @@
         });
     }
 
-    function populateConsignmentImportModalFields(data) {
-        // Populate modal fields with data
-        $('#companyId').val(data.companyId);
-        $('#consignmentImportId').val(data.consignmentImportId);
-        $('#consignmentImport_jobOrderId').val(data.jobOrderId);
-        $('#consignmentImport_jobOrderNo').val(data.jobOrderNo);
-        // ...existing code...
+    function saveConsignmentImport() {
+        let consignmentImportData = {
+            ConsignmentImportId: parseInt($('#consignmentImportId').val()) || 0,
+            JobOrderId: parseInt($('#consignmentImport_jobOrderId').val()) || 0,
+            JobOrderNo: $('#consignmentImport_jobOrderNo').val() || '',
+            CargoTypeId: parseInt($('#consignmentImport_cmb_cargoType').data('kendoComboBox').value()) || 0,
+            TypeId: parseInt($('#consignmentImport_cmb_type').data('kendoComboBox').value()) || 0,
+            ChargeId: parseInt($('#consignmentImport_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#consignmentImport_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            SupplierId: parseInt($('#consignmentImport_cmb_supplier').data('kendoMultiColumnComboBox').value()) || null,
+            ModeId: parseInt($('#consignmentImport_cmb_mode').data('kendoComboBox').value()) || null,
+            LocationLookupId: parseInt($('#consignmentImport_cmb_location').data('kendoComboBox').value()) || null,
+            UomId: parseInt($('#consignmentImport_cmb_uom').data('kendoComboBox').value()) || null,
+            StatusId: parseInt($('#consignmentImport_cmb_status').data('kendoComboBox').value()) || 0,
+            
+            ConsignmentNo: $('#consignmentImport_consignmentNo').val() || '',
+            AWBNumber: $('#consignmentImport_awbNumber').val() || '',
+            HawbNumber: $('#consignmentImport_hawbNumber').val() || '',
+            DeclarationNumber: $('#consignmentImport_declarationNumber').val() || '',
+            BookingDate: $('#consignmentImport_bookingDate').val() || null,
+            Weight: parseFloat($('#consignmentImport_weight').val()) || 0,
+            NoOfPcs: parseInt($('#consignmentImport_noOfPcs').val()) || null,
+            PickupLocation: $('#consignmentImport_pickupLocation').val() || '',
+            PickupLocationAddress: $('#consignmentImport_pickupLocationAddress').val() || '',
+            DeliveryLocation: $('#consignmentImport_deliveryLocation').val() || '',
+            DeliveryLocationAddress: $('#consignmentImport_deliveryLocationAddress').val() || '',
+            DateReceived: $('#consignmentImport_dateReceived').val() || null,
+            DateDelivered: $('#consignmentImport_dateDelivered').val() || null,
+            Quantity: parseFloat($('#consignmentImport_quantity').val()) || null,
+            ReferenceNumber: $('#consignmentImport_referenceNumber').val() || '',
+            BillEntryNumber: $('#consignmentImport_billEntryNumber').val() || '',
+            ClearedBy: $('#consignmentImport_clearedBy').val() || '',
+            TransporterName: $('#consignmentImport_transporterName').val() || '',
+            AmountDeposited: parseFloat($('#consignmentImport_amountDeposited').val()) || null,
+            RefundAmt: parseFloat($('#consignmentImport_refundAmt').val()) || null,
+            RefundInstrumentNumber: $('#consignmentImport_refundInstrumentNumber').val() || '',
+            
+            IsDepositRefundReceived: $('#consignmentImport_isDepositRefundReceived').is(':checked'),
+            IsWarehouseCharges: $('#consignmentImport_isWarehouseCharges').is(':checked'),
+            IsRefundedReceived: $('#consignmentImport_isRefundedReceived').is(':checked'),
+            IsRefundedExpected: $('#consignmentImport_isRefundedExpected').is(':checked'),
+            
+            TotAmt: parseFloat($('#consignmentImport_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#consignmentImport_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#consignmentImport_totAmtAftGst').val()) || 0,
+            Remarks: $('#consignmentImport_remarks').val() || '',
+            
+            DebitNoteId: parseInt($('#consignmentImport_debitNoteId').val()) || null,
+            DebitNoteNo: $('#consignmentImport_debitNoteNo').val() || '',
+            TaskId: 4, // Assuming TaskId 4 is for Consignment Import
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveConsignmentImport", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ consignmentImport: consignmentImportData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    initializeConsignmentImportGrid();
+                    clearConsignmentImportForm();
+                    $('#addConsignmentImportModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save consignment import.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
     }
 
-    function setDefaultDropdownValues() {
-        // Set default values for dropdowns
-        $('#consignmentImport_cmb_gl').data('kendoMultiColumnComboBox').value(488);
-        // ...existing code...
-    }
+    // Calculate GST amounts on change
+    $('#consignmentImport_amountDeposited').on('change', function() {
+        const amount = parseFloat($(this).val()) || 0;
+        const gstRate = 0.07; // Assuming 7% GST
+        
+        const gstAmt = amount * gstRate;
+        const totAmt = amount;
+        const totAmtAftGst = totAmt + gstAmt;
+        
+        $('#consignmentImport_totAmt').val(totAmt.toFixed(2));
+        $('#consignmentImport_gstAmt').val(gstAmt.toFixed(2));
+        $('#consignmentImport_totAmtAftGst').val(totAmtAftGst.toFixed(2));
+    });
 </script>

@@ -1,91 +1,73 @@
-﻿<!-- TechnicianSurveyor Modal -->
-<div class="modal fade" id="addTechnicianSurveyorModal" tabindex="-1" aria-labelledby="addTechnicianSurveyorModalLabel"
-    aria-hidden="true">
+﻿<!-- TechniciansSurveyors Modal -->
+<div class="modal fade" id="addTechniciansSurveyorsModal" tabindex="-1" aria-labelledby="addTechniciansSurveyorsModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addTechnicianSurveyorModalLabel">Technicians Surveyors</h5>
+                <h5 class="modal-title" id="addTechniciansSurveyorsModalLabel">Technicians & Surveyors</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="technicianSurveyorForm">
-                    <input type="hidden" id="techniciansSurveyors_jobOrderId" />
+                <!-- Container replacing form tag -->
+                <div id="techniciansSurveyorsContainer">
+                    <input type="hidden" id="companyId" />
+                    <input type="hidden" id="techSurv_jobOrderId" />
+                    <input type="hidden" id="techSurv_jobOrderNo" />
+                    <input type="hidden" id="techSurv_debitNoteId" />
+                    <input type="hidden" id="techSurv_debitNoteNo" />
                     <input type="hidden" id="techniciansSurveyorsId" />
-
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="form-label">Representative Name</label>
-                            <input type="text" class="form-control" id="techniciansSurveyors_quantity" required>
+                            <label class="form-label">Service Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="techSurv_serviceDate">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Charge Code</label>
-                            <select class="form-select" id="techniciansSurveyors_chargeId" required>
-                                <option value="">Select Charge</option>
-                            </select>
+                            <label for="techSurv_cmb_engineer" class="form-label">Engineer <span class="text-danger">*</span></label>
+                            <input type="text" id="techSurv_cmb_engineer" />
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select class="form-select" id="techniciansSurveyors_glId" required>
-                                <option value="">Select GL</option>
-                            </select>
+                            <label for="techSurv_cmb_technicianType" class="form-label">Technician Type <span class="text-danger">*</span></label>
+                            <select id="techSurv_cmb_technicianType" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="techniciansSurveyors_weight" step="0.01"
-                                value="0.00" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">UOM <span class="text-danger">*</span></label>
-                            <select class="form-select" id="techniciansSurveyors_glId" required>
-                                <option value="">Select UOM</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Nature Of Attendance</label>
-                            <input type="text" class="form-control" id="techniciansSurveyors_quantity">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Company Info</label>
-                            <input type="text" class="form-control" id="techniciansSurveyors_quantity">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Pass Type <span class="text-danger">*</span></label>
-                            <select class="form-select" id="techniciansSurveyors_glId" required>
-                                <option value="">Select Pass</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">port Request No.</label>
-                            <input type="text" class="form-control" id="techniciansSurveyors_quantity">
-                        </div>
+                    </div>
 
+                    <div class="row mt-3">
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Embarked Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
-                            </div>
+                            <label for="techSurv_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="techSurv_cmb_charge" style="width: 100%"></select>
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Disembarked Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
-                            </div>
+                            <label for="techSurv_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="techSurv_cmb_gl" style="width: 100%"></select>
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                </select>
-                            </div>
+                            <label for="techSurv_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="techSurv_cmb_status" style="width: 100%"></select>
                         </div>
+                    </div>
 
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Hours <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="techSurv_hours" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Rate </label>
+                            <input type="number" class="form-control" id="techSurv_rate" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Currency</label>
+                            <select id="techSurv_cmb_currency" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="techSurv_amount" step="0.01" value="0.00" readonly>
+                        </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <div class="mb-1">
-                                <label class="form-label">Remark</label>
-                                <textarea class="form-control" id="remark" rows="2"></textarea>
-                            </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="techSurv_remarks" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -93,8 +75,7 @@
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -103,91 +84,355 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="techSurvcreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="techSurvcreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="techSurveditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="techSurveditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="techSurveditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    id="btnBankTechnicianSurveyorClose" onclick="clearBankTechnicianSurveyorForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankTechnicianSurveyorEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankTechnicianSurveyorClear"
-                    onclick="clearBankTechnicianSurveyorForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankTechnicianSurveyorSave"
-                    onclick="saveBankTechnicianSurveyor()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnTechSurvClear" onclick="clearTechSurvForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnTechSurvSave" onclick="saveTechSurv()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function refreshTechniciansSurveyorsDropdown() {
-        // Add dropdown binding logic specific to Technicians Surveyors
+    function refreshTechSurvDropdown() {
+        const engineerUrl = '@Url.Action("GetEngineerLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const engineercolumnsProperties = [
+            { field: 'engineerCode', title: 'Code', width: 100 },
+            { field: 'engineerName', title: 'Name', width: 200 }
+        ];
+        const engineerfilterFields = ['engineerCode', 'engineerName'];
+        bindMultiColumnComboBox(engineerUrl, "techSurv_cmb_engineer", "engineerName", "engineerId", engineercolumnsProperties, engineerfilterFields);
+
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "techSurv_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=5`;
+        bindComboBox(chargeUrl, "techSurv_cmb_charge", "chargeName", "chargeId");
+
+        const technicianTypeUrl = `@Url.Action("GetTechnicianTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(technicianTypeUrl, "techSurv_cmb_technicianType", "technicianTypeName", "technicianTypeId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "techSurv_cmb_status", "orderTypeName", "orderTypeId");
+
+        const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(currencyUrl, "techSurv_cmb_currency", "currencyCode", "currencyId");
     }
 
-    function clearTechniciansSurveyorsForm() {
-        $('#techniciansSurveyors_jobOrderId').val('');
+    function clearTechSurvForm() {
         $('#techniciansSurveyorsId').val('');
-        $('#techniciansSurveyors_quantity').val('');
-        $('#techniciansSurveyors_chargeId').val('');
-        $('#techniciansSurveyors_glId').val('');
-        $('#techniciansSurveyors_weight').val('');
-        $('#techniciansSurveyors_remarks').val('');
+        $('#techSurv_jobOrderId').val('');
+        $('#techSurv_jobOrderNo').val('');
+        $('#techSurv_debitNoteId').val('');
+        $('#techSurv_debitNoteNo').val('');
+
+        $('#techSurv_cmb_engineer').data('kendoMultiColumnComboBox').value('');
+        $('#techSurv_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        
+        $('#techSurv_cmb_charge').data('kendoComboBox').value('');
+        $('#techSurv_cmb_technicianType').data('kendoComboBox').value('');
+        $('#techSurv_cmb_status').data('kendoComboBox').value('');
+        $('#techSurv_cmb_currency').data('kendoComboBox').value('');
+
+        $('#techSurv_serviceDate').val('');
+        $('#techSurv_hours').val('0.00');
+        $('#techSurv_rate').val('0.00');
+        $('#techSurv_amount').val('0.00');
+        $('#techSurv_remarks').val('');
+
+        $('#techSurvcreateBy').text('');
+        $('#techSurvcreateDate').text('');
+        $('#techSurveditBy').text('');
+        $('#techSurveditDate').text('');
+        $('#techSurveditVersion').text('');
+
+        $('#btnTechSurvClear').show();
     }
 
-    function openTechniciansSurveyorsModal(technicianId, mode) {
-        // Add modal opening logic specific to Technicians Surveyors
+    function setDefaultTechSurvValues() {
+        // Set current date
+        const today = new Date().toISOString().split('T')[0];
+        $('#techSurv_serviceDate').val(today);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#techSurv_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#techSurv_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first technician type
+        setTimeout(() => {
+            const techTypeCombo = $('#techSurv_cmb_technicianType').data('kendoComboBox');
+            if (techTypeCombo.dataSource.view().length > 0) {
+                techTypeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#techSurv_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+
+        // Set default currency to SGD
+        setTimeout(() => {
+            const currencyCombo = $('#techSurv_cmb_currency').data('kendoComboBox');
+            const sgdItem = currencyCombo.dataSource.data().find(item =>
+                item.currencyCode.toUpperCase() === "SGD"
+            );
+            if (sgdItem) {
+                currencyCombo.value(sgdItem.currencyId);
+            } else if (currencyCombo.dataSource.view().length > 0) {
+                currencyCombo.select(0);
+            }
+        }, 100);
     }
 
-    function saveTechniciansSurveyors() {
-        const techniciansSurveyorsData = {
+    function openTechSurvModal(jobOrderId, jobOrderNo, techniciansSurveyorsId, mode) {
+        
+        const $modal = $('#addTechniciansSurveyorsModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedTechSurvId = parseInt(techniciansSurveyorsId, 10);
+        $('#techSurv_jobOrderId').val(jobOrderId);
+        $('#techSurv_jobOrderNo').val(jobOrderNo);
+
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedTechSurvId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetTechniciansSurveyorsById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                techniciansSurveyorsId: parsedTechSurvId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshTechSurvDropdown();
+                        clearTechSurvForm();
+                        populateTechSurvModalFields(response.data);
+                        $('#addTechniciansSurveyorsModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            // Add Mode: Clear form and set default values
+            refreshTechSurvDropdown();
+            clearTechSurvForm();
+            setDefaultTechSurvValues();
+           
+            $('#addTechniciansSurveyorsModal').modal('show');
+        }
+    }
+
+    function populateTechSurvModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#techniciansSurveyorsId').val(data.techniciansSurveyorsId);
+        $('#techSurv_jobOrderId').val(data.jobOrderId);
+        $('#techSurv_jobOrderNo').val(data.jobOrderNo);
+        $('#techSurv_debitNoteId').val(data.debitNoteId);
+        $('#techSurv_debitNoteNo').val(data.debitNoteNo);
+
+        // Set date field
+        if (data.serviceDate) {
+            const serviceDate = new Date(data.serviceDate).toLocaleDateString('en-CA');
+            $('#techSurv_serviceDate').val(serviceDate);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const engineerCombo = $('#techSurv_cmb_engineer').data('kendoMultiColumnComboBox');
+        engineerCombo.value(data.engineerId > 0 ? data.engineerId : '');
+        engineerCombo.one('dataBound', function () {
+            engineerCombo.value(data.engineerId > 0 ? data.engineerId : '');
+        });
+
+        const techTypeCombo = $('#techSurv_cmb_technicianType').data('kendoComboBox');
+        techTypeCombo.value(data.technicianTypeId > 0 ? data.technicianTypeId : '');
+        techTypeCombo.one('dataBound', function () {
+            techTypeCombo.value(data.technicianTypeId > 0 ? data.technicianTypeId : '');
+        });
+
+        const chargeCombo = $('#techSurv_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#techSurv_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const statusCombo = $('#techSurv_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        const currencyCombo = $('#techSurv_cmb_currency').data('kendoComboBox');
+        currencyCombo.value(data.currencyId > 0 ? data.currencyId : '');
+        currencyCombo.one('dataBound', function () {
+            currencyCombo.value(data.currencyId > 0 ? data.currencyId : '');
+        });
+
+        // Set other fields
+        $('#techSurv_hours').val(data.hours || 0);
+        $('#techSurv_rate').val(data.rate || 0);
+        $('#techSurv_amount').val(data.amount || 0);
+        $('#techSurv_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#techSurvcreateBy').text(data.createBy || "N/A");
+        $('#techSurvcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#techSurveditBy').text(data.editBy || "N/A");
+        $('#techSurveditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#techSurveditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnTechSurvClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            engineerCombo.enable(false);
+            techTypeCombo.enable(false);
+            chargeCombo.enable(false);
+            glCombo.enable(false);
+            statusCombo.enable(false);
+            currencyCombo.enable(false);
+            
+            $('#techSurv_serviceDate, #techSurv_hours, #techSurv_rate, #techSurv_amount, #techSurv_remarks').prop('readonly', true);
+            $('#btnTechSurvSave').prop('disabled', false);
+        } else {
+            engineerCombo.enable(true);
+            techTypeCombo.enable(true);
+            chargeCombo.enable(true);
+            glCombo.enable(true);
+            statusCombo.enable(true);
+            currencyCombo.enable(true);
+            
+            $('#techSurv_serviceDate, #techSurv_hours, #techSurv_rate, #techSurv_remarks').prop('readonly', false);
+            $('#techSurv_amount').prop('readonly', true);
+            $('#btnTechSurvSave').prop('disabled', false);
+        }
+    }
+
+    function deleteTechSurv(jobOrderId, techniciansSurveyorsId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteTechniciansSurveyors", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, techniciansSurveyorsId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadTechSurvGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveTechSurv() {
+        let techSurvData = {
             TechniciansSurveyorsId: parseInt($('#techniciansSurveyorsId').val()) || 0,
-            JobOrderId: parseInt($('#techniciansSurveyors_jobOrderId').val()) || 0,
-            Quantity: parseFloat($('#techniciansSurveyors_quantity').val()) || 0,
-            ChargeId: parseInt($('#techniciansSurveyors_chargeId').val()) || 0,
-            GLId: parseInt($('#techniciansSurveyors_glId').val()) || 0,
-            Weight: parseFloat($('#techniciansSurveyors_weight').val()) || 0,
-            Remarks: $('#techniciansSurveyors_remarks').val()
+            JobOrderId: parseInt($('#techSurv_jobOrderId').val()) || 0,
+            JobOrderNo: $('#techSurv_jobOrderNo').val() || '',
+            EngineerId: parseInt($('#techSurv_cmb_engineer').data('kendoMultiColumnComboBox').value()) || 0,
+            TechnicianTypeId: parseInt($('#techSurv_cmb_technicianType').data('kendoComboBox').value()) || 0,
+            ChargeId: parseInt($('#techSurv_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#techSurv_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            StatusId: parseInt($('#techSurv_cmb_status').data('kendoComboBox').value()) || 0,
+            CurrencyId: parseInt($('#techSurv_cmb_currency').data('kendoComboBox').value()) || null,
+            
+            ServiceDate: $('#techSurv_serviceDate').val() || null,
+            Hours: parseFloat($('#techSurv_hours').val()) || 0,
+            Rate: parseFloat($('#techSurv_rate').val()) || 0,
+            Amount: parseFloat($('#techSurv_amount').val()) || 0,
+            Remarks: $('#techSurv_remarks').val() || '',
+            
+            DebitNoteId: parseInt($('#techSurv_debitNoteId').val()) || null,
+            DebitNoteNo: $('#techSurv_debitNoteNo').val() || '',
+            TaskId: 5, // Assuming TaskId 5 is for Technicians & Surveyors
         };
 
         $.ajax({
             url: '@Url.Action("SaveTechniciansSurveyors", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(techniciansSurveyorsData),
-            contentType: 'application/json',
+            type: "POST",
+            data: JSON.stringify({ techniciansSurveyors: techSurvData, companyId }),
+            contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    alert('Technicians Surveyors saved successfully!');
-                    clearTechniciansSurveyorsForm();
+                    initializeTechSurvGrid();
+                    clearTechSurvForm();
                     $('#addTechniciansSurveyorsModal').modal('hide');
                 } else {
-                    alert(response.message || 'Failed to save technicians surveyors.');
+                    alert(response.message || "Failed to save technicians & surveyors record.");
                 }
             },
-            error: function () {
-                alert('An error occurred while saving the technicians surveyors.');
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
             }
         });
+    }
+
+    // Calculate total amount when hours or rate changes
+    $('#techSurv_hours, #techSurv_rate').on('change', function() {
+        calculateTechSurvAmount();
+    });
+
+    function calculateTechSurvAmount() {
+        const hours = parseFloat($('#techSurv_hours').val()) || 0;
+        const rate = parseFloat($('#techSurv_rate').val()) || 0;
+        const amount = hours * rate;
+        
+        $('#techSurv_amount').val(amount.toFixed(2));
     }
 </script>

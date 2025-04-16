@@ -1,194 +1,211 @@
-﻿<!-- EquipmentUsed Modal -->
-<div class="modal fade" id="addEquipmentUsedModal" tabindex="-1" aria-labelledby="addEquipmentUsedModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+﻿<!-- EquipmentsUsed Modal -->
+<div class="modal fade" id="addEquipmentsUsedModal" tabindex="-1" aria-labelledby="addEquipmentsUsedModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addEquipmentUsedModalLabel">Equipments Used</h5>
+                <h5 class="modal-title" id="addEquipmentsUsedModalLabel">Equipment Used</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="equipmentUsedForm">
-                    <input type="hidden" id="equipmentsused_jobOrderId" />
-                    <input type="hidden" id="equipmentsusedId" />
+                <!-- Container replacing form tag -->
+                <div id="equipmentsUsedContainer">
+                    <input type="hidden" id="companyId" />
+                    <input type="hidden" id="equipmentsUsed_jobOrderId" />
+                    <input type="hidden" id="equipmentsUsed_jobOrderNo" />
+                    <input type="hidden" id="equipmentsUsed_debitNoteId" />
+                    <input type="hidden" id="equipmentsUsed_debitNoteNo" />
+                    <input type="hidden" id="equipmentsUsedId" />
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="form-label">Equipment Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="equipmentsused_launchServiceDate" required>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="equipmentsUsed_date">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Ref No <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="equipmentsused_refNo">
+                        <div class="col-md-3">
+                            <label class="form-label">Reference No</label>
+                            <input type="text" class="form-control" id="equipmentsUsed_referenceNo">
                         </div>
-                        <div class="col-md-4">
-
-                            <label class="form-label">Charge Code <span class="text-danger">*</span></label>
-                            <select id="portExpense_cmb_gl" style="width: 100%"></select>
+                        <div class="col-md-3">
+                            <label for="equipmentsUsed_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="equipmentsUsed_cmb_charge" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-
-                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select id="portExpense_cmb_gl" style="width: 100%"></select>
+                        <div class="col-md-3">
+                            <label for="equipmentsUsed_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="equipmentsUsed_cmb_gl" style="width: 100%"></select>
                         </div>
-
-                        <div class="col-md-4">
-
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="equipmentsUsed_quantity" step="1.00" value="1.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="equipmentsUsed_cmb_uom" class="form-label">UOM <span class="text-danger">*</span></label>
+                            <select id="equipmentsUsed_cmb_uom" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label">Mafi</label>
-                            <input type="text" class="form-control" id="equipmentsused_mafi">
+                            <input type="text" class="form-control" id="equipmentsUsed_mafi">
                         </div>
-
-                        <div class="col-md-4">
-
+                        <div class="col-md-3">
                             <label class="form-label">Other</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
+                            <input type="text" class="form-control" id="equipmentsUsed_other">
                         </div>
+                    </div>
 
-                        <!-- Section 3: Charges & Equipment -->
-                        <div class="col-md-4">
 
-                            <label class="form-label">Crane Charge</label>
-                            <select id="portExpense_cmb_creancharge" style="width: 100%"></select>
+
+
+
+                    <!-- Loading Details -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Loading/Offloading Details</h6>
                         </div>
-                        <div class="col-md-4">
-
-                            <label class="form-label">Forklift Charge</label>
-                            <select id="portExpense_cmb_forkliftcharge" style="width: 100%"></select>
-                        </div>
-                        <div class="col-md-4">
-
-                            <label class="form-label">Stevedor Charge</label>
-                            <select id="portExpense_cmb_stevedorcharge" style="width: 100%"></select>
-                        </div>
-
-                        <!--loading-->
-                        <div class="col-md-3">
-
-                            <label class="form-label">Loading Tally Sheet No</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Crane Loading (hr)</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">ForkLift Loading (hr)</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Stev. Loading (Nos)</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-
-                        <!--Offloading-->
-                        <div class="col-md-3">
-
-                            <label class="form-label">Offloading Tally Sheet No</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-
-                        <div class="col-md-3">
-
-                            <label class="form-label">Crane OffLoading (hr)</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">ForkLift OffLoading (hr)</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Stev. OffLoading (Nos)</label>
-                            <input type="text" class="form-control" id="equipmentsused_other">
-                        </div>
-
-                        <!-- Section 2: Time Tracking -->
-                        <div class="col-md-3">
-
-                            <label class="form-label">Morning Time In</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Morning Time Out</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Morning Total Hours</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Total Regular Hourss</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-
-                        <div class="col-md-3">
-
-                            <label class="form-label">Evening Time In</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Evening Time Out</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Evening Total Hours</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Total OverTime Hours</label>
-                            <input type="time" class="form-control" id="equipmentsused_other">
-                        </div>
-
-                        <div class="col-md-3">
-
-                            <label class="form-label">Driver Name</label>
-                            <input type="text" class="form-control" id="driverName" value="Driver Name">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Vehicle Name</label>
-                            <input type="text" class="form-control" id="vehicleName" value="Vehicle Name">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Order No</label>
-                            <input type="text" class="form-control" value="Order Number">
-                        </div>
-                        <div class="col-md-3">
-
-                            <label class="form-label">Lunch Service Debit Note</label>
-                            <select id="portExpense_cmb_gl" style="width: 100%"></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="portExpense_cmb_status" class="form-label">Status  <span class="text-danger">*</span></label>
-                            <select id="portExpense_cmb_status" style="width: 100%"></select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Remark</label>
-                            <textarea class="form-control" id="portExpense_remarks" rows="2"></textarea>
-                        </div>
-                        <div class="col-12">
-                            <div class="alert alert-info mt-3">
-                                <small>Equipment Footer: Minimum 3 Hours, including mob-demob charges</small>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="equipmentsUsed_cmb_craneCharge" class="form-label">Crane Charge</label>
+                                    <select id="equipmentsUsed_cmb_craneCharge" style="width: 100%"></select>
+                                </div>
+                                <div class="col-md-4 ">
+                                    <label for="equipmentsUsed_cmb_forkliftCharge" class="form-label">Forklift Charge</label>
+                                    <select id="equipmentsUsed_cmb_forkliftCharge" style="width: 100%"></select>
+                                </div>
+                                <div class="col-md-4 ">
+                                    <label for="equipmentsUsed_cmb_stevedorCharge" class="form-label">Stevedore Charge</label>
+                                    <select id="equipmentsUsed_cmb_stevedorCharge" style="width: 100%"></select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Loading Reference No</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_loadingRefNo">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Crane loading</label>
+                                    <input type="number" class="form-control" id="equipmentsUsed_craneloading" min="0" value="0">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Forklift loading</label>
+                                    <input type="number" class="form-control" id="equipmentsUsed_forkliftloading" min="0" value="0">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Stevedore loading</label>
+                                    <input type="number" class="form-control" id="equipmentsUsed_stevedorloading" min="0" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Offloading Reference No</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_offloadingRefNo">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Crane Offloading</label>
+                                    <input type="number" class="form-control" id="equipmentsUsed_craneOffloading" min="0" value="0">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Forklift Offloading</label>
+                                    <input type="number" class="form-control" id="equipmentsUsed_forkliftOffloading" min="0" value="0">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Stevedore Offloading</label>
+                                    <input type="number" class="form-control" id="equipmentsUsed_stevedorOffloading" min="0" value="0">
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Existing maritime operation fields remain below -->
-                        <!-- [Previous form sections for launch services, vessel timing, etc.] -->
+                    <!-- Time Sheet Details -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Timesheet Details</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="form-label">Morning Time In</label>
+                                    <input type="time" class="form-control" id="equipmentsUsed_morningTimeIn">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Morning Time Out</label>
+                                    <input type="time" class="form-control" id="equipmentsUsed_morningTimeOut">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Morning Total Hours</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_morningTotalHours" readonly>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Evening Time In</label>
+                                    <input type="time" class="form-control" id="equipmentsUsed_eveningTimeIn">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Evening Time Out</label>
+                                    <input type="time" class="form-control" id="equipmentsUsed_eveningTimeOut">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Evening Total Hours</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_eveningTotalHours" readonly>
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <label class="form-label">Total Regular Hours</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_totalRegularHours" readonly>
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <label class="form-label">Total Overtime Hours</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_totalOvertimeHours">
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <label class="form-label">Driver Name</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_driverName">
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <label class="form-label">Vehicle Name</label>
+                                    <input type="text" class="form-control" id="equipmentsUsed_vehicleName">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Remark</label>
+                                    <textarea class="form-control" id="equipmentsUsed_remarks" rows="2"></textarea>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="equipmentsUsed_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                                    <select id="equipmentsUsed_cmb_status" style="width: 100%"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Accounts Details -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Accounts Department</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                
+                                <div class="col-md-3">
+                                    <label for="equipmentsUsed_cmb_launch" class="form-label">Launch DebitNo </label>
+                                    <select id="equipmentsUsed_cmb_launch" style="width: 100%"></select>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="equipmentsUsed_isEquimentFooter">
+                                        <label class="form-check-label" for="equipmentsUsed_isEquimentFooter">
+                                            Equipment Footer
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Equipment Footer Text</label>
+                                    <textarea class="form-control" id="equipmentsUsed_equimentFooter" rows="1"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Audit Fields -->
-                    <div class="accordion mt-3" id="auditAccordion">
+                    <div class="accordion " id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
@@ -200,34 +217,35 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="portexpensecreateBy" class="form-control-plaintext"></p>
+                                            <p id="equipmentsUsedcreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="portexpensecreateDate" class="form-control-plaintext"></p>
+                                            <p id="equipmentsUsedcreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="portexpenseeditBy" class="form-control-plaintext"></p>
+                                            <p id="equipmentsUsededitBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="portexpenseeditDate" class="form-control-plaintext"></p>
+                                            <p id="equipmentsUsededitDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="portexpenseeditVersion" class="form-control-plaintext"></p>
+                                            <p id="equipmentsUsededitVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btnPortExpenseClear" onclick="clearPortExpenseForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnPortExpenseSave" onclick="savePortExpense()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnEquipmentsUsedClear" onclick="clearEquipmentsUsedForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnEquipmentsUsedSave" onclick="saveEquipmentsUsed()">Save</button>
             </div>
         </div>
     </div>
@@ -235,60 +253,161 @@
 
 <script>
     function refreshEquipmentsUsedDropdown() {
-         const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const glcolumnsProperties = [
             { field: 'glCode', title: 'Code', width: 100 },
             { field: 'glName', title: 'Name', width: 200 }
         ];
         const glfilterFields = ['glCode', 'glName'];
-        bindMultiColumnComboBox(chartOfAccountUrl, "equipmentsused_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+        bindMultiColumnComboBox(chartOfAccountUrl, "equipmentsUsed_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
 
-        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=1`;
-        bindComboBox(chargeUrl, "equipmentsused_cmb_charge", "chargeName", "chargeId");
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=3`;
+        bindComboBox(chargeUrl, "equipmentsUsed_cmb_charge", "chargeName", "chargeId");
+        bindComboBox(chargeUrl, "equipmentsUsed_cmb_craneCharge", "chargeName", "chargeId");
+        bindComboBox(chargeUrl, "equipmentsUsed_cmb_forkliftCharge", "chargeName", "chargeId");
+        bindComboBox(chargeUrl, "equipmentsUsed_cmb_stevedorCharge", "chargeName", "chargeId");
 
         const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        bindComboBox(uomUrl, "equipmentsused_cmb_uom", "uomName", "uomId");
+        bindComboBox(uomUrl, "equipmentsUsed_cmb_uom", "uomName", "uomId");
 
         const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
-        bindComboBox(statusUrl, "equipmentsused_cmb_status", "orderTypeName", "orderTypeId");
-
+        bindComboBox(statusUrl, "equipmentsUsed_cmb_status", "orderTypeName", "orderTypeId");
     }
 
     function clearEquipmentsUsedForm() {
-        $('#equipmentsused_jobOrderId').val('');
-        $('#equipmentsusedId').val('');
-        $('#equipmentsused_launchServiceDate').val('');
-        $('#equipmentsused_chargeId').val('');
-        $('#equipmentsused_glId').val('');
-        $('#equipmentsused_mafi').val('');
-        $('#equipmentsused_other').val('');
+        // Clear hidden fields
+        $('#equipmentsUsedId').val('');
+        $('#equipmentsUsed_jobOrderId').val('');
+        $('#equipmentsUsed_jobOrderNo').val('');
+        $('#equipmentsUsed_debitNoteId').val('');
+        $('#equipmentsUsed_debitNoteNo').val('');
+        $('#equipmentsUsed_launchServiceId').val('');
+        
+        // Clear dropdowns
+        $('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#equipmentsUsed_cmb_charge').data('kendoComboBox').value('');
+        $('#equipmentsUsed_cmb_uom').data('kendoComboBox').value('');
+        $('#equipmentsUsed_cmb_status').data('kendoComboBox').value('');
+        $('#equipmentsUsed_cmb_craneCharge').data('kendoComboBox').value('');
+        $('#equipmentsUsed_cmb_forkliftCharge').data('kendoComboBox').value('');
+        $('#equipmentsUsed_cmb_stevedorCharge').data('kendoComboBox').value('');
+
+        // Clear basic fields
+        $('#equipmentsUsed_date').val('');
+        $('#equipmentsUsed_referenceNo').val('');
+        
+        // Clear timesheet fields
+        $('#equipmentsUsed_morningTimeIn').val('');
+        $('#equipmentsUsed_morningTimeOut').val('');
+        $('#equipmentsUsed_morningTotalHours').val('');
+        $('#equipmentsUsed_eveningTimeIn').val('');
+        $('#equipmentsUsed_eveningTimeOut').val('');
+        $('#equipmentsUsed_eveningTotalHours').val('');
+        $('#equipmentsUsed_totalRegularHours').val('');
+        $('#equipmentsUsed_totalOvertimeHours').val('');
+        $('#equipmentsUsed_driverName').val('');
+        $('#equipmentsUsed_vehicleName').val('');
+        
+        // Clear equipment details
+        $('#equipmentsUsed_quantity').val('0.00');
+        $('#equipmentsUsed_mafi').val('');
+        $('#equipmentsUsed_isEquimentFooter').prop('checked', false);
+        $('#equipmentsUsed_equimentFooter').val('');
+        
+        // Clear loading details
+        $('#equipmentsUsed_loadingRefNo').val('');
+        $('#equipmentsUsed_launchServiceDebitNoteNo').val('');
+        $('#equipmentsUsed_craneloading').val('0');
+        $('#equipmentsUsed_forkliftloading').val('0');
+        $('#equipmentsUsed_stevedorloading').val('0');
+        
+        // Clear offloading details
+        $('#equipmentsUsed_offloadingRefNo').val('');
+        $('#equipmentsUsed_craneOffloading').val('0');
+        $('#equipmentsUsed_forkliftOffloading').val('0');
+        $('#equipmentsUsed_stevedorOffloading').val('0');
+        
+        // Clear financial details
+        $('#equipmentsUsed_totAmt').val('0.00');
+        $('#equipmentsUsed_gstAmt').val('0.00');
+        $('#equipmentsUsed_totAmtAftGst').val('0.00');
+        $('#equipmentsUsed_remarks').val('');
+
+        // Clear audit fields
+        $('#equipmentsUsedcreateBy').text('');
+        $('#equipmentsUsedcreateDate').text('');
+        $('#equipmentsUsededitBy').text('');
+        $('#equipmentsUsededitDate').text('');
+        $('#equipmentsUsededitVersion').text('');
+
+        $('#btnEquipmentsUsedClear').show();
+    }
+
+    function setDefaultEquipmentsUsedValues() {
+        // Set current date 
+        const today = new Date().toISOString().split('T')[0];
+        $('#equipmentsUsed_date').val(today);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#equipmentsUsed_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first UOM
+        setTimeout(() => {
+            const uomCombo = $('#equipmentsUsed_cmb_uom').data('kendoComboBox');
+            if (uomCombo.dataSource.view().length > 0) {
+                uomCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#equipmentsUsed_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
     }
 
     function openEquipmentsUsedModal(jobOrderId, jobOrderNo, equipmentsUsedId, mode) {
-
+        
         const $modal = $('#addEquipmentsUsedModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
-        const parsedequipmentsUsedId = parseInt(equipmentsUsedId, 10);
-        $('#equipmentsused_jobOrderId').val(jobOrderId);
-        $('#equipmentsused_jobOrderNo').val(jobOrderNo);
+        const parsedEquipmentsUsedId = parseInt(equipmentsUsedId, 10);
+        $('#equipmentsUsed_jobOrderId').val(jobOrderId);
+        $('#equipmentsUsed_jobOrderNo').val(jobOrderNo);
 
         const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
 
         // Edit Mode: Fetch existing data and populate the form
-        if (isValidId(parsedJobOrderId) && isValidId(parsedequipmentsUsedId)) {
-
+        if (isValidId(parsedJobOrderId) && isValidId(parsedEquipmentsUsedId)) {
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
 
             $.get('@Url.Action("GetEquipmentsUsedById", "Job", new { area = "Project" })', {
                 jobOrderId: parsedJobOrderId,
-                equipmentsUsedId: parsedequipmentsUsedId,
+                equipmentsUsedId: parsedEquipmentsUsedId,
                 companyId: $('#companyId').val()
             })
                 .done(function (response) {
                     if (response.success) {
                         refreshEquipmentsUsedDropdown();
-                        clearequipmentsusedForm();
-                        populateequipmentsusedModalFields(response.data);
+                        clearEquipmentsUsedForm();
+                        populateEquipmentsUsedModalFields(response.data);
                         $('#addEquipmentsUsedModal').modal('show');
                     }
                 })
@@ -296,42 +415,153 @@
         } else {
             // Add Mode: Clear form and set default values
             refreshEquipmentsUsedDropdown();
-            clearequipmentsusedForm();
-            setDefaultDropdownValues();
-
+            clearEquipmentsUsedForm();
+            setDefaultEquipmentsUsedValues();
+           
             $('#addEquipmentsUsedModal').modal('show');
         }
     }
 
-    function saveEquipmentsUsed() {
-        const equipmentsUsedData = {
-            JobOrderId: parseInt($('#equipmentsused_jobOrderId').val()) || 0,
-            EquipmentsUsedId: parseInt($('#equipmentsusedId').val()) || 0,
-            LaunchServiceDate: $('#equipmentsused_launchServiceDate').val(),
-            ChargeId: parseInt($('#equipmentsused_chargeId').val()) || 0,
-            GLId: parseInt($('#equipmentsused_glId').val()) || 0,
-            Mafi: $('#equipmentsused_mafi').val(),
-            Other: $('#equipmentsused_other').val()
-        };
+    function populateEquipmentsUsedModalFields(data) {
+        
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#equipmentsUsedId').val(data.equipmentsUsedId);
+        $('#equipmentsUsed_jobOrderId').val(data.jobOrderId);
+        $('#equipmentsUsed_jobOrderNo').val(data.jobOrderNo);
+        $('#equipmentsUsed_debitNoteId').val(data.debitNoteId);
+        $('#equipmentsUsed_debitNoteNo').val(data.debitNoteNo);
+        $('#equipmentsUsed_launchServiceId').val(data.launchServiceId);
 
-        $.ajax({
-            url: '@Url.Action("SaveEquipmentsUsed", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(equipmentsUsedData),
-            contentType: 'application/json',
-            success: function (response) {
-                if (response.success) {
-                    alert('Equipments Used saved successfully!');
-                    clearEquipmentsUsedForm();
-                    $('#addEquipmentsUsedModal').modal('hide');
-                } else {
-                    alert(response.message || 'Failed to save equipments used.');
-                }
-            },
-            error: function () {
-                alert('An error occurred while saving the equipments used.');
-            }
+        // Set date field
+        if (data.date) {
+            const formattedDate = new Date(data.date).toLocaleDateString('en-CA');
+            $('#equipmentsUsed_date').val(formattedDate);
+        }
+        
+        // Set combobox values
+        const glCombo = $('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
         });
+
+        const chargeCombo = $('#equipmentsUsed_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const uomCombo = $('#equipmentsUsed_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        const statusCombo = $('#equipmentsUsed_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+        
+        const craneChargeCombo = $('#equipmentsUsed_cmb_craneCharge').data('kendoComboBox');
+        craneChargeCombo.value(data.craneChargeId > 0 ? data.craneChargeId : '');
+        craneChargeCombo.one('dataBound', function () {
+            craneChargeCombo.value(data.craneChargeId > 0 ? data.craneChargeId : '');
+        });
+        
+        const forkliftChargeCombo = $('#equipmentsUsed_cmb_forkliftCharge').data('kendoComboBox');
+        forkliftChargeCombo.value(data.forkliftChargeId > 0 ? data.forkliftChargeId : '');
+        forkliftChargeCombo.one('dataBound', function () {
+            forkliftChargeCombo.value(data.forkliftChargeId > 0 ? data.forkliftChargeId : '');
+        });
+        
+        const stevedorChargeCombo = $('#equipmentsUsed_cmb_stevedorCharge').data('kendoComboBox');
+        stevedorChargeCombo.value(data.stevedorChargeId > 0 ? data.stevedorChargeId : '');
+        stevedorChargeCombo.one('dataBound', function () {
+            stevedorChargeCombo.value(data.stevedorChargeId > 0 ? data.stevedorChargeId : '');
+        });
+
+        // Set basic fields
+        $('#equipmentsUsed_referenceNo').val(data.referenceNo);
+        
+        // Set timesheet fields
+        $('#equipmentsUsed_morningTimeIn').val(data.morningTimeIn);
+        $('#equipmentsUsed_morningTimeOut').val(data.morningTimeOut);
+        $('#equipmentsUsed_morningTotalHours').val(data.morningTotalHours);
+        $('#equipmentsUsed_eveningTimeIn').val(data.eveningTimeIn);
+        $('#equipmentsUsed_eveningTimeOut').val(data.eveningTimeOut);
+        $('#equipmentsUsed_eveningTotalHours').val(data.eveningTotalHours);
+        $('#equipmentsUsed_totalRegularHours').val(data.totalRegularHours);
+        $('#equipmentsUsed_totalOvertimeHours').val(data.totalOvertimeHours);
+        $('#equipmentsUsed_driverName').val(data.driverName);
+        $('#equipmentsUsed_vehicleName').val(data.vehicleName);
+        
+        // Set equipment details
+        $('#equipmentsUsed_quantity').val(data.quantity);
+        $('#equipmentsUsed_mafi').val(data.mafi);
+        $('#equipmentsUsed_isEquimentFooter').prop('checked', data.isEquimentFooter === true);
+        $('#equipmentsUsed_equimentFooter').val(data.equimentFooter);
+        
+        // Set loading details
+        $('#equipmentsUsed_loadingRefNo').val(data.loadingRefNo);
+        $('#equipmentsUsed_launchServiceDebitNoteNo').val(data.launchServiceDebitNoteNo);
+        $('#equipmentsUsed_craneloading').val(data.craneloading);
+        $('#equipmentsUsed_forkliftloading').val(data.forkliftloading);
+        $('#equipmentsUsed_stevedorloading').val(data.stevedorloading);
+        
+        // Set offloading details
+        $('#equipmentsUsed_offloadingRefNo').val(data.offloadingRefNo);
+        $('#equipmentsUsed_craneOffloading').val(data.craneOffloading);
+        $('#equipmentsUsed_forkliftOffloading').val(data.forkliftOffloading);
+        $('#equipmentsUsed_stevedorOffloading').val(data.stevedorOffloading);
+        
+        // Set financial details
+        $('#equipmentsUsed_totAmt').val(data.totAmt);
+        $('#equipmentsUsed_gstAmt').val(data.gstAmt);
+        $('#equipmentsUsed_totAmtAftGst').val(data.totAmtAftGst);
+        $('#equipmentsUsed_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#equipmentsUsedcreateBy').text(data.createBy || "N/A");
+        $('#equipmentsUsedcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#equipmentsUsededitBy').text(data.editBy || "N/A");
+        $('#equipmentsUsededitDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#equipmentsUsededitVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnEquipmentsUsedClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            // Disable all dropdowns
+            glCombo.enable(false);
+            chargeCombo.enable(false);
+            uomCombo.enable(false);
+            statusCombo.enable(false);
+            craneChargeCombo.enable(false);
+            forkliftChargeCombo.enable(false);
+            stevedorChargeCombo.enable(false);
+            
+            // Disable all input fields
+            $('input, textarea').not('#btnEquipmentsUsedSave').prop('readonly', true);
+            $('input[type="checkbox"]').prop('disabled', true);
+            $('#btnEquipmentsUsedSave').prop('disabled', false);
+        } else {
+            // Enable all controls
+            glCombo.enable(true);
+            chargeCombo.enable(true);
+            uomCombo.enable(true);
+            statusCombo.enable(true);
+            craneChargeCombo.enable(true);
+            forkliftChargeCombo.enable(true);
+            stevedorChargeCombo.enable(true);
+            
+            // Enable all input fields
+            $('input, textarea').not('#equipmentsUsed_gstAmt, #equipmentsUsed_totAmtAftGst, #equipmentsUsed_morningTotalHours, #equipmentsUsed_eveningTotalHours, #equipmentsUsed_totalRegularHours').prop('readonly', false);
+            $('input[type="checkbox"]').prop('disabled', false);
+            $('#btnEquipmentsUsedSave').prop('disabled', false);
+        }
     }
 
     function deleteEquipmentsUsed(jobOrderId, equipmentsUsedId) {
@@ -350,49 +580,134 @@
         });
     }
 
-    function populateEquipmentsUsedModalFields(data) {
-        // Populate modal fields with data
-        $('#companyId').val(data.companyId);
-        $('#equipmentsUsedId').val(data.equipmentsUsedId);
-        $('#equipmentsUsed_jobOrderId').val(data.jobOrderId);
-        $('#equipmentsUsed_jobOrderNo').val(data.jobOrderNo);
-        // ...existing code...
+    function saveEquipmentsUsed() {
+        let equipmentsUsedData = {
+            EquipmentsUsedId: parseInt($('#equipmentsUsedId').val()) || 0,
+            JobOrderId: parseInt($('#equipmentsUsed_jobOrderId').val()) || 0,
+            JobOrderNo: $('#equipmentsUsed_jobOrderNo').val() || '',
+            Date: $('#equipmentsUsed_date').val() || '',
+            ReferenceNo: $('#equipmentsUsed_referenceNo').val() || '',
+            ChargeId: parseInt($('#equipmentsUsed_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            UomId: parseInt($('#equipmentsUsed_cmb_uom').data('kendoComboBox').value()) || 0,
+            StatusId: parseInt($('#equipmentsUsed_cmb_status').data('kendoComboBox').value()) || 0,
+            
+            MorningTimeIn: $('#equipmentsUsed_morningTimeIn').val() || '',
+            MorningTimeOut: $('#equipmentsUsed_morningTimeOut').val() || '',
+            MorningTotalHours: $('#equipmentsUsed_morningTotalHours').val() || '',
+            EveningTimeIn: $('#equipmentsUsed_eveningTimeIn').val() || '',
+            EveningTimeOut: $('#equipmentsUsed_eveningTimeOut').val() || '',
+            EveningTotalHours: $('#equipmentsUsed_eveningTotalHours').val() || '',
+            TotalRegularHours: $('#equipmentsUsed_totalRegularHours').val() || '',
+            TotalOvertimeHours: $('#equipmentsUsed_totalOvertimeHours').val() || '',
+            DriverName: $('#equipmentsUsed_driverName').val() || '',
+            VehicleName: $('#equipmentsUsed_vehicleName').val() || '',
+            
+            Quantity: parseFloat($('#equipmentsUsed_quantity').val()) || 0,
+            Mafi: $('#equipmentsUsed_mafi').val() || '',
+            IsEquimentFooter: $('#equipmentsUsed_isEquimentFooter').is(':checked'),
+            EquimentFooter: $('#equipmentsUsed_equimentFooter').val() || '',
+            
+            LoadingRefNo: $('#equipmentsUsed_loadingRefNo').val() || '',
+            LaunchServiceDebitNoteNo: $('#equipmentsUsed_launchServiceDebitNoteNo').val() || '',
+            LaunchServiceId: parseInt($('#equipmentsUsed_launchServiceId').val()) || 0,
+            
+            ForkliftChargeId: parseInt($('#equipmentsUsed_cmb_forkliftCharge').data('kendoComboBox').value()) || 0,
+            CraneChargeId: parseInt($('#equipmentsUsed_cmb_craneCharge').data('kendoComboBox').value()) || 0,
+            StevedorChargeId: parseInt($('#equipmentsUsed_cmb_stevedorCharge').data('kendoComboBox').value()) || 0,
+            
+            Craneloading: parseInt($('#equipmentsUsed_craneloading').val()) || 0,
+            Forkliftloading: parseInt($('#equipmentsUsed_forkliftloading').val()) || 0,
+            Stevedorloading: parseInt($('#equipmentsUsed_stevedorloading').val()) || 0,
+            
+            OffloadingRefNo: $('#equipmentsUsed_offloadingRefNo').val() || '',
+            CraneOffloading: parseInt($('#equipmentsUsed_craneOffloading').val()) || 0,
+            ForkliftOffloading: parseInt($('#equipmentsUsed_forkliftOffloading').val()) || 0,
+            StevedorOffloading: parseInt($('#equipmentsUsed_stevedorOffloading').val()) || 0,
+            
+            TotAmt: parseFloat($('#equipmentsUsed_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#equipmentsUsed_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#equipmentsUsed_totAmtAftGst').val()) || 0,
+            Remarks: $('#equipmentsUsed_remarks').val() || '',
+            
+            DebitNoteId: parseInt($('#equipmentsUsed_debitNoteId').val()) || 0,
+            DebitNoteNo: $('#equipmentsUsed_debitNoteNo').val() || '',
+            TaskId: 9, // Assuming TaskId 9 is for Equipment Used
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveEquipmentsUsed", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ equipmentsUsed: equipmentsUsedData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    initializeEquipmentsUsedGrid();
+                    clearEquipmentsUsedForm();
+                    $('#addEquipmentsUsedModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save equipment used.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
     }
 
-    function openEquipmentsUsedModal(jobOrderId, jobOrderNo, equipmentsUsedId, mode) {
-        const $modal = $('#addEquipmentsUsedModal');
-        const parsedJobOrderId = parseInt(jobOrderId, 10);
-        const parsedEquipmentsUsedId = parseInt(equipmentsUsedId, 10);
-        $('#equipmentsUsed_jobOrderId').val(jobOrderId);
-        $('#equipmentsUsed_jobOrderNo').val(jobOrderNo);
+    // Calculate total hours when time values change
+    $('#equipmentsUsed_morningTimeIn, #equipmentsUsed_morningTimeOut').on('change', calculateMorningHours);
+    $('#equipmentsUsed_eveningTimeIn, #equipmentsUsed_eveningTimeOut').on('change', calculateEveningHours);
 
-        if (parsedJobOrderId > 0 && parsedEquipmentsUsedId > 0) {
-            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
-            $.get('@Url.Action("GetEquipmentsUsedById", "Job", new { area = "Project" })', {
-                jobOrderId: parsedJobOrderId,
-                equipmentsUsedId: parsedEquipmentsUsedId,
-                companyId: $('#companyId').val()
-            })
-                .done(function (response) {
-                    if (response.success) {
-                        refreshEquipmentsUsedDropdown();
-                        clearEquipmentsUsedForm();
-                        populateEquipmentsUsedModalFields(response.data);
-                        $('#addEquipmentsUsedModal').modal('show');
-                    }
-                })
-                .always(() => $modal.find('.modal-overlay').remove());
-        } else {
-            refreshEquipmentsUsedDropdown();
-            clearEquipmentsUsedForm();
-            setDefaultDropdownValues();
-            $('#addEquipmentsUsedModal').modal('show');
+    function calculateMorningHours() {
+        const timeIn = $('#equipmentsUsed_morningTimeIn').val();
+        const timeOut = $('#equipmentsUsed_morningTimeOut').val();
+        
+        if (timeIn && timeOut) {
+            const timeInDate = new Date(`2000-01-01T${timeIn}`);
+            const timeOutDate = new Date(`2000-01-01T${timeOut}`);
+            
+            let hours = (timeOutDate - timeInDate) / (1000 * 60 * 60);
+            if (hours < 0) hours += 24; // Handle overnight shift
+            
+            $('#equipmentsUsed_morningTotalHours').val(hours.toFixed(2));
+            calculateTotalHours();
         }
     }
-
-    function setDefaultDropdownValues() {
-        // Set default values for dropdowns
-        $('#equipmentsUsed_cmb_gl').data('kendoMultiColumnComboBox').value(488);
-        // ...existing code...
+    
+    function calculateEveningHours() {
+        const timeIn = $('#equipmentsUsed_eveningTimeIn').val();
+        const timeOut = $('#equipmentsUsed_eveningTimeOut').val();
+        
+        if (timeIn && timeOut) {
+            const timeInDate = new Date(`2000-01-01T${timeIn}`);
+            const timeOutDate = new Date(`2000-01-01T${timeOut}`);
+            
+            let hours = (timeOutDate - timeInDate) / (1000 * 60 * 60);
+            if (hours < 0) hours += 24; // Handle overnight shift
+            
+            $('#equipmentsUsed_eveningTotalHours').val(hours.toFixed(2));
+            calculateTotalHours();
+        }
     }
+    
+    function calculateTotalHours() {
+        const morningHours = parseFloat($('#equipmentsUsed_morningTotalHours').val()) || 0;
+        const eveningHours = parseFloat($('#equipmentsUsed_eveningTotalHours').val()) || 0;
+        
+        const totalHours = morningHours + eveningHours;
+        $('#equipmentsUsed_totalRegularHours').val(totalHours.toFixed(2));
+    }
+
+    // Calculate GST amount when total amount changes
+    $('#equipmentsUsed_totAmt').on('change', function() {
+        const amount = parseFloat($(this).val()) || 0;
+        const gstRate = 0.07; // Assuming 7% GST
+        
+        const gstAmt = amount * gstRate;
+        const totAmtAftGst = amount + gstAmt;
+        
+        $('#equipmentsUsed_gstAmt').val(gstAmt.toFixed(2));
+        $('#equipmentsUsed_totAmtAftGst').val(totAmtAftGst.toFixed(2));
+    });
 </script>

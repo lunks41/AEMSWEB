@@ -8,6 +8,7 @@ using AMESWEB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.Design;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AMESWEB.Areas.Project.Controllers
 {
@@ -211,8 +212,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SavePortExpensesAsync(companyIdShort, parsedUserId.Value, portExpenseToSave);
-                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+                var data = await _jobTaskService.SavePortExpensesAsync(companyIdShort, parsedUserId.Value, portExpenseToSave);
+                return Json(new { success = true, message = "Account Type saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -256,6 +257,782 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         #endregion Port Expenses
+
+        #region Launch Services
+
+        [HttpGet]
+        public async Task<JsonResult> LaunchServicesList(string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetLaunchServicesListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching account type list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetLaunchServicesById(Int64 jobOrderId, Int64 launchServiceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+                return Json(new { success = false, message = "Invalid Account Type ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetLaunchServicesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
+                return data == null
+                    ? Json(new { success = false, message = "Account Type not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching account type by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveLaunchServices([FromBody] SaveLaunchServicesViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var launchServiceToSave = new Ser_LaunchServices
+                {
+                    LaunchServiceId = model.launchService.LaunchServiceId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.launchService.JobOrderId,
+                    JobOrderNo = model.launchService.JobOrderNo?.Trim() ?? string.Empty,
+
+                    TaskId = model.launchService.TaskId,
+                    GLId = model.launchService.GLId,
+                    ChargeId = model.launchService.ChargeId,
+                    StatusId = model.launchService.StatusId,
+                    UomId = model.launchService.UomId,
+
+                    LaunchServiceDate = Convert.ToDateTime(model.launchService.LaunchServiceDate),
+
+                    LoadingTime = string.IsNullOrWhiteSpace(model.launchService.LoadingTime)
+                        ? (DateTime?)null
+                        : Convert.ToDateTime(model.launchService.LoadingTime),
+                    LeftJetty = string.IsNullOrWhiteSpace(model.launchService.LeftJetty)
+                        ? (DateTime?)null
+                        : Convert.ToDateTime(model.launchService.LeftJetty),
+
+                    DebitNoteId = model.launchService.DebitNoteId,
+                    DebitNoteNo = model.launchService.DebitNoteNo?.Trim(),
+
+                    TotAmt = model.launchService.TotAmt,
+                    GstAmt = model.launchService.GstAmt,
+                    TotAmtAftGst = model.launchService.TotAmtAftGst,
+
+                    Remarks = model.launchService.Remarks?.Trim() ?? string.Empty,
+                    BoatOperator = model.launchService.BoatOperator?.Trim(),
+                    InvoiceNo = model.launchService.InvoiceNo?.Trim(),
+                    Annexure = model.launchService.Annexure?.Trim(),
+
+                    DistanceFromJetty = model.launchService.DistanceFromJetty,
+                    DistanceFromJettyToVessel = model.launchService.DistanceFromJettyToVessel,
+                    WeightOfCargoDelivered = model.launchService.WeightOfCargoDelivered,
+                    WeightOfCargoLanded = model.launchService.WeightOfCargoLanded,
+
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.Now,
+                };
+
+                var data = await _jobTaskService.SaveLaunchServicesAsync(companyIdShort, parsedUserId.Value, launchServiceToSave);
+                return Json(new { success = true, message = "Account Type saved successfully", data = data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving account type");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteLaunchServices(Int64 jobOrderId, Int64 launchServiceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+            {
+                _logger.LogWarning("Delete failed: Invalid Account Type ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Account Type ID." });
+            }
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
+            if (permissions == null || !permissions.IsDelete)
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this account group." });
+            }
+
+            try
+            {
+                await _jobTaskService.DeleteLaunchServicesAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
+                return Json(new { success = true, message = "Account Type deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Account Type. Account Type ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
+            }
+        }
+
+        #endregion Launch Services
+
+        #region Equipment Used
+
+        [HttpGet]
+        public async Task<JsonResult> EquipmentUsedList(string companyId, Int64 jobOrderId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                if (parsedUserId.HasValue)
+                {
+                    var data = await _jobTaskService.GetEquipmentsUsedListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                    return Json(data);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in EquipmentsUsedList");
+                return Json(new { success = false, message = "An error occurred while fetching equipment used list." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetEquipmentsUsedById(Int64 jobOrderId, Int64 equipmentsUsedId, string companyId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                if (parsedUserId.HasValue)
+                {
+                    var data = await _jobTaskService.GetEquipmentsUsedByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, equipmentsUsedId);
+                    return data == null
+                    ? Json(new { success = false, message = "Account Type not found" })
+                    : Json(new { success = true, data });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetEquipmentsUsedById");
+                return Json(new { success = false, message = "An error occurred while fetching equipment used details." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveEquipmentsUsed([FromBody] SaveEquipmentsUsedViewModel model)
+        {
+            try
+            {
+                if (model == null || model.equipmentsUsed == null || string.IsNullOrEmpty(model.companyId))
+                {
+                    return BadRequest(new { success = false, message = "Invalid input data." });
+                }
+
+                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                // Create the entity from view model
+                var equipmentsUsed = new Ser_EquipmentsUsed
+                {
+                    EquipmentsUsedId = model.equipmentsUsed.EquipmentsUsedId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.equipmentsUsed.JobOrderId,
+                    JobOrderNo = model.equipmentsUsed.JobOrderNo,
+                    TaskId = model.equipmentsUsed.TaskId,
+
+                    // Equipment details
+                    GLId = model.equipmentsUsed.GLId,
+                    StatusId = model.equipmentsUsed.StatusId,
+                    ChargeId = model.equipmentsUsed.ChargeId,
+
+                    // Financial information
+                    DebitNoteId = model.equipmentsUsed.DebitNoteId,
+                    DebitNoteNo = model.equipmentsUsed.DebitNoteNo,
+                    TotAmt = model.equipmentsUsed.TotAmt,
+                    GstAmt = model.equipmentsUsed.GstAmt,
+                    TotAmtAftGst = model.equipmentsUsed.TotAmtAftGst,
+
+                    // Additional information
+                    Remarks = model.equipmentsUsed.Remarks ?? string.Empty,
+
+                    // Audit fields
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = model.equipmentsUsed.EditById,
+                    EditDate = model.equipmentsUsed.EditDate,
+                    EditVersion = model.equipmentsUsed.EditVersion
+                };
+
+                var data = await _jobTaskService.SaveEquipmentsUsedAsync(companyIdShort, parsedUserId.Value, equipmentsUsed);
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in SaveEquipmentsUsed");
+                return Json(new SqlResponce { Result = -1, Message = "An error occurred while saving equipment used data." });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteEquipmentsUsed(Int64 jobOrderId, Int64 equipmentsUsedId, string companyId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                var data = await _jobTaskService.DeleteEquipmentsUsedAsync(companyIdShort, parsedUserId.Value, jobOrderId, equipmentsUsedId);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in DeleteEquipmentsUsed");
+                return Json(new SqlResponce { Result = -1, Message = "An error occurred while deleting equipment used data." });
+            }
+        }
+
+        #endregion Equipment Used
+
+        #region Crew Sign On
+
+        [HttpGet]
+        public async Task<JsonResult> CrewSignOnList(string companyId, Int64 jobOrderId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                if (parsedUserId.HasValue)
+                {
+                    var data = await _jobTaskService.GetCrewSignOnListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                    return Json(data);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in CrewSignOnList");
+                return Json(new { success = false, message = "An error occurred while fetching crew sign on list." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCrewSignOnById(Int64 jobOrderId, Int64 crewSignOnId, string companyId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                if (parsedUserId.HasValue)
+                {
+                    var data = await _jobTaskService.GetCrewSignOnByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOnId);
+                    return Json(data);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetCrewSignOnById");
+                return Json(new { success = false, message = "An error occurred while fetching crew sign on details." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCrewSignOn([FromBody] SaveCrewSignOnViewModel model)
+        {
+            try
+            {
+                if (model == null || model.crewSignOn == null || string.IsNullOrEmpty(model.companyId))
+                {
+                    return BadRequest(new { success = false, message = "Invalid input data." });
+                }
+
+                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                var crewSignOn = new Ser_CrewSignOn
+                {
+                    CrewSignOnId = model.crewSignOn.CrewSignOnId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.crewSignOn.JobOrderId,
+                    JobOrderNo = model.crewSignOn.JobOrderNo,
+                    TaskId = model.crewSignOn.TaskId,
+                    CrewName = model.crewSignOn.CrewName,
+                    SignOnDate = model.crewSignOn.SignOnDate,
+                    Position = model.crewSignOn.Position,
+                    GLId = model.crewSignOn.GLId,
+                    GenderId = model.crewSignOn.GenderId,
+                    Nationality = model.crewSignOn.Nationality,
+                    VisaTypeId = model.crewSignOn.VisaTypeId,
+                    TicketNo = model.crewSignOn.TicketNo,
+                    Clearing = model.crewSignOn.Clearing,
+                    TransportName = model.crewSignOn.TransportName,
+                    HotelName = model.crewSignOn.HotelName,
+                    StatusId = model.crewSignOn.StatusId,
+                    FlightDetails = model.crewSignOn.FlightDetails,
+                    RankId = model.crewSignOn.RankId,
+                    ChargeId = model.crewSignOn.ChargeId,
+                    DebitNoteId = model.crewSignOn.DebitNoteId,
+                    DebitNoteNo = model.crewSignOn.DebitNoteNo,
+                    TotAmt = model.crewSignOn.TotAmt,
+                    GstAmt = model.crewSignOn.GstAmt,
+                    TotAmtAftGst = model.crewSignOn.TotAmtAftGst,
+                    Remarks = model.crewSignOn.Remarks ?? string.Empty,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = model.crewSignOn.EditById,
+                    EditDate = model.crewSignOn.EditDate,
+                    EditVersion = model.crewSignOn.EditVersion
+                };
+
+                var data = await _jobTaskService.SaveCrewSignOnAsync(companyIdShort, parsedUserId.Value, crewSignOn);
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in SaveCrewSignOn");
+                return Json(new SqlResponce { Result = -1, Message = "An error occurred while saving crew sign on data." });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCrewSignOn(Int64 jobOrderId, Int64 crewSignOnId, string companyId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                var data = await _jobTaskService.DeleteCrewSignOnAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOnId);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in DeleteCrewSignOn");
+                return Json(new SqlResponce { Result = -1, Message = "An error occurred while deleting crew sign on data." });
+            }
+        }
+
+        #endregion Crew Sign On
+
+        #region Crew Sign Off
+
+        [HttpGet]
+        public async Task<JsonResult> CrewSignOffList(string companyId, Int64 jobOrderId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                if (parsedUserId.HasValue)
+                {
+                    var data = await _jobTaskService.GetCrewSignOffListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                    return Json(data);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in CrewSignOffList");
+                return Json(new { success = false, message = "An error occurred while fetching crew sign off list." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCrewSignOffById(Int64 jobOrderId, Int64 crewSignOffId, string companyId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                if (parsedUserId.HasValue)
+                {
+                    var data = await _jobTaskService.GetCrewSignOffByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOffId);
+                    return Json(data);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetCrewSignOffById");
+                return Json(new { success = false, message = "An error occurred while fetching crew sign off details." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCrewSignOff([FromBody] SaveCrewSignOffViewModel model)
+        {
+            try
+            {
+                if (model == null || model.crewSignOff == null || string.IsNullOrEmpty(model.companyId))
+                {
+                    return BadRequest(new { success = false, message = "Invalid input data." });
+                }
+
+                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                // Create the entity from view model
+                var crewSignOff = new Ser_CrewSignOff
+                {
+                    // Basic identification
+                    CrewSignOffId = model.crewSignOff.CrewSignOffId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.crewSignOff.JobOrderId,
+                    JobOrderNo = model.crewSignOff.JobOrderNo,
+                    TaskId = model.crewSignOff.TaskId,
+
+                    // Crew details
+                    CrewName = model.crewSignOff.CrewName,
+                    SignOffDate = model.crewSignOff.SignOffDate,
+                    Position = model.crewSignOff.Position,
+                    GLId = model.crewSignOff.GLId,
+                    GenderId = model.crewSignOff.GenderId,
+                    Nationality = model.crewSignOff.Nationality,
+                    VisaTypeId = model.crewSignOff.VisaTypeId,
+                    TicketNo = model.crewSignOff.TicketNo,
+                    Clearing = model.crewSignOff.Clearing,
+                    TransportName = model.crewSignOff.TransportName,
+                    HotelName = model.crewSignOff.HotelName,
+                    StatusId = model.crewSignOff.StatusId,
+                    FlightDetails = model.crewSignOff.FlightDetails,
+                    RankId = model.crewSignOff.RankId,
+                    ChargeId = model.crewSignOff.ChargeId,
+
+                    // Financial information
+                    DebitNoteId = model.crewSignOff.DebitNoteId,
+                    DebitNoteNo = model.crewSignOff.DebitNoteNo,
+                    TotAmt = model.crewSignOff.TotAmt,
+                    GstAmt = model.crewSignOff.GstAmt,
+                    TotAmtAftGst = model.crewSignOff.TotAmtAftGst,
+
+                    // Additional information
+                    Remarks = model.crewSignOff.Remarks ?? string.Empty,
+
+                    // Audit fields
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = model.crewSignOff.EditById,
+                    EditDate = model.crewSignOff.EditDate,
+                    EditVersion = model.crewSignOff.EditVersion
+                };
+
+                var data = await _jobTaskService.SaveCrewSignOffAsync(companyIdShort, parsedUserId.Value, crewSignOff);
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in SaveCrewSignOff");
+                return Json(new SqlResponce { Result = -1, Message = "An error occurred while saving crew sign off data." });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCrewSignOff(Int64 jobOrderId, Int64 crewSignOffId, string companyId)
+        {
+            try
+            {
+                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+                if (validationResult != null) return validationResult;
+
+                var data = await _jobTaskService.DeleteCrewSignOffAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOffId);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in DeleteCrewSignOff");
+                return Json(new SqlResponce { Result = -1, Message = "An error occurred while deleting crew sign off data." });
+            }
+        }
+
+        #endregion Crew Sign Off
+
+        #region Crew Miscellaneous
+
+        [HttpGet]
+        public async Task<JsonResult> CrewMiscellaneousList(string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetCrewMiscellaneousListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Crew Miscellaneous list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCrewMiscellaneousById(Int64 jobOrderId, Int64 crewMiscellaneousId, string companyId)
+        {
+            if (jobOrderId <= 0)
+                return Json(new { success = false, message = "Invalid Crew Miscellaneous ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetCrewMiscellaneousByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewMiscellaneousId);
+                return data == null
+                    ? Json(new { success = false, message = "Crew Miscellaneous not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Crew Miscellaneous by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCrewMiscellaneous([FromBody] SaveCrewMiscellaneousViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var crewMiscellaneousToSave = new Ser_CrewMiscellaneous
+                {
+                    CrewMiscellaneousId = model.crewMiscellaneous.CrewMiscellaneousId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.crewMiscellaneous.JobOrderId,
+                    JobOrderNo = model.crewMiscellaneous.JobOrderNo ?? string.Empty,
+                    TaskId = model.crewMiscellaneous.TaskId,
+                    Remarks = model.crewMiscellaneous.Remarks?.Trim() ?? string.Empty,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.Now,
+                };
+
+                var data = await _jobTaskService.SaveCrewMiscellaneousAsync(companyIdShort, parsedUserId.Value, crewMiscellaneousToSave);
+                return Json(new { success = true, message = "Crew Miscellaneous saved successfully", data = data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving Crew Miscellaneous");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCrewMiscellaneous(Int64 jobOrderId, Int64 crewMiscellaneousId, string companyId)
+        {
+            if (jobOrderId <= 0)
+            {
+                _logger.LogWarning("Delete failed: Invalid Crew Miscellaneous ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Crew Miscellaneous ID." });
+            }
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
+            if (permissions == null || !permissions.IsDelete)
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this Crew Miscellaneous." });
+            }
+
+            try
+            {
+                await _jobTaskService.DeleteCrewMiscellaneousAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewMiscellaneousId);
+                return Json(new { success = true, message = "Crew Miscellaneous deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Crew Miscellaneous. Crew Miscellaneous ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
+            }
+        }
+
+        #endregion Crew Miscellaneous
+
+        #region Medical Assistance
+
+        [HttpGet]
+        public async Task<JsonResult> MedicalAssistanceList(string companyId, Int64 jobOrderId)
+        {
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetMedicalAssistanceListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                return Json(new { data = data.data, total = data.totalRecords });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Medical Assistance list");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetMedicalAssistanceById(Int64 jobOrderId, Int64 medicalAssistanceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+                return Json(new { success = false, message = "Invalid Medical Assistance ID" });
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var data = await _jobTaskService.GetMedicalAssistanceByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, medicalAssistanceId);
+                return data == null
+                    ? Json(new { success = false, message = "Medical Assistance not found" })
+                    : Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching Medical Assistance by ID");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveMedicalAssistance([FromBody] SaveMedicalAssistanceViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid request data" });
+
+            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null) return validationResult;
+
+            try
+            {
+                var medicalAssistanceToSave = new Ser_MedicalAssistance
+                {
+                    MedicalAssistanceId = model.medicalAssistance.MedicalAssistanceId,
+                    CompanyId = companyIdShort,
+                    JobOrderId = model.medicalAssistance.JobOrderId,
+                    JobOrderNo = model.medicalAssistance.JobOrderNo ?? string.Empty,
+                    TaskId = model.medicalAssistance.TaskId,
+                    Remarks = model.medicalAssistance.Remarks?.Trim() ?? string.Empty,
+                    CreateById = parsedUserId.Value,
+                    CreateDate = DateTime.Now,
+                    EditById = parsedUserId.Value,
+                    EditDate = DateTime.Now,
+                    EditVersion = 0
+                };
+
+                var data = await _jobTaskService.SaveMedicalAssistanceAsync(companyIdShort, parsedUserId.Value, medicalAssistanceToSave);
+                return Json(new { success = true, message = "Medical Assistance saved successfully", data = data });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving Medical Assistance");
+                return Json(new { success = false, message = "An error occurred" });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteMedicalAssistance(Int64 jobOrderId, Int64 medicalAssistanceId, string companyId)
+        {
+            if (jobOrderId <= 0)
+            {
+                _logger.LogWarning("Delete failed: Invalid Medical Assistance ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Medical Assistance ID." });
+            }
+
+            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
+            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
+            if (permissions == null || !permissions.IsDelete)
+            {
+                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
+                return Json(new { success = false, message = "You do not have permission to delete this Medical Assistance." });
+            }
+
+            try
+            {
+                await _jobTaskService.DeleteMedicalAssistanceAsync(companyIdShort, parsedUserId.Value, jobOrderId, medicalAssistanceId);
+                return Json(new { success = true, message = "Medical Assistance deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Medical Assistance. Medical Assistance ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                return Json(new { success = false, message = "An error occurred." });
+            }
+        }
+
+        #endregion Medical Assistance
 
         #region Agency Remuneration
 
@@ -334,8 +1111,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SaveAgencyRemunerationAsync(companyIdShort, parsedUserId.Value, agencyRemunerationToSave);
-                return Json(new { success = true, message = "Agency Remuneration saved successfully", data = result });
+                var data = await _jobTaskService.SaveAgencyRemunerationAsync(companyIdShort, parsedUserId.Value, agencyRemunerationToSave);
+                return Json(new { success = true, message = "Agency Remuneration saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -461,8 +1238,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SaveConsignmentExportAsync(companyIdShort, parsedUserId.Value, consignmentExportToSave);
-                return Json(new { success = true, message = "Consignment Export saved successfully", data = result });
+                var data = await _jobTaskService.SaveConsignmentExportAsync(companyIdShort, parsedUserId.Value, consignmentExportToSave);
+                return Json(new { success = true, message = "Consignment Export saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -588,8 +1365,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SaveConsignmentImportAsync(companyIdShort, parsedUserId.Value, consignmentImportToSave);
-                return Json(new { success = true, message = "Consignment Import saved successfully", data = result });
+                var data = await _jobTaskService.SaveConsignmentImportAsync(companyIdShort, parsedUserId.Value, consignmentImportToSave);
+                return Json(new { success = true, message = "Consignment Import saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -714,8 +1491,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SaveLandingItemsAsync(companyIdShort, parsedUserId.Value, landingItemToSave);
-                return Json(new { success = true, message = "Landing Item saved successfully", data = result });
+                var data = await _jobTaskService.SaveLandingItemsAsync(companyIdShort, parsedUserId.Value, landingItemToSave);
+                return Json(new { success = true, message = "Landing Item saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -837,8 +1614,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SaveOtherServiceAsync(companyIdShort, parsedUserId.Value, otherServiceToSave);
-                return Json(new { success = true, message = "Other Service saved successfully", data = result });
+                var data = await _jobTaskService.SaveOtherServiceAsync(companyIdShort, parsedUserId.Value, otherServiceToSave);
+                return Json(new { success = true, message = "Other Service saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -960,8 +1737,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SaveTechniciansSurveyorsAsync(companyIdShort, parsedUserId.Value, technicianSurveyorToSave);
-                return Json(new { success = true, message = "Technician/Surveyor saved successfully", data = result });
+                var data = await _jobTaskService.SaveTechniciansSurveyorsAsync(companyIdShort, parsedUserId.Value, technicianSurveyorToSave);
+                return Json(new { success = true, message = "Technician/Surveyor saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -1086,8 +1863,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var result = await _jobTaskService.SaveThirdPartySupplyAsync(companyIdShort, parsedUserId.Value, thirdPartySupplyToSave);
-                return Json(new { success = true, message = "Third Party Supply saved successfully", data = result });
+                var data = await _jobTaskService.SaveThirdPartySupplyAsync(companyIdShort, parsedUserId.Value, thirdPartySupplyToSave);
+                return Json(new { success = true, message = "Third Party Supply saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -1132,780 +1909,6 @@ namespace AMESWEB.Areas.Project.Controllers
 
         #endregion Third Party Supply
 
-        #region Launch Services
-
-        [HttpGet]
-        public async Task<JsonResult> LaunchServicesList(string companyId, Int64 jobOrderId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var data = await _jobTaskService.GetLaunchServicesListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
-                return Json(new { data = data.data, total = data.totalRecords });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching account type list");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetLaunchServicesById(Int64 jobOrderId, Int64 launchServiceId, string companyId)
-        {
-            if (jobOrderId <= 0)
-                return Json(new { success = false, message = "Invalid Account Type ID" });
-
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var data = await _jobTaskService.GetLaunchServicesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
-                return data == null
-                    ? Json(new { success = false, message = "Account Type not found" })
-                    : Json(new { success = true, data });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching account type by ID");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveLaunchServices([FromBody] SaveLaunchServicesViewModel model)
-        {
-            if (model == null || !ModelState.IsValid)
-                return Json(new { success = false, message = "Invalid request data" });
-
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var launchServiceToSave = new Ser_LaunchServices
-                {
-                    LaunchServiceId = model.launchService.LaunchServiceId,
-                    CompanyId = companyIdShort,
-                    JobOrderId = model.launchService.JobOrderId,
-                    JobOrderNo = model.launchService.JobOrderNo?.Trim() ?? string.Empty,
-
-                    TaskId = model.launchService.TaskId,
-                    GLId = model.launchService.GLId,
-                    ChargeId = model.launchService.ChargeId,
-                    StatusId = model.launchService.StatusId,
-                    UomId = model.launchService.UomId,
-
-                    LaunchServiceDate = Convert.ToDateTime(model.launchService.LaunchServiceDate),
-
-                    LoadingTime = string.IsNullOrWhiteSpace(model.launchService.LoadingTime)
-                        ? (DateTime?)null
-                        : Convert.ToDateTime(model.launchService.LoadingTime),
-                    LeftJetty = string.IsNullOrWhiteSpace(model.launchService.LeftJetty)
-                        ? (DateTime?)null
-                        : Convert.ToDateTime(model.launchService.LeftJetty),
-
-                    DebitNoteId = model.launchService.DebitNoteId,
-                    DebitNoteNo = model.launchService.DebitNoteNo?.Trim(),
-
-                    TotAmt = model.launchService.TotAmt,
-                    GstAmt = model.launchService.GstAmt,
-                    TotAmtAftGst = model.launchService.TotAmtAftGst,
-
-                    Remarks = model.launchService.Remarks?.Trim() ?? string.Empty,
-                    BoatOperator = model.launchService.BoatOperator?.Trim(),
-                    InvoiceNo = model.launchService.InvoiceNo?.Trim(),
-                    Annexure = model.launchService.Annexure?.Trim(),
-
-                    DistanceFromJetty = model.launchService.DistanceFromJetty,
-                    DistanceFromJettyToVessel = model.launchService.DistanceFromJettyToVessel,
-                    WeightOfCargoDelivered = model.launchService.WeightOfCargoDelivered,
-                    WeightOfCargoLanded = model.launchService.WeightOfCargoLanded,
-
-                    CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.Now,
-                    EditById = parsedUserId.Value,
-                    EditDate = DateTime.Now,
-                };
-
-                var result = await _jobTaskService.SaveLaunchServicesAsync(companyIdShort, parsedUserId.Value, launchServiceToSave);
-                return Json(new { success = true, message = "Account Type saved successfully", data = result });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error saving account type");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteLaunchServices(Int64 jobOrderId, Int64 launchServiceId, string companyId)
-        {
-            if (jobOrderId <= 0)
-            {
-                _logger.LogWarning("Delete failed: Invalid Account Type ID {JobOrderId}.", jobOrderId);
-                return Json(new { success = false, message = "Invalid Account Type ID." });
-            }
-
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null)
-            {
-                return validationResult;
-            }
-
-            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
-            if (permissions == null || !permissions.IsDelete)
-            {
-                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
-                return Json(new { success = false, message = "You do not have permission to delete this account group." });
-            }
-
-            try
-            {
-                await _jobTaskService.DeleteLaunchServicesAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
-                return Json(new { success = true, message = "Account Type deleted successfully." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while deleting the Account Type. Account Type ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
-                return Json(new { success = false, message = "An error occurred." });
-            }
-        }
-
-        #endregion Launch Services
-
-        #region Equipment Used
-
-        [HttpGet]
-        public async Task<JsonResult> EquipmentUsedList(string companyId, Int64 jobOrderId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                if (parsedUserId.HasValue)
-                {
-                    var result = await _jobTaskService.GetEquipmentsUsedListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
-                    return Json(result);
-                }
-                else
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in EquipmentsUsedList");
-                return Json(new { success = false, message = "An error occurred while fetching equipment used list." });
-            }
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetEquipmentsUsedById(Int64 jobOrderId, Int64 equipmentsUsedId, string companyId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                if (parsedUserId.HasValue)
-                {
-                    var result = await _jobTaskService.GetEquipmentsUsedByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, equipmentsUsedId);
-                    return Json(result);
-                }
-                else
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in GetEquipmentsUsedById");
-                return Json(new { success = false, message = "An error occurred while fetching equipment used details." });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveEquipmentsUsed([FromBody] SaveEquipmentsUsedViewModel model)
-        {
-            try
-            {
-                if (model == null || model.equipmentsUsed == null || string.IsNullOrEmpty(model.companyId))
-                {
-                    return BadRequest(new { success = false, message = "Invalid input data." });
-                }
-
-                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                // Create the entity from view model
-                var equipmentsUsed = new Ser_EquipmentsUsed
-                {
-                    EquipmentsUsedId = model.equipmentsUsed.EquipmentsUsedId,
-                    CompanyId = companyIdShort,
-                    JobOrderId = model.equipmentsUsed.JobOrderId,
-                    JobOrderNo = model.equipmentsUsed.JobOrderNo,
-                    TaskId = model.equipmentsUsed.TaskId,
-
-                    // Equipment details
-                    GLId = model.equipmentsUsed.GLId,
-                    StatusId = model.equipmentsUsed.StatusId,
-                    ChargeId = model.equipmentsUsed.ChargeId,
-
-                    // Financial information
-                    DebitNoteId = model.equipmentsUsed.DebitNoteId,
-                    DebitNoteNo = model.equipmentsUsed.DebitNoteNo,
-                    TotAmt = model.equipmentsUsed.TotAmt,
-                    GstAmt = model.equipmentsUsed.GstAmt,
-                    TotAmtAftGst = model.equipmentsUsed.TotAmtAftGst,
-
-                    // Additional information
-                    Remarks = model.equipmentsUsed.Remarks ?? string.Empty,
-
-                    // Audit fields
-                    CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.Now,
-                    EditById = model.equipmentsUsed.EditById,
-                    EditDate = model.equipmentsUsed.EditDate,
-                    EditVersion = model.equipmentsUsed.EditVersion
-                };
-
-                var result = await _jobTaskService.SaveEquipmentsUsedAsync(companyIdShort, parsedUserId.Value, equipmentsUsed);
-
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in SaveEquipmentsUsed");
-                return Json(new SqlResponce { Result = -1, Message = "An error occurred while saving equipment used data." });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteEquipmentsUsed(Int64 jobOrderId, Int64 equipmentsUsedId, string companyId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                var result = await _jobTaskService.DeleteEquipmentsUsedAsync(companyIdShort, parsedUserId.Value, jobOrderId, equipmentsUsedId);
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in DeleteEquipmentsUsed");
-                return Json(new SqlResponce { Result = -1, Message = "An error occurred while deleting equipment used data." });
-            }
-        }
-
-        #endregion Equipment Used
-
-        #region Crew Sign On
-
-        [HttpGet]
-        public async Task<JsonResult> CrewSignOnList(string companyId, Int64 jobOrderId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                if (parsedUserId.HasValue)
-                {
-                    var result = await _jobTaskService.GetCrewSignOnListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
-                    return Json(result);
-                }
-                else
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in CrewSignOnList");
-                return Json(new { success = false, message = "An error occurred while fetching crew sign on list." });
-            }
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCrewSignOnById(Int64 jobOrderId, Int64 crewSignOnId, string companyId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                if (parsedUserId.HasValue)
-                {
-                    var result = await _jobTaskService.GetCrewSignOnByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOnId);
-                    return Json(result);
-                }
-                else
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in GetCrewSignOnById");
-                return Json(new { success = false, message = "An error occurred while fetching crew sign on details." });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveCrewSignOn([FromBody] SaveCrewSignOnViewModel model)
-        {
-            try
-            {
-                if (model == null || model.crewSignOn == null || string.IsNullOrEmpty(model.companyId))
-                {
-                    return BadRequest(new { success = false, message = "Invalid input data." });
-                }
-
-                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                var crewSignOn = new Ser_CrewSignOn
-                {
-                    CrewSignOnId = model.crewSignOn.CrewSignOnId,
-                    CompanyId = companyIdShort,
-                    JobOrderId = model.crewSignOn.JobOrderId,
-                    JobOrderNo = model.crewSignOn.JobOrderNo,
-                    TaskId = model.crewSignOn.TaskId,
-                    CrewName = model.crewSignOn.CrewName,
-                    SignOnDate = model.crewSignOn.SignOnDate,
-                    Position = model.crewSignOn.Position,
-                    GLId = model.crewSignOn.GLId,
-                    GenderId = model.crewSignOn.GenderId,
-                    Nationality = model.crewSignOn.Nationality,
-                    VisaTypeId = model.crewSignOn.VisaTypeId,
-                    TicketNo = model.crewSignOn.TicketNo,
-                    Clearing = model.crewSignOn.Clearing,
-                    TransportName = model.crewSignOn.TransportName,
-                    HotelName = model.crewSignOn.HotelName,
-                    StatusId = model.crewSignOn.StatusId,
-                    FlightDetails = model.crewSignOn.FlightDetails,
-                    RankId = model.crewSignOn.RankId,
-                    ChargeId = model.crewSignOn.ChargeId,
-                    DebitNoteId = model.crewSignOn.DebitNoteId,
-                    DebitNoteNo = model.crewSignOn.DebitNoteNo,
-                    TotAmt = model.crewSignOn.TotAmt,
-                    GstAmt = model.crewSignOn.GstAmt,
-                    TotAmtAftGst = model.crewSignOn.TotAmtAftGst,
-                    Remarks = model.crewSignOn.Remarks ?? string.Empty,
-                    CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.Now,
-                    EditById = model.crewSignOn.EditById,
-                    EditDate = model.crewSignOn.EditDate,
-                    EditVersion = model.crewSignOn.EditVersion
-                };
-
-                var result = await _jobTaskService.SaveCrewSignOnAsync(companyIdShort, parsedUserId.Value, crewSignOn);
-
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in SaveCrewSignOn");
-                return Json(new SqlResponce { Result = -1, Message = "An error occurred while saving crew sign on data." });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCrewSignOn(Int64 jobOrderId, Int64 crewSignOnId, string companyId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                var result = await _jobTaskService.DeleteCrewSignOnAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOnId);
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in DeleteCrewSignOn");
-                return Json(new SqlResponce { Result = -1, Message = "An error occurred while deleting crew sign on data." });
-            }
-        }
-
-        #endregion Crew Sign On
-
-        #region Crew Sign Off
-
-        [HttpGet]
-        public async Task<JsonResult> CrewSignOffList(string companyId, Int64 jobOrderId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                if (parsedUserId.HasValue)
-                {
-                    var result = await _jobTaskService.GetCrewSignOffListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
-                    return Json(result);
-                }
-                else
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in CrewSignOffList");
-                return Json(new { success = false, message = "An error occurred while fetching crew sign off list." });
-            }
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCrewSignOffById(Int64 jobOrderId, Int64 crewSignOffId, string companyId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                if (parsedUserId.HasValue)
-                {
-                    var result = await _jobTaskService.GetCrewSignOffByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOffId);
-                    return Json(result);
-                }
-                else
-                {
-                    return Json(new { success = false, message = "User not logged in or invalid user ID." });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in GetCrewSignOffById");
-                return Json(new { success = false, message = "An error occurred while fetching crew sign off details." });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveCrewSignOff([FromBody] SaveCrewSignOffViewModel model)
-        {
-            try
-            {
-                if (model == null || model.crewSignOff == null || string.IsNullOrEmpty(model.companyId))
-                {
-                    return BadRequest(new { success = false, message = "Invalid input data." });
-                }
-
-                var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                // Create the entity from view model
-                var crewSignOff = new Ser_CrewSignOff
-                {
-                    // Basic identification
-                    CrewSignOffId = model.crewSignOff.CrewSignOffId,
-                    CompanyId = companyIdShort,
-                    JobOrderId = model.crewSignOff.JobOrderId,
-                    JobOrderNo = model.crewSignOff.JobOrderNo,
-                    TaskId = model.crewSignOff.TaskId,
-
-                    // Crew details
-                    CrewName = model.crewSignOff.CrewName,
-                    SignOffDate = model.crewSignOff.SignOffDate,
-                    Position = model.crewSignOff.Position,
-                    GLId = model.crewSignOff.GLId,
-                    GenderId = model.crewSignOff.GenderId,
-                    Nationality = model.crewSignOff.Nationality,
-                    VisaTypeId = model.crewSignOff.VisaTypeId,
-                    TicketNo = model.crewSignOff.TicketNo,
-                    Clearing = model.crewSignOff.Clearing,
-                    TransportName = model.crewSignOff.TransportName,
-                    HotelName = model.crewSignOff.HotelName,
-                    StatusId = model.crewSignOff.StatusId,
-                    FlightDetails = model.crewSignOff.FlightDetails,
-                    RankId = model.crewSignOff.RankId,
-                    ChargeId = model.crewSignOff.ChargeId,
-
-                    // Financial information
-                    DebitNoteId = model.crewSignOff.DebitNoteId,
-                    DebitNoteNo = model.crewSignOff.DebitNoteNo,
-                    TotAmt = model.crewSignOff.TotAmt,
-                    GstAmt = model.crewSignOff.GstAmt,
-                    TotAmtAftGst = model.crewSignOff.TotAmtAftGst,
-
-                    // Additional information
-                    Remarks = model.crewSignOff.Remarks ?? string.Empty,
-
-                    // Audit fields
-                    CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.Now,
-                    EditById = model.crewSignOff.EditById,
-                    EditDate = model.crewSignOff.EditDate,
-                    EditVersion = model.crewSignOff.EditVersion
-                };
-
-                var result = await _jobTaskService.SaveCrewSignOffAsync(companyIdShort, parsedUserId.Value, crewSignOff);
-
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in SaveCrewSignOff");
-                return Json(new SqlResponce { Result = -1, Message = "An error occurred while saving crew sign off data." });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCrewSignOff(Int64 jobOrderId, Int64 crewSignOffId, string companyId)
-        {
-            try
-            {
-                var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-                if (validationResult != null) return validationResult;
-
-                var result = await _jobTaskService.DeleteCrewSignOffAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewSignOffId);
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in DeleteCrewSignOff");
-                return Json(new SqlResponce { Result = -1, Message = "An error occurred while deleting crew sign off data." });
-            }
-        }
-
-        #endregion Crew Sign Off
-
-        #region Crew Miscellaneous
-
-        [HttpGet]
-        public async Task<JsonResult> CrewMiscellaneousList(string companyId, Int64 jobOrderId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var data = await _jobTaskService.GetCrewMiscellaneousListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
-                return Json(new { data = data.data, total = data.totalRecords });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching Crew Miscellaneous list");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetCrewMiscellaneousById(Int64 jobOrderId, Int64 crewMiscellaneousId, string companyId)
-        {
-            if (jobOrderId <= 0)
-                return Json(new { success = false, message = "Invalid Crew Miscellaneous ID" });
-
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var data = await _jobTaskService.GetCrewMiscellaneousByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewMiscellaneousId);
-                return data == null
-                    ? Json(new { success = false, message = "Crew Miscellaneous not found" })
-                    : Json(new { success = true, data });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching Crew Miscellaneous by ID");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveCrewMiscellaneous([FromBody] SaveCrewMiscellaneousViewModel model)
-        {
-            if (model == null || !ModelState.IsValid)
-                return Json(new { success = false, message = "Invalid request data" });
-
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var crewMiscellaneousToSave = new Ser_CrewMiscellaneous
-                {
-                    CrewMiscellaneousId = model.crewMiscellaneous.CrewMiscellaneousId,
-                    CompanyId = companyIdShort,
-                    JobOrderId = model.crewMiscellaneous.JobOrderId,
-                    JobOrderNo = model.crewMiscellaneous.JobOrderNo ?? string.Empty,
-                    TaskId = model.crewMiscellaneous.TaskId,
-                    Remarks = model.crewMiscellaneous.Remarks?.Trim() ?? string.Empty,
-                    CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.Now,
-                    EditById = parsedUserId.Value,
-                    EditDate = DateTime.Now,
-                };
-
-                var result = await _jobTaskService.SaveCrewMiscellaneousAsync(companyIdShort, parsedUserId.Value, crewMiscellaneousToSave);
-                return Json(new { success = true, message = "Crew Miscellaneous saved successfully", data = result });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error saving Crew Miscellaneous");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCrewMiscellaneous(Int64 jobOrderId, Int64 crewMiscellaneousId, string companyId)
-        {
-            if (jobOrderId <= 0)
-            {
-                _logger.LogWarning("Delete failed: Invalid Crew Miscellaneous ID {JobOrderId}.", jobOrderId);
-                return Json(new { success = false, message = "Invalid Crew Miscellaneous ID." });
-            }
-
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null)
-            {
-                return validationResult;
-            }
-
-            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
-            if (permissions == null || !permissions.IsDelete)
-            {
-                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
-                return Json(new { success = false, message = "You do not have permission to delete this Crew Miscellaneous." });
-            }
-
-            try
-            {
-                await _jobTaskService.DeleteCrewMiscellaneousAsync(companyIdShort, parsedUserId.Value, jobOrderId, crewMiscellaneousId);
-                return Json(new { success = true, message = "Crew Miscellaneous deleted successfully." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while deleting the Crew Miscellaneous. Crew Miscellaneous ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
-                return Json(new { success = false, message = "An error occurred." });
-            }
-        }
-
-        #endregion Crew Miscellaneous
-
-        #region Medical Assistance
-
-        [HttpGet]
-        public async Task<JsonResult> MedicalAssistanceList(string companyId, Int64 jobOrderId)
-        {
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var data = await _jobTaskService.GetMedicalAssistanceListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
-                return Json(new { data = data.data, total = data.totalRecords });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching Medical Assistance list");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetMedicalAssistanceById(Int64 jobOrderId, Int64 medicalAssistanceId, string companyId)
-        {
-            if (jobOrderId <= 0)
-                return Json(new { success = false, message = "Invalid Medical Assistance ID" });
-
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var data = await _jobTaskService.GetMedicalAssistanceByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, medicalAssistanceId);
-                return data == null
-                    ? Json(new { success = false, message = "Medical Assistance not found" })
-                    : Json(new { success = true, data });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching Medical Assistance by ID");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveMedicalAssistance([FromBody] SaveMedicalAssistanceViewModel model)
-        {
-            if (model == null || !ModelState.IsValid)
-                return Json(new { success = false, message = "Invalid request data" });
-
-            var validationResult = ValidateCompanyAndUserId(model.companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null) return validationResult;
-
-            try
-            {
-                var medicalAssistanceToSave = new Ser_MedicalAssistance
-                {
-                    MedicalAssistanceId = model.medicalAssistance.MedicalAssistanceId,
-                    CompanyId = companyIdShort,
-                    JobOrderId = model.medicalAssistance.JobOrderId,
-                    JobOrderNo = model.medicalAssistance.JobOrderNo ?? string.Empty,
-                    TaskId = model.medicalAssistance.TaskId,
-                    Remarks = model.medicalAssistance.Remarks?.Trim() ?? string.Empty,
-                    CreateById = parsedUserId.Value,
-                    CreateDate = DateTime.Now,
-                    EditById = parsedUserId.Value,
-                    EditDate = DateTime.Now,
-                    EditVersion = 0
-                };
-
-                var result = await _jobTaskService.SaveMedicalAssistanceAsync(companyIdShort, parsedUserId.Value, medicalAssistanceToSave);
-                return Json(new { success = true, message = "Medical Assistance saved successfully", data = result });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error saving Medical Assistance");
-                return Json(new { success = false, message = "An error occurred" });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteMedicalAssistance(Int64 jobOrderId, Int64 medicalAssistanceId, string companyId)
-        {
-            if (jobOrderId <= 0)
-            {
-                _logger.LogWarning("Delete failed: Invalid Medical Assistance ID {JobOrderId}.", jobOrderId);
-                return Json(new { success = false, message = "Invalid Medical Assistance ID." });
-            }
-
-            var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
-            if (validationResult != null)
-            {
-                return validationResult;
-            }
-
-            var permissions = await HasPermission(companyIdShort, parsedUserId.Value, (short)E_Modules.Project, (short)E_Project.Job);
-            if (permissions == null || !permissions.IsDelete)
-            {
-                _logger.LogWarning("Delete failed: User ID {UserId} does not have delete permissions.", parsedUserId.Value);
-                return Json(new { success = false, message = "You do not have permission to delete this Medical Assistance." });
-            }
-
-            try
-            {
-                await _jobTaskService.DeleteMedicalAssistanceAsync(companyIdShort, parsedUserId.Value, jobOrderId, medicalAssistanceId);
-                return Json(new { success = true, message = "Medical Assistance deleted successfully." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while deleting the Medical Assistance. Medical Assistance ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
-                return Json(new { success = false, message = "An error occurred." });
-            }
-        }
-
-        #endregion Medical Assistance
-
         #region Fresh Water Supply
 
         [HttpGet]
@@ -1918,8 +1921,8 @@ namespace AMESWEB.Areas.Project.Controllers
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetFreshWaterListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
-                    return Json(result);
+                    var data = await _jobTaskService.GetFreshWaterListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                    return Json(data);
                 }
                 else
                 {
@@ -1943,8 +1946,8 @@ namespace AMESWEB.Areas.Project.Controllers
 
                 if (parsedUserId.HasValue)
                 {
-                    var result = await _jobTaskService.GetFreshWaterByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, freshWaterId);
-                    return Json(result);
+                    var data = await _jobTaskService.GetFreshWaterByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, freshWaterId);
+                    return Json(data);
                 }
                 else
                 {
@@ -2005,9 +2008,9 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = model.freshWater.EditVersion
                 };
 
-                var result = await _jobTaskService.SaveFreshWaterAsync(companyIdShort, parsedUserId.Value, freshWater);
+                var data = await _jobTaskService.SaveFreshWaterAsync(companyIdShort, parsedUserId.Value, freshWater);
 
-                return Json(result);
+                return Json(data);
             }
             catch (Exception ex)
             {
@@ -2024,8 +2027,8 @@ namespace AMESWEB.Areas.Project.Controllers
                 var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
                 if (validationResult != null) return validationResult;
 
-                var result = await _jobTaskService.DeleteFreshWaterAsync(companyIdShort, parsedUserId.Value, jobOrderId, freshWaterId);
-                return Json(result);
+                var data = await _jobTaskService.DeleteFreshWaterAsync(companyIdShort, parsedUserId.Value, jobOrderId, freshWaterId);
+                return Json(data);
             }
             catch (Exception ex)
             {
@@ -2058,8 +2061,8 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, jobOrderNo, prevJobOrderId, taskId, multipleId);
-                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+                var data = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, jobOrderNo, prevJobOrderId, taskId, multipleId);
+                return Json(new { success = true, message = "Account Type saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -2080,8 +2083,8 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var result = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, jobOrderNo, prevJobOrderId, taskId, multipleId);
-                return Json(new { success = true, message = "Account Type saved successfully", data = result });
+                var data = await _jobOrderService.SaveTaskForwardAsync(companyIdShort, parsedUserId.Value, jobOrderId, jobOrderNo, prevJobOrderId, taskId, multipleId);
+                return Json(new { success = true, message = "Account Type saved successfully", data = data });
             }
             catch (Exception ex)
             {

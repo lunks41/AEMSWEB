@@ -1,6 +1,5 @@
 ﻿<!-- MedicalAssistance Modal -->
-<div class="modal fade" id="addMedicalAssistanceModal" tabindex="-1" aria-labelledby="addMedicalAssistanceModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="addMedicalAssistanceModal" tabindex="-1" aria-labelledby="addMedicalAssistanceModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,107 +7,82 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="medicalAssistanceForm">
+                <!-- Container replacing form tag -->
+                <div id="medicalAssistanceContainer">
+                    <input type="hidden" id="companyId" />
                     <input type="hidden" id="medicalAssistance_jobOrderId" />
+                    <input type="hidden" id="medicalAssistance_jobOrderNo" />
+                    <input type="hidden" id="medicalAssistance_debitNoteId" />
+                    <input type="hidden" id="medicalAssistance_debitNoteNo" />
                     <input type="hidden" id="medicalAssistanceId" />
-
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label"> Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
-                            </div>
+                            <label class="form-label">Service Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="medicalAssistance_serviceDate">
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Gender <span class="text-danger">*</span></label>
-                                <select class="form-select" id="medicalAssistance_chargeId" required>
-                                    <option value="">Select Gender</option>
-                                </select>
-                            </div>
+                            <label for="medicalAssistance_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="medicalAssistance_cmb_charge" style="width: 100%"></select>
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Crew Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="crewName" required>
-                            </div>
+                            <label for="medicalAssistance_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="medicalAssistance_cmb_gl" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Rank <span class="text-danger">*</span></label>
-                                <select class="form-select" id="medicalAssistance_glId" required>
-                                    <option value="">Select Rank</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-mb-4">
-                                <label class="form-label">Nationality <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nationality" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Charge Code <span class="text-danger">*</span></label>
-                                <select class="form-select" id="medicalAssistance_chargeId" required>
-                                    <option value="">Select Charge</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                                <select class="form-select" id="medicalAssistance_glId" required>
-                                    <option value="">Select GL</option>
-                                </select>
-                            </div>
-                        </div>
+                    </div>
 
+                    <div class="row mt-3">
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Clinic Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="hotelName" required>
-                            </div>
+                            <label class="form-label">Doctor Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="medicalAssistance_doctorName">
                         </div>
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Doctor Name</label>
-                                <input type="text" class="form-control" id="transportName">
-                            </div>
+                            <label class="form-label">Clinic Name</label>
+                            <input type="text" class="form-control" id="medicalAssistance_clinicName">
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Admitted Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
-                            </div>
+                            <label class="form-label">Patient Name</label>
+                            <input type="text" class="form-control" id="medicalAssistance_patientName">
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Discharged Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchServiceDate" required>
-                            </div>
-                        </div>
+                    </div>
 
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Number of Patients</label>
+                            <input type="number" class="form-control" id="medicalAssistance_noOfPatients" value="1">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="medicalAssistance_quantity" step="0.01" value="1.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="medicalAssistance_cmb_uom" class="form-label">UOM</label>
+                            <select id="medicalAssistance_cmb_uom" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="medicalAssistance_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="medicalAssistance_cmb_status" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
                         <div class="col-md-4">
-                            <div class="col-mb-6">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                    <!-- Options to be populated -->
-                                </select>
-                            </div>
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="medicalAssistance_totAmt" step="0.01" value="0.00" readonly>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-1">
-                                <label class="form-label">Reason</label>
-                                <textarea class="form-control" id="reason" rows="2"></textarea>
-                            </div>
+                        <div class="col-md-4">
+                            <label class="form-label">GST Amount</label>
+                            <input type="number" class="form-control" id="medicalAssistance_gstAmt" step="0.01" value="0.00" readonly>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-1">
-                                <label class="form-label">Remark</label>
-                                <textarea class="form-control" id="remark" rows="2"></textarea>
-                            </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total After GST</label>
+                            <input type="number" class="form-control" id="medicalAssistance_totAmtAftGst" step="0.01" value="0.00" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="medicalAssistance_remarks" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -116,8 +90,7 @@
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -126,83 +99,335 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="medicalAssistancecreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="medicalAssistancecreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="medicalAssistanceeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="medicalAssistanceeditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="medicalAssistanceeditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    id="btnBankMedicalAssistanceClose" onclick="clearBankMedicalAssistanceForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankMedicalAssistanceEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankMedicalAssistanceClear"
-                    onclick="clearBankMedicalAssistanceForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankMedicalAssistanceSave"
-                    onclick="saveBankMedicalAssistance()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnMedicalAssistanceClear" onclick="clearMedicalAssistanceForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnMedicalAssistanceSave" onclick="saveMedicalAssistance()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    function refreshMedicalAssistanceDropdown() {
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "medicalAssistance_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=7`;
+        bindComboBox(chargeUrl, "medicalAssistance_cmb_charge", "chargeName", "chargeId");
+
+        const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(uomUrl, "medicalAssistance_cmb_uom", "uomName", "uomId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "medicalAssistance_cmb_status", "orderTypeName", "orderTypeId");
+    }
+
     function clearMedicalAssistanceForm() {
-        $('#medicalAssistance_jobOrderId').val('');
         $('#medicalAssistanceId').val('');
+        $('#medicalAssistance_jobOrderId').val('');
+        $('#medicalAssistance_jobOrderNo').val('');
+        $('#medicalAssistance_debitNoteId').val('');
+        $('#medicalAssistance_debitNoteNo').val('');
+
+        $('#medicalAssistance_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#medicalAssistance_cmb_charge').data('kendoComboBox').value('');
+        $('#medicalAssistance_cmb_uom').data('kendoComboBox').value('');
+        $('#medicalAssistance_cmb_status').data('kendoComboBox').value('');
+
+        $('#medicalAssistance_serviceDate').val('');
+        $('#medicalAssistance_doctorName').val('');
+        $('#medicalAssistance_clinicName').val('');
         $('#medicalAssistance_patientName').val('');
-        $('#medicalAssistance_chargeId').val('');
-        $('#medicalAssistance_glId').val('');
-        $('#medicalAssistance_cost').val('');
+        $('#medicalAssistance_noOfPatients').val('1');
+        $('#medicalAssistance_quantity').val('1.00');
+        $('#medicalAssistance_totAmt').val('0.00');
+        $('#medicalAssistance_gstAmt').val('0.00');
+        $('#medicalAssistance_totAmtAftGst').val('0.00');
         $('#medicalAssistance_remarks').val('');
+
+        $('#medicalAssistancecreateBy').text('');
+        $('#medicalAssistancecreateDate').text('');
+        $('#medicalAssistanceeditBy').text('');
+        $('#medicalAssistanceeditDate').text('');
+        $('#medicalAssistanceeditVersion').text('');
+
+        $('#btnMedicalAssistanceClear').show();
+    }
+
+    function setDefaultMedicalAssistanceValues() {
+        // Set current date
+        const today = new Date().toISOString().split('T')[0];
+        $('#medicalAssistance_serviceDate').val(today);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#medicalAssistance_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#medicalAssistance_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first UOM
+        setTimeout(() => {
+            const uomCombo = $('#medicalAssistance_cmb_uom').data('kendoComboBox');
+            if (uomCombo.dataSource.view().length > 0) {
+                uomCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#medicalAssistance_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+    }
+
+    function openMedicalAssistanceModal(jobOrderId, jobOrderNo, medicalAssistanceId, mode) {
+        const $modal = $('#addMedicalAssistanceModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedMedicalAssistanceId = parseInt(medicalAssistanceId, 10);
+        $('#medicalAssistance_jobOrderId').val(jobOrderId);
+        $('#medicalAssistance_jobOrderNo').val(jobOrderNo);
+
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedMedicalAssistanceId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetMedicalAssistanceById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                medicalAssistanceId: parsedMedicalAssistanceId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshMedicalAssistanceDropdown();
+                        clearMedicalAssistanceForm();
+                        populateMedicalAssistanceModalFields(response.data);
+                        $('#addMedicalAssistanceModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            // Add Mode: Clear form and set default values
+            refreshMedicalAssistanceDropdown();
+            clearMedicalAssistanceForm();
+            setDefaultMedicalAssistanceValues();
+           
+            $('#addMedicalAssistanceModal').modal('show');
+        }
+    }
+
+    function populateMedicalAssistanceModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#medicalAssistanceId').val(data.medicalAssistanceId);
+        $('#medicalAssistance_jobOrderId').val(data.jobOrderId);
+        $('#medicalAssistance_jobOrderNo').val(data.jobOrderNo);
+        $('#medicalAssistance_debitNoteId').val(data.debitNoteId);
+        $('#medicalAssistance_debitNoteNo').val(data.debitNoteNo);
+
+        // Set date fields
+        if (data.serviceDate) {
+            const serviceDate = new Date(data.serviceDate).toLocaleDateString('en-CA');
+            $('#medicalAssistance_serviceDate').val(serviceDate);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const chargeCombo = $('#medicalAssistance_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#medicalAssistance_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const uomCombo = $('#medicalAssistance_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        const statusCombo = $('#medicalAssistance_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        // Set other fields
+        $('#medicalAssistance_doctorName').val(data.doctorName);
+        $('#medicalAssistance_clinicName').val(data.clinicName);
+        $('#medicalAssistance_patientName').val(data.patientName);
+        $('#medicalAssistance_noOfPatients').val(data.noOfPatients || 1);
+        $('#medicalAssistance_quantity').val(data.quantity || 1.00);
+        $('#medicalAssistance_totAmt').val(data.totAmt);
+        $('#medicalAssistance_gstAmt').val(data.gstAmt);
+        $('#medicalAssistance_totAmtAftGst').val(data.totAmtAftGst);
+        $('#medicalAssistance_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#medicalAssistancecreateBy').text(data.createBy || "N/A");
+        $('#medicalAssistancecreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#medicalAssistanceeditBy').text(data.editBy || "N/A");
+        $('#medicalAssistanceeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#medicalAssistanceeditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnMedicalAssistanceClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            chargeCombo.enable(false);
+            uomCombo.enable(false);
+            statusCombo.enable(false);
+            glCombo.enable(false);
+            
+            $('input, textarea').not('#btnMedicalAssistanceSave').prop('readonly', true);
+            $('#btnMedicalAssistanceSave').prop('disabled', false);
+        } else {
+            chargeCombo.enable(true);
+            uomCombo.enable(true);
+            statusCombo.enable(true);
+            glCombo.enable(true);
+            
+            $('input, textarea').not('#medicalAssistance_totAmt, #medicalAssistance_gstAmt, #medicalAssistance_totAmtAftGst').prop('readonly', false);
+            $('#btnMedicalAssistanceSave').prop('disabled', false);
+        }
+    }
+
+    function deleteMedicalAssistance(jobOrderId, medicalAssistanceId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteMedicalAssistance", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, medicalAssistanceId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadMedicalAssistanceGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
     }
 
     function saveMedicalAssistance() {
-        const medicalAssistanceData = {
+        let medicalAssistanceData = {
             MedicalAssistanceId: parseInt($('#medicalAssistanceId').val()) || 0,
             JobOrderId: parseInt($('#medicalAssistance_jobOrderId').val()) || 0,
-            PatientName: $('#medicalAssistance_patientName').val(),
-            ChargeId: parseInt($('#medicalAssistance_chargeId').val()) || 0,
-            GLId: parseInt($('#medicalAssistance_glId').val()) || 0,
-            Cost: parseFloat($('#medicalAssistance_cost').val()) || 0,
-            Remarks: $('#medicalAssistance_remarks').val()
+            JobOrderNo: $('#medicalAssistance_jobOrderNo').val() || '',
+            ChargeId: parseInt($('#medicalAssistance_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#medicalAssistance_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            UomId: parseInt($('#medicalAssistance_cmb_uom').data('kendoComboBox').value()) || null,
+            StatusId: parseInt($('#medicalAssistance_cmb_status').data('kendoComboBox').value()) || 0,
+            
+            ServiceDate: $('#medicalAssistance_serviceDate').val() || null,
+            DoctorName: $('#medicalAssistance_doctorName').val() || '',
+            ClinicName: $('#medicalAssistance_clinicName').val() || '',
+            PatientName: $('#medicalAssistance_patientName').val() || '',
+            NoOfPatients: parseInt($('#medicalAssistance_noOfPatients').val()) || 1,
+            Quantity: parseFloat($('#medicalAssistance_quantity').val()) || 1,
+            
+            TotAmt: parseFloat($('#medicalAssistance_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#medicalAssistance_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#medicalAssistance_totAmtAftGst').val()) || 0,
+            Remarks: $('#medicalAssistance_remarks').val() || '',
+            
+            DebitNoteId: parseInt($('#medicalAssistance_debitNoteId').val()) || null,
+            DebitNoteNo: $('#medicalAssistance_debitNoteNo').val() || '',
+            TaskId: 7, // Assuming TaskId 7 is for Medical Assistance
         };
 
         $.ajax({
             url: '@Url.Action("SaveMedicalAssistance", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(medicalAssistanceData),
-            contentType: 'application/json',
+            type: "POST",
+            data: JSON.stringify({ medicalAssistance: medicalAssistanceData, companyId }),
+            contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    alert('Medical Assistance saved successfully!');
+                    initializeMedicalAssistanceGrid();
                     clearMedicalAssistanceForm();
                     $('#addMedicalAssistanceModal').modal('hide');
                 } else {
-                    alert(response.message || 'Failed to save medical assistance.');
+                    alert(response.message || "Failed to save medical assistance record.");
                 }
             },
-            error: function () {
-                alert('An error occurred while saving the medical assistance.');
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
             }
         });
     }
+
+    // Calculate total amounts when quantity changes
+    $('#medicalAssistance_quantity').on('change', function() {
+        calculateMedicalAssistanceAmount();
+    });
+
+    function calculateMedicalAssistanceAmount() {
+        const quantity = parseFloat($('#medicalAssistance_quantity').val()) || 0;
+        const noOfPatients = parseInt($('#medicalAssistance_noOfPatients').val()) || 1;
+        // You would typically have a rate here to multiply by quantity and number of patients
+        const rate = 1.0; // Default rate, adjust as needed
+        const totAmt = quantity * rate * noOfPatients;
+        const gstRate = 0.07; // Assuming 7% GST
+        const gstAmt = totAmt * gstRate;
+        const totAmtAftGst = totAmt + gstAmt;
+        
+        $('#medicalAssistance_totAmt').val(totAmt.toFixed(2));
+        $('#medicalAssistance_gstAmt').val(gstAmt.toFixed(2));
+        $('#medicalAssistance_totAmtAftGst').val(totAmtAftGst.toFixed(2));
+    }
+
+    $('#medicalAssistance_noOfPatients').on('change', function() {
+        calculateMedicalAssistanceAmount();
+    });
 </script>

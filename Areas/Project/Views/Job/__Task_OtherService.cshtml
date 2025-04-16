@@ -1,6 +1,5 @@
 ﻿<!-- OtherService Modal -->
-<div class="modal fade" id="addOtherServiceModal" tabindex="-1" aria-labelledby="addOtherServiceModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="addOtherServiceModal" tabindex="-1" aria-labelledby="addOtherServiceModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,68 +7,82 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="otherServiceForm">
+                <!-- Container replacing form tag -->
+                <div id="otherServiceContainer">
+                    <input type="hidden" id="companyId" />
                     <input type="hidden" id="otherService_jobOrderId" />
+                    <input type="hidden" id="otherService_jobOrderNo" />
+                    <input type="hidden" id="otherService_debitNoteId" />
+                    <input type="hidden" id="otherService_debitNoteNo" />
                     <input type="hidden" id="otherServiceId" />
-
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Service Provider</label>
-                                <input type="text" class="form-control" id="landingItemName">
-                            </div>
+                            <label class="form-label">Service Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="otherService_serviceDate">
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Other Service Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="landingItemDate" required>
-                            </div>
+                            <label for="otherService_cmb_supplier" class="form-label">Supplier <span class="text-danger">*</span></label>
+                            <input type="text" id="otherService_cmb_supplier" />
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Service Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="otherService_serviceName">
+                        </div>
+                    </div>
 
+                    <div class="row mt-3">
                         <div class="col-md-4">
+                            <label for="otherService_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="otherService_cmb_charge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="otherService_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="otherService_cmb_gl" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="otherService_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="otherService_cmb_status" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="otherService_quantity" step="0.01"
-                                value="0.00" required>
+                            <input type="number" class="form-control" id="otherService_quantity" step="0.01" value="1.00">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">UOM <span class="text-danger">*</span></label>
-                            <select class="form-select" id="otherService_glId" required>
-                                <option value="">Select UOM</option>
-                            </select>
+                        <div class="col-md-3">
+                            <label for="otherService_cmb_uom" class="form-label">UOM</label>
+                            <select id="otherService_cmb_uom" style="width: 100%"></select>
                         </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Rate</label>
+                            <input type="number" class="form-control" id="otherService_rate" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Currency</label>
+                            <select id="otherService_cmb_currency" style="width: 100%"></select>
+                        </div>
+                    </div>
 
+                    <div class="row mt-3">
                         <div class="col-md-4">
-                            <label class="form-label">Charge Code</label>
-                            <select class="form-select" id="otherService_chargeId">
-                                <option value="">Select Charge</option>
-                            </select>
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="otherService_totAmt" step="0.01" value="0.00" readonly>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select class="form-select" id="otherService_glId" required>
-                                <option value="">Select GL</option>
-                            </select>
+                            <label class="form-label">GST Amount</label>
+                            <input type="number" class="form-control" id="otherService_gstAmt" step="0.01" value="0.00" readonly>
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total After GST</label>
+                            <input type="number" class="form-control" id="otherService_totAmtAftGst" step="0.01" value="0.00" readonly>
+                        </div>
+                    </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                        </div>
-                        <div class="col-md-4">
-                        </div>
-
-
-                        <div class="col-md-6">
-                            <div class="mb-1">
-                                <label class="form-label">Remark</label>
-                                <textarea class="form-control" id="remark" rows="2"></textarea>
-                            </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="otherService_remarks" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -77,8 +90,7 @@
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -87,39 +99,35 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="otherServicecreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="otherServicecreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="otherServiceeditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="otherServiceeditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="otherServiceeditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankOtherServiceClose"
-                    onclick="clearBankOtherServiceForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankOtherServiceEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankOtherServiceClear"
-                    onclick="clearBankOtherServiceForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankOtherServiceSave"
-                    onclick="saveBankOtherService()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnOtherServiceClear" onclick="clearOtherServiceForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnOtherServiceSave" onclick="saveOtherService()">Save</button>
             </div>
         </div>
     </div>
@@ -127,51 +135,331 @@
 
 <script>
     function refreshOtherServiceDropdown() {
-        // Add dropdown binding logic specific to Other Service
+        const supplierUrl = '@Url.Action("GetSupplierLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const suppliercolumnsProperties = [
+            { field: 'supplierCode', title: 'Code', width: 100 },
+            { field: 'supplierName', title: 'Name', width: 200 }
+        ];
+        const supplierfilterFields = ['supplierCode', 'supplierName'];
+        bindMultiColumnComboBox(supplierUrl, "otherService_cmb_supplier", "supplierName", "supplierId", suppliercolumnsProperties, supplierfilterFields);
+
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "otherService_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=6`;
+        bindComboBox(chargeUrl, "otherService_cmb_charge", "chargeName", "chargeId");
+
+        const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(uomUrl, "otherService_cmb_uom", "uomName", "uomId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "otherService_cmb_status", "orderTypeName", "orderTypeId");
+
+        const currencyUrl = '@Url.Action("GetCurrencyLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(currencyUrl, "otherService_cmb_currency", "currencyCode", "currencyId");
     }
 
     function clearOtherServiceForm() {
-        $('#otherService_jobOrderId').val('');
         $('#otherServiceId').val('');
-        $('#otherService_quantity').val('');
-        $('#otherService_chargeId').val('');
-        $('#otherService_glId').val('');
-        $('#otherService_weight').val('');
+        $('#otherService_jobOrderId').val('');
+        $('#otherService_jobOrderNo').val('');
+        $('#otherService_debitNoteId').val('');
+        $('#otherService_debitNoteNo').val('');
+
+        $('#otherService_cmb_supplier').data('kendoMultiColumnComboBox').value('');
+        $('#otherService_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#otherService_cmb_charge').data('kendoComboBox').value('');
+        $('#otherService_cmb_uom').data('kendoComboBox').value('');
+        $('#otherService_cmb_status').data('kendoComboBox').value('');
+        $('#otherService_cmb_currency').data('kendoComboBox').value('');
+
+        $('#otherService_serviceDate').val('');
+        $('#otherService_serviceName').val('');
+        $('#otherService_quantity').val('1.00');
+        $('#otherService_rate').val('0.00');
+        $('#otherService_totAmt').val('0.00');
+        $('#otherService_gstAmt').val('0.00');
+        $('#otherService_totAmtAftGst').val('0.00');
         $('#otherService_remarks').val('');
+
+        $('#otherServicecreateBy').text('');
+        $('#otherServicecreateDate').text('');
+        $('#otherServiceeditBy').text('');
+        $('#otherServiceeditDate').text('');
+        $('#otherServiceeditVersion').text('');
+
+        $('#btnOtherServiceClear').show();
     }
 
-    function openOtherServiceModal(serviceId, mode) {
-        // Add modal opening logic specific to Other Service
+    function setDefaultOtherServiceValues() {
+        // Set current date
+        const today = new Date().toISOString().split('T')[0];
+        $('#otherService_serviceDate').val(today);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#otherService_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#otherService_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first UOM
+        setTimeout(() => {
+            const uomCombo = $('#otherService_cmb_uom').data('kendoComboBox');
+            if (uomCombo.dataSource.view().length > 0) {
+                uomCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#otherService_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+
+        // Set default currency
+        setTimeout(() => {
+            const currencyCombo = $('#otherService_cmb_currency').data('kendoComboBox');
+            const sgdItem = currencyCombo.dataSource.data().find(item =>
+                item.currencyCode.toUpperCase() === "SGD"
+            );
+            if (sgdItem) {
+                currencyCombo.value(sgdItem.currencyId);
+            } else if (currencyCombo.dataSource.view().length > 0) {
+                currencyCombo.select(0);
+            }
+        }, 100);
+    }
+
+    function openOtherServiceModal(jobOrderId, jobOrderNo, otherServiceId, mode) {
+        const $modal = $('#addOtherServiceModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedOtherServiceId = parseInt(otherServiceId, 10);
+        $('#otherService_jobOrderId').val(jobOrderId);
+        $('#otherService_jobOrderNo').val(jobOrderNo);
+
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedOtherServiceId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetOtherServiceById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                otherServiceId: parsedOtherServiceId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshOtherServiceDropdown();
+                        clearOtherServiceForm();
+                        populateOtherServiceModalFields(response.data);
+                        $('#addOtherServiceModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            // Add Mode: Clear form and set default values
+            refreshOtherServiceDropdown();
+            clearOtherServiceForm();
+            setDefaultOtherServiceValues();
+           
+            $('#addOtherServiceModal').modal('show');
+        }
+    }
+
+    function populateOtherServiceModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#otherServiceId').val(data.otherServiceId);
+        $('#otherService_jobOrderId').val(data.jobOrderId);
+        $('#otherService_jobOrderNo').val(data.jobOrderNo);
+        $('#otherService_debitNoteId').val(data.debitNoteId);
+        $('#otherService_debitNoteNo').val(data.debitNoteNo);
+
+        // Set date fields
+        if (data.serviceDate) {
+            const serviceDate = new Date(data.serviceDate).toLocaleDateString('en-CA');
+            $('#otherService_serviceDate').val(serviceDate);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const supplierCombo = $('#otherService_cmb_supplier').data('kendoMultiColumnComboBox');
+        supplierCombo.value(data.supplierId > 0 ? data.supplierId : '');
+        supplierCombo.one('dataBound', function () {
+            supplierCombo.value(data.supplierId > 0 ? data.supplierId : '');
+        });
+
+        const chargeCombo = $('#otherService_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#otherService_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const uomCombo = $('#otherService_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        const statusCombo = $('#otherService_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        const currencyCombo = $('#otherService_cmb_currency').data('kendoComboBox');
+        currencyCombo.value(data.currencyId > 0 ? data.currencyId : '');
+        currencyCombo.one('dataBound', function () {
+            currencyCombo.value(data.currencyId > 0 ? data.currencyId : '');
+        });
+
+        // Set other fields
+        $('#otherService_serviceName').val(data.serviceName);
+        $('#otherService_quantity').val(data.quantity || 1.00);
+        $('#otherService_rate').val(data.rate || 0.00);
+        $('#otherService_totAmt').val(data.totAmt);
+        $('#otherService_gstAmt').val(data.gstAmt);
+        $('#otherService_totAmtAftGst').val(data.totAmtAftGst);
+        $('#otherService_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#otherServicecreateBy').text(data.createBy || "N/A");
+        $('#otherServicecreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#otherServiceeditBy').text(data.editBy || "N/A");
+        $('#otherServiceeditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#otherServiceeditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnOtherServiceClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            supplierCombo.enable(false);
+            chargeCombo.enable(false);
+            uomCombo.enable(false);
+            statusCombo.enable(false);
+            glCombo.enable(false);
+            currencyCombo.enable(false);
+            
+            $('input, textarea').not('#btnOtherServiceSave').prop('readonly', true);
+            $('#btnOtherServiceSave').prop('disabled', false);
+        } else {
+            supplierCombo.enable(true);
+            chargeCombo.enable(true);
+            uomCombo.enable(true);
+            statusCombo.enable(true);
+            glCombo.enable(true);
+            currencyCombo.enable(true);
+            
+            $('input, textarea').not('#otherService_totAmt, #otherService_gstAmt, #otherService_totAmtAftGst').prop('readonly', false);
+            $('#btnOtherServiceSave').prop('disabled', false);
+        }
+    }
+
+    function deleteOtherService(jobOrderId, otherServiceId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteOtherService", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, otherServiceId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadOtherServiceGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
     }
 
     function saveOtherService() {
-        const otherServiceData = {
+        let otherServiceData = {
             OtherServiceId: parseInt($('#otherServiceId').val()) || 0,
             JobOrderId: parseInt($('#otherService_jobOrderId').val()) || 0,
-            Quantity: parseFloat($('#otherService_quantity').val()) || 0,
-            ChargeId: parseInt($('#otherService_chargeId').val()) || 0,
-            GLId: parseInt($('#otherService_glId').val()) || 0,
-            Weight: parseFloat($('#otherService_weight').val()) || 0,
-            Remarks: $('#otherService_remarks').val()
+            JobOrderNo: $('#otherService_jobOrderNo').val() || '',
+            SupplierId: parseInt($('#otherService_cmb_supplier').data('kendoMultiColumnComboBox').value()) || 0,
+            ChargeId: parseInt($('#otherService_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#otherService_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            UomId: parseInt($('#otherService_cmb_uom').data('kendoComboBox').value()) || null,
+            StatusId: parseInt($('#otherService_cmb_status').data('kendoComboBox').value()) || 0,
+            CurrencyId: parseInt($('#otherService_cmb_currency').data('kendoComboBox').value()) || null,
+            
+            ServiceDate: $('#otherService_serviceDate').val() || null,
+            ServiceName: $('#otherService_serviceName').val() || '',
+            Quantity: parseFloat($('#otherService_quantity').val()) || 1,
+            Rate: parseFloat($('#otherService_rate').val()) || 0,
+            
+            TotAmt: parseFloat($('#otherService_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#otherService_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#otherService_totAmtAftGst').val()) || 0,
+            Remarks: $('#otherService_remarks').val() || '',
+            
+            DebitNoteId: parseInt($('#otherService_debitNoteId').val()) || null,
+            DebitNoteNo: $('#otherService_debitNoteNo').val() || '',
+            TaskId: 6, // Assuming TaskId 6 is for Other Service
         };
 
         $.ajax({
             url: '@Url.Action("SaveOtherService", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(otherServiceData),
-            contentType: 'application/json',
+            type: "POST",
+            data: JSON.stringify({ otherService: otherServiceData, companyId }),
+            contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    alert('Other Service saved successfully!');
+                    initializeOtherServiceGrid();
                     clearOtherServiceForm();
                     $('#addOtherServiceModal').modal('hide');
                 } else {
-                    alert(response.message || 'Failed to save other service.');
+                    alert(response.message || "Failed to save other service record.");
                 }
             },
-            error: function () {
-                alert('An error occurred while saving the other service.');
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
             }
         });
+    }
+
+    // Calculate total amounts when quantity or rate changes
+    $('#otherService_quantity, #otherService_rate').on('change', function() {
+        calculateOtherServiceAmount();
+    });
+
+    function calculateOtherServiceAmount() {
+        const quantity = parseFloat($('#otherService_quantity').val()) || 0;
+        const rate = parseFloat($('#otherService_rate').val()) || 0;
+        const totAmt = quantity * rate;
+        const gstRate = 0.07; // Assuming 7% GST
+        const gstAmt = totAmt * gstRate;
+        const totAmtAftGst = totAmt + gstAmt;
+        
+        $('#otherService_totAmt').val(totAmt.toFixed(2));
+        $('#otherService_gstAmt').val(gstAmt.toFixed(2));
+        $('#otherService_totAmtAftGst').val(totAmtAftGst.toFixed(2));
     }
 </script>

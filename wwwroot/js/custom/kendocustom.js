@@ -154,7 +154,7 @@ function initializeKendoTreeList(treeListId, url, params, columns, height = 600)
 function bindAutoComplete(url, dropdownId, textField) {
 
     if ($("#" + dropdownId).data("kendoAutoComplete")) {
-        debugger;
+        
         $("#" + dropdownId).siblings(".k-clear-value").remove();
         $("#" + dropdownId).data("kendoAutoComplete").destroy();
     }
@@ -203,10 +203,10 @@ function bindAutoComplete(url, dropdownId, textField) {
 }
 function bindComboBox(url, dropdownId, textField, valueField) {
     try {
-        debugger;
+        
         // Cleanup previous instances
         if ($("#" + dropdownId).data("kendoComboBox")) {
-            debugger;
+            
             $("#" + dropdownId).siblings(".k-clear-value").remove();
             $("#" + dropdownId).data("kendoComboBox").destroy();
         }
@@ -221,7 +221,7 @@ function bindComboBox(url, dropdownId, textField, valueField) {
             dataType: "json",
             success: function (response) {
                 try {
-                    debugger;
+                    
                     const data = typeof response === "string" ? JSON.parse(response) : response;
                     // Initialize Kendo ComboBox
                     $("#" + dropdownId).kendoComboBox({
@@ -294,7 +294,7 @@ function bindComboBox(url, dropdownId, textField, valueField) {
 function bindMultiColumnComboBox(url, dropdownId, textField, valueField, columnsProperties, filterFields) {
 
     if ($("#" + dropdownId).data("kendoMultiColumnComboBox")) {
-        debugger;
+        
         $("#" + dropdownId).siblings(".k-clear-value").remove();
         $("#" + dropdownId).data("kendoMultiColumnComboBox").destroy();
     }

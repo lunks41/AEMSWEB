@@ -338,7 +338,7 @@
                                 <div class="tab-pane fade" id="launch-services">
                                     <!-- Button Group for Launch Services (adjust as needed) -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add Port Expense</button>
+                                        <button id="btnAddLaunchService" onclick="openChildModal('LaunchService')" class="btn btn-primary me-2">Add LaunchService</button>
                                         <button id="btnCreateDebitNoteLaunchService" onclick="openChildDebitNoteModal('LaunchService')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
                                         <button id="btnTaskForwardLaunchService" onclick="openChildTaskForwardModal('LaunchService',2)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateLaunchService" onclick="openChildBulkUpdateModal('LaunchService',2)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -360,10 +360,10 @@
                                 <div class="tab-pane fade" id="equipments-used">
                                     <!-- Button Group for Equipments Used -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentUsed')" class="btn btn-primary me-2">Add Port Expense</button>
-                                        <button id="btnCreateDebitNoteEquipmentUsed" onclick="openChildDebitNoteModal('EquipmentUsed')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
-                                        <button id="btnTaskForwardEquipmentUsed" onclick="openChildTaskForwardModal('EquipmentUsed',3)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateEquipmentUsed" onclick="openChildBulkUpdateModal('EquipmentUsed',3)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddEquipmentUsed" onclick="openChildModal('EquipmentsUsed')" class="btn btn-primary me-2">Add Equipments Used</button>
+                                        <button id="btnCreateDebitNoteEquipmentUsed" onclick="openChildDebitNoteModal('EquipmentsUsed')" class="btn btn-secondary me-2" disabled>Create DebitNote</button>
+                                        <button id="btnTaskForwardEquipmentUsed" onclick="openChildTaskForwardModal('EquipmentsUsed',3)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateEquipmentUsed" onclick="openChildBulkUpdateModal('EquipmentsUsed',3)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
@@ -758,7 +758,7 @@
     }
 
     function openpurchaseExpenseModal(jobOrderId, jobOrderNo, portExpenseId, taskId) {
-        debugger;
+        
         if (parseInt(jobOrderId) && parseInt(portExpenseId)) {
             const modalId = `#viewPurchaseModal`;
             const modalElement = $(modalId);
@@ -792,11 +792,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelectedPortExpense(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 
@@ -867,7 +867,7 @@
         console.log("Updated mulid:", mulid);
 
         // Call function to update button states
-        updateButtonStates();
+        updateButtonPortExpenseStates();
     }
 
     function toggleSelectAllPortExpense(headerCheckbox) {
@@ -890,10 +890,10 @@
         console.log("Final mulid after toggleSelectAll:", mulid);
 
         // Call function to update button states
-        updateButtonStates();
+        updateButtonPortExpenseStates();
     }
 
-    function updateButtonStates() {
+    function updateButtonPortExpenseStates() {
         // Check if any .selectDebitNote checkbox is selected
         let anySelected = document.querySelectorAll(".selectDebitNote:checked").length > 0;
 
@@ -910,7 +910,7 @@
 
     // ================== LAUNCH SERVICES GRID ================== //
     function initializeLaunchServicesGrid() {
-        debugger;
+        
         let searchString = "";
         let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
@@ -930,11 +930,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelectedLaunchServices(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'view')">
      <i class="material-symbols-outlined text-primary">visibility</i>
  </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'edit')">
      <i class="material-symbols-outlined text-warning" >edit</i>
  </button>`;
 
@@ -1003,7 +1003,7 @@
         console.log("Updated mulid:", mulid);
 
         // Call function to update button states
-        updateButtonStates();
+        updateButtonLaunchServicesStates();
     }
 
     function toggleSelectAllLaunchServices(headerCheckbox) {
@@ -1026,10 +1026,10 @@
         console.log("Final mulid after toggleSelectAll:", mulid);
 
         // Call function to update button states
-        updateButtonStates();
+        updateButtonLaunchServicesStates();
     }
 
-    function updateButtonStates() {
+    function updateButtonLaunchServicesStates() {
         // Check if any .selectDebitNote checkbox is selected
         let anySelected = document.querySelectorAll(".selectDebitNote:checked").length > 0;
 
@@ -1056,7 +1056,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
@@ -1065,11 +1065,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i>
 </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
     <i class="material-symbols-outlined text-warning" >edit</i>
 </button>`;
 
@@ -1122,7 +1122,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1170,7 +1170,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1218,7 +1218,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1266,7 +1266,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1323,11 +1323,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectConsignmentImport" ${commonStyle} data-consignmentImportId="${dataItem.consignmentImportId}"  onclick="updateSelectedConsignmentImport(this, '${dataItem.jobOrderId}','${dataItem.consignmentImportId}')" />`;
 
                         // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentImportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentImportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentImportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentImportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentImportId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 
@@ -1444,11 +1444,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectConsignmentExport" ${commonStyle} data-consignmentExportId="${dataItem.consignmentExportId}"  onclick="updateSelectedConsignmentExport(this, '${dataItem.jobOrderId}','${dataItem.consignmentExportId}')" />`;
 
                         // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentExportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentExportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentExportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openConsignmentExportModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.consignmentExportId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 
@@ -1556,7 +1556,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1604,7 +1604,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1652,7 +1652,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1709,11 +1709,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectTechniciansSurveyors" ${commonStyle} data-technicianSurveyorId="${dataItem.technicianSurveyorId}"  onclick="updateSelectedTechniciansSurveyors(this, '${dataItem.jobOrderId}','${dataItem.technicianSurveyorId}')" />`;
 
                         // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openTechniciansSurveyorsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openTechniciansSurveyorsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openTechniciansSurveyorsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openTechniciansSurveyorsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 
@@ -1830,7 +1830,7 @@
             let columns = [
                 {
                     title: "Actions",
-                    width: "100px",
+                    width: "200px",
                     template: function (dataItem) {
                         let buttons = `<button class="ps-0 border-0 bg-transparent" onclick="openPortExpenseModal('${dataItem.jobOrderId}','${dataItem.portExpenseId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i></button>`;
@@ -1887,11 +1887,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectLandingItems" ${commonStyle} data-landingItemId="${dataItem.landingItemId}"  onclick="updateSelectedLandingItems(this, '${dataItem.jobOrderId}','${dataItem.landingItemId}')" />`;
 
                         // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLandingItemsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLandingItemsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLandingItemsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLandingItemsModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.landingItemId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 
@@ -2019,11 +2019,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectOtherService" ${commonStyle} data-otherServiceId="${dataItem.otherServiceId}"  onclick="updateSelectedOtherService(this, '${dataItem.jobOrderId}','${dataItem.otherServiceId}')" />`;
 
                         // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openOtherServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openOtherServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openOtherServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openOtherServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.otherServiceId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 
@@ -2138,11 +2138,11 @@
                         let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectAgencyRemuneration" ${commonStyle} data-agencyRemunerationId="${dataItem.agencyRemunerationId}"  onclick="updateSelectedAgencyRemuneration(this, '${dataItem.jobOrderId}','${dataItem.agencyRemunerationId}')" />`;
 
                         // Action buttons with common style
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openAgencyRemunerationModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}','${dataItem.debitNoteId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openAgencyRemunerationModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}', 'view')">
         <i class="material-symbols-outlined text-primary">visibility</i>
     </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openAgencyRemunerationModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}','${dataItem.debitNoteId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openAgencyRemunerationModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.agencyRemunerationId}', 'edit')">
         <i class="material-symbols-outlined text-warning" >edit</i>
     </button>`;
 

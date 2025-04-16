@@ -163,53 +163,459 @@
     </div>
 </div>
 
+<!-- LandingItems Modal -->
+<div class="modal fade" id="addLandingItemsModal" tabindex="-1" aria-labelledby="addLandingItemsModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLandingItemsModalLabel">Landing Items</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Container replacing form tag -->
+                <div id="landingItemsContainer">
+                    <input type="hidden" id="companyId" />
+                    <input type="hidden" id="landingItems_jobOrderId" />
+                    <input type="hidden" id="landingItems_jobOrderNo" />
+                    <input type="hidden" id="landingItems_debitNoteId" />
+                    <input type="hidden" id="landingItems_debitNoteNo" />
+                    <input type="hidden" id="landingItemId" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Landing Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="landingItems_date">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Item Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="landingItems_itemName">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" id="landingItems_locationName">
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="landingItems_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="landingItems_cmb_charge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="landingItems_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="landingItems_cmb_gl" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="landingItems_cmb_forwardExport" class="form-label">Forward Export</label>
+                            <select id="landingItems_cmb_forwardExport" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="landingItems_quantity" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Weight</label>
+                            <input type="number" class="form-control" id="landingItems_weight" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="landingItems_cmb_uom" class="form-label">UOM</label>
+                            <select id="landingItems_cmb_uom" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="landingItems_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="landingItems_cmb_status" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="landingItems_isDepositRefundReceived">
+                                <label class="form-check-label" for="landingItems_isDepositRefundReceived">
+                                    Deposit Refund Received
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="landingItems_totAmt" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">GST Amount</label>
+                            <input type="number" class="form-control" id="landingItems_gstAmt" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total After GST</label>
+                            <input type="number" class="form-control" id="landingItems_totAmtAftGst" step="0.01" value="0.00" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="landingItems_remarks" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="landingItemscreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="landingItemscreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="landingItemseditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="landingItemseditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="landingItemseditVersion" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End of container -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnLandingItemsClear" onclick="clearLandingItemsForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnLandingItemsSave" onclick="saveLandingItems()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function refreshLandingItemsDropdown() {
-        // Add dropdown binding logic specific to Landing Items
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "landingItems_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=3`;
+        bindComboBox(chargeUrl, "landingItems_cmb_charge", "chargeName", "chargeId");
+
+        const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(uomUrl, "landingItems_cmb_uom", "uomName", "uomId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "landingItems_cmb_status", "orderTypeName", "orderTypeId");
+
+        const forwardExportUrl = `@Url.Action("GetForwardExportLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
+        bindComboBox(forwardExportUrl, "landingItems_cmb_forwardExport", "forwardExportName", "forwardExportId");
     }
 
     function clearLandingItemsForm() {
+        $('#landingItemId').val('');
         $('#landingItems_jobOrderId').val('');
-        $('#landingItemsId').val('');
-        $('#landingItems_quantity').val('');
-        $('#landingItems_chargeId').val('');
-        $('#landingItems_glId').val('');
-        $('#landingItems_weight').val('');
+        $('#landingItems_jobOrderNo').val('');
+        $('#landingItems_debitNoteId').val('');
+        $('#landingItems_debitNoteNo').val('');
+
+        $('#landingItems_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#landingItems_cmb_charge').data('kendoComboBox').value('');
+        $('#landingItems_cmb_uom').data('kendoComboBox').value('');
+        $('#landingItems_cmb_status').data('kendoComboBox').value('');
+        $('#landingItems_cmb_forwardExport').data('kendoComboBox').value('');
+
+        $('#landingItems_date').val('');
+        $('#landingItems_itemName').val('');
+        $('#landingItems_locationName').val('');
+        $('#landingItems_quantity').val('0.00');
+        $('#landingItems_weight').val('0.00');
+        $('#landingItems_isDepositRefundReceived').prop('checked', false);
+        $('#landingItems_totAmt').val('0.00');
+        $('#landingItems_gstAmt').val('0.00');
+        $('#landingItems_totAmtAftGst').val('0.00');
         $('#landingItems_remarks').val('');
+
+        $('#landingItemscreateBy').text('');
+        $('#landingItemscreateDate').text('');
+        $('#landingItemseditBy').text('');
+        $('#landingItemseditDate').text('');
+        $('#landingItemseditVersion').text('');
+
+        $('#btnLandingItemsClear').show();
     }
 
-    function openLandingItemsModal(itemId, mode) {
-        // Add modal opening logic specific to Landing Items
+    function setDefaultLandingItemsValues() {
+        // Set current date
+        const today = new Date().toISOString().split('T')[0];
+        $('#landingItems_date').val(today);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#landingItems_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#landingItems_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first UOM
+        setTimeout(() => {
+            const uomCombo = $('#landingItems_cmb_uom').data('kendoComboBox');
+            if (uomCombo.dataSource.view().length > 0) {
+                uomCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#landingItems_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+    }
+
+    function openLandingItemsModal(jobOrderId, jobOrderNo, landingItemId, mode) {
+        const $modal = $('#addLandingItemsModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedLandingItemId = parseInt(landingItemId, 10);
+        $('#landingItems_jobOrderId').val(jobOrderId);
+        $('#landingItems_jobOrderNo').val(jobOrderNo);
+
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedLandingItemId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetLandingItemById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                landingItemId: parsedLandingItemId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshLandingItemsDropdown();
+                        clearLandingItemsForm();
+                        populateLandingItemsModalFields(response.data);
+                        $('#addLandingItemsModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+            // Add Mode: Clear form and set default values
+            refreshLandingItemsDropdown();
+            clearLandingItemsForm();
+            setDefaultLandingItemsValues();
+           
+            $('#addLandingItemsModal').modal('show');
+        }
+    }
+
+    function populateLandingItemsModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#landingItemId').val(data.landingItemId);
+        $('#landingItems_jobOrderId').val(data.jobOrderId);
+        $('#landingItems_jobOrderNo').val(data.jobOrderNo);
+        $('#landingItems_debitNoteId').val(data.debitNoteId);
+        $('#landingItems_debitNoteNo').val(data.debitNoteNo);
+
+        // Set date fields
+        if (data.landingItemDate) {
+            const landingItemDate = new Date(data.landingItemDate).toLocaleDateString('en-CA');
+            $('#landingItems_date').val(landingItemDate);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const chargeCombo = $('#landingItems_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#landingItems_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const uomCombo = $('#landingItems_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        const statusCombo = $('#landingItems_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        const forwardExportCombo = $('#landingItems_cmb_forwardExport').data('kendoComboBox');
+        forwardExportCombo.value(data.forwardExportId > 0 ? data.forwardExportId : '');
+        forwardExportCombo.one('dataBound', function () {
+            forwardExportCombo.value(data.forwardExportId > 0 ? data.forwardExportId : '');
+        });
+
+        // Set other fields
+        $('#landingItems_itemName').val(data.itemName || data.landingItemName);
+        $('#landingItems_locationName').val(data.locationName || data.location);
+        $('#landingItems_quantity').val(data.quantity || 0.00);
+        $('#landingItems_weight').val(data.weight || 0.00);
+        $('#landingItems_isDepositRefundReceived').prop('checked', data.isDepositRefundReceived);
+        $('#landingItems_totAmt').val(data.totAmt);
+        $('#landingItems_gstAmt').val(data.gstAmt);
+        $('#landingItems_totAmtAftGst').val(data.totAmtAftGst);
+        $('#landingItems_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#landingItemscreateBy').text(data.createBy || "N/A");
+        $('#landingItemscreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#landingItemseditBy').text(data.editBy || "N/A");
+        $('#landingItemseditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#landingItemseditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnLandingItemsClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            chargeCombo.enable(false);
+            uomCombo.enable(false);
+            statusCombo.enable(false);
+            glCombo.enable(false);
+            forwardExportCombo.enable(false);
+            
+            $('input, textarea').not('#btnLandingItemsSave').prop('readonly', true);
+            $('#landingItems_isDepositRefundReceived').prop('disabled', true);
+            $('#btnLandingItemsSave').prop('disabled', false);
+        } else {
+            chargeCombo.enable(true);
+            uomCombo.enable(true);
+            statusCombo.enable(true);
+            glCombo.enable(true);
+            forwardExportCombo.enable(true);
+            
+            $('input, textarea').not('#landingItems_totAmt, #landingItems_gstAmt, #landingItems_totAmtAftGst').prop('readonly', false);
+            $('#landingItems_isDepositRefundReceived').prop('disabled', false);
+            $('#btnLandingItemsSave').prop('disabled', false);
+        }
+    }
+
+    function deleteLandingItem(jobOrderId, landingItemId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteLandingItem", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, landingItemId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadLandingItemsGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
     }
 
     function saveLandingItems() {
-        const landingItemsData = {
-            LandingItemsId: parseInt($('#landingItemsId').val()) || 0,
+        let landingItemsData = {
+            LandingItemId: parseInt($('#landingItemId').val()) || 0,
             JobOrderId: parseInt($('#landingItems_jobOrderId').val()) || 0,
+            JobOrderNo: $('#landingItems_jobOrderNo').val() || '',
+            ChargeId: parseInt($('#landingItems_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#landingItems_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            UomId: parseInt($('#landingItems_cmb_uom').data('kendoComboBox').value()) || null,
+            StatusId: parseInt($('#landingItems_cmb_status').data('kendoComboBox').value()) || 0,
+            ForwardExportId: parseInt($('#landingItems_cmb_forwardExport').data('kendoComboBox').value()) || null,
+            
+            LandingItemDate: $('#landingItems_date').val() || null,
+            LandingItemName: $('#landingItems_itemName').val() || '',
+            ItemName: $('#landingItems_itemName').val() || '',
+            Location: $('#landingItems_locationName').val() || '',
+            LocationName: $('#landingItems_locationName').val() || '',
             Quantity: parseFloat($('#landingItems_quantity').val()) || 0,
-            ChargeId: parseInt($('#landingItems_chargeId').val()) || 0,
-            GLId: parseInt($('#landingItems_glId').val()) || 0,
             Weight: parseFloat($('#landingItems_weight').val()) || 0,
-            Remarks: $('#landingItems_remarks').val()
+            IsDepositRefundReceived: $('#landingItems_isDepositRefundReceived').is(':checked'),
+            
+            TotAmt: parseFloat($('#landingItems_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#landingItems_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#landingItems_totAmtAftGst').val()) || 0,
+            Remarks: $('#landingItems_remarks').val() || '',
+            
+            DebitNoteId: parseInt($('#landingItems_debitNoteId').val()) || null,
+            DebitNoteNo: $('#landingItems_debitNoteNo').val() || '',
+            TaskId: 3, // Assuming TaskId 3 is for Landing Items
         };
 
         $.ajax({
-            url: '@Url.Action("SaveLandingItems", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(landingItemsData),
-            contentType: 'application/json',
+            url: '@Url.Action("SaveLandingItem", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ landingItem: landingItemsData, companyId }),
+            contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    alert('Landing Items saved successfully!');
+                    initializeLandingItemsGrid();
                     clearLandingItemsForm();
                     $('#addLandingItemsModal').modal('hide');
                 } else {
-                    alert(response.message || 'Failed to save landing items.');
+                    alert(response.message || "Failed to save landing item record.");
                 }
             },
-            error: function () {
-                alert('An error occurred while saving the landing items.');
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
             }
         });
+    }
+
+    // Calculate total amounts when quantity changes
+    $('#landingItems_quantity').on('change', function() {
+        calculateLandingItemsAmount();
+    });
+
+    function calculateLandingItemsAmount() {
+        const quantity = parseFloat($('#landingItems_quantity').val()) || 0;
+        // You would typically have a rate here to multiply by quantity
+        const rate = 1.0; // Default rate, adjust as needed
+        const totAmt = quantity * rate;
+        const gstRate = 0.07; // Assuming 7% GST
+        const gstAmt = totAmt * gstRate;
+        const totAmtAftGst = totAmt + gstAmt;
+        
+        $('#landingItems_totAmt').val(totAmt.toFixed(2));
+        $('#landingItems_gstAmt').val(gstAmt.toFixed(2));
+        $('#landingItems_totAmtAftGst').val(totAmtAftGst.toFixed(2));
     }
 </script>

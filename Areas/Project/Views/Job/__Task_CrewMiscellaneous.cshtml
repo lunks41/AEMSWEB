@@ -1,54 +1,57 @@
-﻿<!-- CrewMisc Modal -->
-<div class="modal fade" id="addCrewMiscModal" tabindex="-1" aria-labelledby="addCrewMiscModalLabel" aria-hidden="true">
+﻿<!-- CrewMiscellaneous Modal -->
+<div class="modal fade" id="addCrewMiscellaneousModal" tabindex="-1" aria-labelledby="addCrewMiscellaneousModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCrewMiscModalLabel">Crew Miscellaneous</h5>
+                <h5 class="modal-title" id="addCrewMiscellaneousModalLabel">Crew Miscellaneous</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="crewMiscForm">
+                <!-- Container replacing form tag -->
+                <div id="crewMiscellaneousContainer">
+                    <input type="hidden" id="companyId" />
                     <input type="hidden" id="crewMiscellaneous_jobOrderId" />
+                    <input type="hidden" id="crewMiscellaneous_jobOrderNo" />
+                    <input type="hidden" id="crewMiscellaneous_debitNoteId" />
+                    <input type="hidden" id="crewMiscellaneous_debitNoteNo" />
                     <input type="hidden" id="crewMiscellaneousId" />
-
+                    
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Crew Misc Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="crewMiscellaneous_launchServiceDate"
-                                    required>
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Miscellaneous Description <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="crewMiscellaneous_miscDescription">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Charge Code</label>
-                            <select class="form-select" id="crewMiscellaneous_chargeId">
-                                <option value="">Select Charge</option>
-                            </select>
+                        <div class="col-md-6">
+                            <label for="crewMiscellaneous_cmb_charge" class="form-label">Charge</label>
+                            <select id="crewMiscellaneous_cmb_charge" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select class="form-select" id="crewMiscellaneous_glId" required>
-                                <option value="">Select GL</option>
-                            </select>
+                        <div class="col-md-6">
+                            <label for="crewMiscellaneous_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="crewMiscellaneous_cmb_gl" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="crewMiscellaneous_quantity" step="0.01"
-                                value="0.00" required>
+                            <input type="number" class="form-control" id="crewMiscellaneous_quantity" step="1" value="1">
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="statusId" required>
-                                    <option value="">Select Status</option>
-                                </select>
-                            </div>
+                            <label class="form-label">Amount <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="crewMiscellaneous_miscAmount" step="0.01" value="0.00">
                         </div>
-                        <div class="col-12">
-                            <div class="mb-1">
-                                <label class="form-label">Remark</label>
-                                <textarea class="form-control" id="remark" rows="2"></textarea>
-                            </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="crewMiscellaneous_totAmt" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">GST Amount</label>
+                            <input type="number" class="form-control" id="crewMiscellaneous_gstAmt" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Total After GST</label>
+                            <input type="number" class="form-control" id="crewMiscellaneous_totAmtAftGst" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="crewMiscellaneous_remarks" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -56,8 +59,7 @@
                     <div class="accordion mt-3" id="auditAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#auditCollapse">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
                                     Audit Details
                                 </button>
                             </h2>
@@ -66,39 +68,35 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Created By</label>
-                                            <p id="freshwatercreateBy" class="form-control-plaintext"></p>
+                                            <p id="crewMiscellaneousCreateBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Created Date</label>
-                                            <p id="freshwatercreateDate" class="form-control-plaintext"></p>
+                                            <p id="crewMiscellaneousCreateDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified By</label>
-                                            <p id="freshwatereditBy" class="form-control-plaintext"></p>
+                                            <p id="crewMiscellaneousEditBy" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Modified Date</label>
-                                            <p id="freshwatereditDate" class="form-control-plaintext"></p>
+                                            <p id="crewMiscellaneousEditDate" class="form-control-plaintext"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Edit Version</label>
-                                            <p id="freshwatereditVersion" class="form-control-plaintext"></p>
+                                            <p id="crewMiscellaneousEditVersion" class="form-control-plaintext"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <!-- End of container -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnBankCrewMiscClose"
-                    onclick="clearBankCrewMiscForm()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnBankCrewMiscEdit">Edit</button>
-                <button type="button" class="btn btn-secondary" id="btnBankCrewMiscClear"
-                    onclick="clearBankCrewMiscForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnBankCrewMiscSave"
-                    onclick="saveBankCrewMisc()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnCrewMiscellaneousClear" onclick="clearCrewMiscellaneousForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnCrewMiscellaneousSave" onclick="saveCrewMiscellaneous()">Save</button>
             </div>
         </div>
     </div>
@@ -106,16 +104,64 @@
 
 <script>
     function refreshCrewMiscellaneousDropdown() {
-        // Add dropdown binding logic specific to Crew Miscellaneous
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "crewMiscellaneous_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=5`;
+        bindComboBox(chargeUrl, "crewMiscellaneous_cmb_charge", "chargeName", "chargeId");
     }
 
     function clearCrewMiscellaneousForm() {
-        $('#crewMiscellaneous_jobOrderId').val('');
         $('#crewMiscellaneousId').val('');
-        $('#crewMiscellaneous_launchServiceDate').val('');
-        $('#crewMiscellaneous_chargeId').val('');
-        $('#crewMiscellaneous_glId').val('');
-        $('#crewMiscellaneous_quantity').val('');
+        $('#crewMiscellaneous_jobOrderId').val('');
+        $('#crewMiscellaneous_jobOrderNo').val('');
+        $('#crewMiscellaneous_debitNoteId').val('');
+        $('#crewMiscellaneous_debitNoteNo').val('');
+
+        // Clear dropdowns
+        $('#crewMiscellaneous_cmb_gl').data('kendoMultiColumnComboBox').value('');
+        $('#crewMiscellaneous_cmb_charge').data('kendoComboBox').value('');
+
+        // Clear text inputs
+        $('#crewMiscellaneous_miscDescription').val('');
+        $('#crewMiscellaneous_quantity').val('1');
+        $('#crewMiscellaneous_miscAmount').val('0.00');
+        $('#crewMiscellaneous_totAmt').val('0.00');
+        $('#crewMiscellaneous_gstAmt').val('0.00');
+        $('#crewMiscellaneous_totAmtAftGst').val('0.00');
+        $('#crewMiscellaneous_remarks').val('');
+
+        // Clear audit fields
+        $('#crewMiscellaneousCreateBy').text('');
+        $('#crewMiscellaneousCreateDate').text('');
+        $('#crewMiscellaneousEditBy').text('');
+        $('#crewMiscellaneousEditDate').text('');
+        $('#crewMiscellaneousEditVersion').text('');
+
+        $('#btnCrewMiscellaneousClear').show();
+    }
+
+    function setDefaultCrewMiscellaneousValues() {
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#crewMiscellaneous_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#crewMiscellaneous_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
     }
 
     function openCrewMiscellaneousModal(jobOrderId, jobOrderNo, crewMiscellaneousId, mode) {
@@ -125,8 +171,12 @@
         $('#crewMiscellaneous_jobOrderId').val(jobOrderId);
         $('#crewMiscellaneous_jobOrderNo').val(jobOrderNo);
 
-        if (parsedJobOrderId > 0 && parsedCrewMiscellaneousId > 0) {
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedCrewMiscellaneousId)) {
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
             $.get('@Url.Action("GetCrewMiscellaneousById", "Job", new { area = "Project" })', {
                 jobOrderId: parsedJobOrderId,
                 crewMiscellaneousId: parsedCrewMiscellaneousId,
@@ -142,41 +192,74 @@
                 })
                 .always(() => $modal.find('.modal-overlay').remove());
         } else {
+            // Add Mode: Clear form and set default values
             refreshCrewMiscellaneousDropdown();
             clearCrewMiscellaneousForm();
-            setDefaultDropdownValues();
+            setDefaultCrewMiscellaneousValues();
+           
             $('#addCrewMiscellaneousModal').modal('show');
         }
     }
 
-    function saveCrewMiscellaneous() {
-        const crewMiscellaneousData = {
-            JobOrderId: parseInt($('#crewMiscellaneous_jobOrderId').val()) || 0,
-            CrewMiscellaneousId: parseInt($('#crewMiscellaneousId').val()) || 0,
-            LaunchServiceDate: $('#crewMiscellaneous_launchServiceDate').val(),
-            ChargeId: parseInt($('#crewMiscellaneous_chargeId').val()) || 0,
-            GLId: parseInt($('#crewMiscellaneous_glId').val()) || 0,
-            Quantity: parseFloat($('#crewMiscellaneous_quantity').val()) || 0
-        };
+    function populateCrewMiscellaneousModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#crewMiscellaneousId').val(data.crewMiscellaneousId);
+        $('#crewMiscellaneous_jobOrderId').val(data.jobOrderId);
+        $('#crewMiscellaneous_jobOrderNo').val(data.jobOrderNo);
+        $('#crewMiscellaneous_debitNoteId').val(data.debitNoteId);
+        $('#crewMiscellaneous_debitNoteNo').val(data.debitNoteNo);
 
-        $.ajax({
-            url: '@Url.Action("SaveCrewMiscellaneous", "Job", new { area = "Project" })',
-            type: 'POST',
-            data: JSON.stringify(crewMiscellaneousData),
-            contentType: 'application/json',
-            success: function (response) {
-                if (response.success) {
-                    alert('Crew Miscellaneous saved successfully!');
-                    clearCrewMiscellaneousForm();
-                    $('#addCrewMiscellaneousModal').modal('hide');
-                } else {
-                    alert(response.message || 'Failed to save crew miscellaneous.');
-                }
-            },
-            error: function () {
-                alert('An error occurred while saving the crew miscellaneous.');
-            }
+        // Set combobox values, ensuring they update after data is loaded
+        const chargeCombo = $('#crewMiscellaneous_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
         });
+
+        const glCombo = $('#crewMiscellaneous_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        // Set text fields
+        $('#crewMiscellaneous_miscDescription').val(data.miscDescription);
+        $('#crewMiscellaneous_quantity').val(data.quantity);
+        $('#crewMiscellaneous_miscAmount').val(data.miscAmount);
+        $('#crewMiscellaneous_totAmt').val(data.totAmt);
+        $('#crewMiscellaneous_gstAmt').val(data.gstAmt);
+        $('#crewMiscellaneous_totAmtAftGst').val(data.totAmtAftGst);
+        $('#crewMiscellaneous_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#crewMiscellaneousCreateBy').text(data.createBy || "N/A");
+        $('#crewMiscellaneousCreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#crewMiscellaneousEditBy').text(data.editBy || "N/A");
+        $('#crewMiscellaneousEditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#crewMiscellaneousEditVersion').text(data.editVersion || "0");
+        
+        // Hide clear button in edit mode
+        $('#btnCrewMiscellaneousClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            // Disable dropdowns
+            chargeCombo.enable(false);
+            glCombo.enable(false);
+            
+            // Disable inputs
+            $('#crewMiscellaneous_miscDescription, #crewMiscellaneous_quantity, #crewMiscellaneous_miscAmount, #crewMiscellaneous_remarks').prop('readonly', true);
+            $('#btnCrewMiscellaneousSave').prop('disabled', false);
+        } else {
+            // Enable all controls
+            chargeCombo.enable(true);
+            glCombo.enable(true);
+            
+            // Enable inputs
+            $('#crewMiscellaneous_miscDescription, #crewMiscellaneous_quantity, #crewMiscellaneous_miscAmount, #crewMiscellaneous_remarks').prop('readonly', false);
+            $('#btnCrewMiscellaneousSave').prop('disabled', false);
+        }
     }
 
     function deleteCrewMiscellaneous(jobOrderId, crewMiscellaneousId) {
@@ -195,18 +278,66 @@
         });
     }
 
-    function populateCrewMiscellaneousModalFields(data) {
-        // Populate modal fields with data
-        $('#companyId').val(data.companyId);
-        $('#crewMiscellaneousId').val(data.crewMiscellaneousId);
-        $('#crewMiscellaneous_jobOrderId').val(data.jobOrderId);
-        $('#crewMiscellaneous_jobOrderNo').val(data.jobOrderNo);
-        // ...existing code...
+    function saveCrewMiscellaneous() {
+        let crewMiscellaneousData = {
+            CrewMiscellaneousId: parseInt($('#crewMiscellaneousId').val()) || 0,
+            JobOrderId: parseInt($('#crewMiscellaneous_jobOrderId').val()) || 0,
+            JobOrderNo: $('#crewMiscellaneous_jobOrderNo').val() || '',
+            ChargeId: parseInt($('#crewMiscellaneous_cmb_charge').data('kendoComboBox').value()) || null,
+            GLId: parseInt($('#crewMiscellaneous_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            MiscDescription: $('#crewMiscellaneous_miscDescription').val() || '',
+            Quantity: parseFloat($('#crewMiscellaneous_quantity').val()) || 1,
+            MiscAmount: parseFloat($('#crewMiscellaneous_miscAmount').val()) || 0,
+            TotAmt: parseFloat($('#crewMiscellaneous_totAmt').val()) || 0,
+            GstAmt: parseFloat($('#crewMiscellaneous_gstAmt').val()) || 0,
+            TotAmtAftGst: parseFloat($('#crewMiscellaneous_totAmtAftGst').val()) || 0,
+            Remarks: $('#crewMiscellaneous_remarks').val() || '',
+            DebitNoteId: parseInt($('#crewMiscellaneous_debitNoteId').val()) || null,
+            DebitNoteNo: $('#crewMiscellaneous_debitNoteNo').val() || '',
+            TaskId: 5, // Assuming TaskId 5 is for Crew Miscellaneous
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveCrewMiscellaneous", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ crewMiscellaneous: crewMiscellaneousData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    initializeCrewMiscellaneousGrid();
+                    clearCrewMiscellaneousForm();
+                    $('#addCrewMiscellaneousModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save crew miscellaneous.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
     }
 
-    function setDefaultDropdownValues() {
-        // Set default values for dropdowns
-        $('#crewMiscellaneous_cmb_gl').data('kendoMultiColumnComboBox').value(488);
-        // ...existing code...
+    // Calculate total amounts when amount changes
+    $('#crewMiscellaneous_miscAmount').on('change', function() {
+        calculateCrewMiscellaneousTotals();
+    });
+    
+    // Calculate total amounts when quantity changes
+    $('#crewMiscellaneous_quantity').on('change', function() {
+        calculateCrewMiscellaneousTotals();
+    });
+    
+    function calculateCrewMiscellaneousTotals() {
+        const amount = parseFloat($('#crewMiscellaneous_miscAmount').val()) || 0;
+        const quantity = parseFloat($('#crewMiscellaneous_quantity').val()) || 1;
+        const gstRate = 0.07; // Assuming 7% GST
+        
+        const totAmt = amount * quantity;
+        const gstAmt = totAmt * gstRate;
+        const totAmtAftGst = totAmt + gstAmt;
+        
+        $('#crewMiscellaneous_totAmt').val(totAmt.toFixed(2));
+        $('#crewMiscellaneous_gstAmt').val(gstAmt.toFixed(2));
+        $('#crewMiscellaneous_totAmtAftGst').val(totAmtAftGst.toFixed(2));
     }
 </script>
