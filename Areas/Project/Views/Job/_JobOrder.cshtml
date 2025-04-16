@@ -277,12 +277,12 @@
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button" data-status="ThirdPartySupply">
-                                            <span class="badge bg-danger me-1">0</span> Third Party Supply
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button" data-status="ThirdParty">
+                                            <span class="badge bg-danger me-1">0</span> Third Party 
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button" data-status="FreshWaterSupply">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button" data-status="FreshWater">
                                             <span class="badge bg-info me-1">0</span> Fresh Water
                                         </button>
                                     </li>
@@ -474,17 +474,17 @@
                                     <div id="grid-ConsignmentExport" class="kendo-grid"></div>
                                 </div>
 
-                                <!-- Third Party Supply Tab -->
+                                <!-- Third Party  Tab -->
                                 <div class="tab-pane fade" id="third-party-supply">
-                                    <!-- Button Group for Third Party Supply -->
+                                    <!-- Button Group for Third Party  -->
                                     <div class="mb-3">
-                                        <button id="btnAddThirdPartySupply" onclick="openChildModal('ThirdPartySupply')" class="btn btn-primary me-2">Add Third Party Supply</button>
+                                        <button id="btnAddThirdParty" onclick="openChildModal('ThirdParty')" class="btn btn-primary me-2">Add Third Party </button>
                                         <button id="btnCreateDebitNoteThirdParty" class="btn btn-secondary me-2">Create DebitNote</button>
                                         <button id="btnTaskForwardThirdParty" class="btn btn-info me-2">Task Forward</button>
                                         <button id="btnBulkUpdateThirdParty" class="btn btn-warning">Bulk Update</button>
                                     </div>
-                                    <!-- Grid for Third Party Supply -->
-                                    <div id="grid-ThirdPartySupply" class="kendo-grid"></div>
+                                    <!-- Grid for Third Party  -->
+                                    <div id="grid-ThirdParty" class="kendo-grid"></div>
                                 </div>
 
                                 <!-- Fresh Water Tab -->
@@ -633,8 +633,8 @@
                 $('#serviceTabs [data-status="MedicalAssistance"] .badge').text(counts.medicalAssistance);
                 $('#serviceTabs [data-status="ConsignmentImport"] .badge').text(counts.consignmentImport);
                 $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
-                $('#serviceTabs [data-status="ThirdPartySupply"] .badge').text(counts.thirdPartySupply);
-                $('#serviceTabs [data-status="FreshWaterSupply"] .badge').text(counts.freshWaterSupply);
+                $('#serviceTabs [data-status="ThirdParty"] .badge').text(counts.thirdParty);
+                $('#serviceTabs [data-status="FreshWater"] .badge').text(counts.freshWater);
                 $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
                 $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
                 $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
@@ -1377,52 +1377,6 @@
         }
     }
 
-    function updateSelectedConsignmentImport(checkbox, jobOrderId, consignmentImportId) {
-        if (checkbox.checked) {
-            // Add the consignmentImportId to mulid if checked
-            if (!mulid.includes(consignmentImportId)) {
-                mulid += mulid.length > 0 ? `,${consignmentImportId}` : consignmentImportId;
-            }
-        } else {
-            // Remove the consignmentImportId from mulid if unchecked
-            let idsArray = mulid.split(",").filter(id => id !== consignmentImportId);
-            mulid = idsArray.join(",");
-        }
-        
-        // Call function to update button states
-        updateConsignmentImportButtonStates();
-    }
-
-    function toggleSelectAllConsignmentImport(headerCheckbox) {
-        let checked = headerCheckbox.checked;
-        mulid = ""; // Reset mulid when toggling "Select All"
-
-        document.querySelectorAll(".selectConsignmentImport").forEach(function (checkbox) {
-            checkbox.checked = checked;
-
-            // If checked, add all consignmentImportIds to mulid
-            if (checked) {
-                let consignmentImportId = checkbox.getAttribute("data-consignmentImportId");
-                if (consignmentImportId) {
-                    mulid += mulid.length > 0 ? `,${consignmentImportId}` : consignmentImportId;
-                }
-            }
-        });
-
-        // Call function to update button states
-        updateConsignmentImportButtonStates();
-    }
-
-    function updateConsignmentImportButtonStates() {
-        // Check if any selectConsignmentImport checkbox is selected
-        let anySelected = document.querySelectorAll(".selectConsignmentImport:checked").length > 0;
-
-        // Enable or disable buttons based on selection
-        document.getElementById("btnCreateDebitNoteConsignmentImport").disabled = !anySelected;
-        document.getElementById("btnTaskForwardConsignmentImport").disabled = !anySelected;
-        document.getElementById("btnBulkUpdateConsignmentImport").disabled = !anySelected;
-    }
-
     // ================== CONSIGNMENT EXPORT GRID ================== //
     function initializeConsignmentExportGrid() {
         let searchString = "";
@@ -1498,61 +1452,17 @@
         }
     }
 
-    function updateSelectedConsignmentExport(checkbox, jobOrderId, consignmentExportId) {
-        if (checkbox.checked) {
-            // Add the consignmentExportId to mulid if checked
-            if (!mulid.includes(consignmentExportId)) {
-                mulid += mulid.length > 0 ? `,${consignmentExportId}` : consignmentExportId;
-            }
-        } else {
-            // Remove the consignmentExportId from mulid if unchecked
-            let idsArray = mulid.split(",").filter(id => id !== consignmentExportId);
-            mulid = idsArray.join(",");
-        }
-        
-        // Call function to update button states
-        updateConsignmentExportButtonStates();
-    }
-
-    function toggleSelectAllConsignmentExport(headerCheckbox) {
-        let checked = headerCheckbox.checked;
-        mulid = ""; // Reset mulid when toggling "Select All"
-
-        document.querySelectorAll(".selectConsignmentExport").forEach(function (checkbox) {
-            checkbox.checked = checked;
-
-            // If checked, add all consignmentExportIds to mulid
-            if (checked) {
-                let consignmentExportId = checkbox.getAttribute("data-consignmentExportId");
-                if (consignmentExportId) {
-                    mulid += mulid.length > 0 ? `,${consignmentExportId}` : consignmentExportId;
-                }
-            }
-        });
-
-        // Call function to update button states
-        updateConsignmentExportButtonStates();
-    }
-
-    function updateConsignmentExportButtonStates() {
-        // Check if any selectConsignmentExport checkbox is selected
-        let anySelected = document.querySelectorAll(".selectConsignmentExport:checked").length > 0;
-
-        // Enable or disable buttons based on selection
-        document.getElementById("btnCreateDebitNoteConsignmentExport").disabled = !anySelected;
-        document.getElementById("btnTaskForwardConsignmentExport").disabled = !anySelected;
-        document.getElementById("btnBulkUpdateConsignmentExport").disabled = !anySelected;
-    }
+   
 
     // ================== THIRD PARTY SUPPLY GRID ================== //
-    function initializeThirdPartySupplyGrid() {
+    function initializeThirdPartyGrid() {
 
         let searchString = "";
         let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
 
         if (jobOrderId > 0) {
-            let url = '@Url.Action("ThirdPartySupplyList", "Job", new { area = "Project" })';
+            let url = '@Url.Action("ThirdPartyList", "Job", new { area = "Project" })';
             let columns = [
                 {
                     title: "Actions",
@@ -1582,12 +1492,12 @@
                 { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
             ];
 
-            let grid = $("#grid-ThirdPartySupply").data("kendoGrid");
+            let grid = $("#grid-ThirdParty").data("kendoGrid");
             if (grid) {
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-ThirdPartySupply", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGrid("grid-ThirdParty", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -2232,6 +2142,693 @@
         document.getElementById("btnCreateDebitNoteAgency").disabled = !anySelected;
         document.getElementById("btnTaskForwardAgency").disabled = !anySelected;
         document.getElementById("btnBulkUpdateAgency").disabled = !anySelected;
+    }
+
+    // ================== EQUIPMENTS USED FUNCTIONS ================== //
+    function updateSelectedEquipmentsUsed(checkbox, jobOrderId, equipmentsUsedId) {
+        if (checkbox.checked) {
+            // Add the equipmentsUsedId to mulid if checked
+            if (!mulid.includes(equipmentsUsedId)) {
+                mulid += mulid.length > 0 ? `,${equipmentsUsedId}` : equipmentsUsedId;
+            }
+        } else {
+            // Remove the equipmentsUsedId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== equipmentsUsedId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonEquipmentsUsedStates();
+    }
+
+    function toggleSelectAllEquipmentsUsed(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectEquipmentsUsed").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all equipmentsUsedIds to mulid
+            if (checked) {
+                let equipmentsUsedId = checkbox.getAttribute("data-equipmentsUsedId");
+                if (equipmentsUsedId) {
+                    mulid += mulid.length > 0 ? `,${equipmentsUsedId}` : equipmentsUsedId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonEquipmentsUsedStates();
+    }
+
+    function updateButtonEquipmentsUsedStates() {
+        // Check if any .selectEquipmentsUsed checkbox is selected
+        let anySelected = document.querySelectorAll(".selectEquipmentsUsed:checked").length > 0;
+
+        // Check the state of the isEquipmentsUsedDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isEquipmentsUsedDebitNoteNo") ? 
+                                 document.getElementById("isEquipmentsUsedDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteEquipmentsUsed"))
+            document.getElementById("btnCreateDebitNoteEquipmentsUsed").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardEquipmentsUsed"))
+            document.getElementById("btnTaskForwardEquipmentsUsed").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateEquipmentsUsed"))
+            document.getElementById("btnBulkUpdateEquipmentsUsed").disabled = !enableButtons;
+    }
+
+    // ================== CREW SIGN ON FUNCTIONS ================== //
+    function updateSelectedCrewSignOn(checkbox, jobOrderId, crewSignOnId) {
+        if (checkbox.checked) {
+            // Add the crewSignOnId to mulid if checked
+            if (!mulid.includes(crewSignOnId)) {
+                mulid += mulid.length > 0 ? `,${crewSignOnId}` : crewSignOnId;
+            }
+        } else {
+            // Remove the crewSignOnId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== crewSignOnId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonCrewSignOnStates();
+    }
+
+    function toggleSelectAllCrewSignOn(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectCrewSignOn").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all crewSignOnIds to mulid
+            if (checked) {
+                let crewSignOnId = checkbox.getAttribute("data-crewSignOnId");
+                if (crewSignOnId) {
+                    mulid += mulid.length > 0 ? `,${crewSignOnId}` : crewSignOnId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonCrewSignOnStates();
+    }
+
+    function updateButtonCrewSignOnStates() {
+        // Check if any .selectCrewSignOn checkbox is selected
+        let anySelected = document.querySelectorAll(".selectCrewSignOn:checked").length > 0;
+
+        // Check the state of the isCrewSignOnDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isCrewSignOnDebitNoteNo") ? 
+                                 document.getElementById("isCrewSignOnDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteCrewSignOn"))
+            document.getElementById("btnCreateDebitNoteCrewSignOn").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardCrewSignOn"))
+            document.getElementById("btnTaskForwardCrewSignOn").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateCrewSignOn"))
+            document.getElementById("btnBulkUpdateCrewSignOn").disabled = !enableButtons;
+    }
+
+    // ================== CREW SIGN OFF FUNCTIONS ================== //
+    function updateSelectedCrewSignOff(checkbox, jobOrderId, crewSignOffId) {
+        if (checkbox.checked) {
+            // Add the crewSignOffId to mulid if checked
+            if (!mulid.includes(crewSignOffId)) {
+                mulid += mulid.length > 0 ? `,${crewSignOffId}` : crewSignOffId;
+            }
+        } else {
+            // Remove the crewSignOffId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== crewSignOffId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonCrewSignOffStates();
+    }
+
+    function toggleSelectAllCrewSignOff(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectCrewSignOff").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all crewSignOffIds to mulid
+            if (checked) {
+                let crewSignOffId = checkbox.getAttribute("data-crewSignOffId");
+                if (crewSignOffId) {
+                    mulid += mulid.length > 0 ? `,${crewSignOffId}` : crewSignOffId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonCrewSignOffStates();
+    }
+
+    function updateButtonCrewSignOffStates() {
+        // Check if any .selectCrewSignOff checkbox is selected
+        let anySelected = document.querySelectorAll(".selectCrewSignOff:checked").length > 0;
+
+        // Check the state of the isCrewSignOffDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isCrewSignOffDebitNoteNo") ? 
+                                 document.getElementById("isCrewSignOffDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteCrewSignOff"))
+            document.getElementById("btnCreateDebitNoteCrewSignOff").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardCrewSignOff"))
+            document.getElementById("btnTaskForwardCrewSignOff").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateCrewSignOff"))
+            document.getElementById("btnBulkUpdateCrewSignOff").disabled = !enableButtons;
+    }
+
+    // ================== CREW MISCELLANEOUS FUNCTIONS ================== //
+    function updateSelectedCrewMiscellaneous(checkbox, jobOrderId, crewMiscellaneousId) {
+        if (checkbox.checked) {
+            // Add the crewMiscellaneousId to mulid if checked
+            if (!mulid.includes(crewMiscellaneousId)) {
+                mulid += mulid.length > 0 ? `,${crewMiscellaneousId}` : crewMiscellaneousId;
+            }
+        } else {
+            // Remove the crewMiscellaneousId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== crewMiscellaneousId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonCrewMiscellaneousStates();
+    }
+
+    function toggleSelectAllCrewMiscellaneous(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectCrewMiscellaneous").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all crewMiscellaneousIds to mulid
+            if (checked) {
+                let crewMiscellaneousId = checkbox.getAttribute("data-crewMiscellaneousId");
+                if (crewMiscellaneousId) {
+                    mulid += mulid.length > 0 ? `,${crewMiscellaneousId}` : crewMiscellaneousId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonCrewMiscellaneousStates();
+    }
+
+    function updateButtonCrewMiscellaneousStates() {
+        // Check if any .selectCrewMiscellaneous checkbox is selected
+        let anySelected = document.querySelectorAll(".selectCrewMiscellaneous:checked").length > 0;
+
+        // Check the state of the isCrewMiscellaneousDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isCrewMiscellaneousDebitNoteNo") ? 
+                                 document.getElementById("isCrewMiscellaneousDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteCrewMiscellaneous"))
+            document.getElementById("btnCreateDebitNoteCrewMiscellaneous").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardCrewMiscellaneous"))
+            document.getElementById("btnTaskForwardCrewMiscellaneous").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateCrewMiscellaneous"))
+            document.getElementById("btnBulkUpdateCrewMiscellaneous").disabled = !enableButtons;
+    }
+
+    // ================== MEDICAL ASSISTANCE FUNCTIONS ================== //
+    function updateSelectedMedicalAssistance(checkbox, jobOrderId, medicalAssistanceId) {
+        if (checkbox.checked) {
+            // Add the medicalAssistanceId to mulid if checked
+            if (!mulid.includes(medicalAssistanceId)) {
+                mulid += mulid.length > 0 ? `,${medicalAssistanceId}` : medicalAssistanceId;
+            }
+        } else {
+            // Remove the medicalAssistanceId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== medicalAssistanceId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonMedicalAssistanceStates();
+    }
+
+    function toggleSelectAllMedicalAssistance(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectMedicalAssistance").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all medicalAssistanceIds to mulid
+            if (checked) {
+                let medicalAssistanceId = checkbox.getAttribute("data-medicalAssistanceId");
+                if (medicalAssistanceId) {
+                    mulid += mulid.length > 0 ? `,${medicalAssistanceId}` : medicalAssistanceId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonMedicalAssistanceStates();
+    }
+
+    function updateButtonMedicalAssistanceStates() {
+        // Check if any .selectMedicalAssistance checkbox is selected
+        let anySelected = document.querySelectorAll(".selectMedicalAssistance:checked").length > 0;
+
+        // Check the state of the isMedicalAssistanceDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isMedicalAssistanceDebitNoteNo") ? 
+                                 document.getElementById("isMedicalAssistanceDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteMedicalAssistance"))
+            document.getElementById("btnCreateDebitNoteMedicalAssistance").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardMedicalAssistance"))
+            document.getElementById("btnTaskForwardMedicalAssistance").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateMedicalAssistance"))
+            document.getElementById("btnBulkUpdateMedicalAssistance").disabled = !enableButtons;
+    }
+
+    // ConsignmentImport functions are already implemented
+
+    function updateSelectedConsignmentImport(checkbox, jobOrderId, consignmentImportId) {
+        if (checkbox.checked) {
+            // Add the consignmentImportId to mulid if checked
+            if (!mulid.includes(consignmentImportId)) {
+                mulid += mulid.length > 0 ? `,${consignmentImportId}` : consignmentImportId;
+            }
+        } else {
+            // Remove the consignmentImportId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== consignmentImportId);
+            mulid = idsArray.join(",");
+        }
+
+        // Call function to update button states
+        updateConsignmentImportButtonStates();
+    }
+
+    function toggleSelectAllConsignmentImport(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectConsignmentImport").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all consignmentImportIds to mulid
+            if (checked) {
+                let consignmentImportId = checkbox.getAttribute("data-consignmentImportId");
+                if (consignmentImportId) {
+                    mulid += mulid.length > 0 ? `,${consignmentImportId}` : consignmentImportId;
+                }
+            }
+        });
+
+        // Call function to update button states
+        updateConsignmentImportButtonStates();
+    }
+
+    function updateConsignmentImportButtonStates() {
+        // Check if any selectConsignmentImport checkbox is selected
+        let anySelected = document.querySelectorAll(".selectConsignmentImport:checked").length > 0;
+
+        // Enable or disable buttons based on selection
+        document.getElementById("btnCreateDebitNoteConsignmentImport").disabled = !anySelected;
+        document.getElementById("btnTaskForwardConsignmentImport").disabled = !anySelected;
+        document.getElementById("btnBulkUpdateConsignmentImport").disabled = !anySelected;
+    }
+
+    // ================== Consignment Export SUPPLY FUNCTIONS ================== //
+    function updateSelectedConsignmentExport(checkbox, jobOrderId, consignmentExportId) {
+        if (checkbox.checked) {
+            // Add the consignmentExportId to mulid if checked
+            if (!mulid.includes(consignmentExportId)) {
+                mulid += mulid.length > 0 ? `,${consignmentExportId}` : consignmentExportId;
+            }
+        } else {
+            // Remove the consignmentExportId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== consignmentExportId);
+            mulid = idsArray.join(",");
+        }
+
+        // Call function to update button states
+        updateConsignmentExportButtonStates();
+    }
+
+    function toggleSelectAllConsignmentExport(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectConsignmentExport").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all consignmentExportIds to mulid
+            if (checked) {
+                let consignmentExportId = checkbox.getAttribute("data-consignmentExportId");
+                if (consignmentExportId) {
+                    mulid += mulid.length > 0 ? `,${consignmentExportId}` : consignmentExportId;
+                }
+            }
+        });
+
+        // Call function to update button states
+        updateConsignmentExportButtonStates();
+    }
+
+    function updateConsignmentExportButtonStates() {
+        // Check if any selectConsignmentExport checkbox is selected
+        let anySelected = document.querySelectorAll(".selectConsignmentExport:checked").length > 0;
+
+        // Enable or disable buttons based on selection
+        document.getElementById("btnCreateDebitNoteConsignmentExport").disabled = !anySelected;
+        document.getElementById("btnTaskForwardConsignmentExport").disabled = !anySelected;
+        document.getElementById("btnBulkUpdateConsignmentExport").disabled = !anySelected;
+    }
+
+    // ================== THIRD PARTY SUPPLY FUNCTIONS ================== //
+    function updateSelectedThirdParty(checkbox, jobOrderId, thirdPartyId) {
+        if (checkbox.checked) {
+            // Add the thirdPartyId to mulid if checked
+            if (!mulid.includes(thirdPartyId)) {
+                mulid += mulid.length > 0 ? `,${thirdPartyId}` : thirdPartyId;
+            }
+        } else {
+            // Remove the thirdPartyId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== thirdPartyId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonThirdPartyStates();
+    }
+
+    function toggleSelectAllThirdParty(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectThirdParty").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all thirdPartyIds to mulid
+            if (checked) {
+                let thirdPartyId = checkbox.getAttribute("data-thirdPartyId");
+                if (thirdPartyId) {
+                    mulid += mulid.length > 0 ? `,${thirdPartyId}` : thirdPartyId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonThirdPartyStates();
+    }
+
+    function updateButtonThirdPartyStates() {
+        // Check if any .selectThirdParty checkbox is selected
+        let anySelected = document.querySelectorAll(".selectThirdParty:checked").length > 0;
+
+        // Check the state of the isThirdPartyDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isThirdPartyDebitNoteNo") ? 
+                                 document.getElementById("isThirdPartyDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteThirdParty"))
+            document.getElementById("btnCreateDebitNoteThirdParty").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardThirdParty"))
+            document.getElementById("btnTaskForwardThirdParty").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateThirdParty"))
+            document.getElementById("btnBulkUpdateThirdParty").disabled = !enableButtons;
+    }
+
+    // ================== FRESH WATER SUPPLY FUNCTIONS ================== //
+    function updateSelectedFreshWater(checkbox, jobOrderId, freshWaterId) {
+        if (checkbox.checked) {
+            // Add the freshWaterId to mulid if checked
+            if (!mulid.includes(freshWaterId)) {
+                mulid += mulid.length > 0 ? `,${freshWaterId}` : freshWaterId;
+            }
+        } else {
+            // Remove the freshWaterId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== freshWaterId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonFreshWaterStates();
+    }
+
+    function toggleSelectAllFreshWater(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectFreshWater").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all freshWaterIds to mulid
+            if (checked) {
+                let freshWaterId = checkbox.getAttribute("data-freshWaterId");
+                if (freshWaterId) {
+                    mulid += mulid.length > 0 ? `,${freshWaterId}` : freshWaterId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonFreshWaterStates();
+    }
+
+    function updateButtonFreshWaterStates() {
+        // Check if any .selectFreshWater checkbox is selected
+        let anySelected = document.querySelectorAll(".selectFreshWater:checked").length > 0;
+
+        // Check the state of the isFreshWaterDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isFreshWaterDebitNoteNo") ? 
+                                 document.getElementById("isFreshWaterDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteFreshWater"))
+            document.getElementById("btnCreateDebitNoteFreshWater").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardFreshWater"))
+            document.getElementById("btnTaskForwardFreshWater").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateFreshWater"))
+            document.getElementById("btnBulkUpdateFreshWater").disabled = !enableButtons;
+    }
+
+    // TechniciansSurveyors functions are already implemented
+
+    // ================== LANDING ITEMS FUNCTIONS ================== //
+    function updateSelectedLandingItems(checkbox, jobOrderId, landingItemId) {
+        if (checkbox.checked) {
+            // Add the landingItemId to mulid if checked
+            if (!mulid.includes(landingItemId)) {
+                mulid += mulid.length > 0 ? `,${landingItemId}` : landingItemId;
+            }
+        } else {
+            // Remove the landingItemId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== landingItemId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonLandingItemsStates();
+    }
+
+    function toggleSelectAllLandingItems(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectLandingItems").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all landingItemIds to mulid
+            if (checked) {
+                let landingItemId = checkbox.getAttribute("data-landingItemId");
+                if (landingItemId) {
+                    mulid += mulid.length > 0 ? `,${landingItemId}` : landingItemId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonLandingItemsStates();
+    }
+
+    function updateButtonLandingItemsStates() {
+        // Check if any .selectLandingItems checkbox is selected
+        let anySelected = document.querySelectorAll(".selectLandingItems:checked").length > 0;
+
+        // Check the state of the isLandingItemsDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isLandingItemsDebitNoteNo") ? 
+                                 document.getElementById("isLandingItemsDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteLandingItems"))
+            document.getElementById("btnCreateDebitNoteLandingItems").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardLandingItems"))
+            document.getElementById("btnTaskForwardLandingItems").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateLandingItems"))
+            document.getElementById("btnBulkUpdateLandingItems").disabled = !enableButtons;
+    }
+
+    // ================== OTHER SERVICE FUNCTIONS ================== //
+    function updateSelectedOtherService(checkbox, jobOrderId, otherServiceId) {
+        if (checkbox.checked) {
+            // Add the otherServiceId to mulid if checked
+            if (!mulid.includes(otherServiceId)) {
+                mulid += mulid.length > 0 ? `,${otherServiceId}` : otherServiceId;
+            }
+        } else {
+            // Remove the otherServiceId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== otherServiceId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonOtherServiceStates();
+    }
+
+    function toggleSelectAllOtherService(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectOtherService").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all otherServiceIds to mulid
+            if (checked) {
+                let otherServiceId = checkbox.getAttribute("data-otherServiceId");
+                if (otherServiceId) {
+                    mulid += mulid.length > 0 ? `,${otherServiceId}` : otherServiceId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonOtherServiceStates();
+    }
+
+    function updateButtonOtherServiceStates() {
+        // Check if any .selectOtherService checkbox is selected
+        let anySelected = document.querySelectorAll(".selectOtherService:checked").length > 0;
+
+        // Check the state of the isOtherServiceDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isOtherServiceDebitNoteNo") ? 
+                                 document.getElementById("isOtherServiceDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteOtherService"))
+            document.getElementById("btnCreateDebitNoteOtherService").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardOtherService"))
+            document.getElementById("btnTaskForwardOtherService").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateOtherService"))
+            document.getElementById("btnBulkUpdateOtherService").disabled = !enableButtons;
+    }
+
+    // ================== AGENCY REMUNERATION FUNCTIONS ================== //
+    function updateSelectedAgencyRemuneration(checkbox, jobOrderId, agencyRemunerationId) {
+        if (checkbox.checked) {
+            // Add the agencyRemunerationId to mulid if checked
+            if (!mulid.includes(agencyRemunerationId)) {
+                mulid += mulid.length > 0 ? `,${agencyRemunerationId}` : agencyRemunerationId;
+            }
+        } else {
+            // Remove the agencyRemunerationId from mulid if unchecked
+            let idsArray = mulid.split(",").filter(id => id !== agencyRemunerationId);
+            mulid = idsArray.join(",");
+        }
+        console.log("Updated mulid:", mulid);
+
+        // Call function to update button states
+        updateButtonAgencyRemunerationStates();
+    }
+
+    function toggleSelectAllAgencyRemuneration(headerCheckbox) {
+        let checked = headerCheckbox.checked;
+        mulid = ""; // Reset mulid when toggling "Select All"
+
+        document.querySelectorAll(".selectAgencyRemuneration").forEach(function (checkbox) {
+            checkbox.checked = checked;
+
+            // If checked, add all agencyRemunerationIds to mulid
+            if (checked) {
+                let agencyRemunerationId = checkbox.getAttribute("data-agencyRemunerationId");
+                if (agencyRemunerationId) {
+                    mulid += mulid.length > 0 ? `,${agencyRemunerationId}` : agencyRemunerationId;
+                }
+            }
+        });
+
+        console.log("Final mulid after toggleSelectAll:", mulid);
+
+        // Call function to update button states
+        updateButtonAgencyRemunerationStates();
+    }
+
+    function updateButtonAgencyRemunerationStates() {
+        // Check if any .selectAgencyRemuneration checkbox is selected
+        let anySelected = document.querySelectorAll(".selectAgencyRemuneration:checked").length > 0;
+
+        // Check the state of the isAgencyRemunerationDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isAgencyRemunerationDebitNoteNo") ? 
+                                 document.getElementById("isAgencyRemunerationDebitNoteNo").checked : false;
+
+        // Enable or disable buttons based on both conditions
+        let enableButtons = anySelected || isDebitNoteChecked;
+
+        if (document.getElementById("btnCreateDebitNoteAgencyRemuneration"))
+            document.getElementById("btnCreateDebitNoteAgencyRemuneration").disabled = !enableButtons;
+        if (document.getElementById("btnTaskForwardAgency"))
+            document.getElementById("btnTaskForwardAgency").disabled = !enableButtons;
+        if (document.getElementById("btnBulkUpdateAgency"))
+            document.getElementById("btnBulkUpdateAgency").disabled = !enableButtons;
     }
 </script>
 

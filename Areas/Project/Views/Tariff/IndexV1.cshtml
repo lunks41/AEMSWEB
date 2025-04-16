@@ -141,12 +141,12 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button" data-status="ThirdPartySupply">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#third-party-supply" type="button" data-status="ThirdParty">
                                     <span class="badge bg-danger me-1">0</span> Third Party Supply
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button" data-status="FreshWaterSupply">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fresh-water" type="button" data-status="FreshWater">
                                     <span class="badge bg-info me-1">0</span> Fresh Water
                                 </button>
                             </li>
@@ -275,10 +275,10 @@
                     <div class="tab-pane fade" id="third-party-supply">
                         <!-- Button Group for Third Party Supply -->
                         <div class="mb-3">
-                            <button id="btnAddThirdPartySupply" onclick="openChildModal('Common',10)" class="btn btn-primary me-2">Add Third Party Supply</button>
+                            <button id="btnAddThirdParty" onclick="openChildModal('Common',10)" class="btn btn-primary me-2">Add Third Party Supply</button>
                         </div>
                         <!-- Grid for Third Party Supply -->
-                        <div id="grid-ThirdPartySupply" class="kendo-grid"></div>
+                        <div id="grid-ThirdParty" class="kendo-grid"></div>
                     </div>
 
                     <!-- Fresh Water Tab -->
@@ -288,7 +288,7 @@
                             <button id="btnAddFreshWater" onclick="openChildModal('FreshWater',11)" class="btn btn-primary me-2">Add Fresh Water</button>
                         </div>
                         <!-- Grid for Fresh Water -->
-                        <div id="grid-FreshWaterSupply" class="kendo-grid"></div>
+                        <div id="grid-FreshWater" class="kendo-grid"></div>
                     </div>
 
                     <!-- Technicians Surveyors Tab -->
@@ -424,8 +424,8 @@
                 initializeMedicalAssistanceGrid();
                 initializeConsignmentImportGrid();
                 initializeConsignmentExportGrid();
-                initializeThirdPartySupplyGrid();
-                initializeFreshWaterSupplyGrid();
+                initializeThirdPartyGrid();
+                initializeFreshWaterGrid();
                 initializeTechniciansSurveyorsGrid();
                 initializeLandingItemsGrid();
                 initializeOtherServiceGrid();
@@ -459,8 +459,8 @@
                     $('#serviceTabs [data-status="MedicalAssistance"] .badge').text(counts.medicalAssistance);
                     $('#serviceTabs [data-status="ConsignmentImport"] .badge').text(counts.consignmentImport);
                     $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
-                    $('#serviceTabs [data-status="ThirdPartySupply"] .badge').text(counts.thirdPartySupply);
-                    $('#serviceTabs [data-status="FreshWaterSupply"] .badge').text(counts.freshWaterSupply);
+                    $('#serviceTabs [data-status="ThirdParty"] .badge').text(counts.thirdPartySupply);
+                    $('#serviceTabs [data-status="FreshWater"] .badge').text(counts.freshWaterSupply);
                     $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
                     $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
                     $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
@@ -485,8 +485,8 @@
             initializeMedicalAssistanceGrid();
             initializeConsignmentImportGrid();
             initializeConsignmentExportGrid();
-            initializeThirdPartySupplyGrid();
-            initializeFreshWaterSupplyGrid();
+            initializeThirdPartyGrid();
+            initializeFreshWaterGrid();
             initializeTechniciansSurveyorsGrid();
             initializeLandingItemsGrid();
             initializeOtherServiceGrid();
@@ -594,12 +594,12 @@
             initializeTaskGrid("ConsignmentExport", "@Url.Action("GetTariffConsignmentExportList", "Tariff", new { area = "Project" })", "grid-ConsignmentExport");
         }
 
-        function initializeThirdPartySupplyGrid() {
-            initializeTaskGrid("ThirdPartySupply", "@Url.Action("GetTariffThirdPartySupplyList", "Tariff", new { area = "Project" })","grid-ThirdPartySupply");
+        function initializeThirdPartyGrid() {
+            initializeTaskGrid("ThirdParty", "@Url.Action("GetTariffThirdPartyList", "Tariff", new { area = "Project" })","grid-ThirdParty");
         }
 
-        function initializeFreshWaterSupplyGrid() {
-            initializeTaskGrid("FreshWaterSupply", "@Url.Action("GetTariffFreshWaterSupplyList", "Tariff", new { area = "Project" })", "grid-FreshWaterSupply");
+        function initializeFreshWaterGrid() {
+            initializeTaskGrid("FreshWater", "@Url.Action("GetTariffFreshWaterList", "Tariff", new { area = "Project" })", "grid-FreshWater");
         }
 
         function initializeTechniciansSurveyorsGrid() {

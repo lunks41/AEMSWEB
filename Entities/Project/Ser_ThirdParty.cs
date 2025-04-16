@@ -2,10 +2,10 @@
 
 namespace AMESWEB.Entities.Project
 {
-    public class Ser_ThirdPartySupply
+    public class Ser_ThirdParty
     {
         [Key]
-        public long ThirdPartySupplyId { get; set; }
+        public long ThirdPartyId { get; set; }
 
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }

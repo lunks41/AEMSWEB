@@ -413,18 +413,18 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<TariffViewModelCount> GetTariffThirdPartySupplyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId)
+        public async Task<TariffViewModelCount> GetTariffThirdPartyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId)
         {
             TariffViewModelCount countViewModel = new TariffViewModelCount();
             try
             {
                 // Count query for total records with additional filters
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                        $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.ThirdPartySupply} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
+                        $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.ThirdParty} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
                 var result = await _repository.GetQueryAsync<TariffViewModel>(
-                    $"SELECT Ser_Tar.CompanyId,Ser_Tar.TariffId,Ser_Tar.TaskId,M_Tsk.TaskName,Ser_Tar.ChargeId,M_Ch.ChargeName,Ser_Tar.PortId,M_Po.PortName,Ser_Tar.CustomerId,M_Cu.CustomerName,Ser_Tar.CurrencyId,M_Cur.CurrencyName,Ser_Tar.UomId,M_Uo.UomName,Ser_Tar.BasicRate,Ser_Tar.MinUnit,Ser_Tar.MaxUnit,Ser_Tar.IsAdditional,Ser_Tar.AdditionalUnit,Ser_Tar.AdditionalRate FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.ThirdPartySupply} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
+                    $"SELECT Ser_Tar.CompanyId,Ser_Tar.TariffId,Ser_Tar.TaskId,M_Tsk.TaskName,Ser_Tar.ChargeId,M_Ch.ChargeName,Ser_Tar.PortId,M_Po.PortName,Ser_Tar.CustomerId,M_Cu.CustomerName,Ser_Tar.CurrencyId,M_Cur.CurrencyName,Ser_Tar.UomId,M_Uo.UomName,Ser_Tar.BasicRate,Ser_Tar.MinUnit,Ser_Tar.MaxUnit,Ser_Tar.IsAdditional,Ser_Tar.AdditionalUnit,Ser_Tar.AdditionalRate FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId  INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.ThirdParty} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Build the result
                 countViewModel.responseCode = 200;
@@ -456,18 +456,18 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<TariffViewModelCount> GetTariffFreshWaterSupplyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId)
+        public async Task<TariffViewModelCount> GetTariffFreshWaterListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId)
         {
             TariffViewModelCount countViewModel = new TariffViewModelCount();
             try
             {
                 // Count query for total records with additional filters
                 var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                        $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId INNER JOIN dbo.M_OrderType M_Or1 ON M_Or1.OrderTypeId = Ser_Tar.FromPlace INNER JOIN dbo.M_OrderType M_Or2 ON M_Or2.OrderTypeId = Ser_Tar.ToPlace INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.FreshWaterSupply} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
+                        $"SELECT COUNT(*) AS CountId FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId INNER JOIN dbo.M_OrderType M_Or1 ON M_Or1.OrderTypeId = Ser_Tar.FromPlace INNER JOIN dbo.M_OrderType M_Or2 ON M_Or2.OrderTypeId = Ser_Tar.ToPlace INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.FreshWater} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Query to fetch paginated data with the additional filters
                 var result = await _repository.GetQueryAsync<TariffViewModel>(
-                    $"SELECT Ser_Tar.CompanyId,Ser_Tar.TariffId,Ser_Tar.TaskId,M_Tsk.TaskName,Ser_Tar.ChargeId,M_Ch.ChargeName,Ser_Tar.PortId,M_Po.PortName,Ser_Tar.CustomerId,M_Cu.CustomerName,Ser_Tar.CurrencyId,M_Cur.CurrencyName,Ser_Tar.UomId,M_Uo.UomName,Ser_Tar.FromPlace,M_Or1.OrderTypeName AS FromOrderTypeName,Ser_Tar.ToPlace,M_Or2.OrderTypeName AS ToOrderTypeName,Ser_Tar.BasicRate,Ser_Tar.MinUnit,Ser_Tar.MaxUnit,Ser_Tar.IsAdditional,Ser_Tar.AdditionalUnit,Ser_Tar.AdditionalRate FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId INNER JOIN dbo.M_OrderType M_Or1 ON M_Or1.OrderTypeId = Ser_Tar.FromPlace INNER JOIN dbo.M_OrderType M_Or2 ON M_Or2.OrderTypeId = Ser_Tar.ToPlace INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.FreshWaterSupply} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
+                    $"SELECT Ser_Tar.CompanyId,Ser_Tar.TariffId,Ser_Tar.TaskId,M_Tsk.TaskName,Ser_Tar.ChargeId,M_Ch.ChargeName,Ser_Tar.PortId,M_Po.PortName,Ser_Tar.CustomerId,M_Cu.CustomerName,Ser_Tar.CurrencyId,M_Cur.CurrencyName,Ser_Tar.UomId,M_Uo.UomName,Ser_Tar.FromPlace,M_Or1.OrderTypeName AS FromOrderTypeName,Ser_Tar.ToPlace,M_Or2.OrderTypeName AS ToOrderTypeName,Ser_Tar.BasicRate,Ser_Tar.MinUnit,Ser_Tar.MaxUnit,Ser_Tar.IsAdditional,Ser_Tar.AdditionalUnit,Ser_Tar.AdditionalRate FROM dbo.Ser_Tariff Ser_Tar INNER JOIN dbo.M_Customer M_Cu ON M_Cu.CustomerId = Ser_Tar.CustomerId INNER JOIN dbo.M_Currency M_Cur ON M_Cur.CurrencyId = Ser_Tar.CurrencyId INNER JOIN dbo.M_Port M_Po ON M_Po.PortId = Ser_Tar.PortId INNER JOIN dbo.M_Uom M_Uo ON M_Uo.UomId = Ser_Tar.UomId INNER JOIN dbo.M_OrderType M_Or1 ON M_Or1.OrderTypeId = Ser_Tar.FromPlace INNER JOIN dbo.M_OrderType M_Or2 ON M_Or2.OrderTypeId = Ser_Tar.ToPlace INNER JOIN dbo.M_Task M_Tsk ON M_Tsk.TaskId = Ser_Tar.TaskId INNER JOIN dbo.M_Charge M_Ch ON M_Ch.ChargeId = Ser_Tar.ChargeId AND M_Ch.TaskId = M_Tsk.TaskId WHERE Ser_Tar.TaskId={(short)E_Task.FreshWater} AND Ser_Tar.CompanyId={CompanyId} AND Ser_Tar.CustomerId={customerId} AND Ser_Tar.PortId={portId}");
 
                 // Build the result
                 countViewModel.responseCode = 200;
@@ -690,8 +690,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                 int countMedicalAssistance = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.MedicalAssistance)?.CountId ?? 0;
                 int countConsignmentImport = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ConsignmentImport)?.CountId ?? 0;
                 int countConsignmentExport = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ConsignmentExport)?.CountId ?? 0;
-                int countThirdPartySupply = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ThirdPartySupply)?.CountId ?? 0;
-                int countFreshWaterSupply = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.FreshWaterSupply)?.CountId ?? 0;
+                int countThirdParty = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ThirdParty)?.CountId ?? 0;
+                int countFreshWater = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.FreshWater)?.CountId ?? 0;
                 int countTechniciansSurveyors = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.TechniciansSurveyors)?.CountId ?? 0;
                 int countLandingItems = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.LandingItems)?.CountId ?? 0;
                 int countOtherService = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.OtherService)?.CountId ?? 0;
@@ -710,8 +710,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                     MedicalAssistance = countMedicalAssistance,
                     ConsignmentImport = countConsignmentImport,
                     ConsignmentExport = countConsignmentExport,
-                    ThirdPartySupply = countThirdPartySupply,
-                    FreshWaterSupply = countFreshWaterSupply,
+                    ThirdParty = countThirdParty,
+                    FreshWater = countFreshWater,
                     TechniciansSurveyors = countTechniciansSurveyors,
                     LandingItems = countLandingItems,
                     OtherService = countOtherService,

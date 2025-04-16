@@ -245,7 +245,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTariffThirdPartySupplyList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
+        public async Task<JsonResult> GetTariffThirdPartyList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -255,7 +255,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _tariffService.GetTariffThirdPartySupplyListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
+                var data = await _tariffService.GetTariffThirdPartyListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
@@ -266,7 +266,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTariffFreshWaterSupplyList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
+        public async Task<JsonResult> GetTariffFreshWaterList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -276,7 +276,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _tariffService.GetTariffFreshWaterSupplyListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
+                var data = await _tariffService.GetTariffFreshWaterListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
@@ -381,7 +381,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _tariffService.GetTariffFreshWaterSupplyListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
+                var data = await _tariffService.GetTariffFreshWaterListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)

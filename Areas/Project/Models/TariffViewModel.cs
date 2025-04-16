@@ -84,8 +84,8 @@
         public int MedicalAssistance { get; set; }
         public int ConsignmentImport { get; set; }
         public int ConsignmentExport { get; set; }
-        public int ThirdPartySupply { get; set; }
-        public int FreshWaterSupply { get; set; }
+        public int ThirdParty { get; set; }
+        public int FreshWater { get; set; }
         public int TechniciansSurveyors { get; set; }
         public int LandingItems { get; set; }
         public int OtherService { get; set; }

@@ -545,7 +545,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                         7 => $"UPDATE dbo.Ser_MedicalAssistance SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND MedicalAssistanceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         8 => $"UPDATE dbo.Ser_ConsignmentImport SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ConsignmentImportId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         9 => $"UPDATE dbo.Ser_ConsignmentExport SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ConsignmentExporId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
-                        10 => $"UPDATE dbo.Ser_ThirdPartySupply SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ThirdPartySupplyId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        10 => $"UPDATE dbo.Ser_ThirdParty SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ThirdPartyId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         11 => $"UPDATE dbo.Ser_FreshWater SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND FreshWaterId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         12 => $"UPDATE dbo.Ser_TechniciansSurveyors SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND TechniciansSurveyorsId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         13 => $"UPDATE dbo.Ser_LandingItems SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND LandingItemId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
@@ -613,8 +613,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                 int countMedicalAssistance = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.MedicalAssistance)?.CountId ?? 0;
                 int countConsignmentImport = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ConsignmentImport)?.CountId ?? 0;
                 int countConsignmentExport = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ConsignmentExport)?.CountId ?? 0;
-                int countThirdPartySupply = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ThirdPartySupply)?.CountId ?? 0;
-                int countFreshWaterSupply = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.FreshWaterSupply)?.CountId ?? 0;
+                int countThirdParty = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ThirdParty)?.CountId ?? 0;
+                int countFreshWater = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.FreshWater)?.CountId ?? 0;
                 int countTechniciansSurveyors = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.TechniciansSurveyors)?.CountId ?? 0;
                 int countLandingItems = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.LandingItems)?.CountId ?? 0;
                 int countOtherService = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.OtherService)?.CountId ?? 0;
@@ -633,8 +633,8 @@ namespace AMESWEB.Areas.Project.Data.Services
                     MedicalAssistance = countMedicalAssistance,
                     ConsignmentImport = countConsignmentImport,
                     ConsignmentExport = countConsignmentExport,
-                    ThirdPartySupply = countThirdPartySupply,
-                    FreshWaterSupply = countFreshWaterSupply,
+                    ThirdParty = countThirdParty,
+                    FreshWater = countFreshWater,
                     TechniciansSurveyors = countTechniciansSurveyors,
                     LandingItems = countLandingItems,
                     OtherService = countOtherService,

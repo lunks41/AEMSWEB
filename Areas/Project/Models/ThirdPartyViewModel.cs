@@ -1,22 +1,22 @@
 namespace AMESWEB.Areas.Project.Models
 {
-    public class SaveThirdPartySupplyViewModel
+    public class SaveThirdPartyViewModel
     {
-        public ThirdPartySupplyViewModel thirdPartySupply { get; set; }
+        public ThirdPartyViewModel thirdParty { get; set; }
         public string? companyId { get; set; }
     }
 
-    public class ThirdPartySupplyViewModelCount
+    public class ThirdPartyViewModelCount
     {
         public Int16 responseCode { get; set; }
         public string? responseMessage { get; set; }
         public Int64 totalRecords { get; set; }
-        public List<ThirdPartySupplyViewModel> data { get; set; }
+        public List<ThirdPartyViewModel> data { get; set; }
     }
 
-    public class ThirdPartySupplyViewModel
+    public class ThirdPartyViewModel
     {
-        public long ThirdPartySupplyId { get; set; }
+        public long ThirdPartyId { get; set; }
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }
         public string JobOrderNo { get; set; } = string.Empty;

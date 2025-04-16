@@ -1783,17 +1783,17 @@ namespace AMESWEB.Areas.Project.Controllers
 
         #endregion Technicians Surveyors
 
-        #region Third Party Supply
+        #region Third Party 
 
         [HttpGet]
-        public async Task<JsonResult> ThirdPartySupplyList(string companyId, Int64 jobOrderId)
+        public async Task<JsonResult> ThirdPartyList(string companyId, Int64 jobOrderId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _jobTaskService.GetThirdPartySupplyListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                var data = await _jobTaskService.GetThirdPartyListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
@@ -1804,19 +1804,19 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetThirdPartySupplyById(Int64 jobOrderId, Int64 thirdPartySupplyId, string companyId)
+        public async Task<JsonResult> GetThirdPartyById(Int64 jobOrderId, Int64 thirdPartyId, string companyId)
         {
             if (jobOrderId <= 0)
-                return Json(new { success = false, message = "Invalid Third Party Supply ID" });
+                return Json(new { success = false, message = "Invalid Third Party  ID" });
 
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _jobTaskService.GetThirdPartySupplyByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, thirdPartySupplyId);
+                var data = await _jobTaskService.GetThirdPartyByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, thirdPartyId);
                 return data == null
-                    ? Json(new { success = false, message = "Third Party Supply not found" })
+                    ? Json(new { success = false, message = "Third Party  not found" })
                     : Json(new { success = true, data });
             }
             catch (Exception ex)
@@ -1827,7 +1827,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveThirdPartySupply([FromBody] SaveThirdPartySupplyViewModel model)
+        public async Task<IActionResult> SaveThirdParty([FromBody] SaveThirdPartyViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -1837,25 +1837,25 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var thirdPartySupplyToSave = new Ser_ThirdPartySupply
+                var thirdPartyToSave = new Ser_ThirdParty
                 {
-                    ThirdPartySupplyId = model.thirdPartySupply.ThirdPartySupplyId,
+                    ThirdPartyId = model.thirdParty.ThirdPartyId,
                     CompanyId = companyIdShort,
-                    JobOrderId = model.thirdPartySupply.JobOrderId,
-                    JobOrderNo = model.thirdPartySupply.JobOrderNo ?? string.Empty,
-                    TaskId = model.thirdPartySupply.TaskId,
-                    SupplierName = model.thirdPartySupply.SupplierName?.Trim(),
-                    Quantity = model.thirdPartySupply.Quantity,
-                    UomId = model.thirdPartySupply.UomId,
-                    ChargeId = model.thirdPartySupply.ChargeId,
-                    StatusId = model.thirdPartySupply.StatusId,
-                    GLId = model.thirdPartySupply.GLId,
-                    DebitNoteId = model.thirdPartySupply.DebitNoteId,
-                    DebitNoteNo = model.thirdPartySupply.DebitNoteNo?.Trim(),
-                    TotAmt = model.thirdPartySupply.TotAmt,
-                    GstAmt = model.thirdPartySupply.GstAmt,
-                    TotAmtAftGst = model.thirdPartySupply.TotAmtAftGst,
-                    Remarks = model.thirdPartySupply.Remarks?.Trim() ?? string.Empty,
+                    JobOrderId = model.thirdParty.JobOrderId,
+                    JobOrderNo = model.thirdParty.JobOrderNo ?? string.Empty,
+                    TaskId = model.thirdParty.TaskId,
+                    SupplierName = model.thirdParty.SupplierName?.Trim(),
+                    Quantity = model.thirdParty.Quantity,
+                    UomId = model.thirdParty.UomId,
+                    ChargeId = model.thirdParty.ChargeId,
+                    StatusId = model.thirdParty.StatusId,
+                    GLId = model.thirdParty.GLId,
+                    DebitNoteId = model.thirdParty.DebitNoteId,
+                    DebitNoteNo = model.thirdParty.DebitNoteNo?.Trim(),
+                    TotAmt = model.thirdParty.TotAmt,
+                    GstAmt = model.thirdParty.GstAmt,
+                    TotAmtAftGst = model.thirdParty.TotAmtAftGst,
+                    Remarks = model.thirdParty.Remarks?.Trim() ?? string.Empty,
                     CreateById = parsedUserId.Value,
                     CreateDate = DateTime.Now,
                     EditById = parsedUserId.Value,
@@ -1863,8 +1863,8 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var data = await _jobTaskService.SaveThirdPartySupplyAsync(companyIdShort, parsedUserId.Value, thirdPartySupplyToSave);
-                return Json(new { success = true, message = "Third Party Supply saved successfully", data = data });
+                var data = await _jobTaskService.SaveThirdPartyAsync(companyIdShort, parsedUserId.Value, thirdPartyToSave);
+                return Json(new { success = true, message = "Third Party  saved successfully", data = data });
             }
             catch (Exception ex)
             {
@@ -1874,12 +1874,12 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteThirdPartySupply(Int64 jobOrderId, Int64 thirdPartySupplyId, string companyId)
+        public async Task<IActionResult> DeleteThirdParty(Int64 jobOrderId, Int64 thirdPartyId, string companyId)
         {
             if (jobOrderId <= 0)
             {
-                _logger.LogWarning("Delete failed: Invalid Third Party Supply ID {JobOrderId}.", jobOrderId);
-                return Json(new { success = false, message = "Invalid Third Party Supply ID." });
+                _logger.LogWarning("Delete failed: Invalid Third Party  ID {JobOrderId}.", jobOrderId);
+                return Json(new { success = false, message = "Invalid Third Party  ID." });
             }
 
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
@@ -1897,19 +1897,19 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                await _jobTaskService.DeleteThirdPartySupplyAsync(companyIdShort, parsedUserId.Value, jobOrderId, thirdPartySupplyId);
-                return Json(new { success = true, message = "Third Party Supply deleted successfully." });
+                await _jobTaskService.DeleteThirdPartyAsync(companyIdShort, parsedUserId.Value, jobOrderId, thirdPartyId);
+                return Json(new { success = true, message = "Third Party  deleted successfully." });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting the Third Party Supply. Third Party Supply ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
+                _logger.LogError(ex, "An error occurred while deleting the Third Party . Third Party  ID: {JobOrderId}, Company ID: {CompanyId}.", jobOrderId, companyId);
                 return Json(new { success = false, message = "An error occurred." });
             }
         }
 
-        #endregion Third Party Supply
+        #endregion Third Party 
 
-        #region Fresh Water Supply
+        #region Fresh Water 
 
         [HttpGet]
         public async Task<JsonResult> FreshWaterList(string companyId, Int64 jobOrderId)
@@ -1983,7 +1983,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     JobOrderNo = model.freshWater.JobOrderNo,
                     TaskId = model.freshWater.TaskId,
 
-                    // Supply details
+                    //  details
                     Quantity = model.freshWater.Quantity,
                     UomId = model.freshWater.UomId,
                     GLId = model.freshWater.GLId,
@@ -2037,7 +2037,7 @@ namespace AMESWEB.Areas.Project.Controllers
             }
         }
 
-        #endregion Fresh Water Supply
+        #endregion Fresh Water 
 
         #endregion Task
 

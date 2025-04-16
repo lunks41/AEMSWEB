@@ -17,8 +17,8 @@
                     <input type="hidden" id="freshWaterId" />
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="form-label">Date of Supply <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="freshWater_dateOfSupply">
+                            <label class="form-label">Date of  <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="freshWater_dateOf">
                         </div>
                         <div class="col-md-4">
                             <label for="freshWater_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
@@ -180,7 +180,7 @@
         $('#freshWater_cmb_status').data('kendoComboBox').value('');
         $('#freshWater_cmb_bargeName').data('kendoComboBox').value('');
 
-        $('#freshWater_dateOfSupply').val('');
+        $('#freshWater_dateOf').val('');
         $('#freshWater_receiptNumber').val('');
         $('#freshWater_bargeOperatorName').val('');
         $('#freshWater_distance').val('0.00');
@@ -203,7 +203,7 @@
     function setDefaultFreshWaterValues() {
         // Set current date
         const today = new Date().toISOString().split('T')[0];
-        $('#freshWater_dateOfSupply').val(today);
+        $('#freshWater_dateOf').val(today);
 
         // Set default GL Account
         setTimeout(() => {
@@ -288,9 +288,9 @@
         $('#freshWater_debitNoteNo').val(data.debitNoteNo);
 
         // Set date fields
-        if (data.dateOfSupply) {
-            const dateOfSupply = new Date(data.dateOfSupply).toLocaleDateString('en-CA');
-            $('#freshWater_dateOfSupply').val(dateOfSupply);
+        if (data.dateOf) {
+            const dateOf = new Date(data.dateOf).toLocaleDateString('en-CA');
+            $('#freshWater_dateOf').val(dateOf);
         }
 
         // Set combobox values, ensuring they update after data is loaded
@@ -396,7 +396,7 @@
             StatusId: parseInt($('#freshWater_cmb_status').data('kendoComboBox').value()) || 0,
             BargeNameLookupId: parseInt($('#freshWater_cmb_bargeName').data('kendoComboBox').value()) || null,
             
-            DateOfSupply: $('#freshWater_dateOfSupply').val() || null,
+            DateOf: $('#freshWater_dateOf').val() || null,
             ReceiptNumber: $('#freshWater_receiptNumber').val() || '',
             BargeOperatorName: $('#freshWater_bargeOperatorName').val() || '',
             Distance: parseFloat($('#freshWater_distance').val()) || 0.00,

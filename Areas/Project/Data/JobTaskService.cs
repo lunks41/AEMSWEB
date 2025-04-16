@@ -2859,21 +2859,21 @@ namespace AMESWEB.Areas.Project.Data.Services
 
         #endregion Consignment Export
 
-        #region Third Party Supply
+        #region Third Party 
 
-        public async Task<ThirdPartySupplyViewModelCount> GetThirdPartySupplyListAsync(short CompanyId, short UserId, Int64 JobOrderId)
+        public async Task<ThirdPartyViewModelCount> GetThirdPartyListAsync(short CompanyId, short UserId, Int64 JobOrderId)
         {
-            ThirdPartySupplyViewModelCount countViewModel = new ThirdPartySupplyViewModelCount();
+            ThirdPartyViewModelCount countViewModel = new ThirdPartyViewModelCount();
             try
             {
-                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_ThirdPartySupply Ser_Tps LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Tps.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Tps.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Tps.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Tps.ChargeId AND M_Chr.TaskId = Ser_Tps.TaskId LEFT JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Ser_Tps.SupplierId WHERE Ser_Tps.JobOrderId={JobOrderId} AND Ser_Tps.CompanyId={CompanyId}");
+                var totalcount = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>($"SELECT COUNT(*) AS CountId FROM dbo.Ser_ThirdParty Ser_Tps LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Tps.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Tps.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Tps.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Tps.ChargeId AND M_Chr.TaskId = Ser_Tps.TaskId LEFT JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Ser_Tps.SupplierId WHERE Ser_Tps.JobOrderId={JobOrderId} AND Ser_Tps.CompanyId={CompanyId}");
 
-                var result = await _repository.GetQueryAsync<ThirdPartySupplyViewModel>($"SELECT Ser_Tps.ThirdPartySupplyId,Ser_Tps.CompanyId,Ser_Tps.JobOrderId,Ser_Tps.JobOrderNo,Ser_Tps.TaskId,Ser_Tps.SupplyDate,Ser_Tps.SupplierId,M_Sup.SupplierName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Tps.GLId,Ser_Tps.StatusId,M_Or.OrderTypeName As StatusName,Ser_Tps.DebitNoteId,Ser_Tps.DebitNoteNo,Ser_Tps.TotAmt,Ser_Tps.GstAmt,Ser_Tps.TotAmtAftGst,Ser_Tps.Remarks,Ser_Tps.CreateById,Ser_Tps.CreateDate,Ser_Tps.EditById,Ser_Tps.EditDate,Ser_Tps.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_ThirdPartySupply Ser_Tps LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Tps.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Tps.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Tps.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Tps.ChargeId AND M_Chr.TaskId = Ser_Tps.TaskId LEFT JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Ser_Tps.SupplierId WHERE Ser_Tps.JobOrderId={JobOrderId} AND Ser_Tps.CompanyId={CompanyId}");
+                var result = await _repository.GetQueryAsync<ThirdPartyViewModel>($"SELECT Ser_Tps.ThirdPartyId,Ser_Tps.CompanyId,Ser_Tps.JobOrderId,Ser_Tps.JobOrderNo,Ser_Tps.TaskId,Ser_Tps.Date,Ser_Tps.SupplierId,M_Sup.SupplierName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Tps.GLId,Ser_Tps.StatusId,M_Or.OrderTypeName As StatusName,Ser_Tps.DebitNoteId,Ser_Tps.DebitNoteNo,Ser_Tps.TotAmt,Ser_Tps.GstAmt,Ser_Tps.TotAmtAftGst,Ser_Tps.Remarks,Ser_Tps.CreateById,Ser_Tps.CreateDate,Ser_Tps.EditById,Ser_Tps.EditDate,Ser_Tps.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_ThirdParty Ser_Tps LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Tps.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Tps.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Tps.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Tps.ChargeId AND M_Chr.TaskId = Ser_Tps.TaskId LEFT JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Ser_Tps.SupplierId WHERE Ser_Tps.JobOrderId={JobOrderId} AND Ser_Tps.CompanyId={CompanyId}");
 
                 countViewModel.responseCode = 200;
                 countViewModel.responseMessage = "success";
                 countViewModel.totalRecords = totalcount == null ? 0 : totalcount.CountId;
-                countViewModel.data = result?.ToList() ?? new List<ThirdPartySupplyViewModel>();
+                countViewModel.data = result?.ToList() ?? new List<ThirdPartyViewModel>();
 
                 return countViewModel;
             }
@@ -2886,7 +2886,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     TransactionId = (short)E_Project.Job,
                     DocumentId = 0,
                     DocumentNo = "",
-                    TblName = "Ser_ThirdPartySupply",
+                    TblName = "Ser_ThirdParty",
                     ModeId = (short)E_Mode.View,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId
@@ -2899,11 +2899,11 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<ThirdPartySupplyViewModel> GetThirdPartySupplyByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 ThirdPartySupplyId)
+        public async Task<ThirdPartyViewModel> GetThirdPartyByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 ThirdPartyId)
         {
             try
             {
-                var result = await _repository.GetQuerySingleOrDefaultAsync<ThirdPartySupplyViewModel>($"SELECT Ser_Tps.ThirdPartySupplyId,Ser_Tps.CompanyId,Ser_Tps.JobOrderId,Ser_Tps.JobOrderNo,Ser_Tps.TaskId,Ser_Tps.SupplyDate,Ser_Tps.SupplierId,M_Sup.SupplierName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Tps.GLId,Ser_Tps.StatusId,M_Or.OrderTypeName As StatusName,Ser_Tps.DebitNoteId,Ser_Tps.DebitNoteNo,Ser_Tps.TotAmt,Ser_Tps.GstAmt,Ser_Tps.TotAmtAftGst,Ser_Tps.Remarks,Ser_Tps.CreateById,Ser_Tps.CreateDate,Ser_Tps.EditById,Ser_Tps.EditDate,Ser_Tps.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_ThirdPartySupply Ser_Tps LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Tps.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Tps.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Tps.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Tps.ChargeId AND M_Chr.TaskId = Ser_Tps.TaskId LEFT JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Ser_Tps.SupplierId WHERE Ser_Tps.JobOrderId={JobOrderId} AND Ser_Tps.ThirdPartySupplyId={ThirdPartySupplyId} AND Ser_Tps.CompanyId={CompanyId}");
+                var result = await _repository.GetQuerySingleOrDefaultAsync<ThirdPartyViewModel>($"SELECT Ser_Tps.ThirdPartyId,Ser_Tps.CompanyId,Ser_Tps.JobOrderId,Ser_Tps.JobOrderNo,Ser_Tps.TaskId,Ser_Tps.Date,Ser_Tps.SupplierId,M_Sup.SupplierName,M_Chr.ChargeId,M_Chr.ChargeName,Ser_Tps.GLId,Ser_Tps.StatusId,M_Or.OrderTypeName As StatusName,Ser_Tps.DebitNoteId,Ser_Tps.DebitNoteNo,Ser_Tps.TotAmt,Ser_Tps.GstAmt,Ser_Tps.TotAmtAftGst,Ser_Tps.Remarks,Ser_Tps.CreateById,Ser_Tps.CreateDate,Ser_Tps.EditById,Ser_Tps.EditDate,Ser_Tps.EditVersion,Usr.UserName AS CreateBy, Usr1.UserName AS EditBy FROM dbo.Ser_ThirdParty Ser_Tps LEFT JOIN dbo.M_OrderType M_Or ON M_Or.OrderTypeId = Ser_Tps.StatusId LEFT JOIN dbo.AdmUser Usr ON Usr.UserId = Ser_Tps.CreateById LEFT JOIN dbo.AdmUser Usr1 ON Usr1.UserId = Ser_Tps.EditById LEFT JOIN dbo.M_Charge M_Chr ON M_Chr.ChargeId = Ser_Tps.ChargeId AND M_Chr.TaskId = Ser_Tps.TaskId LEFT JOIN dbo.M_Supplier M_Sup ON M_Sup.SupplierId = Ser_Tps.SupplierId WHERE Ser_Tps.JobOrderId={JobOrderId} AND Ser_Tps.ThirdPartyId={ThirdPartyId} AND Ser_Tps.CompanyId={CompanyId}");
 
                 return result;
             }
@@ -2916,7 +2916,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     TransactionId = (short)E_Project.Job,
                     DocumentId = 0,
                     DocumentNo = "",
-                    TblName = "Ser_ThirdPartySupply",
+                    TblName = "Ser_ThirdParty",
                     ModeId = (short)E_Mode.View,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId,
@@ -2929,9 +2929,9 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponce> SaveThirdPartySupplyAsync(short CompanyId, short UserId, Ser_ThirdPartySupply ser_ThirdPartySupply)
+        public async Task<SqlResponce> SaveThirdPartyAsync(short CompanyId, short UserId, Ser_ThirdParty ser_ThirdParty)
         {
-            bool IsEdit = ser_ThirdPartySupply.ThirdPartySupplyId != 0;
+            bool IsEdit = ser_ThirdParty.ThirdPartyId != 0;
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -2939,32 +2939,32 @@ namespace AMESWEB.Areas.Project.Data.Services
                     if (IsEdit)
                     {
                         var dataExist = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                     $"SELECT 1 AS IsExist FROM dbo.Ser_ThirdPartySupply WHERE ThirdPartySupplyId=@ThirdPartySupplyId",
-                     new { ser_ThirdPartySupply.ThirdPartySupplyId });
+                     $"SELECT 1 AS IsExist FROM dbo.Ser_ThirdParty WHERE ThirdPartyId=@ThirdPartyId",
+                     new { ser_ThirdParty.ThirdPartyId });
 
                         if ((dataExist?.IsExist ?? 0) > 0)
                         {
-                            var entityHead = _context.Update(ser_ThirdPartySupply);
+                            var entityHead = _context.Update(ser_ThirdParty);
                             entityHead.Property(b => b.CreateById).IsModified = false;
                             entityHead.Property(b => b.CompanyId).IsModified = false;
                         }
                         else
                         {
-                            return new SqlResponce { Result = -1, Message = "ThirdPartySupply Not Found" };
+                            return new SqlResponce { Result = -1, Message = "ThirdParty Not Found" };
                         }
                     }
                     else
                     {
                         // Take the Next Id From SQL
                         var sqlMissingResponse = await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
-                     "SELECT ISNULL((SELECT TOP 1 (ThirdPartySupplyId + 1) FROM dbo.Ser_ThirdPartySupply WHERE (ThirdPartySupplyId + 1) NOT IN (SELECT ThirdPartySupplyId FROM dbo.Ser_ThirdPartySupply)),1) AS NextId");
+                     "SELECT ISNULL((SELECT TOP 1 (ThirdPartyId + 1) FROM dbo.Ser_ThirdParty WHERE (ThirdPartyId + 1) NOT IN (SELECT ThirdPartyId FROM dbo.Ser_ThirdParty)),1) AS NextId");
 
                         if (sqlMissingResponse != null && sqlMissingResponse.NextId > 0)
                         {
-                            ser_ThirdPartySupply.ThirdPartySupplyId = Convert.ToInt16(sqlMissingResponse.NextId);
-                            ser_ThirdPartySupply.EditById = null;
-                            ser_ThirdPartySupply.EditDate = null;
-                            _context.Add(ser_ThirdPartySupply);
+                            ser_ThirdParty.ThirdPartyId = Convert.ToInt16(sqlMissingResponse.NextId);
+                            ser_ThirdParty.EditById = null;
+                            ser_ThirdParty.EditDate = null;
+                            _context.Add(ser_ThirdParty);
                         }
                         else
                         {
@@ -2978,7 +2978,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     {
                         if (IsEdit)
                         {
-                            await _repository.UpsertExecuteScalarAsync($"update Ser_ThirdPartySupply set EditVersion=EditVersion+1 WHERE ThirdPartySupplyId={ser_ThirdPartySupply.ThirdPartySupplyId} AND CompanyId={CompanyId}");
+                            await _repository.UpsertExecuteScalarAsync($"update Ser_ThirdParty set EditVersion=EditVersion+1 WHERE ThirdPartyId={ser_ThirdParty.ThirdPartyId} AND CompanyId={CompanyId}");
                         }
                         else
                         {
@@ -2986,9 +2986,9 @@ namespace AMESWEB.Areas.Project.Data.Services
                             await _repository.GetQuerySingleOrDefaultAsync<SqlResponceIds>(
                             "DECLARE @ItemNo SMALLINT;   " +
                             "DECLARE @TaskItemNo SMALLINT; " +
-                            $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdPartySupply.JobOrderId} AND (ItemNo + 1) NOT IN     (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdPartySupply.JobOrderId})), 1);  " +
-                            $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdPartySupply.JobOrderId} AND TaskId = {ser_ThirdPartySupply.TaskId} AND (TaskItemNo + 1) NOT IN     (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt      WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdPartySupply.JobOrderId} AND TaskId = {ser_ThirdPartySupply.TaskId})), 1);   " +
-                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId )   VALUES ({CompanyId},{ser_ThirdPartySupply.JobOrderId},'{ser_ThirdPartySupply.JobOrderNo}',@ItemNo,{ser_ThirdPartySupply.TaskId},@TaskItemNo,{ser_ThirdPartySupply.ThirdPartySupplyId});");
+                            $"SELECT @ItemNo = ISNULL((SELECT TOP 1 (ItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdParty.JobOrderId} AND (ItemNo + 1) NOT IN     (SELECT ItemNo FROM dbo.Ser_JobOrderDt WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdParty.JobOrderId})), 1);  " +
+                            $"SELECT @TaskItemNo = ISNULL((SELECT TOP 1 (TaskItemNo + 1)  FROM dbo.Ser_JobOrderDt  WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdParty.JobOrderId} AND TaskId = {ser_ThirdParty.TaskId} AND (TaskItemNo + 1) NOT IN     (SELECT TaskItemNo FROM dbo.Ser_JobOrderDt      WHERE CompanyId = {CompanyId} AND JobOrderId = {ser_ThirdParty.JobOrderId} AND TaskId = {ser_ThirdParty.TaskId})), 1);   " +
+                            $"INSERT INTO dbo.Ser_JobOrderDt (CompanyId,JobOrderId,JobOrderNo,ItemNo,TaskId,TaskItemNo,ServiceId )   VALUES ({CompanyId},{ser_ThirdParty.JobOrderId},'{ser_ThirdParty.JobOrderNo}',@ItemNo,{ser_ThirdParty.TaskId},@TaskItemNo,{ser_ThirdParty.ThirdPartyId});");
                         }
 
                         var auditLog = new AdmAuditLog
@@ -2996,11 +2996,11 @@ namespace AMESWEB.Areas.Project.Data.Services
                             CompanyId = CompanyId,
                             ModuleId = (short)E_Modules.Project,
                             TransactionId = (short)E_Project.Job,
-                            DocumentId = ser_ThirdPartySupply.ThirdPartySupplyId,
+                            DocumentId = ser_ThirdParty.ThirdPartyId,
                             DocumentNo = "",
-                            TblName = "Ser_ThirdPartySupply",
+                            TblName = "Ser_ThirdParty",
                             ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
-                            Remarks = "ThirdPartySupply Save Successfully",
+                            Remarks = "ThirdParty Save Successfully",
                             CreateById = UserId,
                             CreateDate = DateTime.Now
                         };
@@ -3033,7 +3033,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     TransactionId = (short)E_Project.Job,
                     DocumentId = 0,
                     DocumentNo = "",
-                    TblName = "Ser_ThirdPartySupply",
+                    TblName = "Ser_ThirdParty",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
                     CreateById = UserId,
@@ -3059,9 +3059,9 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = ser_ThirdPartySupply.ThirdPartySupplyId,
+                    DocumentId = ser_ThirdParty.ThirdPartyId,
                     DocumentNo = "",
-                    TblName = "Ser_ThirdPartySupply",
+                    TblName = "Ser_ThirdParty",
                     ModeId = IsEdit ? (short)E_Mode.Update : (short)E_Mode.Create,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId
@@ -3073,30 +3073,30 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponce> DeleteThirdPartySupplyAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 thirdPartySupplyId)
+        public async Task<SqlResponce> DeleteThirdPartyAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 thirdPartyId)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (thirdPartySupplyId > 0)
+                    if (thirdPartyId > 0)
                     {
-                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={thirdPartySupplyId}");
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={thirdPartyId}");
 
-                        var deleteThirdPartySupplyResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_ThirdPartySupply WHERE CompanyId={CompanyId} AND ThirdPartySupplyId={thirdPartySupplyId}");
+                        var deleteThirdPartyResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_ThirdParty WHERE CompanyId={CompanyId} AND ThirdPartyId={thirdPartyId}");
 
-                        if (deletejobOrderResult > 0 && deleteThirdPartySupplyResult > 0)
+                        if (deletejobOrderResult > 0 && deleteThirdPartyResult > 0)
                         {
                             var auditLog = new AdmAuditLog
                             {
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Project,
                                 TransactionId = (short)E_Project.Job,
-                                DocumentId = thirdPartySupplyId,
+                                DocumentId = thirdPartyId,
                                 DocumentNo = "",
-                                TblName = "Ser_ThirdPartySupply",
+                                TblName = "Ser_ThirdParty",
                                 ModeId = (short)E_Mode.Delete,
-                                Remarks = "ThirdPartySupply Delete Successfully",
+                                Remarks = "ThirdParty Delete Successfully",
                                 CreateById = UserId
                             };
                             _context.Add(auditLog);
@@ -3115,7 +3115,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     }
                     else
                     {
-                        return new SqlResponce { Result = -1, Message = "ThirdPartySupplyId Should be greater than zero" };
+                        return new SqlResponce { Result = -1, Message = "ThirdPartyId Should be greater than zero" };
                     }
                     return new SqlResponce();
                 }
@@ -3129,9 +3129,9 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = thirdPartySupplyId,
+                    DocumentId = thirdPartyId,
                     DocumentNo = "",
-                    TblName = "Ser_ThirdPartySupply",
+                    TblName = "Ser_ThirdParty",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = sqlEx.Number.ToString() + " " + sqlEx.Message + sqlEx.InnerException?.Message,
                     CreateById = UserId,
@@ -3157,9 +3157,9 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = thirdPartySupplyId,
+                    DocumentId = thirdPartyId,
                     DocumentNo = "",
-                    TblName = "Ser_ThirdPartySupply",
+                    TblName = "Ser_ThirdParty",
                     ModeId = (short)E_Mode.Delete,
                     Remarks = ex.Message + ex.InnerException?.Message,
                     CreateById = UserId,
@@ -3172,7 +3172,7 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        #endregion Third Party Supply
+        #endregion Third Party 
 
         #region FreshWater
 
@@ -3388,17 +3388,17 @@ namespace AMESWEB.Areas.Project.Data.Services
             }
         }
 
-        public async Task<SqlResponce> DeleteFreshWaterAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 freshWaterSupplyId)
+        public async Task<SqlResponce> DeleteFreshWaterAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 freshWaterId)
         {
             try
             {
                 using (var TScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    if (freshWaterSupplyId > 0)
+                    if (freshWaterId > 0)
                     {
-                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={freshWaterSupplyId}");
+                        var deletejobOrderResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_JobOrderDt WHERE CompanyId={CompanyId} AND JobOrderId={jobOrderId} AND ServiceId={freshWaterId}");
 
-                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_FreshWater WHERE CompanyId={CompanyId} AND FreshWaterId={freshWaterSupplyId}");
+                        var deleteResult = await _repository.GetRowExecuteAsync($"DELETE FROM dbo.Ser_FreshWater WHERE CompanyId={CompanyId} AND FreshWaterId={freshWaterId}");
 
                         if (deletejobOrderResult > 0 && deleteResult > 0)
                         {
@@ -3407,7 +3407,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                                 CompanyId = CompanyId,
                                 ModuleId = (short)E_Modules.Project,
                                 TransactionId = (short)E_Project.Job,
-                                DocumentId = freshWaterSupplyId,
+                                DocumentId = freshWaterId,
                                 DocumentNo = "",
                                 TblName = "Ser_FreshWater",
                                 ModeId = (short)E_Mode.Delete,
@@ -3444,7 +3444,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = freshWaterSupplyId,
+                    DocumentId = freshWaterId,
                     DocumentNo = "",
                     TblName = "Ser_FreshWater",
                     ModeId = (short)E_Mode.Delete,
@@ -3472,7 +3472,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     CompanyId = CompanyId,
                     ModuleId = (short)E_Modules.Project,
                     TransactionId = (short)E_Project.Job,
-                    DocumentId = freshWaterSupplyId,
+                    DocumentId = freshWaterId,
                     DocumentNo = "",
                     TblName = "Ser_FreshWater",
                     ModeId = (short)E_Mode.Delete,

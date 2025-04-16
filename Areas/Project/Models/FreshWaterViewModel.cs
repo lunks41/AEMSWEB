@@ -35,7 +35,7 @@ namespace AMESWEB.Areas.Project.Models
         public byte EditVersion { get; set; } = 0;
         
         // Fresh water specific fields
-        public DateTime? DateOfSupply { get; set; }
+        public DateTime? DateOf { get; set; }
         public string? ReceiptNumber { get; set; }
         public decimal? Distance { get; set; }
         public decimal Quantity { get; set; } = 0M;

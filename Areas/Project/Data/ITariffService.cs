@@ -24,9 +24,9 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         public Task<TariffViewModelCount> GetTariffConsignmentExportListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
-        public Task<TariffViewModelCount> GetTariffThirdPartySupplyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
+        public Task<TariffViewModelCount> GetTariffThirdPartyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
-        public Task<TariffViewModelCount> GetTariffFreshWaterSupplyListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
+        public Task<TariffViewModelCount> GetTariffFreshWaterListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
         public Task<TariffViewModelCount> GetTariffTechniciansSurveyorsListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 

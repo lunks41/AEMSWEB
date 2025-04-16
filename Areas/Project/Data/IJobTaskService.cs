@@ -114,17 +114,17 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         #endregion Consignment Export
 
-        #region Third Party Supply
+        #region Third Party 
 
-        public Task<ThirdPartySupplyViewModelCount> GetThirdPartySupplyListAsync(short CompanyId, short UserId, Int64 JobOrderId);
+        public Task<ThirdPartyViewModelCount> GetThirdPartyListAsync(short CompanyId, short UserId, Int64 JobOrderId);
 
-        public Task<ThirdPartySupplyViewModel> GetThirdPartySupplyByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 ThirdPartySupplyId);
+        public Task<ThirdPartyViewModel> GetThirdPartyByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 ThirdPartyId);
 
-        public Task<SqlResponce> SaveThirdPartySupplyAsync(short CompanyId, short UserId, Ser_ThirdPartySupply ser_ThirdPartySupply);
+        public Task<SqlResponce> SaveThirdPartyAsync(short CompanyId, short UserId, Ser_ThirdParty ser_ThirdParty);
 
-        public Task<SqlResponce> DeleteThirdPartySupplyAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 thirdPartySupplyId);
+        public Task<SqlResponce> DeleteThirdPartyAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 thirdPartyId);
 
-        #endregion Third Party Supply
+        #endregion Third Party 
 
         #region Fresh Water
 

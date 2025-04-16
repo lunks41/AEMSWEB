@@ -16,7 +16,7 @@ namespace AMESWEB.Entities.Project
         public decimal TotAmt { get; set; } = 0m;
         public decimal GstAmt { get; set; } = 0m;
         public decimal TotAmtAftGst { get; set; } = 0m;
-        public DateTime? DateOfSupply { get; set; } // Nullable
+        public DateTime? DateOf { get; set; } // Nullable
         public string ReceiptNumber { get; set; } // Nullable
         public decimal? Distance { get; set; } // Nullable
         public decimal Quantity { get; set; } = 0m; // Default zero
