@@ -151,6 +151,74 @@ function initializeKendoTreeList(treeListId, url, params, columns, height = 600)
         }
     });
 }
+
+function initializeKendoDatePicker(selector, options = {}) {
+    $(selector).kendoDatePicker({
+        value: options.value || null,               // Default selected date
+        format: options.format || "MM/dd/yyyy",    // Date format
+        min: options.min || null,                  // Minimum selectable date
+        max: options.max || null,                  // Maximum selectable date
+        start: options.start || "month",           // Start view (e.g., "month", "year", "decade")
+        depth: options.depth || "month",           // Navigation depth
+        change: options.onChange || function (e) {  // Change event handler
+            console.log("Selected date: ", e.sender.value());
+        },
+    });
+}
+
+function initializeKendoDateTimePicker(selector, options = {}) {
+    $(selector).kendoDateTimePicker({
+        value: options.value || null,               // Default selected datetime
+        format: options.format || "MM/dd/yyyy HH:mm", // Date and time format
+        min: options.min || null,                  // Minimum selectable datetime
+        max: options.max || null,                  // Maximum selectable datetime
+        interval: options.interval || 30,          // Time interval in minutes
+        change: options.onChange || function (e) {  // Change event handler
+            console.log("Selected datetime: ", e.sender.value());
+        },
+    });
+}
+
+//function initializeDateTimePicker(selector, options) {
+//    var defaultOptions = {
+//        value: new Date() // Default to current date and time
+//    };
+//    var finalOptions = $.extend({}, defaultOptions, options);
+//    $(selector).kendoDateTimePicker(finalOptions);
+//}
+function initializeDateTimePicker(selector, date, options) {
+    var defaultOptions = {
+        value: date || "",
+        format: "dd/MM/yy HH:mm",
+        parseFormats: ["dd/MM/yy HH:mm"],
+        timeFormat: "HH:mm", //24 hr time
+        placeholder: "dd/MM/yy HH:mm" // Add placeholder for empty input
+    };
+    var finalOptions = $.extend({}, defaultOptions, options);
+    $(selector).kendoDateTimePicker(finalOptions);
+    //var $el = $(selector);
+
+    //// Set placeholder to show the format mask when empty
+    //$el.attr("placeholder", finalOptions.format);
+
+    //// Now initialize the Kendo picker
+    //$el.kendoDateTimePicker(finalOptions);
+}
+
+//function initializeMaskedDateTime(selector, opts) {
+//    var defaults = {
+//        alias: 'datetime',
+//        inputFormat: 'dd/mm/yy HH:MM',
+//        placeholder: 'dd/MM/yy HH:mm',
+//        showMaskOnFocus: true,
+//        showMaskOnHover: false
+//    };
+//    // merge user options
+//    var settings = $.extend({}, defaults, opts || {});
+//    // apply mask
+//    $(selector).inputmask(settings);
+//}
+
 function bindAutoComplete(url, dropdownId, textField) {
 
     if ($("#" + dropdownId).data("kendoAutoComplete")) {

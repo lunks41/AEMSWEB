@@ -259,14 +259,14 @@ namespace AMESWEB.Areas.Project.Controllers
         #region Launch Services
 
         [HttpGet]
-        public async Task<JsonResult> LaunchServicesList(string companyId, Int64 jobOrderId)
+        public async Task<JsonResult> LaunchServiceList(string companyId, Int64 jobOrderId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _jobTaskService.GetLaunchServicesListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                var data = await _jobTaskService.GetLaunchServiceListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
@@ -277,7 +277,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetLaunchServicesById(Int64 jobOrderId, Int64 launchServiceId, string companyId)
+        public async Task<JsonResult> GetLaunchServiceById(Int64 jobOrderId, Int64 launchServiceId, string companyId)
         {
             if (jobOrderId <= 0)
                 return Json(new { success = false, message = "Invalid Launch Services ID" });
@@ -287,7 +287,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _jobTaskService.GetLaunchServicesByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
+                var data = await _jobTaskService.GetLaunchServiceByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
                 return data == null
                     ? Json(new { success = false, message = "Launch Services not found" })
                     : Json(new { success = true, data });
@@ -300,7 +300,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveLaunchServices([FromBody] SaveLaunchServicesViewModel model)
+        public async Task<IActionResult> SaveLaunchService([FromBody] SaveLaunchServiceViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -310,7 +310,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var launchServiceToSave = new Ser_LaunchServices
+                var launchServiceToSave = new Ser_LaunchService
                 {
                     LaunchServiceId = model.launchService.LaunchServiceId,
                     CompanyId = companyIdShort,
@@ -355,7 +355,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditDate = DateTime.Now,
                 };
 
-                var data = await _jobTaskService.SaveLaunchServicesAsync(companyIdShort, parsedUserId.Value, launchServiceToSave);
+                var data = await _jobTaskService.SaveLaunchServiceAsync(companyIdShort, parsedUserId.Value, launchServiceToSave);
                 return Json(new { success = true, message = "Account Type saved successfully", data = data });
             }
             catch (Exception ex)
@@ -366,7 +366,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteLaunchServices(Int64 jobOrderId, Int64 launchServiceId, string companyId)
+        public async Task<IActionResult> DeleteLaunchService(Int64 jobOrderId, Int64 launchServiceId, string companyId)
         {
             if (jobOrderId <= 0)
             {
@@ -389,7 +389,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                await _jobTaskService.DeleteLaunchServicesAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
+                await _jobTaskService.DeleteLaunchServiceAsync(companyIdShort, parsedUserId.Value, jobOrderId, launchServiceId);
                 return Json(new { success = true, message = "Account Type deleted successfully." });
             }
             catch (Exception ex)
@@ -1218,9 +1218,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     JobOrderId = model.consignmentExport.JobOrderId,
                     JobOrderNo = model.consignmentExport.JobOrderNo ?? string.Empty,
                     TaskId = model.consignmentExport.TaskId,
-                    ConsignmentNo = model.consignmentExport.ConsignmentNo?.Trim(),
                     CargoTypeId = model.consignmentExport.CargoTypeId,
-                    Quantity = model.consignmentExport.Quantity,
                     UomId = model.consignmentExport.UomId,
                     ChargeId = model.consignmentExport.ChargeId,
                     StatusId = model.consignmentExport.StatusId,
@@ -1345,9 +1343,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     JobOrderId = model.consignmentImport.JobOrderId,
                     JobOrderNo = model.consignmentImport.JobOrderNo ?? string.Empty,
                     TaskId = model.consignmentImport.TaskId,
-                    ConsignmentNo = model.consignmentImport.ConsignmentNo?.Trim() ?? string.Empty,
                     CargoTypeId = model.consignmentImport.CargoTypeId,
-                    Quantity = model.consignmentImport.Quantity,
                     UomId = model.consignmentImport.UomId,
                     ChargeId = model.consignmentImport.ChargeId,
                     StatusId = model.consignmentImport.StatusId,
@@ -1472,7 +1468,6 @@ namespace AMESWEB.Areas.Project.Controllers
                     JobOrderId = model.landingItem.JobOrderId,
                     JobOrderNo = model.landingItem.JobOrderNo ?? string.Empty,
                     TaskId = model.landingItem.TaskId,
-                    ItemName = model.landingItem.ItemName?.Trim(),
                     Quantity = model.landingItem.Quantity,
                     UomId = model.landingItem.UomId,
                     ChargeId = model.landingItem.ChargeId,
@@ -1663,14 +1658,14 @@ namespace AMESWEB.Areas.Project.Controllers
         #region Technicians Surveyors
 
         [HttpGet]
-        public async Task<JsonResult> TechniciansSurveyorsList(string companyId, Int64 jobOrderId)
+        public async Task<JsonResult> TechnicianSurveyorList(string companyId, Int64 jobOrderId)
         {
             var validationResult = ValidateCompanyAndUserId(companyId, out byte companyIdShort, out short? parsedUserId);
             if (validationResult != null) return validationResult;
 
             try
             {
-                var data = await _jobTaskService.GetTechniciansSurveyorsListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
+                var data = await _jobTaskService.GetTechnicianSurveyorListAsync(companyIdShort, parsedUserId.Value, jobOrderId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
@@ -1681,7 +1676,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTechniciansSurveyorsById(Int64 jobOrderId, Int64 technicianSurveyorId, string companyId)
+        public async Task<JsonResult> GetTechnicianSurveyorById(Int64 jobOrderId, Int64 technicianSurveyorId, string companyId)
         {
             if (jobOrderId <= 0)
                 return Json(new { success = false, message = "Invalid Technician/Surveyor ID" });
@@ -1691,7 +1686,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _jobTaskService.GetTechniciansSurveyorsByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, technicianSurveyorId);
+                var data = await _jobTaskService.GetTechnicianSurveyorByIdAsync(companyIdShort, parsedUserId.Value, jobOrderId, technicianSurveyorId);
                 return data == null
                     ? Json(new { success = false, message = "Technician/Surveyor not found" })
                     : Json(new { success = true, data });
@@ -1704,7 +1699,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveTechniciansSurveyors([FromBody] SaveTechniciansSurveyorsViewModel model)
+        public async Task<IActionResult> SaveTechnicianSurveyor([FromBody] SaveTechnicianSurveyorViewModel model)
         {
             if (model == null || !ModelState.IsValid)
                 return Json(new { success = false, message = "Invalid request data" });
@@ -1714,7 +1709,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var technicianSurveyorToSave = new Ser_TechniciansSurveyors
+                var technicianSurveyorToSave = new Ser_TechnicianSurveyor
                 {
                     TechnicianSurveyorId = model.technicianSurveyor.TechnicianSurveyorId,
                     CompanyId = companyIdShort,
@@ -1737,7 +1732,7 @@ namespace AMESWEB.Areas.Project.Controllers
                     EditVersion = 0
                 };
 
-                var data = await _jobTaskService.SaveTechniciansSurveyorsAsync(companyIdShort, parsedUserId.Value, technicianSurveyorToSave);
+                var data = await _jobTaskService.SaveTechnicianSurveyorAsync(companyIdShort, parsedUserId.Value, technicianSurveyorToSave);
                 return Json(new { success = true, message = "Technician/Surveyor saved successfully", data = data });
             }
             catch (Exception ex)
@@ -1748,7 +1743,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteTechniciansSurveyors(Int64 jobOrderId, Int64 technicianSurveyorId, string companyId)
+        public async Task<IActionResult> DeleteTechnicianSurveyor(Int64 jobOrderId, Int64 technicianSurveyorId, string companyId)
         {
             if (jobOrderId <= 0)
             {
@@ -1771,7 +1766,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                await _jobTaskService.DeleteTechniciansSurveyorsAsync(companyIdShort, parsedUserId.Value, jobOrderId, technicianSurveyorId);
+                await _jobTaskService.DeleteTechnicianSurveyorAsync(companyIdShort, parsedUserId.Value, jobOrderId, technicianSurveyorId);
                 return Json(new { success = true, message = "Technician/Surveyor deleted successfully." });
             }
             catch (Exception ex)

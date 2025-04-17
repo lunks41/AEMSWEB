@@ -1,20 +1,20 @@
 ﻿namespace AMESWEB.Areas.Project.Models
 {
-    public class SaveLaunchServicesViewModel
+    public class SaveLaunchServiceViewModel
     {
-        public LaunchServicesViewModel launchService { get; set; }
+        public LaunchServiceViewModel launchService { get; set; }
         public string? companyId { get; set; }
     }
 
-    public class LaunchServicesViewModelCount
+    public class LaunchServiceViewModelCount
     {
         public Int16 responseCode { get; set; }
         public string? responseMessage { get; set; }
         public Int64 totalRecords { get; set; }
-        public List<LaunchServicesViewModel> data { get; set; }
+        public List<LaunchServiceViewModel> data { get; set; }
     }
 
-    public class LaunchServicesViewModel
+    public class LaunchServiceViewModel
     {
         public long LaunchServiceId { get; set; }
         public string LaunchServiceDate { get; set; }

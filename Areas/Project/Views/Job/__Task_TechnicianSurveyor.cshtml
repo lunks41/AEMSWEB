@@ -1,0 +1,433 @@
+﻿<!-- TechnicianSurveyor Modal -->
+<div class="modal fade" id="addTechnicianSurveyorModal" tabindex="-1" aria-labelledby="addTechnicianSurveyorModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTechnicianSurveyorModalLabel">Technicians & Surveyors</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Container replacing form tag -->
+                <div id="techniciansSurveyorsContainer">
+                    <input type="hidden" id="companyId" />
+                    <input type="hidden" id="technicianSurveyor_jobOrderId" />
+                    <input type="hidden" id="technicianSurveyor_jobOrderNo" />
+                    <input type="hidden" id="technicianSurveyor_debitNoteId" />
+                    <input type="hidden" id="technicianSurveyor_debitNoteNo" />
+                    <input type="hidden" id="techniciansSurveyorsId" />
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <label for="technicianSurveyor_name" class="form-label">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="technicianSurveyor_name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="technicianSurveyor_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="technicianSurveyor_cmb_charge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="technicianSurveyor_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="technicianSurveyor_cmb_gl" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                      <div class="row mt-1">
+                        <div class="col-md-4">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="technicianSurveyor_quantity" value="1.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="technicianSurveyor_cmb_uom" class="form-label">Uom <span class="text-danger">*</span></label>
+                            <select id="technicianSurveyor_cmb_uom" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Company Info <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="technicianSurveyor_companyinfo" />
+                        </div>
+                    </div>
+
+                      <div class="row mt-1">
+                        <div class="col-md-4">
+                            <label class="form-label">Nature Of Attendance <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="technicianSurveyor_natureofatt" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="technicianSurveyor_cmb_passtype" class="form-label">Pass Type <span class="text-danger">*</span></label>
+                            <select id="technicianSurveyor_cmb_passtype" style="width: 100%"></select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="technicianSurveyor_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="technicianSurveyor_cmb_status" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                      <div class="row mt-1">
+                        <div class="col-md-4">
+                            <label class="form-label">Embarked Date </label>
+                            <input type="date" class="form-control" id="technicianSurveyor_embarkedDate">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Disembarked Date </label>
+                            <input type="date" class="form-control" id="technicianSurveyor_disembarkedDate">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Port Request No </label>
+                            <input type="text" class="form-control" id="technicianSurveyor_portrequesrno">
+                        </div>
+                    </div>
+
+                      <div class="row mt-1">
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="technicianSurveyor_remarks" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Audit Fields -->
+                    <div class="accordion mt-3" id="auditAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditCollapse">
+                                    Audit Details
+                                </button>
+                            </h2>
+                            <div id="auditCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created By</label>
+                                            <p id="technicianSurveyorcreateBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Created Date</label>
+                                            <p id="technicianSurveyorcreateDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified By</label>
+                                            <p id="technicianSurveyoreditBy" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modified Date</label>
+                                            <p id="technicianSurveyoreditDate" class="form-control-plaintext"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Edit Version</label>
+                                            <p id="technicianSurveyoreditVersion" class="form-control-plaintext"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End of container -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnTechnicianSurveyorClear" onclick="clearTechnicianSurveyorForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnTechnicianSurveyorSave" onclick="saveTechnicianSurveyor()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function refreshTechnicianSurveyorDropdown() {
+       
+        const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        const glcolumnsProperties = [
+            { field: 'glCode', title: 'Code', width: 100 },
+            { field: 'glName', title: 'Name', width: 200 }
+        ];
+        const glfilterFields = ['glCode', 'glName'];
+        bindMultiColumnComboBox(chartOfAccountUrl, "technicianSurveyor_cmb_gl", "glName", "glId", glcolumnsProperties, glfilterFields);
+
+        const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=12`;
+        bindComboBox(chargeUrl, "technicianSurveyor_cmb_charge", "chargeName", "chargeId");
+
+         const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(uomUrl, "technicianSurveyor_cmb_uom", "uomName", "uomId");
+
+        const passTypeUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=10`;
+        bindComboBox(passTypeUrl, "technicianSurveyor_cmb_passtype", "orderTypeName", "orderTypeId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "technicianSurveyor_cmb_status", "orderTypeName", "orderTypeId");
+
+
+    }
+
+    function clearTechnicianSurveyorForm() {
+        $('#techniciansSurveyorsId').val('');
+        $('#technicianSurveyor_jobOrderId').val('');
+        $('#technicianSurveyor_jobOrderNo').val('');
+        $('#technicianSurveyor_debitNoteId').val('');
+        $('#technicianSurveyor_debitNoteNo').val('');
+
+        $('#technicianSurveyor_cmb_gl').data('kendoMultiColumnComboBox').value('');
+       
+        $('#technicianSurveyor_cmb_charge').data('kendoComboBox').value('');
+        $('#technicianSurveyor_cmb_uom').data('kendoComboBox').value('');
+        $('#technicianSurveyor_cmb_passtype').data('kendoComboBox').value('');
+        $('#technicianSurveyor_cmb_status').data('kendoComboBox').value('');
+
+        $('#technicianSurveyor_serviceDate').val('');
+        $('#technicianSurveyor_hours').val('0.00');
+        $('#technicianSurveyor_rate').val('0.00');
+        $('#technicianSurveyor_amount').val('0.00');
+        $('#technicianSurveyor_remarks').val('');
+
+        $('#technicianSurveyorcreateBy').text('');
+        $('#technicianSurveyorcreateDate').text('');
+        $('#technicianSurveyoreditBy').text('');
+        $('#technicianSurveyoreditDate').text('');
+        $('#technicianSurveyoreditVersion').text('');
+
+        $('#btnTechnicianSurveyorClear').show();
+    }
+
+    function setDefaultTechnicianSurveyorValues() {
+        // Set current date
+        const today = new Date().toISOString().split('T')[0];
+        $('#technicianSurveyor_serviceDate').val(today);
+
+        // Set default GL Account
+        setTimeout(() => {
+            const glCombo = $('#technicianSurveyor_cmb_gl').data('kendoMultiColumnComboBox');
+            if (glCombo.dataSource.view().length > 0) {
+                glCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first charge
+        setTimeout(() => {
+            const chargeCombo = $('#technicianSurveyor_cmb_charge').data('kendoComboBox');
+            if (chargeCombo.dataSource.view().length > 0) {
+                chargeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default to first technician type
+        setTimeout(() => {
+            const techTypeCombo = $('#technicianSurveyor_cmb_passtype').data('kendoComboBox');
+            if (techTypeCombo.dataSource.view().length > 0) {
+                techTypeCombo.select(0);
+            }
+        }, 100);
+
+        // Set default status to "Confirm"
+        setTimeout(() => {
+            const statusCombo = $('#technicianSurveyor_cmb_status').data('kendoComboBox');
+            const confirmItem = statusCombo.dataSource.data().find(item =>
+                item.orderTypeName.toLowerCase() === "confirmed"
+            );
+            if (confirmItem) {
+                statusCombo.value(confirmItem.orderTypeId);
+            }
+        }, 100);
+
+    }
+
+    function openTechnicianSurveyorModal(jobOrderId, jobOrderNo, techniciansSurveyorsId, mode) {
+       
+        const $modal = $('#addTechnicianSurveyorModal');
+        const parsedJobOrderId = parseInt(jobOrderId, 10);
+        const parsedTechnicianSurveyorId = parseInt(techniciansSurveyorsId, 10);
+        $('#technicianSurveyor_jobOrderId').val(jobOrderId);
+        $('#technicianSurveyor_jobOrderNo').val(jobOrderNo);
+
+        const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
+
+        // Edit Mode: Fetch existing data and populate the form
+        if (isValidId(parsedJobOrderId) && isValidId(parsedTechnicianSurveyorId)) {
+            $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
+
+            $.get('@Url.Action("GetTechnicianSurveyorById", "Job", new { area = "Project" })', {
+                jobOrderId: parsedJobOrderId,
+                techniciansSurveyorsId: parsedTechnicianSurveyorId,
+                companyId: $('#companyId').val()
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        refreshTechnicianSurveyorDropdown();
+                        clearTechnicianSurveyorForm();
+                        populateTechnicianSurveyorModalFields(response.data);
+                        $('#addTechnicianSurveyorModal').modal('show');
+                    }
+                })
+                .always(() => $modal.find('.modal-overlay').remove());
+        } else {
+           
+            // Add Mode: Clear form and set default values
+            refreshTechnicianSurveyorDropdown();
+            clearTechnicianSurveyorForm();
+            setDefaultTechnicianSurveyorValues();
+
+            $('#addTechnicianSurveyorModal').modal('show');
+        }
+    }
+
+    function populateTechnicianSurveyorModalFields(data) {
+        // Set hidden fields
+        $('#companyId').val(data.companyId);
+        $('#techniciansSurveyorsId').val(data.techniciansSurveyorsId);
+        $('#technicianSurveyor_jobOrderId').val(data.jobOrderId);
+        $('#technicianSurveyor_jobOrderNo').val(data.jobOrderNo);
+        $('#technicianSurveyor_debitNoteId').val(data.debitNoteId);
+        $('#technicianSurveyor_debitNoteNo').val(data.debitNoteNo);
+
+        // Set date field
+        if (data.serviceDate) {
+            const serviceDate = new Date(data.serviceDate).toLocaleDateString('en-CA');
+            $('#technicianSurveyor_serviceDate').val(serviceDate);
+        }
+
+        // Set combobox values, ensuring they update after data is loaded
+        const nameCombo = $('#technicianSurveyor_cmb_name').data('kendoMultiColumnComboBox');
+        nameCombo.value(data.nameId > 0 ? data.nameId : '');
+        nameCombo.one('dataBound', function () {
+            nameCombo.value(data.nameId > 0 ? data.nameId : '');
+        });
+
+        const techTypeCombo = $('#technicianSurveyor_cmb_passtype').data('kendoComboBox');
+        techTypeCombo.value(data.technicianTypeId > 0 ? data.technicianTypeId : '');
+        techTypeCombo.one('dataBound', function () {
+            techTypeCombo.value(data.technicianTypeId > 0 ? data.technicianTypeId : '');
+        });
+
+        const chargeCombo = $('#technicianSurveyor_cmb_charge').data('kendoComboBox');
+        chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        chargeCombo.one('dataBound', function () {
+            chargeCombo.value(data.chargeId > 0 ? data.chargeId : '');
+        });
+
+        const glCombo = $('#technicianSurveyor_cmb_gl').data('kendoMultiColumnComboBox');
+        glCombo.value(data.glId > 0 ? data.glId : '');
+        glCombo.one('dataBound', function () {
+            glCombo.value(data.glId > 0 ? data.glId : '');
+        });
+
+        const statusCombo = $('#technicianSurveyor_cmb_status').data('kendoComboBox');
+        statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        statusCombo.one('dataBound', function () {
+            statusCombo.value(data.statusId > 0 ? data.statusId : '');
+        });
+
+        const uomCombo = $('#technicianSurveyor_cmb_uom').data('kendoComboBox');
+        uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        uomCombo.one('dataBound', function () {
+            uomCombo.value(data.uomId > 0 ? data.uomId : '');
+        });
+
+        // Set other fields
+        $('#technicianSurveyor_hours').val(data.hours || 0);
+        $('#technicianSurveyor_rate').val(data.rate || 0);
+        $('#technicianSurveyor_amount').val(data.amount || 0);
+        $('#technicianSurveyor_remarks').val(data.remarks);
+
+        // Set audit fields
+        $('#technicianSurveyorcreateBy').text(data.createBy || "N/A");
+        $('#technicianSurveyorcreateDate').text(data.createDate ? new Date(data.createDate).toLocaleString() : "N/A");
+        $('#technicianSurveyoreditBy').text(data.editBy || "N/A");
+        $('#technicianSurveyoreditDate').text(data.editDate ? new Date(data.editDate).toLocaleString() : "N/A");
+        $('#technicianSurveyoreditVersion').text(data.editVersion || "0");
+
+        // Hide clear button in edit mode
+        $('#btnTechnicianSurveyorClear').hide();
+
+        // Enable/disable fields based on debitNoteId
+        if (data.debitNoteId > 0) {
+            nameCombo.enable(false);
+            techTypeCombo.enable(false);
+            chargeCombo.enable(false);
+            glCombo.enable(false);
+            statusCombo.enable(false);
+            uomCombo.enable(false);
+
+            $('#technicianSurveyor_serviceDate, #technicianSurveyor_hours, #technicianSurveyor_rate, #technicianSurveyor_amount, #technicianSurveyor_remarks').prop('readonly', true);
+            $('#btnTechnicianSurveyorSave').prop('disabled', false);
+        } else {
+            nameCombo.enable(true);
+            techTypeCombo.enable(true);
+            chargeCombo.enable(true);
+            glCombo.enable(true);
+            statusCombo.enable(true);
+            uomCombo.enable(true);
+
+            $('#technicianSurveyor_serviceDate, #technicianSurveyor_hours, #technicianSurveyor_rate, #technicianSurveyor_remarks').prop('readonly', false);
+            $('#technicianSurveyor_amount').prop('readonly', true);
+            $('#btnTechnicianSurveyorSave').prop('disabled', false);
+        }
+    }
+
+    function deleteTechnicianSurveyor(jobOrderId, techniciansSurveyorsId) {
+        showDeleteModal("Are you sure you want to delete this record?", function () {
+            $.ajax({
+                url: '@Url.Action("DeleteTechnicianSurveyor", "Job", new { area = "Project" })',
+                type: "DELETE",
+                data: { jobOrderId, techniciansSurveyorsId, companyId: companyId },
+                success: function (response) {
+                    if (response.success) {
+                        loadTechnicianSurveyorGrid();
+                        $('#confirmationModal').modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    function saveTechnicianSurveyor() {
+        let technicianSurveyorData = {
+            TechnicianSurveyorId: parseInt($('#techniciansSurveyorsId').val()) || 0,
+            JobOrderId: parseInt($('#technicianSurveyor_jobOrderId').val()) || 0,
+            JobOrderNo: $('#technicianSurveyor_jobOrderNo').val() || '',
+            PassTypeId: parseInt($('#technicianSurveyor_cmb_passtype').data('kendoComboBox').value()) || 0,
+            ChargeId: parseInt($('#technicianSurveyor_cmb_charge').data('kendoComboBox').value()) || 0,
+            GLId: parseInt($('#technicianSurveyor_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
+            StatusId: parseInt($('#technicianSurveyor_cmb_status').data('kendoComboBox').value()) || 0,
+            UomId: parseInt($('#technicianSurveyor_cmb_uom').data('kendoComboBox').value()) || null,
+
+            ServiceDate: $('#technicianSurveyor_serviceDate').val() || null,
+            Hours: parseFloat($('#technicianSurveyor_hours').val()) || 0,
+            Rate: parseFloat($('#technicianSurveyor_rate').val()) || 0,
+            Amount: parseFloat($('#technicianSurveyor_amount').val()) || 0,
+            Remarks: $('#technicianSurveyor_remarks').val() || '',
+
+            DebitNoteId: parseInt($('#technicianSurveyor_debitNoteId').val()) || null,
+            DebitNoteNo: $('#technicianSurveyor_debitNoteNo').val() || '',
+            TaskId: 12, 
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveTechnicianSurveyor", "Job", new { area = "Project" })',
+            type: "POST",
+            data: JSON.stringify({ techniciansSurveyors: technicianSurveyorData, companyId }),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    initializeTechnicianSurveyorGrid();
+                    clearTechnicianSurveyorForm();
+                    $('#addTechnicianSurveyorModal').modal('hide');
+                } else {
+                    alert(response.message || "Failed to save technicians & surveyors record.");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseJSON?.message || "An unexpected error occurred"));
+            }
+        });
+    }
+
+    // Calculate total amount when hours or rate changes
+    $('#technicianSurveyor_hours, #technicianSurveyor_rate').on('change', function() {
+        calculateTechnicianSurveyorAmount();
+    });
+
+    function calculateTechnicianSurveyorAmount() {
+        const hours = parseFloat($('#technicianSurveyor_hours').val()) || 0;
+        const rate = parseFloat($('#technicianSurveyor_rate').val()) || 0;
+        const amount = hours * rate;
+
+        $('#technicianSurveyor_amount').val(amount.toFixed(2));
+    }
+</script>

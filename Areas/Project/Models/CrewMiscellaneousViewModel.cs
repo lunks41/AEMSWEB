@@ -17,6 +17,7 @@ namespace AMESWEB.Areas.Project.Models
     public class CrewMiscellaneousViewModel
     {
         public long CrewMiscellaneousId { get; set; }
+        public DateTime Date { get; set; }
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }
         public string JobOrderNo { get; set; } = string.Empty;
@@ -26,8 +27,7 @@ namespace AMESWEB.Areas.Project.Models
         public decimal TotAmt { get; set; } = 0M;
         public decimal GstAmt { get; set; } = 0M;
         public decimal TotAmtAftGst { get; set; } = 0M;
-        public string MiscDescription { get; set; } = string.Empty;
-        public decimal MiscAmount { get; set; } = 0M;
+        public string Description { get; set; } = string.Empty;
         public short GLId { get; set; }
         public string? GlName { get; set; } = string.Empty;
         public decimal Quantity { get; set; } = 0M;

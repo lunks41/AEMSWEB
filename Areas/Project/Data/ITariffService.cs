@@ -8,7 +8,7 @@ namespace AMESWEB.Areas.Project.Data.IServices
     {
         public Task<TariffViewModelCount> GetTariffPortExpensesListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
-        public Task<TariffViewModelCount> GetTariffLaunchServicesListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
+        public Task<TariffViewModelCount> GetTariffLaunchServiceListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
         public Task<TariffViewModelCount> GetTariffEquipmentsUsedListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
@@ -28,7 +28,7 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         public Task<TariffViewModelCount> GetTariffFreshWaterListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
-        public Task<TariffViewModelCount> GetTariffTechniciansSurveyorsListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
+        public Task<TariffViewModelCount> GetTariffTechnicianSurveyorListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 
         public Task<TariffViewModelCount> GetTariffLandingItemsListAsync(short CompanyId, short UserId, int pageSize, int pageNumber, string searchString, int customerId, int portId);
 

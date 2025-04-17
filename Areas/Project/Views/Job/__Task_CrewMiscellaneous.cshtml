@@ -17,39 +17,31 @@
                     <input type="hidden" id="crewMiscellaneousId" />
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label">Miscellaneous Description <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="crewMiscellaneous_miscDescription">
+                        <div class="col-md-4">
+                            <label class="form-label">Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="crewMiscellaneous_date">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="crewMiscellaneous_cmb_charge" class="form-label">Charge</label>
                             <select id="crewMiscellaneous_cmb_charge" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="crewMiscellaneous_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
                             <select id="crewMiscellaneous_cmb_gl" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="crewMiscellaneous_quantity" step="1" value="1">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Amount <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="crewMiscellaneous_miscAmount" step="0.01" value="0.00">
+                            <label for="crewMiscellaneous_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="crewMiscellaneous_cmb_status" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Total Amount</label>
-                            <input type="number" class="form-control" id="crewMiscellaneous_totAmt" step="0.01" value="0.00" readonly>
+                        <div class="col-md-6">
+                            <label class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="crewMiscellaneous_description" rows="2"></textarea>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">GST Amount</label>
-                            <input type="number" class="form-control" id="crewMiscellaneous_gstAmt" step="0.01" value="0.00" readonly>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label">Total After GST</label>
-                            <input type="number" class="form-control" id="crewMiscellaneous_totAmtAftGst" step="0.01" value="0.00" readonly>
-                        </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label class="form-label">Remarks</label>
                             <textarea class="form-control" id="crewMiscellaneous_remarks" rows="2"></textarea>
                         </div>
@@ -114,6 +106,9 @@
 
         const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=5`;
         bindComboBox(chargeUrl, "crewMiscellaneous_cmb_charge", "chargeName", "chargeId");
+
+        const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
+        bindComboBox(statusUrl, "crewMiscellaneous_cmb_status", "orderTypeName", "orderTypeId");
     }
 
     function clearCrewMiscellaneousForm() {

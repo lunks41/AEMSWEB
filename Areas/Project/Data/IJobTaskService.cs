@@ -20,13 +20,13 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         #region Launch Services
 
-        public Task<LaunchServicesViewModelCount> GetLaunchServicesListAsync(short CompanyId, short UserId, Int64 JobOrderId);
+        public Task<LaunchServiceViewModelCount> GetLaunchServiceListAsync(short CompanyId, short UserId, Int64 JobOrderId);
 
-        public Task<LaunchServicesViewModel> GetLaunchServicesByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 PortExpenseId);
+        public Task<LaunchServiceViewModel> GetLaunchServiceByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 PortExpenseId);
 
-        public Task<SqlResponce> SaveLaunchServicesAsync(short CompanyId, short UserId, Ser_LaunchServices ser_LaunchServices);
+        public Task<SqlResponce> SaveLaunchServiceAsync(short CompanyId, short UserId, Ser_LaunchService ser_LaunchService);
 
-        public Task<SqlResponce> DeleteLaunchServicesAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 LaunchServiceId);
+        public Task<SqlResponce> DeleteLaunchServiceAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 LaunchServiceId);
 
         #endregion Launch Services
 
@@ -140,13 +140,13 @@ namespace AMESWEB.Areas.Project.Data.IServices
 
         #region Technicians Surveyors
 
-        public Task<TechniciansSurveyorsViewModelCount> GetTechniciansSurveyorsListAsync(short CompanyId, short UserId, Int64 JobOrderId);
+        public Task<TechnicianSurveyorViewModelCount> GetTechnicianSurveyorListAsync(short CompanyId, short UserId, Int64 JobOrderId);
 
-        public Task<TechniciansSurveyorsViewModel> GetTechniciansSurveyorsByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 TechniciansSurveyorsId);
+        public Task<TechnicianSurveyorViewModel> GetTechnicianSurveyorByIdAsync(short CompanyId, short UserId, Int64 JobOrderId, Int64 TechnicianSurveyorId);
 
-        public Task<SqlResponce> SaveTechniciansSurveyorsAsync(short CompanyId, short UserId, Ser_TechniciansSurveyors ser_TechniciansSurveyors);
+        public Task<SqlResponce> SaveTechnicianSurveyorAsync(short CompanyId, short UserId, Ser_TechnicianSurveyor ser_TechnicianSurveyor);
 
-        public Task<SqlResponce> DeleteTechniciansSurveyorsAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 techniciansSurveyorsId);
+        public Task<SqlResponce> DeleteTechnicianSurveyorAsync(short CompanyId, short UserId, Int64 jobOrderId, Int64 techniciansSurveyorsId);
 
         #endregion Technicians Surveyors
 

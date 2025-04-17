@@ -40,7 +40,7 @@
 </style>
 
 <div class="modal fade" id="viewJobOrderModal" tabindex="-1" aria-labelledby="viewJobOrderModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog custom-modal-width">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewJobOrderModalLabel">Job Order </h5>
@@ -227,8 +227,7 @@
                         <div class="card-body">
                             <!-- Scrollable Tabs -->
                             <div class="position-relative">
-                                <button class="btn btn-sm btn-secondary scroll-left" onclick="scrollTabs(-100)">&lt;</button>
-                                <button class="btn btn-sm btn-secondary scroll-right" onclick="scrollTabs(100)">&gt;</button>
+                           
                                 <ul class="nav nav-pills mb-3 flex-nowrap" id="serviceTabs" role="tablist">
                                     <!-- Main Service Tabs -->
                                     <li class="nav-item" role="presentation">
@@ -237,7 +236,7 @@
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button" data-status="LaunchServices">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button" data-status="LaunchService">
                                             <span class="badge bg-secondary me-1">0</span> Launch Services
                                         </button>
                                     </li>
@@ -287,7 +286,7 @@
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button" data-status="TechniciansSurveyors">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button" data-status="TechnicianSurveyor">
                                             <span class="badge bg-warning me-1">0</span> Technicians Surveyors
                                         </button>
                                     </li>
@@ -382,7 +381,7 @@
                                 <div class="tab-pane fade" id="crew-sign-on">
                                     <!-- Button Group for Crew Sign On -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddCrewSignOn" onclick="openChildModal('CrewSignOn')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddCrewSignOn" onclick="openChildModal('CrewSignOn')" class="btn btn-primary me-2">Add CrewSign-On</button>
                                         <button id="btnCreateDebitNoteCrewSignOn" onclick="openChildDebitNoteModal('CrewSignOn')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardCrewSignOn" onclick="openChildTaskForwardModal('CrewSignOn', 4)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateCrewSignOn" onclick="openChildBulkUpdateModal('CrewSignOn', 4)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -404,7 +403,7 @@
                                 <div class="tab-pane fade" id="crew-sign-off">
                                     <!-- Button Group for Crew Sign Off -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddCrewSignOff" onclick="openChildModal('CrewSignOff')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddCrewSignOff" onclick="openChildModal('CrewSignOff')" class="btn btn-primary me-2">Add CrewSign-Off</button>
                                         <button id="btnCreateDebitNoteCrewSignOff" onclick="openChildDebitNoteModal('CrewSignOff')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardCrewSignOff" onclick="openChildTaskForwardModal('CrewSignOff', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateCrewSignOff" onclick="openChildBulkUpdateModal('CrewSignOff', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -426,15 +425,15 @@
                                 <div class="tab-pane fade" id="crew-miscellaneous">
                                     <!-- Button Group for Crew Miscellaneous -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddCrewMiscellaneou" onclick="openChildModal('CrewMiscellaneou')" class="btn btn-primary me-2">Add Launch Service</button>
-                                        <button id="btnCreateDebitNoteCrewMiscellaneou" onclick="openChildDebitNoteModal('CrewMiscellaneou')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
-                                        <button id="btnTaskForwardCrewMiscellaneou" onclick="openChildTaskForwardModal('CrewMiscellaneou', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateCrewMiscellaneou" onclick="openChildBulkUpdateModal('CrewMiscellaneou', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddCrewMiscellaneous" onclick="openChildModal('CrewMiscellaneous')" class="btn btn-primary me-2">Add CrewMiscellaneous</button>
+                                        <button id="btnCreateDebitNoteCrewMiscellaneous" onclick="openChildDebitNoteModal('CrewMiscellaneous')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardCrewMiscellaneous" onclick="openChildTaskForwardModal('CrewMiscellaneous', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateCrewMiscellaneous" onclick="openChildBulkUpdateModal('CrewMiscellaneous', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isCrewMiscellaneouDebitNoteNo" class="form-check-input">
-                                            <label for="isCrewMiscellaneouDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                            <input type="checkbox" id="isCrewMiscellaneousDebitNoteNo" class="form-check-input">
+                                            <label for="isCrewMiscellaneousDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
                                         </div>
 
                                         <!-- Input Box -->
@@ -448,7 +447,7 @@
                                 <div class="tab-pane fade" id="medical-assistance">
                                     <!-- Button Group for Medical Assistance -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddMedicalAssistance" onclick="openChildModal('MedicalAssistance')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddMedicalAssistance" onclick="openChildModal('MedicalAssistance')" class="btn btn-primary me-2">Add Medical Assistance</button>
                                         <button id="btnCreateDebitNoteMedicalAssistance" onclick="openChildDebitNoteModal('MedicalAssistance')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardMedicalAssistance" onclick="openChildTaskForwardModal('MedicalAssistance', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateMedicalAssistance" onclick="openChildBulkUpdateModal('MedicalAssistance', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -470,7 +469,7 @@
                                 <div class="tab-pane fade" id="consignment-import">
                                     <!-- Button Group for Consignment Import -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddConsignmentImport" onclick="openChildModal('ConsignmentImport')" class="btn btn-primary me-2">Add ConsignmentImport</button>
                                         <button id="btnCreateDebitNoteConsignmentImport" onclick="openChildDebitNoteModal('ConsignmentImport')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardConsignmentImport" onclick="openChildTaskForwardModal('ConsignmentImport', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateConsignmentImport" onclick="openChildBulkUpdateModal('ConsignmentImport', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -492,7 +491,7 @@
                                 <div class="tab-pane fade" id="consignment-export">
                                     <!-- Button Group for Consignment Export -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddConsignmentExport" onclick="openChildModal('ConsignmentExport')" class="btn btn-primary me-2">Add ConsignmentExport</button>
                                         <button id="btnCreateDebitNoteConsignmentExport" onclick="openChildDebitNoteModal('ConsignmentExport')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardConsignmentExport" onclick="openChildTaskForwardModal('ConsignmentExport', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateConsignmentExport" onclick="openChildBulkUpdateModal('ConsignmentExport', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -514,7 +513,7 @@
                                 <div class="tab-pane fade" id="third-party-supply">
                                     <!-- Button Group for Third Party  -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddThirdParty" onclick="openChildModal('ThirdParty')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddThirdParty" onclick="openChildModal('ThirdParty')" class="btn btn-primary me-2">Add ThirdParty</button>
                                         <button id="btnCreateDebitNoteThirdParty" onclick="openChildDebitNoteModal('ThirdParty')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardThirdParty" onclick="openChildTaskForwardModal('ThirdParty', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateThirdParty" onclick="openChildBulkUpdateModal('ThirdParty', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -536,7 +535,7 @@
                                 <div class="tab-pane fade" id="fresh-water">
                                     <!-- Button Group for Fresh Water -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddFreshWater" onclick="openChildModal('FreshWater')" class="btn btn-primary me-2">Add FreshWater</button>
                                         <button id="btnCreateDebitNoteFreshWater" onclick="openChildDebitNoteModal('FreshWater')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardFreshWater" onclick="openChildTaskForwardModal('FreshWater', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateFreshWater" onclick="openChildBulkUpdateModal('FreshWater', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -558,29 +557,29 @@
                                 <div class="tab-pane fade" id="technicians-surveyors">
                                     <!-- Button Group for Technicians Surveyors -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddTechniciansSurveyors" onclick="openChildModal('TechniciansSurveyors')" class="btn btn-primary me-2">Add Launch Service</button>
-                                        <button id="btnCreateDebitNoteTechniciansSurveyors" onclick="openChildDebitNoteModal('TechniciansSurveyors')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
-                                        <button id="btnTaskForwardTechniciansSurveyors" onclick="openChildTaskForwardModal('TechniciansSurveyors', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
-                                        <button id="btnBulkUpdateTechniciansSurveyors" onclick="openChildBulkUpdateModal('TechniciansSurveyors', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
+                                        <button id="btnAddTechnicianSurveyor" onclick="openChildModal('TechnicianSurveyor')" class="btn btn-primary me-2">Add TechnicianSurveyor</button>
+                                        <button id="btnCreateDebitNoteTechnicianSurveyor" onclick="openChildDebitNoteModal('TechnicianSurveyor')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
+                                        <button id="btnTaskForwardTechnicianSurveyor" onclick="openChildTaskForwardModal('TechnicianSurveyor', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
+                                        <button id="btnBulkUpdateTechnicianSurveyor" onclick="openChildBulkUpdateModal('TechnicianSurveyor', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
 
                                         <!-- Checkbox -->
                                         <div class="form-check me-2 mb-0">
-                                            <input type="checkbox" id="isTechniciansSurveyorsDebitNoteNo" class="form-check-input">
-                                            <label for="isTechniciansSurveyorsDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
+                                            <input type="checkbox" id="isTechnicianSurveyorDebitNoteNo" class="form-check-input">
+                                            <label for="isTechnicianSurveyorDebitNoteNo" class="form-check-label">Is Own Debit Note No.</label>
                                         </div>
 
                                         <!-- Input Box -->
                                         <input type="text" id="launchServiceDebitNoteNo" class="form-control" placeholder="Enter Debit Note No." style="display: none; width: auto;" disabled>
                                     </div>
                                     <!-- Grid for Technicians Surveyors -->
-                                    <div id="grid-TechniciansSurveyors" class="kendo-grid"></div>
+                                    <div id="grid-TechnicianSurveyor" class="kendo-grid"></div>
                                 </div>
 
                                 <!-- Landing Items Tab -->
                                 <div class="tab-pane fade" id="landing-items">
                                     <!-- Button Group for Landing Items -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddLandingItem" onclick="openChildModal('LandingItem')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddLandingItem" onclick="openChildModal('LandingItem')" class="btn btn-primary me-2">Add LandingItem</button>
                                         <button id="btnCreateDebitNoteLandingItem" onclick="openChildDebitNoteModal('LandingItem')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardLandingItem" onclick="openChildTaskForwardModal('LandingItem', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateLandingItem" onclick="openChildBulkUpdateModal('LandingItem', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -602,7 +601,7 @@
                                 <div class="tab-pane fade" id="other-service">
                                     <!-- Button Group for Other Service -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddOtherService" onclick="openChildModal('OtherService')" class="btn btn-primary me-2">Add OtherService</button>
                                         <button id="btnCreateDebitNoteOtherService" onclick="openChildDebitNoteModal('OtherService')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardOtherService" onclick="openChildTaskForwardModal('OtherService', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateOtherService" onclick="openChildBulkUpdateModal('OtherService', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -624,7 +623,7 @@
                                 <div class="tab-pane fade" id="agency-remuneration">
                                     <!-- Button Group for Agency Remuneration -->
                                     <div class="mb-3 d-flex align-items-center flex-wrap">
-                                        <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add Launch Service</button>
+                                        <button id="btnAddAgencyRemuneration" onclick="openChildModal('AgencyRemuneration')" class="btn btn-primary me-2">Add AgencyRemuneration</button>
                                         <button id="btnCreateDebitNoteAgencyRemuneration" onclick="openChildDebitNoteModal('AgencyRemuneration')" class="btn btn-secondary me-2" disabled>Create Debit Note</button>
                                         <button id="btnTaskForwardAgencyRemuneration" onclick="openChildTaskForwardModal('AgencyRemuneration', 5)" class="btn btn-info me-2" disabled>Task Forward</button>
                                         <button id="btnBulkUpdateAgencyRemuneration" onclick="openChildBulkUpdateModal('AgencyRemuneration', 5)" class="btn btn-warning me-2" disabled>Bulk Update</button>
@@ -688,7 +687,7 @@
             success: function (counts) {
 
                 $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
-                $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
+                $('#serviceTabs [data-status="LaunchService"] .badge').text(counts.launchServices);
                 $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
                 $('#serviceTabs [data-status="CrewSignOn"] .badge').text(counts.crewSignOn);
                 $('#serviceTabs [data-status="CrewSignOff"] .badge').text(counts.crewSignOff);
@@ -698,7 +697,7 @@
                 $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
                 $('#serviceTabs [data-status="ThirdParty"] .badge').text(counts.thirdParty);
                 $('#serviceTabs [data-status="FreshWater"] .badge').text(counts.freshWater);
-                $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
+                $('#serviceTabs [data-status="TechnicianSurveyor"] .badge').text(counts.techniciansSurveyors);
                 $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
                 $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
                 $('#serviceTabs [data-status="AgencyRemuneration"] .badge').text(counts.agencyRemuneration);
@@ -972,36 +971,36 @@
     }
 
     // ================== LAUNCH SERVICES GRID ================== //
-    function initializeLaunchServicesGrid() {
+    function initializeLaunchServiceGrid() {
 
         let searchString = "";
         let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
 
         if (jobOrderId > 0) {
-            let url = '@Url.Action("LaunchServicesList", "Job", new { area = "Project" })';
+            let url = '@Url.Action("LaunchServiceList", "Job", new { area = "Project" })';
             let columns = [
                 {
                     title: "Actions",
                     width: "170px",
-                    headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAllLaunchServices(this)" />',
+                    headerTemplate: '<input type="checkbox" id="selectAllDebitNotes" onclick="toggleSelectAllLaunchService(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelectedLaunchServices(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-portExpenseId="${dataItem.portExpenseId}"  onclick="updateSelectedLaunchService(this, '${dataItem.jobOrderId}','${dataItem.portExpenseId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'view')">
      <i class="material-symbols-outlined text-primary">visibility</i>
  </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServicesModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openLaunchServiceModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}', 'edit')">
      <i class="material-symbols-outlined text-warning" >edit</i>
  </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteLaunchServices('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteLaunchService('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.portExpenseId}','${dataItem.debitNoteId}')">
      <i class="material-symbols-outlined text-danger" >delete</i>
  </button>`;
 
@@ -1051,7 +1050,7 @@
         }
     }
 
-    function updateSelectedLaunchServices(checkbox, jobOrderId, portExpenseId) {
+    function updateSelectedLaunchService(checkbox, jobOrderId, portExpenseId) {
 
         if (checkbox.checked) {
             // Add the portExpenseId to mulid if checked
@@ -1066,10 +1065,10 @@
         console.log("Updated mulid:", mulid);
 
         // Call function to update button states
-        updateButtonLaunchServicesStates();
+        updateButtonLaunchServiceStates();
     }
 
-    function toggleSelectAllLaunchServices(headerCheckbox) {
+    function toggleSelectAllLaunchService(headerCheckbox) {
 
         let checked = headerCheckbox.checked;
         mulid = ""; // Reset mulid when toggling "Select All"
@@ -1089,22 +1088,22 @@
         console.log("Final mulid after toggleSelectAll:", mulid);
 
         // Call function to update button states
-        updateButtonLaunchServicesStates();
+        updateButtonLaunchServiceStates();
     }
 
-    function updateButtonLaunchServicesStates() {
+    function updateButtonLaunchServiceStates() {
         // Check if any .selectDebitNote checkbox is selected
         let anySelected = document.querySelectorAll(".selectDebitNote:checked").length > 0;
 
-        // Check the state of the isLaunchServicesDebitNoteNo checkbox
-        let isDebitNoteChecked = document.getElementById("isLaunchServicesDebitNoteNo").checked;
+        // Check the state of the isLaunchServiceDebitNoteNo checkbox
+        let isDebitNoteChecked = document.getElementById("isLaunchServiceDebitNoteNo").checked;
 
         // Enable or disable buttons based on both conditions
         let enableButtons = anySelected || isDebitNoteChecked;
 
-        document.getElementById("btnCreateDebitNoteLaunchServices").disabled = !enableButtons;
-        document.getElementById("btnTaskForwardLaunchServices").disabled = !enableButtons;
-        document.getElementById("btnBulkUpdateLaunchServices").disabled = !enableButtons;
+        document.getElementById("btnCreateDebitNoteLaunchService").disabled = !enableButtons;
+        document.getElementById("btnTaskForwardLaunchService").disabled = !enableButtons;
+        document.getElementById("btnBulkUpdateLaunchService").disabled = !enableButtons;
     }
 
     // ================== EQUIPMENT USED GRID ================== //
@@ -1168,7 +1167,7 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-EquipmentUsed", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-EquipmentUsed", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -1236,7 +1235,7 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-CrewSignOn", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-CrewSignOn", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -1304,7 +1303,7 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-CrewSignOff", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-CrewSignOff", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -1370,7 +1369,7 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-CrewMiscellaneous", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-CrewMiscellaneous", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -1436,7 +1435,7 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-MedicalAssistance", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-MedicalAssistance", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -1652,7 +1651,7 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-ThirdParty", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-ThirdParty", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
@@ -1718,14 +1717,13 @@
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-FreshWater", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-FreshWater", url, { searchString, companyId, jobOrderId }, columns);
             }
         }
     }
 
-    // ================== TECHNICIAN SURVEYOR GRID ================== //
+    // ================== TECHNICIANS SURVEYORS GRID ================== //
     function initializeTechnicianSurveyorGrid() {
-
         let searchString = "";
         let jobOrderId = $('#view_jobOrderId').val();
         let companyId = $('#companyId').val();
@@ -1736,93 +1734,28 @@
                 {
                     title: "Actions",
                     width: "170px",
+                    headerTemplate: '<input type="checkbox" id="selectAllTechnicianSurveyor" onclick="toggleSelectAllTechnicianSurveyor(this)" />',
                     template: function (dataItem) {
                         // Define a common style for equal height, width, and gap
                         let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
 
                         // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
+                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-technicianSurveyorId="${dataItem.technicianSurveyorId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.technicianSurveyorId}')" />`;
 
                         // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
+                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}', 'view')">
     <i class="material-symbols-outlined text-primary">visibility</i>
 </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}', 'edit')">
     <i class="material-symbols-outlined text-warning" >edit</i>
 </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}','${dataItem.debitNoteId}')">
     <i class="material-symbols-outlined text-danger" >delete</i>
 </button>`;
 
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
-    <i class="material-symbols-outlined" >universal_currency_alt</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-    <i class="material-symbols-outlined" >payments</i>
-</button>`;
-
-                        return rowCheckbox + buttons;
-                    }
-                },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
-
-                { field: "supplierName", title: "Supplier Name", width: "200px" },
-                { field: "chargeName", title: "Charge Name", width: "150px" },
-                { field: "statusName", title: "Status Name", width: "150px" },
-                { field: "uomName", title: "Uom Name", width: "120px" },
-                { field: "quantity", title: "Quantity", width: "100px" },
-
-                { field: "remarks", title: "Remarks", width: "200px" },
-                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-            ];
-
-            let grid = $("#grid-TechnicianSurveyor").data("kendoGrid");
-            if (grid) {
-                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-            } else {
-                // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-TechnicianSurveyor", url, { searchString, companyId, jobOrderId }, columns);
-            }
-        }
-    }
-
-    // ================== TECHNICIANS SURVEYORS GRID ================== //
-    function initializeTechniciansSurveyorsGrid() {
-        let searchString = "";
-        let jobOrderId = $('#view_jobOrderId').val();
-        let companyId = $('#companyId').val();
-
-        if (jobOrderId > 0) {
-            let url = '@Url.Action("TechniciansSurveyorsList", "Job", new { area = "Project" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "170px",
-                    headerTemplate: '<input type="checkbox" id="selectAllTechniciansSurveyors" onclick="toggleSelectAllTechniciansSurveyors(this)" />',
-                    template: function (dataItem) {
-                        // Define a common style for equal height, width, and gap
-                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
-
-                        // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
-
-                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
-    <i class="material-symbols-outlined text-warning" >edit</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
-    <i class="material-symbols-outlined text-danger" >delete</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
+                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.technicianSurveyorId}','${dataItem.taskId}')">
     <i class="material-symbols-outlined" >universal_currency_alt</i>
 </button>`;
 
@@ -1861,19 +1794,19 @@
                 }
             ];
 
-            let grid = $("#grid-TechniciansSurveyors").data("kendoGrid");
+            let grid = $("#grid-TechnicianSurveyor").data("kendoGrid");
             if (grid) {
                 grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
             } else {
                 // Initialize grid if it doesn't exist
-                initializeKendoGridWithoutPaging("grid-TechniciansSurveyors", url, { searchString, companyId, jobOrderId }, columns);
+                initializeKendoGridWithoutPaging("grid-TechnicianSurveyor", url, { searchString, companyId, jobOrderId }, columns);
             }
 
             loadTaskJobOrderCounts(jobOrderId);
         }
     }
 
-    function updateSelectedTechniciansSurveyors(checkbox, jobOrderId, technicianSurveyorId) {
+    function updateSelectedTechnicianSurveyor(checkbox, jobOrderId, technicianSurveyorId) {
         if (checkbox.checked) {
             // Add the technicianSurveyorId to mulid if checked
             if (!mulid.includes(technicianSurveyorId)) {
@@ -1886,14 +1819,14 @@
         }
 
         // Call function to update button states
-        updateTechniciansSurveyorsButtonStates();
+        updateTechnicianSurveyorButtonStates();
     }
 
-    function toggleSelectAllTechniciansSurveyors(headerCheckbox) {
+    function toggleSelectAllTechnicianSurveyor(headerCheckbox) {
         let checked = headerCheckbox.checked;
         mulid = ""; // Reset mulid when toggling "Select All"
 
-        document.querySelectorAll(".selectTechniciansSurveyors").forEach(function (checkbox) {
+        document.querySelectorAll(".selectTechnicianSurveyor").forEach(function (checkbox) {
             checkbox.checked = checked;
 
             // If checked, add all technicianSurveyorIds to mulid
@@ -1906,83 +1839,17 @@
         });
 
         // Call function to update button states
-        updateTechniciansSurveyorsButtonStates();
+        updateTechnicianSurveyorButtonStates();
     }
 
-    function updateTechniciansSurveyorsButtonStates() {
-        // Check if any selectTechniciansSurveyors checkbox is selected
-        let anySelected = document.querySelectorAll(".selectTechniciansSurveyors:checked").length > 0;
+    function updateTechnicianSurveyorButtonStates() {
+        // Check if any selectTechnicianSurveyor checkbox is selected
+        let anySelected = document.querySelectorAll(".selectTechnicianSurveyor:checked").length > 0;
 
         // Enable or disable buttons based on selection
-        document.getElementById("btnCreateDebitNoteTechniciansSurveyors").disabled = !anySelected;
-        document.getElementById("btnTaskForwardTechniciansSurveyors").disabled = !anySelected;
-        document.getElementById("btnBulkUpdateTechniciansSurveyors").disabled = !anySelected;
-    }
-
-    // ================== LANDING ITEM GRID ================== //
-    function initializeLandingItemGrid() {
-
-        let searchString = "";
-        let jobOrderId = $('#view_jobOrderId').val();
-        let companyId = $('#companyId').val();
-
-        if (jobOrderId > 0) {
-            let url = '@Url.Action("LandingItemList", "Job", new { area = "Project" })';
-            let columns = [
-                {
-                    title: "Actions",
-                    width: "170px",
-                    template: function (dataItem) {
-                        // Define a common style for equal height, width, and gap
-                        let commonStyle = 'style="margin-right:5px; vertical-align: middle;"';
-
-                        // Row checkbox with common style
-                        let rowCheckbox = `<input type="checkbox" class="ps-0 border-0 bg-transparent selectDebitNote" ${commonStyle} data-equipmentsUsedId="${dataItem.equipmentsUsedId}"  onclick="updateSelectedEquipmentsUsed(this, '${dataItem.jobOrderId}','${dataItem.equipmentsUsedId}')" />`;
-
-                        // Action buttons with common style; applying the style to both button and its icon for proper alignment.
-                        let buttons = `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'view')">
-    <i class="material-symbols-outlined text-primary">visibility</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}', 'edit')">
-    <i class="material-symbols-outlined text-warning" >edit</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="deleteEquipmentsUsed('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.debitNoteId}')">
-    <i class="material-symbols-outlined text-danger" >delete</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openEquipmentsUsedModal('${dataItem.jobOrderId}','${dataItem.jobOrderNo}','${dataItem.equipmentsUsedId}','${dataItem.taskId}')">
-    <i class="material-symbols-outlined" >universal_currency_alt</i>
-</button>`;
-
-                        buttons += `<button class="ps-0 border-0 bg-transparent" ${commonStyle} onclick="openDebitNoteModal('${dataItem.jobOrderId}','${dataItem.debitNoteId}')">
-    <i class="material-symbols-outlined" >payments</i>
-</button>`;
-
-                        return rowCheckbox + buttons;
-                    }
-                },
-                { field: "debitNoteNo", title: "Debit Note No.", width: "200px" },
-
-                { field: "supplierName", title: "Supplier Name", width: "200px" },
-                { field: "chargeName", title: "Charge Name", width: "150px" },
-                { field: "statusName", title: "Status Name", width: "150px" },
-                { field: "uomName", title: "Uom Name", width: "120px" },
-                { field: "quantity", title: "Quantity", width: "100px" },
-
-                { field: "remarks", title: "Remarks", width: "200px" },
-                { field: "isActive", title: "Active", width: "80px", template: '<input type="checkbox" #= isActive ? "checked" : "" # disabled />' }
-            ];
-
-            let grid = $("#grid-LandingItem").data("kendoGrid");
-            if (grid) {
-                grid.dataSource.read({ searchString: searchString, companyId: companyId, jobOrderId });
-            } else {
-                // Initialize grid if it doesn’t exist
-                initializeKendoGrid("grid-LandingItem", url, { searchString, companyId, jobOrderId }, columns);
-            }
-        }
+        document.getElementById("btnCreateDebitNoteTechnicianSurveyor").disabled = !anySelected;
+        document.getElementById("btnTaskForwardTechnicianSurveyor").disabled = !anySelected;
+        document.getElementById("btnBulkUpdateTechnicianSurveyor").disabled = !anySelected;
     }
 
     // ================== LANDING ITEMS GRID ================== //
@@ -2861,7 +2728,7 @@
             document.getElementById("btnBulkUpdateFreshWater").disabled = !enableButtons;
     }
 
-    // TechniciansSurveyors functions are already implemented
+    // TechnicianSurveyor functions are already implemented
 
     // ================== LANDING ITEMS FUNCTIONS ================== //
     function updateSelectedLandingItems(checkbox, jobOrderId, landingItemId) {

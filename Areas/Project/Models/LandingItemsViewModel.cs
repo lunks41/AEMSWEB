@@ -17,45 +17,32 @@ namespace AMESWEB.Areas.Project.Models
     public class LandingItemsViewModel
     {
         public long LandingItemId { get; set; }
+        public DateTime LandingDate { get; set; }
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }
-        public string JobOrderNo { get; set; } = string.Empty;
+        public string JobOrderNo { get; set; } = string.Empty; // Default value as per SQL
         public short TaskId { get; set; }
-        public string? TaskName { get; set; } = string.Empty;
-        public long? DebitNoteId { get; set; }
-        public string? DebitNoteNo { get; set; } = string.Empty;
-        public decimal TotAmt { get; set; } = 0M;
-        public decimal GstAmt { get; set; } = 0M;
-        public decimal TotAmtAftGst { get; set; } = 0M;
-        public string? Remarks { get; set; } = string.Empty;
-        public string? ItemName { get; set; } = string.Empty;
-        public short CreateById { get; set; }
-        public DateTime CreateDate { get; set; } = DateTime.Now;
-        public short? EditById { get; set; }
-        public DateTime? EditDate { get; set; }
-        public byte EditVersion { get; set; } = 0;
-
-        // Landing items specific fields
-        public DateTime LandingItemDate { get; set; }
-
-        public string? LandingItemName { get; set; }
-        public string Location { get; set; } = string.Empty;
-        public decimal? Quantity { get; set; } = 0M;
-        public decimal? Weight { get; set; }
         public short GLId { get; set; }
-        public string? GlName { get; set; } = string.Empty;
         public short ChargeId { get; set; }
-        public string? ChargeName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty; // Not Nullable
+        public decimal Quantity { get; set; } = 0; // Default value
+        public decimal Weight { get; set; } = 0; // Default value
+        public short LandingTypeId { get; set; }
+        public string LocationName { get; set; } = string.Empty; // Not Nullable
+        public short UomId { get; set; }
+        public DateTime? ReturnDate { get; set; } // Nullable
         public short StatusId { get; set; }
-        public string? StatusName { get; set; } = string.Empty;
-        public string LocationName { get; set; } = string.Empty;
-        public bool? IsDepositRefundReceived { get; set; }
-        public short? ForwardExportId { get; set; }
-        public string? ForwardExportName { get; set; } = string.Empty;
-        public short? UomId { get; set; }
-        public string? UomName { get; set; } = string.Empty;
-
-        // Additional fields for UI display
+        public string Remarks { get; set; } = string.Empty; // Default value
+        public long? DebitNoteId { get; set; } // Nullable
+        public string? DebitNoteNo { get; set; } // Nullable
+        public decimal TotAmt { get; set; } = 0; // Default value
+        public decimal GstAmt { get; set; } = 0; // Default value
+        public decimal TotAmtAftGst { get; set; } = 0; // Default value
+        public short CreateById { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.Now; // Default value
+        public short? EditById { get; set; } // Nullable
+        public DateTime? EditDate { get; set; } // Nullable
+        public byte EditVersion { get; set; }
         public string? CreateBy { get; set; } = string.Empty;
 
         public string? EditBy { get; set; } = string.Empty;

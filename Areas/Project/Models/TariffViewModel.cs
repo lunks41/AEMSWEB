@@ -76,7 +76,7 @@
     public class TaskCountsViewModel
     {
         public int PortExpense { get; set; }
-        public int LaunchServices { get; set; }
+        public int LaunchService { get; set; }
         public int EquipmentsUsed { get; set; }
         public int CrewSignOn { get; set; }
         public int CrewSignOff { get; set; }
@@ -86,7 +86,7 @@
         public int ConsignmentExport { get; set; }
         public int ThirdParty { get; set; }
         public int FreshWater { get; set; }
-        public int TechniciansSurveyors { get; set; }
+        public int TechnicianSurveyor { get; set; }
         public int LandingItems { get; set; }
         public int OtherService { get; set; }
         public int AgencyRemuneration { get; set; }

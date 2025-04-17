@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AMESWEB.Entities.Project
 {
-    public class Ser_LandingItems
+    public class Ser_TechnicianSurveyor
     {
         [Key]
-        public long LandingItemId { get; set; }
+        public long TechnicianSurveyorId { get; set; }
 
-        public DateTime LandingDate { get; set; }
         public byte CompanyId { get; set; }
         public long JobOrderId { get; set; }
         public string JobOrderNo { get; set; } = string.Empty; // Default value as per SQL
@@ -16,12 +14,14 @@ namespace AMESWEB.Entities.Project
         public short GLId { get; set; }
         public short ChargeId { get; set; }
         public string Name { get; set; } = string.Empty; // Not Nullable
-        public decimal Quantity { get; set; } = 0; // Default value
-        public decimal Weight { get; set; } = 0; // Default value
-        public short LandingTypeId { get; set; }
-        public string LocationName { get; set; } = string.Empty; // Not Nullable
+        public decimal Quantity { get; set; } // Not Nullable
         public short UomId { get; set; }
-        public DateTime? ReturnDate { get; set; } // Nullable
+        public string NatureOfAttendance { get; set; } = string.Empty; // Not Nullable
+        public string CompanyInfo { get; set; } = string.Empty; // Not Nullable
+        public short PassTypeId { get; set; }
+        public DateTime? Embarked { get; set; } // Nullable
+        public DateTime? Disembarked { get; set; } // Nullable
+        public string? PortRequestNo { get; set; } // Nullable
         public short StatusId { get; set; }
         public string Remarks { get; set; } = string.Empty; // Default value
         public long? DebitNoteId { get; set; } // Nullable

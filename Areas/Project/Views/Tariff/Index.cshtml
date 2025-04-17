@@ -105,7 +105,7 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button" data-status="LaunchServices">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#launch-services" type="button" data-status="LaunchService">
                                     <span class="badge bg-secondary me-1">0</span> Launch Services
                                 </button>
                             </li>
@@ -155,7 +155,7 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button" data-status="TechniciansSurveyors">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#technicians-surveyors" type="button" data-status="TechnicianSurveyor">
                                     <span class="badge bg-warning me-1">0</span> Technicians Surveyors
                                 </button>
                             </li>
@@ -195,7 +195,7 @@
                     <div class="tab-pane fade" id="launch-services">
 
                         <!-- Grid for Launch Services -->
-                        <div id="grid-LaunchServices" class="kendo-grid"></div>
+                        <div id="grid-LaunchService" class="kendo-grid"></div>
                     </div>
 
                     <!-- Equipments Used Tab -->
@@ -265,7 +265,7 @@
                     <div class="tab-pane fade" id="technicians-surveyors">
 
                         <!-- Grid for Technicians Surveyors -->
-                        <div id="grid-TechniciansSurveyors" class="kendo-grid"></div>
+                        <div id="grid-TechnicianSurveyor" class="kendo-grid"></div>
                     </div>
 
                     <!-- Landing Items Tab -->
@@ -398,7 +398,7 @@
                  alert("Please select both the customer and the port.");
             } else {
                 initializePortExpenseGrid();
-                initializeLaunchServicesGrid();
+                initializeLaunchServiceGrid();
                 initializeEquipmentsUsedGrid();
                 initializeCrewSignOnGrid();
                 initializeCrewSignOffGrid();
@@ -408,7 +408,7 @@
                 initializeConsignmentExportGrid();
                 initializeThirdPartyGrid();
                 initializeFreshWaterGrid();
-                initializeTechniciansSurveyorsGrid();
+                initializeTechnicianSurveyorGrid();
                 initializeLandingItemsGrid();
                 initializeOtherServiceGrid();
                 initializeAgencyRemunerationGrid();
@@ -433,7 +433,7 @@
                 success: function (counts) {
 
                     $('#serviceTabs [data-status="PortExpense"] .badge').text(counts.portExpense);
-                    $('#serviceTabs [data-status="LaunchServices"] .badge').text(counts.launchServices);
+                    $('#serviceTabs [data-status="LaunchService"] .badge').text(counts.launchServices);
                     $('#serviceTabs [data-status="EquipmentsUsed"] .badge').text(counts.equipmentsUsed);
                     $('#serviceTabs [data-status="CrewSignOn"] .badge').text(counts.crewSignOn);
                     $('#serviceTabs [data-status="CrewSignOff"] .badge').text(counts.crewSignOff);
@@ -443,7 +443,7 @@
                     $('#serviceTabs [data-status="ConsignmentExport"] .badge').text(counts.consignmentExport);
                     $('#serviceTabs [data-status="ThirdParty"] .badge').text(counts.thirdPartySupply);
                     $('#serviceTabs [data-status="FreshWater"] .badge').text(counts.freshWaterSupply);
-                    $('#serviceTabs [data-status="TechniciansSurveyors"] .badge').text(counts.techniciansSurveyors);
+                    $('#serviceTabs [data-status="TechnicianSurveyor"] .badge').text(counts.techniciansSurveyors);
                     $('#serviceTabs [data-status="LandingItems"] .badge').text(counts.landingItems);
                     $('#serviceTabs [data-status="OtherService"] .badge').text(counts.otherService);
                     $('#serviceTabs [data-status="AgencyRemuneration"] .badge').text(counts.agencyRemuneration);
@@ -459,7 +459,7 @@
             $('#cmb_customer').data('kendoMultiColumnComboBox').value('');
             $('#cmb_port').data('kendoComboBox').value('');
             initializePortExpenseGrid();
-            initializeLaunchServicesGrid();
+            initializeLaunchServiceGrid();
             initializeEquipmentsUsedGrid();
             initializeCrewSignOnGrid();
             initializeCrewSignOffGrid();
@@ -469,7 +469,7 @@
             initializeConsignmentExportGrid();
             initializeThirdPartyGrid();
             initializeFreshWaterGrid();
-            initializeTechniciansSurveyorsGrid();
+            initializeTechnicianSurveyorGrid();
             initializeLandingItemsGrid();
             initializeOtherServiceGrid();
             initializeAgencyRemunerationGrid();
@@ -501,8 +501,8 @@
             initializeTaskGrid("PortExpenses",   "@Url.Action("GetTariffPortExpensesList", "Tariff", new { area = "Project" })","grid-PortExpense");
         }
 
-        function initializeLaunchServicesGrid() {
-            initializeTaskGrid("LaunchServices","@Url.Action("GetTariffLaunchServicesList", "Tariff", new { area = "Project" })",  "grid-LaunchServices");
+        function initializeLaunchServiceGrid() {
+            initializeTaskGrid("LaunchService","@Url.Action("GetTariffLaunchServiceList", "Tariff", new { area = "Project" })",  "grid-LaunchService");
         }
 
         function initializeEquipmentsUsedGrid() {
@@ -541,8 +541,8 @@
             initializeTaskGrid("FreshWater", "@Url.Action("GetTariffFreshWaterList", "Tariff", new { area = "Project" })", "grid-FreshWater");
         }
 
-        function initializeTechniciansSurveyorsGrid() {
-            initializeTaskGrid("TechniciansSurveyors", "@Url.Action("GetTariffTechniciansSurveyorsList", "Tariff", new { area = "Project" })", "grid-TechniciansSurveyors");
+        function initializeTechnicianSurveyorGrid() {
+            initializeTaskGrid("TechnicianSurveyor", "@Url.Action("GetTariffTechnicianSurveyorList", "Tariff", new { area = "Project" })", "grid-TechnicianSurveyor");
         }
 
         function initializeLandingItemsGrid() {

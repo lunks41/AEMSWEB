@@ -1,5 +1,5 @@
 ﻿  <!-- LaunchService Modal -->
-<div class="modal fade" id="addLaunchServiceModal" tabindex="-1" aria-labelledby="addLaunchServiceModalLabel" aria-hidden="true">
+<div class="modal fade" id="addLaunchServiceModal" tabindex="-1" aria-labelledby="addLaunchServiceModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,148 +16,129 @@
                     <input type="hidden" id="launchService_debitNoteId" />
                     <input type="hidden" id="launchService_debitNoteNo" />
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Launch Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="launchService_Date" required>
-                            </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Launch Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="launchService_Date" required>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label for="launchServices_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
-                                <select id="launchServices_cmb_charge" style="width: 100%"></select>
-                            </div>
+                        <div class="col-md-3">
+
+                            <label for="launchServices_cmb_launch" class="form-label">Launch <span class="text-danger">*</span></label>
+                            <select id="launchServices_cmb_launch" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label for="launchServices_cmb_launch" class="form-label">Launch <span class="text-danger">*</span></label>
-                                <select id="launchServices_cmb_launch" style="width: 100%"></select>
-                            </div>
+                        <div class="col-md-3">
+
+                            <label for="launchServices_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="launchServices_cmb_charge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+
+                            <label for="launchServices_cmb_gl" class="form-label">Gl Account <span class="text-danger">*</span></label>
+                            <select id="launchServices_cmb_gl" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col-md-3">
+
+                            <label class="form-label">Distance To Vessel</label>
+                            <input type="number" class="form-control" id="distanceFromJettyToVessel" step="0.0001">
+                        </div>
+                        <div class="col-md-3">
+
+                            <label for="launchServices_cmb_uom" class="form-label">UOM  <span class="text-danger">*</span></label>
+                            <select id="launchServices_cmb_uom" style="width: 100%"></select>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label for="launchServices_cmb_uom" class="form-label">UOM  <span class="text-danger">*</span></label>
-                                <select id="launchServices_cmb_uom" style="width: 100%"></select>
+                        <div class="col-md-3">
+
+                            <label class="form-label">Agent Tally</label>
+                            <input type="text" class="form-control" id="agentTally">
+                        </div>
+                        <div class="col-md-3">
+
+                            <label class="form-label">Boat Opt Tally</label>
+                            <input type="text" class="form-control" id="boatopTally">
+                        </div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col-md-3">
+                            <label class="form-label">Lunch Hire Time (1)</label>
+                            <input id="loadingTime" placeholder="dd/MM/yy HH:mm">
+                        </div>
+                        <div class="col-md-3">
+
+                            <label class="form-label">Left Jetty (2)</label>
+                            <input id="leftJetty" placeholder="dd/MM/yy HH:mm">
+                        </div>
+                        <div class="col-md-3">
+
+                            <label class="form-label">Alongside Vessel (3)</label>
+                            <input id="alongsideVessel" placeholder="dd/MM/yy HH:mm">
+                        </div>
+                        <div class="col-md-3">
+
+                            <label class="form-label">Departed From Vessel (4)</label>
+                            <input id="departedFromVessel" placeholder="dd/MM/yy HH:mm">
+                        </div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col-md-3">
+                            <label class="form-label">Arrived At Jetty (5)</label>
+                            <input id="arrivedAtJetty">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-center">
+                            <b>Waiting Time At Loading Pt (2-1) : <span id="time2minus1"></span></b>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-center">
+                            <b>Waiting Time Along Side (4-3) : <span id="time4minus3"></span></b>
+                        </div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col-md-3">
+                            <label class="form-label">Weight Delivered</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="weightOfCargoDelivered" step="0.0001" value="0.00">
+                                <span class="input-group-text">Tons/Pallets</span>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label for="launchServices_cmb_gl" class="form-label">Gl Account <span class="text-danger">*</span></label>
-                                <select id="launchServices_cmb_gl" style="width: 100%"></select>
+                        <div class="col-md-3">
+                            <label class="form-label">Weight Landed</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="weightOfCargoLanded" step="0.0001" value="0.00">
+                                <span class="input-group-text">Tons/Pallets</span>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Agent Tally</label>
-                                <input type="text" class="form-control" id="agentTally">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Boat Oper Tally</label>
-                                <input type="text" class="form-control" id="boatopTally">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Distance To Vessel</label>
-                                <input type="number" class="form-control" id="distanceFromJettyToVessel" step="0.0001">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Lunch Hire Time (1)</label>
-                                <input type="datetime-local" class="form-control" id="loadingTime">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Left Jetty (2)</label>
-                                <input type="datetime-local" class="form-control" id="leftJetty">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Alongside Vessel (3)</label>
-                                <input type="datetime-local" class="form-control" id="alongsideVessel">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Departed From Vessel (4)</label>
-                                <input type="datetime-local" class="form-control" id="departedFromVessel">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-1">
-                                <b>Waitg Time At Loadg Pt (2-1) : <span id="time2minus1"></span></b>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <b>Waitg Time Along Side (4-3) :  <span id="time4minus3"></span></b>
+                        <div class="col-md-3">
+                            <label class="form-label">Boat Operator</label>
+                            <input type="text" class="form-control" id="boatoperator">
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Arrived At Jetty (5)</label>
-                                <input type="datetime-local" class="form-control" id="arrivedAtJetty">
-                            </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Credit Inv No</label>
+                            <input type="text" class="form-control" id="creditorsInvNo">
                         </div>
+                    </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Weight Delivered</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="weightOfCargoDelivered" step="0.0001" value="0.00">
-                                    <span class="input-group-text">Tons/Pallets</span>
-                                </div>
-                            </div>
+                    <div class="row mt-1">
+                        <div class="col-md-3">
+                            <label class="form-label">Annexure</label>
+                            <input type="text" class="form-control" id="annexure">
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Weight Landed</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="weightOfCargoLanded" step="0.0001" value="0.00">
-                                    <span class="input-group-text">Tons/Pallets</span>
-                                </div>
-                            </div>
+                        <div class="col-md-3">
+                            <label for="launchServices_cmb_port" class="form-label">Launch From (Port)</label>
+                            <select id="launchServices_cmb_port" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Boat Operator</label>
-                                <input type="text" class="form-control" id="boatoperator">
-                            </div>
+                        <div class="col-md-3">
+                            <label for="launchServices_cmb_status" class="form-label">Status  <span class="text-danger">*</span></label>
+                            <select id="launchServices_cmb_status" style="width: 100%"></select>
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Credit Inv No</label>
-                                <input type="text" class="form-control" id="creditorsInvNo">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label class="form-label">Annexure</label>
-                                <input type="text" class="form-control" id="annexure">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label for="launchServices_cmb_port" class="form-label">Launch From (Port)</label>
-                                <select id="launchServices_cmb_port" style="width: 100%"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-1">
-                                <label for="launchServices_cmb_status" class="form-label">Status  <span class="text-danger">*</span></label>
-                                <select id="launchServices_cmb_status" style="width: 100%"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Remark</label>
-                            <textarea class="form-control" id="launchServices_remarks" rows="2"></textarea>
-                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Remark</label>
+                        <textarea class="form-control" id="launchServices_remarks" rows="2"></textarea>
                     </div>
 
                     <!-- Audit Fields -->
@@ -211,8 +192,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btnLaunchServicesClear" onclick="clearLaunchServicesForm()">Clear</button>
-                <button type="button" class="btn btn-primary" id="btnLaunchServicesSave" onclick="saveLaunchServices()">Save</button>
+                <button type="button" class="btn btn-secondary" id="btnLaunchServiceClear" onclick="clearLaunchServiceForm()">Clear</button>
+                <button type="button" class="btn btn-primary" id="btnLaunchServiceSave" onclick="saveLaunchService()">Save</button>
             </div>
         </div>
     </div>
@@ -220,13 +201,16 @@
 
 <script>
 
-    function refreshLaunchServicesDropdown() {
+    function refreshLaunchServiceDropdown() {
+
+        /*initializeDateTimePicker("#arrivedAtJetty", new Date(2025, 3, 17, 14, 30), { format: "dd/MM/yy HH:mm", parseFormats: ["dd/MM/yy HH:mm:ss", "dd/MM/yy"] });*/
+
+       // initializeMaskedDateTime("#loadingTime");
+
+        initializeDateTimePicker("#departedFromVessel,#alongsideVessel,#leftJetty,#loadingTime,#arrivedAtJetty");
 
         const launchUrl = '@Url.Action("GetBargeLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        bindComboBox(launchUrl, "launchServices_cmb_barge", "bargeName", "bargeId");
-
-        const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        bindComboBox(portUrl, "launchServices_cmb_port", "portName", "portId");
+        bindComboBox(launchUrl, "launchServices_cmb_launch", "bargeName", "bargeId");
 
         const chartOfAccountUrl = '@Url.Action("GetChartOfAccountLookup", "Lookup", new { area = "" })?companyId=' + companyId;
         const glcolumnsProperties = [
@@ -244,6 +228,9 @@
 
         const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
         bindComboBox(statusUrl, "launchServices_cmb_status", "orderTypeName", "orderTypeId");
+
+        const portUrl = '@Url.Action("GetPortLookup", "Lookup", new { area = "" })?companyId=' + companyId;
+        bindComboBox(portUrl, "launchServices_cmb_port", "portName", "portId");
     }
 
     function SelectedDropdown(DrpdwnName) {
@@ -284,7 +271,7 @@
         document.getElementById('time4minus3').textContent = formatTime(diff4minus3);
     }
 
-    function clearLaunchServicesForm() {
+    function clearLaunchServiceForm() {
 
         $('#launchServicesId').val('');
         $('#launchServices_jobOrderId').val('');
@@ -309,7 +296,7 @@
         $('#launchServices_editDate').text('');
         $('#launchServices_editVersion').text('');
 
-        $('#btnLaunchServicesClear').show();
+        $('#btnLaunchServiceClear').show();
     }
 
     function setDefaultDropdownValues() {
@@ -344,46 +331,46 @@
         }, 100);
     }
 
-    function openLaunchServicesModal(jobOrderId, jobOrderNo, launchServicesId, mode) {
+    function openLaunchServiceModal(jobOrderId, jobOrderNo, launchServicesId, mode) {
 
-        const $modal = $('#addLaunchServicesModal');
+        const $modal = $('#addLaunchServiceModal');
         const parsedJobOrderId = parseInt(jobOrderId, 10);
-        const parsedLaunchServicesId = parseInt(launchServicesId, 10);
+        const parsedLaunchServiceId = parseInt(launchServicesId, 10);
         $('#launchServices_jobOrderId').val(jobOrderId);
         $('#launchServices_jobOrderNo').val(jobOrderNo);
 
         const isValidId = id => !isNaN(id) && id !== null && id !== "" && id > 0;
 
         // Edit Mode: Fetch existing data and populate the form
-        if (isValidId(parsedJobOrderId) && isValidId(parsedLaunchServicesId)) {
+        if (isValidId(parsedJobOrderId) && isValidId(parsedLaunchServiceId)) {
 
             $modal.find('.modal-content').append('<div class="modal-overlay"><div class="spinner"></div></div>');
 
-            $.get('@Url.Action("GetLaunchServicesById", "Job", new { area = "Project" })', {
+            $.get('@Url.Action("GetLaunchServiceById", "Job", new { area = "Project" })', {
                 jobOrderId: parsedJobOrderId,
-                launchServicesId: parsedLaunchServicesId,
+                launchServicesId: parsedLaunchServiceId,
                 companyId: $('#companyId').val()
             })
                 .done(function (response) {
                     if (response.success) {
-                        refreshLaunchServicesDropdown();
-                        clearLaunchServicesForm();
-                        populateLaunchServicesModalFields(response.data);
-                        $('#addLaunchServicesModal').modal('show');
+                        refreshLaunchServiceDropdown();
+                        clearLaunchServiceForm();
+                        populateLaunchServiceModalFields(response.data);
+                        $('#addLaunchServiceModal').modal('show');
                     }
                 })
                 .always(() => $modal.find('.modal-overlay').remove());
         } else {
             // Add Mode: Clear form and set default values
-            refreshLaunchServicesDropdown();
-            clearLaunchServicesForm();
+            refreshLaunchServiceDropdown();
+            clearLaunchServiceForm();
             setDefaultDropdownValues();
 
-            $('#addLaunchServicesModal').modal('show');
+            $('#addLaunchServiceModal').modal('show');
         }
     }
 
-    function populateLaunchServicesModalFields(data) {
+    function populateLaunchServiceModalFields(data) {
 
         // Set hidden fields
         $('#companyId').val(data.companyId);
@@ -432,7 +419,7 @@
         $('#launchServices_editVersion').text(data.editVersion || "0");
 
         // Hide clear button in edit mode
-        $('#btnLaunchServicesClear').hide();
+        $('#btnLaunchServiceClear').hide();
 
         // Enable/disable fields based on debitNoteId
         if (data.debitNoteId > 0) {
@@ -443,7 +430,7 @@
             glCombo.enable(false);
             $('#launchServices_quantity, #launchServices_deliverDate,  #launchServices_remarks').prop('readonly', true);
             $('#isActive').prop('disabled', false);
-            $('#btnLaunchServicesSave').prop('disabled', false);
+            $('#btnLaunchServiceSave').prop('disabled', false);
         } else {
             chargeCombo.enable(true);
             uomCombo.enable(true);
@@ -452,19 +439,19 @@
             glCombo.enable(true);
             $('#launchServices_quantity, #launchServices_deliverDate,  #launchServices_remarks').prop('readonly', false);
             $('#isActive').prop('disabled', false);
-            $('#btnLaunchServicesSave').prop('disabled', false);
+            $('#btnLaunchServiceSave').prop('disabled', false);
         }
     }
 
-    function deleteLaunchServices(jobOrderId, launchServicesId) {
+    function deleteLaunchService(jobOrderId, launchServicesId) {
         showDeleteModal("Are you sure you want to delete this record?", function () {
             $.ajax({
-                url: '@Url.Action("DeleteLaunchServices", "Job", new { area = "Project" })',
+                url: '@Url.Action("DeleteLaunchService", "Job", new { area = "Project" })',
                 type: "DELETE",
                 data: { jobOrderId, launchServicesId, companyId: companyId },
                 success: function (response) {
                     if (response.success) {
-                        loadLaunchServicesGrid();
+                        loadLaunchServiceGrid();
                         $('#confirmationModal').modal('hide');
                     }
                 }
@@ -472,10 +459,10 @@
         });
     }
 
-    function saveLaunchServices() {
+    function saveLaunchService() {
 
         let launchServicesData = {
-            LaunchServicesId: parseInt($('#launchServicesId').val()) || 0,
+            LaunchServiceId: parseInt($('#launchServicesId').val()) || 0,
             JobOrderId: parseInt($('#launchServices_jobOrderId').val()) || 0,
             JobOrderNo: $('#launchServices_jobOrderNo').val() || '',
             ChargeId: parseInt($('#launchServices_cmb_charge').data('kendoComboBox').value()) || 0,
@@ -490,18 +477,18 @@
             DebitNoteNo: $('#launchServices_debitNoteNo').val() || '',
         };
 
-        console.log("LaunchServices Data : " + launchServicesData);
+        console.log("LaunchService Data : " + launchServicesData);
 
         $.ajax({
-            url: '@Url.Action("SaveLaunchServices", "Job", new { area = "Project" })',
+            url: '@Url.Action("SaveLaunchService", "Job", new { area = "Project" })',
             type: "POST",
             data: JSON.stringify({ launchServices: launchServicesData, companyId }),
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    initializeLaunchServicesGrid();
-                    clearLaunchServicesForm();
-                    $('#addLaunchServicesModal').modal('hide');
+                    initializeLaunchServiceGrid();
+                    clearLaunchServiceForm();
+                    $('#addLaunchServiceModal').modal('hide');
                 } else {
                     alert(response.message || "Failed to save port expense.");
                 }

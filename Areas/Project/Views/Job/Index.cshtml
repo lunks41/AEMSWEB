@@ -179,7 +179,7 @@
     @await Html.PartialAsync("_JobOrder");
 
     @await Html.PartialAsync("__Task_PortExpense");
-    @await Html.PartialAsync("__Task_LaunchServices");
+    @await Html.PartialAsync("__Task_LaunchService");
     @await Html.PartialAsync("__Task_EquipmentsUsed");
     @await Html.PartialAsync("__Task_CrewSignOn");
     @await Html.PartialAsync("__Task_CrewSignOff");
@@ -189,7 +189,7 @@
     @await Html.PartialAsync("__Task_ConsignmentExport");
     @await Html.PartialAsync("__Task_ThirdParty");
     @await Html.PartialAsync("__Task_FreshWater");
-    @await Html.PartialAsync("__Task_TechniciansSurveyors");
+    @await Html.PartialAsync("__Task_TechnicianSurveyor");
     @await Html.PartialAsync("__Task_LandingItems");
     @await Html.PartialAsync("__Task_OtherService");
     @await Html.PartialAsync("__Task_AgencyRemuneration");
@@ -450,17 +450,17 @@
             $('#view_isTaxable').prop('checked', data.isTaxable);
 
             initializePortExpenseGrid();
-            initializeLaunchServicesGrid();
+            initializeLaunchServiceGrid();
             initializeEquipmentUsedGrid();
             initializeCrewSignOnGrid();
             initializeCrewSignOffGrid();
-            initializeCrewMiscGrid();
+            initializeCrewMiscellaneousGrid();
             initializeMedicalAssistanceGrid();
             initializeConsignmentImportGrid();
             initializeConsignmentExportGrid();
             initializeThirdPartyGrid();
             initializeTechnicianSurveyorGrid();
-            initializeLandingItemGrid();
+            initializeLandingItemsGrid();
             initializeOtherServiceGrid();
             initializeAgencyRemunerationGrid();
             loadTaskJobOrderCounts(data.jobOrderId);

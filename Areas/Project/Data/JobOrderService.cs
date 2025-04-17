@@ -537,7 +537,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     string specificQuery = taskId switch
                     {
                         1 => $"UPDATE dbo.Ser_PortExpenses SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND PortExpenseId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
-                        2 => $"UPDATE dbo.Ser_LaunchServices SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND LaunchServiceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        2 => $"UPDATE dbo.Ser_LaunchService SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND LaunchServiceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         3 => $"UPDATE dbo.Ser_EquipmentsUsed SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND EquipmentsUsedId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         4 => $"UPDATE dbo.Ser_CrewSignOn SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND CrewSignOnId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         5 => $"UPDATE dbo.Ser_CrewSignOff SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND CrewSignOffId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
@@ -547,7 +547,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                         9 => $"UPDATE dbo.Ser_ConsignmentExport SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ConsignmentExporId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         10 => $"UPDATE dbo.Ser_ThirdParty SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND ThirdPartyId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         11 => $"UPDATE dbo.Ser_FreshWater SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND FreshWaterId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
-                        12 => $"UPDATE dbo.Ser_TechniciansSurveyors SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND TechniciansSurveyorsId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
+                        12 => $"UPDATE dbo.Ser_TechnicianSurveyor SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND TechnicianSurveyorId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         13 => $"UPDATE dbo.Ser_LandingItems SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND LandingItemId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         14 => $"UPDATE dbo.Ser_OtherService SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND OtherServiceId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
                         15 => $"UPDATE dbo.Ser_AgencyRemuneration SET JobOrderId = {jobOrderId},JobOrderNo='{jobOrderNo}' WHERE TaskId = {taskId} AND JobOrderId = {prevJobOrderId} AND AgencyRemunerationId IN ({multipleId});  SELECT @@ROWCOUNT AS RowsAffected; ",
@@ -605,7 +605,7 @@ namespace AMESWEB.Areas.Project.Data.Services
 
                 // Aggregate counts for each status
                 int countPortExpenses = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.PortExpenses)?.CountId ?? 0;
-                int countLaunchServices = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.LaunchServices)?.CountId ?? 0;
+                int countLaunchService = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.LaunchService)?.CountId ?? 0;
                 int countEquipmentsUsed = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.EquipmentsUsed)?.CountId ?? 0;
                 int countCrewSignOn = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.CrewSignOn)?.CountId ?? 0;
                 int countCrewSignOff = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.CrewSignOff)?.CountId ?? 0;
@@ -615,7 +615,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                 int countConsignmentExport = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ConsignmentExport)?.CountId ?? 0;
                 int countThirdParty = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.ThirdParty)?.CountId ?? 0;
                 int countFreshWater = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.FreshWater)?.CountId ?? 0;
-                int countTechniciansSurveyors = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.TechniciansSurveyors)?.CountId ?? 0;
+                int countTechnicianSurveyor = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.TechnicianSurveyor)?.CountId ?? 0;
                 int countLandingItems = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.LandingItems)?.CountId ?? 0;
                 int countOtherService = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.OtherService)?.CountId ?? 0;
                 int countAgencyRemuneration = countsResult.FirstOrDefault(c => c.TaskId == (short)E_Task.AgencyRemuneration)?.CountId ?? 0;
@@ -625,7 +625,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                 return new TaskCountsViewModel
                 {
                     PortExpense = countPortExpenses,
-                    LaunchServices = countLaunchServices,
+                    LaunchService = countLaunchService,
                     EquipmentsUsed = countEquipmentsUsed,
                     CrewSignOn = countCrewSignOn,
                     CrewSignOff = countCrewSignOff,
@@ -635,7 +635,7 @@ namespace AMESWEB.Areas.Project.Data.Services
                     ConsignmentExport = countConsignmentExport,
                     ThirdParty = countThirdParty,
                     FreshWater = countFreshWater,
-                    TechniciansSurveyors = countTechniciansSurveyors,
+                    TechnicianSurveyor = countTechnicianSurveyor,
                     LandingItems = countLandingItems,
                     OtherService = countOtherService,
                     AgencyRemuneration = countAgencyRemuneration,

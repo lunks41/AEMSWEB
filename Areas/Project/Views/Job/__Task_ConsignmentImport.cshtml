@@ -22,24 +22,12 @@
                             <label for="consignmentImport_cmb_cargoType" class="form-label">Cargo Type <span class="text-danger">*</span></label>
                             <select id="consignmentImport_cmb_cargoType" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Consignment No</label>
-                            <input type="text" class="form-control" id="consignmentImport_consignmentNo">
-                        </div>
+
                         <div class="col-md-3">
                             <label class="form-label">AWB Number</label>
                             <input type="text" class="form-control" id="consignmentImport_awbNumber">
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">HAWB Number</label>
-                            <input type="text" class="form-control" id="consignmentImport_hawbNumber">
-                        </div>
 
-                        <!-- Second row -->
-                        <div class="col-md-3">
-                            <label class="form-label">Declaration Number</label>
-                            <input type="text" class="form-control" id="consignmentImport_declarationNumber">
-                        </div>
                         <div class="col-md-3">
                             <label class="form-label">Booking Date</label>
                             <input type="date" class="form-control" id="consignmentImport_bookingDate">
@@ -53,11 +41,6 @@
                             <input type="number" class="form-control" id="consignmentImport_noOfPcs" step="1" value="0">
                         </div>
 
-                        <!-- Third row -->
-                        <div class="col-md-3">
-                            <label for="consignmentImport_cmb_supplier" class="form-label">Supplier</label>
-                            <input type="text" id="consignmentImport_cmb_supplier" />
-                        </div>
                         <div class="col-md-3">
                             <label for="consignmentImport_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
                             <select id="consignmentImport_cmb_charge" style="width: 100%"></select>
@@ -154,14 +137,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-3 mt-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="consignmentImport_isWarehouseCharges">
-                                <label class="form-check-label" for="consignmentImport_isWarehouseCharges">
-                                    Warehouse Charges
-                                </label>
-                            </div>
-                        </div>
+
                         <div class="col-md-3 mt-4">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="consignmentImport_isRefundedReceived">
@@ -188,20 +164,7 @@
                             <label class="form-label">Refund Instrument Number</label>
                             <input type="text" class="form-control" id="consignmentImport_refundInstrumentNumber">
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Total Amount</label>
-                            <input type="number" class="form-control" id="consignmentImport_totAmt" step="0.01" value="0.00" readonly>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">GST Amount</label>
-                            <input type="number" class="form-control" id="consignmentImport_gstAmt" step="0.01" value="0.00" readonly>
-                        </div>
 
-                        <!-- Last row -->
-                        <div class="col-md-3">
-                            <label class="form-label">Total After GST</label>
-                            <input type="number" class="form-control" id="consignmentImport_totAmtAftGst" step="0.01" value="0.00" readonly>
-                        </div>
                         <div class="col-md-9">
                             <label class="form-label">Remarks</label>
                             <textarea class="form-control" id="consignmentImport_remarks" rows="2"></textarea>

@@ -28,6 +28,8 @@
                             <label for="portExpense_cmb_gl" class="form-label">Gl Account <span class="text-danger">*</span></label>
                             <select id="portExpense_cmb_gl" style="width: 100%"></select>
                         </div>
+                    </div>
+                    <div class="row mt-1">
                         <div class="col-md-3">
                             <label class="form-label">Quantity <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="portExpense_quantity" step="0.01" value="0.00" required>
@@ -44,12 +46,13 @@
                             <label for="portExpense_cmb_status" class="form-label">Status  <span class="text-danger">*</span></label>
                             <select id="portExpense_cmb_status" style="width: 100%"></select>
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Remark</label>
-                            <textarea class="form-control" id="portExpense_remarks" rows="2"></textarea>
-                        </div>
                     </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Remark</label>
+                        <textarea class="form-control" id="portExpense_remarks" rows="2"></textarea>
+                    </div>
+
 
                     <!-- Audit Fields -->
                     <div class="accordion mt-3" id="auditAccordion">

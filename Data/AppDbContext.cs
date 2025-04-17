@@ -223,7 +223,7 @@ namespace AMESWEB.Data
         public DbSet<Ser_Tariff> Ser_Tariff { get; set; }
 
         public DbSet<Ser_PortExpenses> Ser_PortExpenses { get; set; }
-        public DbSet<Ser_LaunchServices> Ser_LaunchServices { get; set; }
+        public DbSet<Ser_LaunchService> Ser_LaunchService { get; set; }
         public DbSet<Ser_EquipmentsUsed> Ser_EquipmentsUsed { get; set; }
         public DbSet<Ser_CrewSignOn> Ser_CrewSignOn { get; set; }
         public DbSet<Ser_CrewSignOff> Ser_CrewSignOff { get; set; }
@@ -233,7 +233,7 @@ namespace AMESWEB.Data
         public DbSet<Ser_ConsignmentExport> Ser_ConsignmentExport { get; set; }
         public DbSet<Ser_ThirdParty> Ser_ThirdParty { get; set; }
         public DbSet<Ser_FreshWater> Ser_FreshWater { get; set; }
-        public DbSet<Ser_TechniciansSurveyors> Ser_TechniciansSurveyors { get; set; }
+        public DbSet<Ser_TechnicianSurveyor> Ser_TechnicianSurveyor { get; set; }
         public DbSet<Ser_LandingItems> Ser_LandingItems { get; set; }
         public DbSet<Ser_OtherService> Ser_OtherService { get; set; }
         public DbSet<Ser_AgencyRemuneration> Ser_AgencyRemuneration { get; set; }

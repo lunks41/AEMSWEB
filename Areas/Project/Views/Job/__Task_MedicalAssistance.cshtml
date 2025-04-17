@@ -16,73 +16,71 @@
                     <input type="hidden" id="medicalAssistance_debitNoteNo" />
                     <input type="hidden" id="medicalAssistanceId" />
                     <div class="row">
-                        <div class="col-md-4">
-                            <label class="form-label">Service Date <span class="text-danger">*</span></label>
+                        <div class="col-md-3">
+                            <label class="form-label">Date <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" id="medicalAssistance_serviceDate">
                         </div>
-                        <div class="col-md-4">
-                            <label for="medicalAssistance_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
-                            <select id="medicalAssistance_cmb_charge" style="width: 100%"></select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="medicalAssistance_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select id="medicalAssistance_cmb_gl" style="width: 100%"></select>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Doctor Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="medicalAssistance_doctorName">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Clinic Name</label>
-                            <input type="text" class="form-control" id="medicalAssistance_clinicName">
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Patient Name</label>
                             <input type="text" class="form-control" id="medicalAssistance_patientName">
                         </div>
-                    </div>
-
-                    <div class="row mt-3">
                         <div class="col-md-3">
-                            <label class="form-label">Number of Patients</label>
-                            <input type="number" class="form-control" id="medicalAssistance_noOfPatients" value="1">
+                            <label for="medicalAssistance_cmb_gender" class="form-label">Gender</label>
+                            <select id="medicalAssistance_cmb_gender" style="width: 100%"></select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="medicalAssistance_quantity" step="0.01" value="1.00">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="medicalAssistance_cmb_uom" class="form-label">UOM</label>
-                            <select id="medicalAssistance_cmb_uom" style="width: 100%"></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="medicalAssistance_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select id="medicalAssistance_cmb_status" style="width: 100%"></select>
+                            <label class="form-label">Rank <span class="text-danger">*</span></label>
+                            <select id="medicalAssistance_cmb_rankType" style="width: 100%"></select>
                         </div>
                     </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Total Amount</label>
-                            <input type="number" class="form-control" id="medicalAssistance_totAmt" step="0.01" value="0.00" readonly>
+                      <div class="row mt-1">
+                        <div class="col-md-3">
+                            <label class="form-label">Nationality <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="crewSignOn_nationality">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">GST Amount</label>
-                            <input type="number" class="form-control" id="medicalAssistance_gstAmt" step="0.01" value="0.00" readonly>
+                        <div class="col-md-3">
+                            <label for="medicalAssistance_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="medicalAssistance_cmb_charge" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Total After GST</label>
-                            <input type="number" class="form-control" id="medicalAssistance_totAmtAftGst" step="0.01" value="0.00" readonly>
+                        <div class="col-md-3">
+                            <label for="medicalAssistance_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
+                            <select id="medicalAssistance_cmb_gl" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Clinic Name</label>
+                            <input type="text" class="form-control" id="medicalAssistance_clinicName">
                         </div>
                     </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-12">
+                      <div class="row mt-1">
+                        <div class="col-md-3">
+                            <label class="form-label">Doctor Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="medicalAssistance_doctorName">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Mobile No.</label>
+                            <input type="number" class="form-control" id="medicalAssistance_noOfPatients">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Admitted Date </label>
+                            <input type="date" class="form-control" id="medicalAssistance_admittedDate">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Discharged Date </label>
+                            <input type="date" class="form-control" id="medicalAssistance_dischargedDate">
+                        </div>
+                    </div>
+                      <div class="row mt-1">
+                        <div class="col-md-4">
+                            <label class="form-label">Reason</label>
+                            <textarea class="form-control" id="medicalAssistance_reason" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label">Remarks</label>
                             <textarea class="form-control" id="medicalAssistance_remarks" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="medicalAssistance_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="medicalAssistance_cmb_status" style="width: 100%"></select>
                         </div>
                     </div>
 
@@ -146,11 +144,14 @@
         const chargeUrl = `@Url.Action("GetChargeLookup", "Lookup", new { area = "" })?companyId=${companyId}&taskId=7`;
         bindComboBox(chargeUrl, "medicalAssistance_cmb_charge", "chargeName", "chargeId");
 
-        const uomUrl = '@Url.Action("GetUomLookup", "Lookup", new { area = "" })?companyId=' + companyId;
-        bindComboBox(uomUrl, "medicalAssistance_cmb_uom", "uomName", "uomId");
-
         const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
         bindComboBox(statusUrl, "medicalAssistance_cmb_status", "orderTypeName", "orderTypeId");
+
+        const genderUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=3`;
+        bindComboBox(genderUrl, "medicalAssistance_cmb_gender", "orderTypeName", "orderTypeId");
+
+        const rankTypeUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=15`;
+        bindComboBox(rankTypeUrl, "medicalAssistance_cmb_rankType", "orderTypeName", "orderTypeId");
     }
 
     function clearMedicalAssistanceForm() {

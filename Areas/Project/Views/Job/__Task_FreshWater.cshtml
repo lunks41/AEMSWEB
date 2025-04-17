@@ -16,38 +16,32 @@
                     <input type="hidden" id="freshWater_debitNoteNo" />
                     <input type="hidden" id="freshWaterId" />
                     <div class="row">
-                        <div class="col-md-4">
-                            <label class="form-label">Date of  <span class="text-danger">*</span></label>
+                        <div class="col-md-3">
+                            <label class="form-label">Date  <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" id="freshWater_dateOf">
                         </div>
-                        <div class="col-md-4">
-                            <label for="freshWater_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
-                            <select id="freshWater_cmb_charge" style="width: 100%"></select>
+                        <div class="col-md-3">
+                            <label for="freshWater_cmb_barge" class="form-label">Barge Location<span class="text-danger">*</span></label>
+                            <select id="freshWater_cmb_barge" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-4">
-                            <label for="freshWater_cmb_gl" class="form-label">GL Account <span class="text-danger">*</span></label>
-                            <select id="freshWater_cmb_gl" style="width: 100%"></select>
+                        <div class="col-md-3">
+                            <label class="form-label">Supply Barge</label>
+                            <input type="text" class="form-control" id="freshWater_bargeOperatorName">
                         </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Receipt Number</label>
-                            <input type="text" class="form-control" id="freshWater_receiptNumber">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="freshWater_cmb_bargeName" class="form-label">Barge Name</label>
-                            <select id="freshWater_cmb_bargeName" style="width: 100%"></select>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Barge Operator Name</label>
                             <input type="text" class="form-control" id="freshWater_bargeOperatorName">
                         </div>
+
                     </div>
 
-                    <div class="row mt-3">
+                      <div class="row mt-1">
                         <div class="col-md-3">
-                            <label class="form-label">Distance</label>
+                            <label class="form-label">Receipt No <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="freshWater_receiptNo">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Distance <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="freshWater_distance" step="0.01" value="0.00">
                         </div>
                         <div class="col-md-3">
@@ -55,42 +49,29 @@
                             <input type="number" class="form-control" id="freshWater_quantity" step="0.01" value="0.00">
                         </div>
                         <div class="col-md-3">
-                            <label for="freshWater_cmb_uom" class="form-label">UOM</label>
+                            <label for="freshWater_cmb_uom" class="form-label">UOM <span class="text-danger">*</span></label>
                             <select id="freshWater_cmb_uom" style="width: 100%"></select>
                         </div>
-                        <div class="col-md-3">
+
+                    </div>
+
+                      <div class="row mt-1">
+                       
+                        <div class="col-md-4">
+                            <label for="freshWater_cmb_charge" class="form-label">Charge <span class="text-danger">*</span></label>
+                            <select id="freshWater_cmb_charge" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="freshWater_cmb_gl" class="form-label">GL Account </label>
+                            <select id="freshWater_cmb_gl" style="width: 100%"></select>
+                        </div>
+                        <div class="col-md-4">
                             <label for="freshWater_cmb_status" class="form-label">Status <span class="text-danger">*</span></label>
                             <select id="freshWater_cmb_status" style="width: 100%"></select>
                         </div>
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="freshWater_isVesselCallingLocation">
-                                <label class="form-check-label" for="freshWater_isVesselCallingLocation">
-                                    Vessel Calling Location
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Total Amount</label>
-                            <input type="number" class="form-control" id="freshWater_totAmt" step="0.01" value="0.00" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">GST Amount</label>
-                            <input type="number" class="form-control" id="freshWater_gstAmt" step="0.01" value="0.00" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Total After GST</label>
-                            <input type="number" class="form-control" id="freshWater_totAmtAftGst" step="0.01" value="0.00" readonly>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
+                      <div class="row mt-1">
                         <div class="col-md-12">
                             <label class="form-label">Remarks</label>
                             <textarea class="form-control" id="freshWater_remarks" rows="2"></textarea>
@@ -163,8 +144,8 @@
         const statusUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=4`;
         bindComboBox(statusUrl, "freshWater_cmb_status", "orderTypeName", "orderTypeId");
 
-        const bargeNameUrl = `@Url.Action("GetBargeNameLookup", "Lookup", new { area = "" })?companyId=${companyId}`;
-        bindComboBox(bargeNameUrl, "freshWater_cmb_bargeName", "bargeNameLookup", "bargeNameLookupId");
+        const bargeLocationUrl = `@Url.Action("GetOrderTypeLookup", "Lookup", new { area = "" })?companyId=${companyId}&categoryId=5`;
+        bindComboBox(bargeLocationUrl, "freshWater_cmb_barge", "orderTypeName", "orderTypeId");
     }
 
     function clearFreshWaterForm() {
@@ -178,10 +159,10 @@
         $('#freshWater_cmb_charge').data('kendoComboBox').value('');
         $('#freshWater_cmb_uom').data('kendoComboBox').value('');
         $('#freshWater_cmb_status').data('kendoComboBox').value('');
-        $('#freshWater_cmb_bargeName').data('kendoComboBox').value('');
+        $('#freshWater_cmb_barge').data('kendoComboBox').value('');
 
         $('#freshWater_dateOf').val('');
-        $('#freshWater_receiptNumber').val('');
+        $('#freshWater_receiptNo').val('');
         $('#freshWater_bargeOperatorName').val('');
         $('#freshWater_distance').val('0.00');
         $('#freshWater_quantity').val('0.00');
@@ -318,14 +299,14 @@
             statusCombo.value(data.statusId > 0 ? data.statusId : '');
         });
 
-        const bargeNameCombo = $('#freshWater_cmb_bargeName').data('kendoComboBox');
-        bargeNameCombo.value(data.bargeNameLookupId > 0 ? data.bargeNameLookupId : '');
-        bargeNameCombo.one('dataBound', function () {
-            bargeNameCombo.value(data.bargeNameLookupId > 0 ? data.bargeNameLookupId : '');
+        const bargeLocationCombo = $('#freshWater_cmb_barge').data('kendoComboBox');
+        bargeLocationCombo.value(data.bargeLocationLookupId > 0 ? data.bargeLocationLookupId : '');
+        bargeLocationCombo.one('dataBound', function () {
+            bargeLocationCombo.value(data.bargeLocationLookupId > 0 ? data.bargeLocationLookupId : '');
         });
 
         // Set other fields
-        $('#freshWater_receiptNumber').val(data.receiptNumber);
+        $('#freshWater_receiptNo').val(data.receiptNo);
         $('#freshWater_bargeOperatorName').val(data.bargeOperatorName);
         $('#freshWater_distance').val(data.distance || 0.00);
         $('#freshWater_quantity').val(data.quantity || 0.00);
@@ -351,7 +332,7 @@
             uomCombo.enable(false);
             statusCombo.enable(false);
             glCombo.enable(false);
-            bargeNameCombo.enable(false);
+            bargeLocationCombo.enable(false);
 
             $('input, textarea').not('#btnFreshWaterSave').prop('readonly', true);
             $('#freshWater_isVesselCallingLocation').prop('disabled', true);
@@ -361,7 +342,7 @@
             uomCombo.enable(true);
             statusCombo.enable(true);
             glCombo.enable(true);
-            bargeNameCombo.enable(true);
+            bargeLocationCombo.enable(true);
 
             $('input, textarea').not('#freshWater_totAmt, #freshWater_gstAmt, #freshWater_totAmtAftGst').prop('readonly', false);
             $('#freshWater_isVesselCallingLocation').prop('disabled', false);
@@ -394,10 +375,10 @@
             GLId: parseInt($('#freshWater_cmb_gl').data('kendoMultiColumnComboBox').value()) || 0,
             UomId: parseInt($('#freshWater_cmb_uom').data('kendoComboBox').value()) || null,
             StatusId: parseInt($('#freshWater_cmb_status').data('kendoComboBox').value()) || 0,
-            BargeNameLookupId: parseInt($('#freshWater_cmb_bargeName').data('kendoComboBox').value()) || null,
+            BargeNameLookupId: parseInt($('#freshWater_cmb_barge').data('kendoComboBox').value()) || null,
 
             DateOf: $('#freshWater_dateOf').val() || null,
-            ReceiptNumber: $('#freshWater_receiptNumber').val() || '',
+            ReceiptNumber: $('#freshWater_receiptNo').val() || '',
             BargeOperatorName: $('#freshWater_bargeOperatorName').val() || '',
             Distance: parseFloat($('#freshWater_distance').val()) || 0.00,
             Quantity: parseFloat($('#freshWater_quantity').val()) || 0.00,

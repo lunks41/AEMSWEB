@@ -2,7 +2,7 @@
 
 namespace AMESWEB.Entities.Project
 {
-    public class Ser_LaunchServices
+    public class Ser_LaunchService
     {
         public byte CompanyId { get; set; }
 

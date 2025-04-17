@@ -161,7 +161,7 @@ namespace AMESWEB.Enums
     public enum E_Task
     {
         PortExpenses = 1,
-        LaunchServices = 2,
+        LaunchService = 2,
         EquipmentsUsed = 3,
         CrewSignOn = 4,
         CrewSignOff = 5,
@@ -171,7 +171,7 @@ namespace AMESWEB.Enums
         ConsignmentExport = 9,
         ThirdParty = 10,
         FreshWater = 11,
-        TechniciansSurveyors = 12,
+        TechnicianSurveyor = 12,
         LandingItems = 13,
         OtherService = 14,
         AgencyRemuneration = 15

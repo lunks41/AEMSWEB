@@ -77,7 +77,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTariffLaunchServicesList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
+        public async Task<JsonResult> GetTariffLaunchServiceList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -87,7 +87,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _tariffService.GetTariffLaunchServicesListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
+                var data = await _tariffService.GetTariffLaunchServiceListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
@@ -287,7 +287,7 @@ namespace AMESWEB.Areas.Project.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetTariffTechniciansSurveyorsList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
+        public async Task<JsonResult> GetTariffTechnicianSurveyorList(int pageNumber, int pageSize, string searchString, string companyId, int customerId, int portId)
         {
             if (pageNumber < 1 || pageSize < 1)
                 return Json(new { success = false, message = "Invalid page parameters" });
@@ -297,7 +297,7 @@ namespace AMESWEB.Areas.Project.Controllers
 
             try
             {
-                var data = await _tariffService.GetTariffTechniciansSurveyorsListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
+                var data = await _tariffService.GetTariffTechnicianSurveyorListAsync(companyIdShort, parsedUserId.Value, pageSize, pageNumber, searchString ?? string.Empty, customerId, portId);
                 return Json(new { data = data.data, total = data.totalRecords });
             }
             catch (Exception ex)
